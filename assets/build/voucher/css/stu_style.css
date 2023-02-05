@@ -1,0 +1,80 @@
+/* CSS Document */
+body 
+{
+	background-color: #ffffff;	
+	margin: 0px auto -1px auto; 
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	line-height:20px;
+	margin-top:20px;
+	color:#000000;
+	text-align:none;
+	text-decoration:none;
+}
+.header
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	color:#000000;
+	text-decoration:none;
+	line-height:25px;
+}
+
+.tabledesign {
+	width:900px;
+	border-color:000000;
+	border-collapse:collapse;
+	font-size:14px;
+	text-align:center;
+}
+.tabledesign td{
+	padding:3px;
+	border:solid 1px;
+	border-color:000000;
+	
+}
+.tabledesign1 {
+	width:860px;
+	border-color:000000;
+	border-collapse:collapse;
+	font-size:14px;
+	text-align:center;
+	line-height:12px;
+}
+.tabledesign1 td{
+	border:solid 0px;
+	border-color:000000;
+	
+}
+
+.title{
+	font-weight:bold;
+	font-size:25px;
+	line-height:30px;
+}
+.logo{
+	width:300px;
+	height:50px;
+}
+.debit_box{
+	width:330px;
+	height:32px;
+	color:#000000;
+	font-weight:bold;
+	font-size:25px;
+	margin: 0px auto 0px auto; 
+	}
+.line{
+	background:url(../images/line.jpg) repeat-x;
+	height:2px;
+	line-height:0px;}
+	
+.tabledesign_text{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:14px;
+	line-height:20px;
+	margin-top:20px;
+	color:#000000;
+	text-align:none;
+	text-decoration:none;
+	}

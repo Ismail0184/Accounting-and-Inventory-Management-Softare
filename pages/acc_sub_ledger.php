@@ -1,0 +1,136 @@
+<?php require_once 'support_file.php';?>
+<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
+$title='Sub Ledger';
+$proj_id=$_SESSION['proj_id'];
+$page="acc_sub_ledger.php";
+$now=time();
+$separator	= $_SESSION['separator'];
+$table="sub_ledger";
+$unique="sub_ledger_id";
+$crud      =new crud($table);
+$$unique=$_GET[$unique];
+
+if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
+
+{   $id=$_REQUEST['id'];
+    $name		= mysql_real_escape_string($_REQUEST['name']);
+    $name		= str_replace("'","",$name);
+    $name		= str_replace("&","",$name);
+    $name		= str_replace('"','',$name);
+    $under		= mysql_real_escape_string($_REQUEST['under']);
+    $balance	= mysql_real_escape_string($_REQUEST['balance']);
+    //end
+
+    if(isset($_POST['record']))
+
+    {
+
+        $check="select sub_ledger_id from sub_ledger where sub_ledger='$name'";
+        if(mysql_num_rows(mysql_query($check))>0)
+
+        {   $aaa=mysql_num_rows(mysql_query($check));
+            $ledger_id=$aaa[0];
+            $type=0;
+            $msg='Given Name('.$name.') is already exists.';
+
+        } else {
+            $sql_check="select ledger_group_id, balance_type, budget_enable from accounts_ledger where ledger_id='".$under."' limit 1";
+            $sql_query=mysql_query($sql_check);
+            if(mysql_num_rows($sql_query)>0){
+                $ledger_data=mysql_fetch_row($sql_query);
+                if(!ledger_excess($name))
+                {
+
+                    $type=0;
+                    $msg='Given Name('.$name.') is already exists as Ledger.';
+
+                }  else  {
+
+                    $sub_ledger_id=number_format(next_sub_ledger_id($under), 0, '.', '');
+                    sub_ledger_generate($sub_ledger_id,$name, $under, $balance, $now, $proj_id);
+                    ledger_generate($sub_ledger_id,$name,$ledger_data[0],'',$ledger_data[1],'','', time(),$proj_id,$ledger_data[2]);
+                    $type=1;
+                    $msg='New Entry Successfully Inserted.';
+                } }  else  {
+
+                $type=0;
+                $msg='Invalid Accounts Ledger!!!';
+            }}}}
+
+if(isset($_POST['modify']))
+{   $_POST['sub_ledger']=$name;
+    $_POST['edit_at']=time();
+    $_POST['edit_by']=$_SESSION['userid'];
+    $crud->update($unique);
+    $type=1;
+}
+if(isset($_POST['cancel'])){echo "<script>window.close(); </script>";}
+if(isset($$unique))
+{   $condition=$unique."=".$$unique;
+    $data=db_fetch_object($table,$condition);
+    while (list($key, $value)=each($data)){ $$key=$value;}}
+$sql="select a.sub_ledger_id,a.sub_ledger_id,a.sub_ledger, (select ledger_name from accounts_ledger where ledger_id=a.ledger_id) as ledger_name, c.group_name FROM sub_ledger a,accounts_ledger b,ledger_group c where
+a.sub_ledger_id=b.ledger_id and b.ledger_group_id=c.group_id";
+?>
+
+
+<?php require_once 'header_content.php'; ?>
+<?php if(isset($_GET[$unique])):
+    require_once 'body_content_without_menu.php'; else :
+    require_once 'body_content.php'; endif;  ?>
+<?php if(isset($_GET[$unique])): ?>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+    <div class="x_title">
+        <h2><?=$title;?></h2>
+        <ul class="nav navbar-right panel_toolbox">
+            <div class="input-group pull-right"></div>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+<?php else: ?>
+    <div class="modal fade" id="addModal">
+    <div class="modal-dialog modal-md">
+    <div class="modal-content">
+    <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Add New Record
+            <button class="close" data-dismiss="modal">
+                <span>&times;</span>
+            </button>
+        </h5>
+    </div>
+    <div class="modal-body">
+<?php endif; ?>
+    <form id="form2" name="form2" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
+        <? require_once 'support_html.php';?>
+        <div class="form-group" style="width: 100%">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Ledger:<span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="hidden" id="<?=$unique?>" name="<?=$unique?>" value="" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
+                <input type="text" id="name"  required="required" name="name" value="" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
+            </div></div>
+
+
+        <div class="form-group" style="width: 100%">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Under Ledger<span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <select class="select2_single form-control" required name="under" id="under" style="width: 100%; font-size: 12px">
+                    <option value=""></option>
+                    <?=foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $ledger_id, '1','order by ledger_id,ledger_name'); ?>   </select></div></div>
+        <?php if($_GET[$unique]):  ?>
+            <div class="form-group" style="margin-left:30%">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <button type="submit" name="cancel" id="cancel" style="font-size:12px" class="btn btn-danger">Cancel</button>
+                    <button type="submit" name="modify" id="modify" style="font-size:12px" class="btn btn-primary">Modify</button>
+                </div></div>
+        <?php else : ?>
+            <div class="form-group" style="margin-left:40%">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <button type="submit" name="record" id="record"  style="font-size:12px" class="btn btn-primary">Add New</button></div></div> <?php endif; ?></form></div></div></div><?php if(!isset($_GET[$unique])): ?></div><?php endif; ?>
+<?php if(!isset($_GET[$unique])):?>
+    <?=$crud->report_templates_with_add_new($sql,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
+<?php endif; ?>
+<?=$html->footer_content();mysqli_close($conn);?>
+<?php ob_end_flush();
+ob_flush(); ?>

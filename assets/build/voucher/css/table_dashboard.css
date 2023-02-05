@@ -1,0 +1,66 @@
+/* CSS Document */
+
+.table_dashboard {
+	width: 100%;
+	padding: 0;
+	overflow:auto;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	background-color:#f1f1f1;
+}
+
+.table_dashboard th {
+	font: bold 12px Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	border-right: 1px solid #C1DAD7;
+	border-left: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	border-top: 1px solid #C1DAD7;
+	text-align: left;
+	padding: 3px 3px 3px 3px;
+	background: #CAE8EA url(../dash_images/bg_header.jpg) repeat-x;
+}
+
+.table_dashboard td{
+	border-right: 1px solid #C1DAD7;
+	border-left: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	padding: 3px 3px 3px 3px;
+	color: #4f6b72;
+}
+.table_dashboard tr{
+	color: #4f6b72;
+}
+.table_dashboard tr:hover{
+	border-right: 1px solid #C1DAD7;
+	border-left: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	background: #F8FBC1;
+	padding: 3px 3px 3px 3px;
+	color: #4f6b72;
+}
+
+
+.table_dashboard tr.alt {
+	background: #ffffff;
+	color: #797268;
+}
+.table_dashboard tr.alt:hover{
+	background: #f0fbfc;
+	color: #797268;
+}
+
+th.spec {
+	border-left: 1px solid #C1DAD7;
+	border-top: 0;
+	background: #fff url(../images/bullet1.gif) no-repeat;
+	font: bold 10px Verdana, Arial, Helvetica, sans-serif;
+}
+
+th.specalt {
+	border-left: 1px solid #C1DAD7;
+	border-top: 0;
+	background: #f5fafa url(../images/bullet2.gif) no-repeat;
+	font: bold 10px Verdana, Arial, Helvetica, sans-serif;
+	color: #797268;
+}

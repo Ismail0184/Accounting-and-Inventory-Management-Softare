@@ -1,0 +1,48 @@
+/* -------------------- Dashboard -------------------- */
+
+a.dashboard-module, 
+a.dashboard-module:visited {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	width: 119px; 
+	height: 119px; 
+	display: block; 
+	float: left; 
+	background: url(../dash_images/dashboard-module.gif) top left no-repeat; 
+	margin: 0 3px 3px 0;  
+	text-align: center; 
+	color: #444444;
+	text-decoration:none;
+	}
+	
+a.dashboard-module:hover, 
+a.dashboard-module:active { 
+	background-position: bottom left; 
+	text-decoration: none; 
+	color:#0063be; 
+	text-decoration:none;
+	}
+.dashboard_check{
+	margin-top:10px;
+	display: block;
+	text-decoration:none;
+	position:absolute;
+	width: 19px;
+	}
+a.dashboard-module img { 
+	margin-top: 20px; 
+	border:0px;
+	}
+	
+a.dashboard-module span { 
+	margin-top: 10px; 
+	display: block; 
+	text-decoration:none;
+	}
+.dashboard{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	width:740px;
+	margin:0px auto;
+	}
+
+

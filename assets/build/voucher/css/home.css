@@ -1,0 +1,212 @@
+body 
+{
+	background:url(../homeimages/bg.jpg) repeat-x top;
+	margin-top:25px;
+	background-color: #849ba8;	
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	line-height:15px;
+	color:#000000;
+	text-align:none;
+	text-decoration:none;
+}
+.wrapper{
+	width:962px;
+	margin: 0px auto -1px auto; 
+	}
+
+table{
+	width:100%;
+	border:0px;
+	vertical-align:top;
+}
+
+
+a{color:#000000; text-decoration:none;}
+a:hover{color:#000000;text-decoration:underline;}
+
+.l_button_bar{
+	background:url(../homeimages/body_04.jpg) repeat-x;
+	width:944px;
+	height:32px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-align:right;
+	color:#000000;
+	}
+.l_button_bar a{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-align:right;
+	color:#000000;
+	}
+.l_button_bar a:hover{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-align:right;
+	color:#000000;
+	text-decoration:underline;
+	}
+.l_button_logo{
+	width:230px;
+	height:32px;
+	margin: 0px auto -1px 700px; 
+	}
+.l_title{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:16px;
+	line-height:25px;
+	color:#000000;
+	font-weight:bold;
+	text-align:none;
+	text-decoration:none;
+	}
+.l_title1{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:16px;
+	line-height:25px;
+	color:#076b7d;
+	font-weight:bold;
+	text-align:none;
+	text-decoration:none;
+	}
+.l_title1_g{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:14px;
+	line-height:25px;
+	color:#7f8082;
+	font-weight:bold;
+	text-align:none;
+	text-decoration:none;
+	}
+.l_title2{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:14px;
+	line-height:25px;
+	color:#df3304;
+	font-weight:bold;
+	text-align:none;
+	text-decoration:none;
+	}
+.header1{
+	background:url(../homeimages/body_02_bar.jpg) repeat-x;
+	width:166px;
+	height:70px;
+}
+
+.header2{
+	background:url(../homeimages/body_02_bar.jpg) repeat-x;
+	width:749px;
+	height:70px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:20px;
+	line-height:70px;
+	text-align:right;
+	color:#FFFFFF;
+}
+.body{
+	background:url(../homeimages/body_05_bar.jpg) repeat-x;
+	width:944px;
+	height:386px;
+}
+.body_left{
+	width:524px;
+	height:386px;
+}
+.body_left_header{
+	background:url(../homeimages/left_header.jpg) top right no-repeat;
+	height:136px;
+	width:501px;
+	float:right;
+}
+.body_right{
+	width:420px;
+	height:386px;
+}
+.version{
+	width:366px;
+	height:130px;
+	}
+.version1{
+	background:url(../homeimages/version_01.jpg) no-repeat;
+	width:131px;
+	height:130px;
+	}
+.version2{
+	position:absolute;
+	font-size:16px;
+	color:#FFFFFF;
+	top: 184px;
+	margin-left:35px;
+	text-align:center;
+	font-weight:bold;
+	}
+.version_right{
+	background:url(../homeimages/version_02.jpg) no-repeat;
+	width:235px;
+	height:130px;
+	}
+.login{
+	width:343px;
+	height:241px;
+	margin: 0px auto -1px auto;
+	}
+.login_header{
+	background:url(../homeimages/login_01.jpg) no-repeat;
+	width:343px;
+	height:46px;
+	color:#FFFFFF;
+	font-size:16px;
+	line-height:15px;
+	font-weight:bold;
+	}
+.login_form{
+	background:url(../homeimages/login_03.jpg) no-repeat;
+	width:272px;
+	height:163px;
+	color:#FFFFFF;
+	font-size:12px;
+	line-height:15px;
+	}
+.login_form td{
+	text-align:right;
+	}
+.input {
+	width:160px;
+	height:18px;
+	border:1px solid #4a4c4c;
+	background:#ffffff;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	color:#465b60;
+	font-weight:normal;
+	-moz-border-radius:0.4em;
+	-khtml-border-radius:0.4em;
+}
+.input:hover, .input:focus {
+	border-color:#c5c5c5;
+	background:#f6f6f6;
+}
+.l_box1{
+	width:465px;
+	height:55px;
+	padding:5px;
+	border:1px solid #9BDEA8;
+	background-color:#E9FFE5;
+	margin:0px auto 0px auto;
+	}
+.l_box2{
+	width:465px;
+	height:55px;
+	padding:5px;
+	border:1px solid #E8E657;
+	background-color:#FFFEE5;
+	margin:0px auto 0px auto;
+	}
+.l_box3{
+	width:465px;
+	height:55px;
+	padding:5px;
+	border:1px solid #D99D9D;
+	background-color:#FFE5E5;
+	margin:0px auto 0px auto;
+	}
+.l_form{
+width:250px;}

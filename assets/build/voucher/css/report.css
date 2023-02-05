@@ -1,0 +1,97 @@
+.title{
+	font-weight:bold;
+	font-size:25px;
+	line-height:30px;
+}
+table {
+  border: 0px solid #666666;
+  font: normal 11px Tahoma;
+}
+th {
+  border-bottom: 1px solid #000000;
+  border-left: 1px solid #000000;
+  border-right: 1px solid #000000;
+  border-top: 1px solid #000000;
+  font: 12px;
+  padding: 2px 5px;
+  text-align:left;
+  font-weight:bold;
+}
+td {
+  border-bottom: 1px solid #000000;
+  border-right: 1px solid #000000;
+  border-left: 1px solid #000000;
+  font: 11px;
+  padding: 2px 5px;
+}
+
+.footer {
+  color: #000000;
+  font-size: 12px;
+  font-weight:bold;
+}
+
+.footer td {
+  border:0px;
+  font-size: 12px;
+  font-weight:bold;
+}
+/*---------------------Header-----------------------*/
+.header{
+	width:100%;
+	text-align:center;
+	float:left;
+}
+.logo{
+	width:20%;
+	text-align:center;
+	float:left;
+	position:absolute;
+	left: 0px;
+	top: 3px;
+}
+h1{
+  padding:0px;
+  font: normal 22px Tahoma;
+  line-height:0px;}
+  h2{
+  padding: 0px;
+  font: normal 16px Tahoma;
+  }
+h3{
+  padding: 0px;
+  font: normal 14px Tahoma;
+  }
+ p{
+ text-align:left;
+ font-weight:normal;
+ font-size:14px;
+ font-family:Tahoma;
+ line-height:10px;}
+/*-------------------End of Header-------------------------*/
+/*---------------------Project Details-----------------------*/
+.left{
+	width:50%;
+	text-align:lleft;
+	float:left;
+}
+.right{
+	width:50%;
+	text-align:left;
+	float:right;
+}
+/*---------------------End of Project Details-----------------------*/
+.main{
+	width:100%;
+	float:left;
+}
+/*---------------------Date-----------------------*/
+.date{
+	width:100%;
+	text-align:right;
+	font-size:12px;
+	font-family:Tahoma;
+	line-height:20px;
+	float:left;
+	}
+/*---------------------end-----------------------*/

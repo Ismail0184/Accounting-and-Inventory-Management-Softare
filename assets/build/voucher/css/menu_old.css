@@ -1,0 +1,68 @@
+.smartmenu{
+margin: 0px 0;
+padding: 0;
+width: 95%; /*width of menu*/
+border: 1px solid #D5D9DC;
+}
+
+.smartmenu div.silverheader a{
+background: black url(../images/silvergradient.gif) repeat-x center left;
+font: normal 11px Verdana, Arial, Helvetica, sans-serif;
+color: #000000;
+display: block;
+position: relative; /*To help in the anchoring of the ".statusicon" icon image*/
+width: auto;
+padding: 6px 0;
+padding-left: 8px;
+text-decoration: none;
+}
+
+.smartmenu div.silverheader a:active{
+color: #000000;
+}
+
+
+.smartmenu div.selected a, .smartmenu div.silverheader a:hover{
+background-image: url(../images/silvergradientover.gif);
+color: #ffffff;
+}
+
+.smartmenu div.submenu{ /*DIV that contains each sub menu*/
+padding: 0px;
+height:100px; /*Height that applies to all sub menu DIVs. A good idea when headers are toggled via "mouseover" instead of "click"*/
+overflow: auto;
+}
+.smartmenu div.submenu a{
+background: url(../images/arrowbullet.png) no-repeat center left; /*custom bullet list image*/
+display: block;
+padding: 3px;
+background-color:#FEF7CF;
+border:1px solid #FFFFFF;
+padding-left: 19px; /*link text is indented 19px*/
+font-family:Verdana, Arial, Helvetica, sans-serif;
+color:#16387C;
+font-size:11px;
+text-decoration:none;
+}
+.smartmenu div.submenu a:hover{ /*DIV that contains each sub menu*/
+background: url(../images/arrowbullet.png) no-repeat center left; /*custom bullet list image*/
+padding-left: 19px; /*link text is indented 19px*/
+font-family:Verdana, Arial, Helvetica, sans-serif;
+color:#000000;
+text-decoration:none;
+display: block;
+background-color:#F5F7F8;
+font-size:11px;
+border:1px solid #FFFFFF;
+}
+.smartmenu div.submenu a.current{
+background: url(../images/arrowbullet.png) no-repeat center left; /*custom bullet list image*/
+padding-left: 19px; /*link text is indented 19px*/
+display: block;
+background-color:#C9D0DE;
+border:1px solid #FFFFFF;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+color:#16387C;
+font-size:11px;
+text-decoration:none;
+}

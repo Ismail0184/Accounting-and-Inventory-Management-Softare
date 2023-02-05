@@ -1,0 +1,152 @@
+input{
+	width:65px;
+	height:18px;
+	border:1px solid #a5bed2;
+	background:#ffffff;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	line-height:20px;
+	color:#465b60;
+	font-weight:normal;
+	-moz-border-radius:0.4em;
+	-khtml-border-radius:0.4em;
+}
+input:hover, input:focus {
+	border-color:#c5c5c5;
+	background:#F7F6F6;
+}
+.input1{
+	width:160px;
+	height:18px;
+	border:1px solid #a5bed2;
+	background:#ffffff;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	line-height:20px;
+	color:#465b60;
+	font-weight:normal;
+	-moz-border-radius:0.4em;
+	-khtml-border-radius:0.4em;
+}
+input1:hover, input1:focus {
+	border-color:#c5c5c5;
+	background:#F7F6F6;
+}
+select{
+	width:75px;
+	height:20px;
+	border:1px solid #a5bed2;
+	background:#ffffff;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	line-height:20px;
+	float:right;
+	vertical-align:middle;
+	color:#000000;
+	font-weight:normal;
+	-moz-border-radius:0.4em;
+	-khtml-border-radius:0.4em;
+}
+select:hover, select:focus {
+	border-color:#c5c5c5;
+	background:#F7F6F6;
+}
+textarea{
+	width:75px;
+	height:100px;
+	border:1px solid #a5bed2;
+	background:#ffffff;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	line-height:20px;
+	color:#465b60;
+	float:right;
+	font-weight:normal;
+	-moz-border-radius:0.4em;
+	-khtml-border-radius:0.4em;
+}
+textarea:hover, textarea:focus {
+	border-color:#c5c5c5;
+	background:#F7F6F6;
+}
+.radio{
+	width:15px;
+	height:15px;
+	border:0px;
+}
+.checkbox{
+	width:15px;
+	height:15px;
+	border:0px;
+}
+input.btn { 
+	width:170px; 
+	height:22px;
+	color:#000;
+	line-height:20px;
+	font-size:11spx;	
+	font-weight:normal; 
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	border: 1px solid #4B6677;
+    background: #84B1C6;
+} 
+
+input.btn:hover{ 
+	width:170px;
+	color:#000; 
+	font-size:11px;	
+	font-weight:normal;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	border: 1px solid #3C3C3D;
+    background: #ccf;
+} 
+
+input.btn1 { 
+	width:40px; 
+	height:22px;
+	color:#000;
+	line-height:20px;
+	font-size:11px;	
+	font-weight:normal; 
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	border: 1px solid #4B6677;
+    background: #84B1C6;
+} 
+
+input.btn1:hover{ 
+	width:40px;
+	color:#000; 
+	font-size:11px;	
+	font-weight:normal;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	border: 1px solid #3C3C3D;
+    background: #ccf;
+} 
+input.btn2 { 
+	width:100px; 
+	height:22px;
+	color:#000;
+	line-height:20px;
+	font-size:11px;	
+	font-weight:normal; 
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	border: 1px solid #4B6677;
+    background: #84B1C6;
+}
+input.btn2:hover{ 
+	width:100px;
+	color:#000; 
+	font-size:11px;	
+	font-weight:normal;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	border: 1px solid #3C3C3D;
+    background: #ccf;
+} 
+.v_title{
+	font-weight:bold; 
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:14px;
+	text-align:center;
+	color:#000000;}
+
+
