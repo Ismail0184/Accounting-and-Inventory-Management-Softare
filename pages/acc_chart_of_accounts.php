@@ -49,9 +49,8 @@ $page="acc_chart_of_accounts.php";
                      <div id="content">
                          <ul id="sitemap">
 
-                             <?  $sql='select * from ledger_group order by group_id';
-                             if($_SESSION['usergroup']>1)
-                                 $sql='select * from ledger_group where group_for="'.$_SESSION['usergroup'].'" and status not in ("SUSPENDED") order by group_id';
+                             <?
+                             $sql='select * from ledger_group where status not in ("SUSPENDED") order by group_id';
                              $query=mysqli_query($conn, $sql);
                              if(mysqli_num_rows($query)>0){
                                  while($grp=mysqli_fetch_object($query)){
