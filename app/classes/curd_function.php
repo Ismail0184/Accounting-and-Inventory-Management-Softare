@@ -870,6 +870,7 @@ ORDER BY zm.sl, zs.sl");
         $str.='
 		<table style="width:100%; font-size: 12px">';
         $str .='<tr class="oe_list_header_columns">';
+        $result = mysqli_query($conn, "SET NAMES utf8");//the main trick
         if ($result = mysqli_query($conn , $sql)):
             $cols = mysqli_num_fields($result);
             if (mysqli_num_rows($result)>0):
@@ -900,6 +901,7 @@ ORDER BY zm.sl, zs.sl");
         $str.='
 		<table style="width:100%; font-size: 12px">';
         $str .='<tr class="oe_list_header_columns">';
+        $result = mysqli_query($conn, "SET NAMES utf8");//the main trick
         if ($result = mysqli_query($conn , $sql)):
             $cols = mysqli_num_fields($result);
             if (mysqli_num_rows($result)>0):
