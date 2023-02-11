@@ -11,11 +11,14 @@ top: -4px; font-size:15px;font-weight:bold; color:white"><?=strtoupper($_SESSION
                   
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <img src="<?=$_SESSION['userpic'];?>" alt="" style="height:30px; width:30px;border: 1px solid <?=$_SESSION[logo_color]?>;
-    border-radius: 25px; background-color:#069;"> <span style="color:white"><?php echo  $_SESSION['username']; ?></span>
+    border-radius: 25px; background-color:#069;"> <span style="color:white"><?=$_SESSION['username'];?></span>
                          <span class="fa fa-angle-down"></span>
                     </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                   <li><a href="profile.php"> Profile</a></li>
+                      <li><a href="dashboard.php?language=English"> English</a></li>
+                      <li><a href="dashboard.php?language=Bangla""> Profile</a></li>
+
                         <li><a href="account_settings.php"> Change Password</a></li>
                         <?php if($_SESSION["userid"]=='10019'){ ?>
                             <li><a href="permission_setup.php">Permission Setup</a></li> <?php } ?>
