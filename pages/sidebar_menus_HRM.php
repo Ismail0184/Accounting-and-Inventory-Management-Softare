@@ -27,12 +27,17 @@ $attendance_leave_pending=find_a_field('hrm_leave_info','COUNT(id)','leave_statu
               <div class="menu_section">
                 <h3></h3>
                 <ul class="nav side-menu">
-                <li><?php  if($_SESSION['module_id']==11)  { echo '<br></br>';} else {echo '<a href="dashboard.php"><i class="fa fa-home"></i>Home</a>';} ?></li>
+                <li><?php  if($_SESSION['module_id']==11)  { echo '<br></br>';} else { ?><a href="dashboard.php"><i class="fa fa-home"></i><?php
+                        if($_SESSION['language']=='Bangla') {?>
+                            হোম <?php } else if($_SESSION['language']=='English') {?> Home
+                        <?php } ?></a><?php } ?></li>
 <?php
+                $result = mysqli_query($conn, "SET NAMES utf8");//the main trick
+                if($_SESSION['language']=='Bangla') {
 				$result="Select
 				pmm.*,
 				dmm.faicon as iconmain,
-				dmm.main_menu_name,
+				dmm.main_menu_name_BN as main_menu_name,
 				dmm.sl,
 				dmm.url as main_url
 				from
@@ -45,6 +50,24 @@ $attendance_leave_pending=find_a_field('hrm_leave_info','COUNT(id)','leave_statu
 				dmm.module_id='".$_SESSION['module_id']."' and
 				dmm.status=1 and pmm.status=1
 				order by dmm.sl";
+                } else if($_SESSION['language']=='English') {
+                    $result = "Select
+				pmm.*,
+				dmm.faicon as iconmain,
+				dmm.main_menu_name,
+				dmm.sl,
+				dmm.url as main_url
+				from
+				user_permission_matrix_main_menu pmm,
+				dev_main_menu dmm
+				where
+				pmm.main_menu_id=dmm.main_menu_id and
+				pmm.user_id='" . $_SESSION["userid"] . "' and
+				pmm.company_id='" . $_SESSION['companyid'] . "'  and
+				dmm.module_id='" . $_SESSION['module_id'] . "' and
+				dmm.status=1 and pmm.status=1
+				order by dmm.sl";
+                }
                 $master_result=mysqli_query($conn, $result);
 				while($mainrow=mysqli_fetch_object($master_result)):  ?>
                     <?php if($mainrow->main_menu_name!="HRM Report"): ?>
@@ -55,10 +78,11 @@ $attendance_leave_pending=find_a_field('hrm_leave_info','COUNT(id)','leave_statu
 					
                 <ul class="nav child_menu">
                 <?php
-				$zone2="Select
+                if($_SESSION['language']=='Bangla') {
+				$result="Select
 				psm.*,
 				dsm.sub_menu_id,
-				dsm.sub_menu_name,
+				dsm.sub_menu_name_BN as sub_menu_name,
 				dsm.sub_url
 				from
 				user_permission_matrix_sub_menu psm,
@@ -71,7 +95,25 @@ $attendance_leave_pending=find_a_field('hrm_leave_info','COUNT(id)','leave_statu
 				dsm.module_id='".$_SESSION['module_id']."' and
 				dsm.status=1 and psm.status=1
 				order by dsm.sl";
-				$sub_menu=mysqli_query($conn, $zone2);
+                } else if($_SESSION['language']=='English') {
+                    $result="Select
+				psm.*,
+				dsm.sub_menu_id,
+				dsm.sub_menu_name_BN as sub_menu_name,
+				dsm.sub_url
+				from
+				user_permission_matrix_sub_menu psm,
+				dev_sub_menu dsm
+				where
+				dsm.sub_menu_id=psm.sub_menu_id and
+				psm.user_id='".$_SESSION["userid"]."' and
+				psm.company_id='".$_SESSION['companyid']."' and
+				psm.main_menu_id='".$mainrow->main_menu_id."' and
+				dsm.module_id='".$_SESSION['module_id']."' and
+				dsm.status=1 and psm.status=1
+				order by dsm.sl";
+                }
+				$sub_menu=mysqli_query($conn, $result);
 				while($subnrow=mysqli_fetch_object($sub_menu)): ?> 
                  <li><a href="<?=$subnrow->sub_url;?>"><?=$subnrow->sub_menu_name;?>
                          <?php if($subnrow->sub_menu_id=="20095") if($attendance_leave_pending>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$attendance_leave_pending.' </span>]'?><?php } else {echo'';} ?>

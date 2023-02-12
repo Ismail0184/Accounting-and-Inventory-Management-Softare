@@ -31,7 +31,12 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
               <div class="menu_section">
                 <h3></h3>
                 <ul class="nav side-menu">
-                <li><a href="dashboard.php"><i class="fa fa-home"></i>Home</a></li>
+                <li><a href="dashboard.php"><i class="fa fa-home"></i><?php
+                if($_SESSION['language']=='Bangla') {?>
+                    হোম <?php } else if($_SESSION['language']=='English') {?> Home
+                    <?php } ?>
+                    </a>
+                </li>
 
                 <?php
                 $result = mysqli_query($conn, "SET NAMES utf8");//the main trick
@@ -83,7 +88,26 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
                <?php if($mainrow->main_url=='#'){ ?>
                <ul class="nav child_menu">
                 <?php
-				$zone2="Select
+
+                if($_SESSION['language']=='Bangla') {
+                $result="Select
+				psm.*,
+				dsm.sub_menu_id,
+				dsm.sub_menu_name_BN as sub_menu_name,
+				dsm.sub_url
+				from
+				user_permission_matrix_sub_menu psm,
+				dev_sub_menu dsm
+				where
+				dsm.sub_menu_id=psm.sub_menu_id and
+				psm.user_id='".$_SESSION["userid"]."' and
+				psm.company_id='".$_SESSION['companyid']."' and
+				psm.main_menu_id='".$mainrow->main_menu_id."' and
+				dsm.module_id='".$_SESSION['module_id']."' and
+				dsm.status=1 and psm.status=1
+				order by dsm.sl";
+                } else if($_SESSION['language']=='English') {
+                    $result="Select
 				psm.*,
 				dsm.sub_menu_id,
 				dsm.sub_menu_name,
@@ -99,7 +123,10 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
 				dsm.module_id='".$_SESSION['module_id']."' and
 				dsm.status=1 and psm.status=1
 				order by dsm.sl";
-				$sub_menu=mysqli_query($conn, $zone2);
+                }
+
+
+				$sub_menu=mysqli_query($conn, $result);
 				while($subnrow=mysqli_fetch_object($sub_menu)): ?>
                 <li><a href="<?=$subnrow->sub_url;?>"><?=$subnrow->sub_menu_name;?>
                         <?php if($subnrow->sub_menu_id=="20023") if($grnverifi>0) : ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$grnverifi.' </span>]'?><?php  else : echo''; endif; ?>
