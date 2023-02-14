@@ -10,7 +10,6 @@ else
 $url.= $_SERVER['HTTP_HOST'];
 $url.= $_SERVER['REQUEST_URI'];
 
-
 $unique='voucherno';
 $unique_field='voucher_date';
 $table_journal_master="journal_voucher_master";
@@ -247,7 +246,7 @@ cost_center c
  j.entry_status='MANUAL' and 
  j.receipt_date not in ('1845854380') and 
  j.receipt_no='" . $_SESSION['initiate_credit_note'] . "'";
-$intercompany_ledger="Select a.ledger_id,a.ledger_name from accounts_ledger a,acc_intercompany i where a.ledger_id=i.ledger_id";
+$intercompany_ledger="Select a.ledger_id,concat(i.client_id, ' : ' ,a.ledger_name) as ledger_name from accounts_ledger a,acc_intercompany i where a.ledger_id=i.ledger_id";
 $dealer_info="Select a.ledger_id,a.ledger_name from accounts_ledger a,dealer_info d where a.ledger_id=d.account_code and d.canceled in ('Yes')";
 
 if($_GET['delete_commend']==1) {
@@ -384,7 +383,7 @@ $find_API_customer_list=find_all_field('dev_API_received','','API_name="API_cust
                         <?=advance_foreign_relation($dealer_info,$ledger_id_2);?>
                     </select></td>
                 <td rowspan="3" style="width:15%;vertical-align: middle" align="center">
-                    <textarea  id="narration" style="width:100%; height:149px; font-size: 11px; text-align:center"  name="narration"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['credit_note_last_narration'];?></textarea></td>
+                    <textarea  id="narration" style="width:100%; height:149px; font-size: 11px; text-align:center"  name="narration"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['credit_note_last_narration']. 'Ref: '.$_SESSION['initiate_credit_note'].',';?></textarea></td>
                 <td align="center" rowspan="2" style="width:10%; vertical-align: middle;">
                     <input type="number" id="amount_1" style="width:99%; font-size: 11px; text-align:center"  value="<?=$edit_value->dr_amt;?>"  name="amount_1" class="form-control col-md-7 col-xs-12" required placeholder="amt 1 & 2" autocomplete="off" step="any" min="1" />
                 </td>

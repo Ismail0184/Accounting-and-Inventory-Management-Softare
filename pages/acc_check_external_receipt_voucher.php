@@ -29,6 +29,11 @@ if(prevent_multi_submit()) {
         echo "<script>self.opener.location = '$page'; self.blur(); </script>";
         echo "<script>window.close(); </script>";
     }// if insert confirm
+
+    if(isset($_POST['delete']))
+    {
+        mysqli_query($conn, "DELETE from receipt where entry_status in ('UNCHECKED') and receipt_no=".$_GET[$unique]." and received_from in ('External')");
+    }
 }
 
 $ress="SELECT er.receipt_no,er.receipt_no,er.ledger_id,er.receiptdate as date,a.ledger_name,er.narration,er.cr_amt,er.dr_amt,er.cr_amt from receipt er,accounts_ledger a where 
@@ -52,12 +57,11 @@ $ress="SELECT er.receipt_no,er.receipt_no,er.ledger_id,er.receiptdate as date,a.
                     <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px">
                         <thead>
                         <tr style="background-color: bisque">
-                            <th>#</th>
-                            <th style="width: 12%">Ledger ID</th>
-                            <th>Accounts Description</th>
-                            <th style="text-align:center; width: 25%">Narration</th>
-                            <th style="text-align:center; width: 12%">Debit</th>
-                            <th style="text-align:center; width: 12%">Credit</th>
+                            <th style="width:1%">#</th>
+                            <th style="width:49%">Accounts Description</th>
+                            <th style="text-align:center; width: 30%">Narration</th>
+                            <th style="text-align:center; width: 10%">Debit</th>
+                            <th style="text-align:center; width: 10%">Credit</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -66,15 +70,19 @@ $ress="SELECT er.receipt_no,er.receipt_no,er.ledger_id,er.receiptdate as date,a.
                         while($data=mysqli_fetch_object($query)): ?>
                         <tr>
                             <td style="vertical-align: middle"><?=$sl=$sl+1?></td>
-                            <td style="vertical-align: middle"><?=$data->ledger_id?></td>
-                            <td style="vertical-align: middle"><?=$data->ledger_name?></td>
-                            <td style="vertical-align: middle"><?=$data->narration?></td>
+                            <td style="vertical-align: middle">
+                            <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
+                        <option></option>
+                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $data->ledger_id, 'status=1'); ?>
+                        </select>
+                    </td>
+                            <td style="vertical-align: middle"><textarea  id="narration" style="width:100%; height:50px; font-size: 11px; text-align:center"  name="narration"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=$data->narration?></textarea></td>
                             <td style="vertical-align: middle; text-align: right"><?=($data->dr_amt>0)? $data->dr_amt : '-' ?></td>
                             <td style="vertical-align: middle; text-align: right"><?=($data->cr_amt>0)? $data->cr_amt : '-' ?></td>
                         </tr>
                         <?php $total_dr_amt=$total_dr_amt+$data->dr_amt;$total_cr_amt=$total_cr_amt+$data->cr_amt; endwhile; ?>
                         <tr>
-                            <th style="vertical-align: middle" colspan="4">Total</th>
+                            <th style="vertical-align: middle" colspan="3">Total</th>
                             <th style="vertical-align: middle; text-align: right"><?=number_format($total_dr_amt,2)?></th>
                             <th style="vertical-align: middle; text-align: right"><?=number_format($total_cr_amt,2)?></th>
                         </tr>

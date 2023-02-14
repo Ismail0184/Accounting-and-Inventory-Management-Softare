@@ -3,11 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Accounts.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Accounts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_HRM.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_HRM.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Procurement.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Procurement.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Sales.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Warehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Warehouse.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_check_external_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_check_external_receipt_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_intercompany_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_intercompany_journal_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_entry_mod.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_entry_mod.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +58,9 @@
       <workItem from="1676119257193" duration="7285000" />
       <workItem from="1676128687021" duration="69000" />
       <workItem from="1676181335790" duration="7903000" />
+      <workItem from="1676203094423" duration="82000" />
+      <workItem from="1676265140941" duration="1236000" />
+      <workItem from="1676368616468" duration="272000" />
     </task>
     <servers />
   </component>
