@@ -93,7 +93,7 @@ if(isset($_GET[$unique]))
     while (list($key, $value)=each($data))
     { $$key=$value;}}
 
-$res='select al.'.$unique.',al.'.$unique.' as Code,al.'.$unique_field.',lg.group_name,IF(al.status=1, "Active", "Inactive") as status from '.$table.' al,ledger_group lg where 
+$res='select al.'.$unique.',al.'.$unique.' as Code,al.'.$unique_field.',lg.group_name,(select COUNT(ledger_id) from journal where ledger_id=al.ledger_id) as has_transaction,IF(al.status=1, "Active", "Inactive") as status from '.$table.' al,ledger_group lg where 
 al.ledger_group_id=lg.group_id order by al.ledger_group_id,al.'.$unique;
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
@@ -136,18 +136,24 @@ if(isset($_POST['deletedata'.$row->$unique]))
                         <?php require_once 'support_html.php';?>
 
 
-                        <div class="form-group" style="width: 100%">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger  Name<span class="required">*</span></label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="ledger_name"  required="required" name="ledger_name" value="<?=$ledger_name;?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size:11px" >
-                            </div></div>
+
                             
                             <div class="form-group" style="width: 100%">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger Group<span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="select2_single form-control" style="width:100%" name="ledger_group_id" id="ledger_group_id">
                                     <option></option>
-                             <?=foreign_relation('ledger_group', 'group_id', 'CONCAT(group_id," : ", group_name)', ($_GET[$unique]!='')? $ledger_group_id : $_POST[ledger_group_id], '1','order by group_id'); ?>                                    </select></div></div>
+                                    <?=foreign_relation('ledger_group', 'group_id', 'CONCAT(group_id," : ", group_name)', ($_GET[$unique]!='')? $ledger_group_id : $_POST[ledger_group_id], '1','order by group_id'); ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width: 100%">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger  Name<span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="ledger_name"  required="required" name="ledger_name" value="<?=$ledger_name;?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size:11px" >
+                                </div>
+                            </div>
 
                            
                             
