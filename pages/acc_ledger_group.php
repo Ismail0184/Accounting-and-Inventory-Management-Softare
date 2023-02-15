@@ -45,7 +45,10 @@ if(isset($_POST['modify']))
         $_POST['edit_by']=$_SESSION['userid'];
         $crud->update($unique);
         $type=1;
-		unset($_POST);}
+		unset($_POST);
+        echo "<script>self.opener.location = '$page'; self.blur(); </script>";
+        echo "<script>window.close(); </script>";
+    }
 		
 		
 if(isset($_POST['cancel'])){echo "<script>window.close(); </script>";}
@@ -63,7 +66,10 @@ if(isset($$unique)>0)
 {   $condition=$unique."=".$$unique;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data)){ $$key=$value;}}	
-$res='select lg.'.$unique.',lg.'.$unique.' as Code,lg.'.$unique_field.',(select COUNT(ledger_id) from accounts_ledger where ledger_group_id=lg.group_id) as no_of_child,(select sub_class_name from acc_sub_class where id=lg.group_sub_class) as sub_class,ac.class_name as class,IF(lg.status=1, "Active", "Inactive") as status from '.$table.' lg,
+$res='select lg.'.$unique.',lg.'.$unique.' as Code,lg.'.$unique_field.',(select COUNT(ledger_id) from accounts_ledger where ledger_group_id=lg.group_id) as no_of_child,ac.class_name as class,
+
+
+IF(lg.status=1, "Active",IF(lg.status="SUSPENDED", "SUSPENDED","Inactive")) as status  from '.$table.' lg,
                                 acc_class ac
                                 where 
                                 lg.group_class=ac.class_id                                 
@@ -74,7 +80,7 @@ while($row=mysqli_fetch_object($query)){
     if(isset($_POST['deletedata'.$row->$unique]))
     { if($row->no_of_child == 0){
         mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$row->$unique.""));
-    } else { echo "It has Child (".$row->no_of_child."). Hence you cannot delete the Ledger Group (".$row->ledger_group_id.")";}
+    } else { echo "<h4 style='color:red'>It has Child (".$row->no_of_child."). Hence you cannot delete the Ledger Group (".$row->$unique.")</h4>";}
         unset($_POST);
     }} // end of deletedata
 ?>
@@ -110,7 +116,7 @@ while($row=mysqli_fetch_object($query)){
         <div class="modal-body">
         <?php endif; ?>
         <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post"  style="font-size: 11px">
-        <input type="text" id="<?=$unique?>" style="width:100%; font-size:11px" name="<?=$unique?>" value="<?=$$unique?>" class="form-control col-md-7 col-xs-12" >
+        <input type="hidden" id="<?=$unique?>" style="width:100%; font-size:11px" name="<?=$unique?>" value="<?=$$unique?>" class="form-control col-md-7 col-xs-12" >
         <? require_once 'support_html.php';?>
         <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Group Name :<span class="required">*</span></label>
@@ -119,12 +125,15 @@ while($row=mysqli_fetch_object($query)){
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
+                                    <!--div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Class</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <select class="select2_single form-control" style="width:100%" name="group_sub_class" id="group_sub_class">
                                                     <option></option>
-                                                    <?php foreign_relation('acc_sub_class', 'id', 'CONCAT(id," : ", sub_class_name)',  $group_sub_class, '1','order by sub_class_name'); ?>                  </select></select></div></div>
+                                                    <?php foreign_relation('acc_sub_class', 'id', 'CONCAT(id," : ", sub_class_name)',  $group_sub_class, '1','order by sub_class_name'); ?>
+                                                </select>
+                                        </div>
+                                    </div-->
 
 
                                     <div class="form-group">
@@ -146,7 +155,8 @@ while($row=mysqli_fetch_object($query)){
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <select class="select2_single form-control" style="width:100%; font-size:11px" name="status" id="status">
                                     <option value="1"<?=($status=='1')? 'Selected' : '' ?>>Active</option>
-                                    <option value="1"<?=($status=='0')? 'Selected' : '' ?>>Inactive</option>
+                                    <option value="0"<?=($status=='0')? 'Selected' : '' ?>>Inactive</option>
+                                    <option value="SUSPENDED"<?=($status=='SUSPENDED')? 'Selected' : '' ?>>SUSPENDED</option>
                                 </select>
                             </div></div>
                             
