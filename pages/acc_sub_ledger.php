@@ -69,8 +69,16 @@ if(isset($$unique))
 {   $condition=$unique."=".$$unique;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data)){ $$key=$value;}}
-$sql="select a.sub_ledger_id,a.sub_ledger_id,a.sub_ledger, (select ledger_name from accounts_ledger where ledger_id=a.ledger_id) as ledger_name, c.group_name FROM sub_ledger a,accounts_ledger b,ledger_group c where
+$res="select a.sub_ledger_id,a.sub_ledger_id,a.sub_ledger, (select ledger_name from accounts_ledger where ledger_id=a.ledger_id) as ledger_name, c.group_name,(select COUNT(ledger_id) from journal where ledger_id=a.sub_ledger_id) as has_transactions FROM sub_ledger a,accounts_ledger b,ledger_group c where
 a.sub_ledger_id=b.ledger_id and b.ledger_group_id=c.group_id";
+$query=mysqli_query($conn, $res);
+while($row=mysqli_fetch_object($query)){
+    if(isset($_POST['deletedata'.$row->$unique]))
+    { if($row->has_transactions == 0){
+        mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$row->$unique.""));
+    } else { echo "<h4 style='color:red'>It has transactions (".$row->has_transactions."). Hence you cannot delete the Sub-Ledger ID (".$row->sub_ledger_id.")</h4>";}
+        unset($_POST);
+    }} // end of deletedata
 ?>
 
 
@@ -129,7 +137,7 @@ a.sub_ledger_id=b.ledger_id and b.ledger_group_id=c.group_id";
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <button type="submit" name="record" id="record"  style="font-size:12px" class="btn btn-primary">Add New</button></div></div> <?php endif; ?></form></div></div></div><?php if(!isset($_GET[$unique])): ?></div><?php endif; ?>
 <?php if(!isset($_GET[$unique])):?>
-    <?=$crud->report_templates_with_add_new($sql,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
+    <?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
 <?php endif; ?>
 <?=$html->footer_content();mysqli_close($conn);?>
 <?php ob_end_flush();

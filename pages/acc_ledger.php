@@ -98,7 +98,9 @@ al.ledger_group_id=lg.group_id order by al.ledger_group_id,al.'.$unique;
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
 if(isset($_POST['deletedata'.$row->$unique]))
-    {  mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$row->$unique.""));
+    { if($row->has_transaction == 0){
+        mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$row->$unique.""));
+    } else { echo "It has transactions (".$row->has_transaction."). Hence you cannot delete the Ledger ID (".$row->ledger_id.")";}
        unset($_POST);
     }} // end of deletedata
 ?>

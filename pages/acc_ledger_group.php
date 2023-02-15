@@ -63,11 +63,20 @@ if(isset($$unique)>0)
 {   $condition=$unique."=".$$unique;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data)){ $$key=$value;}}	
-$res='select lg.'.$unique.',lg.'.$unique.' as Code,lg.'.$unique_field.',(select COUNT(ledger_id) from accounts_ledger where ledger_group_id=lg.group_id) as "No. of Child",(select sub_class_name from acc_sub_class where id=lg.group_sub_class) as sub_class,ac.class_name as class,IF(lg.status=1, "Active", "Inactive") as status from '.$table.' lg,
+$res='select lg.'.$unique.',lg.'.$unique.' as Code,lg.'.$unique_field.',(select COUNT(ledger_id) from accounts_ledger where ledger_group_id=lg.group_id) as no_of_child,(select sub_class_name from acc_sub_class where id=lg.group_sub_class) as sub_class,ac.class_name as class,IF(lg.status=1, "Active", "Inactive") as status from '.$table.' lg,
                                 acc_class ac
                                 where 
                                 lg.group_class=ac.class_id                                 
                                  order by lg.'.$unique;
+
+$query=mysqli_query($conn, $res);
+while($row=mysqli_fetch_object($query)){
+    if(isset($_POST['deletedata'.$row->$unique]))
+    { if($row->no_of_child == 0){
+        mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$row->$unique.""));
+    } else { echo "It has Child (".$row->no_of_child."). Hence you cannot delete the Ledger Group (".$row->ledger_group_id.")";}
+        unset($_POST);
+    }} // end of deletedata
 ?>
 
 
