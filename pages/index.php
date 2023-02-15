@@ -60,7 +60,7 @@ header("Location: dashboard.php");
         <meta content="ERP software using php mysql" name="description" />
         <meta content="Md Ismail Hossain" name="author" />
         <!-- App favicon -->
-        <link rel="shortcut icon" href="../assets/login/images/logo.png">
+        <link rel="shortcut icon" href="../assets/images/icon/title.png">
         <!-- Bootstrap Css -->
         <link href="../assets/login/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
         <!-- Icons Css -->
