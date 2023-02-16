@@ -1,7 +1,6 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Sub Ledger';
-$proj_id=$_SESSION['proj_id'];
 $page="acc_sub_ledger.php";
 $now=time();
 $separator	= $_SESSION['separator'];
@@ -26,18 +25,18 @@ if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
     {
 
         $check="select sub_ledger_id from sub_ledger where sub_ledger='$name'";
-        if(mysql_num_rows(mysql_query($check))>0)
+        if(mysqli_num_rows(mysqli_query($conn, $check))>0)
 
-        {   $aaa=mysql_num_rows(mysql_query($check));
+        {   $aaa=mysqli_num_rows(mysqli_query($conn, $check));
             $ledger_id=$aaa[0];
             $type=0;
             $msg='Given Name('.$name.') is already exists.';
 
         } else {
             $sql_check="select ledger_group_id, balance_type, budget_enable from accounts_ledger where ledger_id='".$under."' limit 1";
-            $sql_query=mysql_query($sql_check);
-            if(mysql_num_rows($sql_query)>0){
-                $ledger_data=mysql_fetch_row($sql_query);
+            $sql_query=mysqli_query($conn, $sql_check);
+            if(mysqli_num_rows($sql_query)>0){
+                $ledger_data=mysqli_fetch_row($sql_query);
                 if(!ledger_excess($name))
                 {
 
@@ -117,7 +116,7 @@ while($row=mysqli_fetch_object($query)){
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Ledger:<span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <input type="hidden" id="<?=$unique?>" name="<?=$unique?>" value="" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
-                <input type="text" id="name"  required="required" name="name" value="" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
+                <input type="text" id="name"  required="required" name="name" value="<?=$sub_ledger?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
             </div></div>
 
 

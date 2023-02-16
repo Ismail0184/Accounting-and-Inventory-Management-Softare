@@ -35,13 +35,7 @@ if(isset($_REQUEST['ledger_name'])||isset($_REQUEST['ledger_id']))
 		{ $type=1;
 		  $msg='New Entry Successfully Inserted.';}}}
 
-
-
-
-
 //for Modify..................................
-
-
 
 if(isset($_POST['mledger']))
 
@@ -184,6 +178,7 @@ if(isset($_POST['deletedata'.$row->$unique]))
                                 <select class="select2_single form-control" style="width:100%; font-size:11px" name="status" id="status">
                                     <option value="1"<?=($status=='1')? ' Selected' : '' ?>>Active</option>
                                     <option value="0"<?=($status=='0')? ' Selected' : '' ?>>Inactive</option>
+                                    <option value="SUSPENDED"<?=($status=='SUSPENDED')? ' Selected' : '' ?>>SUSPENDED</option>
                                 </select>
                             </div></div>
                             

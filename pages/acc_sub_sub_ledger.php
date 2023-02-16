@@ -125,22 +125,30 @@ while($row=mysqli_fetch_object($query)){
 ?>
 <?php require_once 'header_content.php'; ?>
 <?php require_once 'body_content.php'; ?>
-
-                
-
-
-
- <div class="modal fade" id="addModal">
+<?php if(isset($_GET[$unique])): ?>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+    <div class="x_title">
+        <h2><?=$title;?></h2>
+        <ul class="nav navbar-right panel_toolbox">
+            <div class="input-group pull-right"></div>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+<?php else: ?>
+    <div class="modal fade" id="addModal">
     <div class="modal-dialog modal-md">
-      <div class="modal-content">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title">Add New Record
-          <button class="close" data-dismiss="modal">
-            <span>&times;</span>
-          </button>
-          </h5>
-        </div>
-        <div class="modal-body">
+    <div class="modal-content">
+    <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Add New Record
+            <button class="close" data-dismiss="modal">
+                <span>&times;</span>
+            </button>
+        </h5>
+    </div>
+    <div class="modal-body">
+<?php endif; ?>
                                 <form id="form2" name="form2" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
                                     <? require_once 'support_html.php';?>
                                         <div class="form-group" style="width: 100%">

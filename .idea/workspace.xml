@@ -7,7 +7,6 @@
       <change beforePath="$PROJECT_DIR$/pages/acc_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_ledger.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_sub_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_sub_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/top.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/top.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +63,7 @@
       <workItem from="1676265140941" duration="1236000" />
       <workItem from="1676368616468" duration="2813000" />
       <workItem from="1676433809172" duration="17453000" />
-      <workItem from="1676524114359" duration="4253000" />
+      <workItem from="1676524114359" duration="7360000" />
     </task>
     <servers />
   </component>

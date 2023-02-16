@@ -1364,11 +1364,6 @@ function date_value($date)
  return $time;
 }
 
-
-
-
-
-
 function unauthorised_page_tried_to_view($page_id,$url)
 {
 	    global $conn;
