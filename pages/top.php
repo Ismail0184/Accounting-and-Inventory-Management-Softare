@@ -16,11 +16,7 @@ top: -4px; font-size:15px;font-weight:bold; color:white"><?=strtoupper($_SESSION
                     </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                   <li><a href="profile.php"> Profile</a></li>
-                      <li><a href="dashboard.php?language=English">Language - English</a></li>
-                      <li><a href="dashboard.php?language=Bangla"">Language - Bangla</a></li>
                       <li><a href="account_settings.php"> Change Password</a></li>
-                      <?php if($_SESSION["userid"]=='10019'){ ?>
-                      <li><a href="permission_setup.php">Permission Setup</a></li> <?php } ?>
                       <li><a href="logout.php"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                   </ul>
                 </li>
@@ -56,14 +52,12 @@ top: -4px; font-size:15px;font-weight:bold; color:white"><?=strtoupper($_SESSION
                 </li>
                 <li role="presentation" class="dropdown">
                     <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-language"  style="color:white"></i>
-                        <span class="badge bg-green">
-                            <?php if($_SESSION['language']=='Bangla') {?>
+                        <?php if($_SESSION['language']=='Bangla') {?>
                             <image src="../assets/images/icon/bn.png" height="15" weight="15"></image>
-                            <?php } else if($_SESSION['language']=='English') {?>
+                        <?php } else if($_SESSION['language']=='English') {?>
                             <image src="../assets/images/icon/en.png" height="15" weight="15"></image>
-                            <?php } ?>
-                        </span>
+                        <?php } ?>
+
                     </a>
                     <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                         <li><image src="../assets/images/icon/en.png" height="25" weight="25"><a href="dashboard.php?language=English">English</a></li>

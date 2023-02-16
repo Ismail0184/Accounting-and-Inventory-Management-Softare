@@ -34,7 +34,7 @@ if(isset($$unique))
 {   $condition=$unique."=".$$unique;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data)){ $$key=$value;}}
-$query="Select r.report_id,r.report_id,r.report_name,ol.optgroup_label_name,m.module_short_name as module from $table r,module_reportview_optgroup_label ol,module_department m where  r.optgroup_label_id=ol.optgroup_label_id and r.module_id=m.module_id order by r.$unique ";
+$query="Select r.report_id,r.report_id,r.report_name,ol.optgroup_label_name,m.module_short_name as module,IF(r.status=1, 'Active', 'Inactive') as status from $table r,module_reportview_optgroup_label ol,module_department m where  r.optgroup_label_id=ol.optgroup_label_id and r.module_id=m.module_id order by r.$unique ";
 ?>
 <?php require_once 'header_content.php'; ?>
     <style>
