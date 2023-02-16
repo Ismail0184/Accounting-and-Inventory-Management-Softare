@@ -59,9 +59,10 @@ top: -4px; font-size:15px;font-weight:bold; color:white"><?=strtoupper($_SESSION
                         <?php } ?>
 
                     </a>
-                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                        <li><image src="../assets/images/icon/en.png" height="25" weight="25"><a href="dashboard.php?language=English">English</a></li>
-                        <li><image src="../assets/images/icon/bn.png" height="25" weight="25"><a href="dashboard.php?language=Bangla"">Bangla</a></li>
+
+                    <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
+                        <li><a href="dashboard.php?language=English">English</a></li>
+                        <li><a href="dashboard.php?language=Bangla"">Bangla</a></li>
                     </ul>
                 </li>
               </ul>

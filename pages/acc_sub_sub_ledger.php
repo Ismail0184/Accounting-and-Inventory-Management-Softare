@@ -2,40 +2,39 @@
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Sub sub Ledger';
 $table='sub_sub_ledger';
-$unique='id';
+$unique='sub_sub_ledger_id';
 $page="acc_sub_sub_ledger.php";
 $proj_id=$_SESSION['proj_id'];
 $now=time();
 $separator	= $_SESSION['separator'];
+
 if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
 {
-	//common part.............
-
 	$id=$_REQUEST['id'];
 	//echo $ledger_id;
-	$name		= mysql_real_escape_string($_REQUEST['name']);
+	$name		= mysqli_real_escape_string($conn, $_REQUEST['name']);
 	$name			= str_replace("'","",$name);
 	$name			= str_replace("&","",$name);
 	$name			= str_replace('"','',$name);
-	$under		= mysql_real_escape_string($_REQUEST['under']);
-	$balance	= mysql_real_escape_string($_REQUEST['balance']);
+	$under		= mysqli_real_escape_string($conn, $_REQUEST['under']);
+	$balance	= mysqli_real_escape_string($conn, $_REQUEST['balance']);
 	//end
 	if(isset($_POST['nledger']))
 	{
 		$check="select sub_sub_ledger_id from ".$table." where sub_sub_ledger='$name'";
 		//echo $check;
-		if(mysql_num_rows(mysql_query($check))>0)
+		if(mysqli_num_rows(mysqli_query($conn, $check))>0)
 		{
-			$aaa=mysql_num_rows(mysql_query($check));
+			$aaa=mysqli_num_rows(mysqli_query($conn, $check));
 			$ledger_id=$aaa[0];
 				$type=0;
 				$msg='Given Name('.$name.') is already exists.';
 		}
 		else
 		{	$sql_check="select ledger_id,balance_type,budget_enable from accounts_ledger where ledger_id='".$under."' limit 1";
-			$sql_query=mysql_query($sql_check);
-			if(mysql_num_rows($sql_query)>0){
-			$ledger_data=mysql_fetch_row($sql_query);
+			$sql_query=mysqli_query($conn, $sql_check);
+			if(mysqli_num_rows($sql_query)>0){
+			$ledger_data=mysqli_fetch_row($sql_query);
 				if(!ledger_excess($name))
 				{
 					$type=0;
@@ -48,7 +47,7 @@ if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
 
 					ledger_generate($sub_ledger_id,$name,$ledger_data[0],'',$ledger_data[1],'','', time(),$proj_id,$ledger_data[2]);
 					$type=1;
-					$msg='New Entry Successfully Inserted.';
+					echo "<h4 style='color:red'>New Entry Successfully Inserted.</h4>";
 			}}		else
 		{
 		$type=0;
@@ -62,11 +61,11 @@ if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
 	if(isset($_POST['mledger']))
 	{
 $search_sql="select 1 from sub_sub_ledger where `sub_sub_ledger_id`!='$id' and `sub_sub_ledger` = '$name' limit 1";
-if(mysql_num_rows(mysql_query($search_sql))==0)
+if(mysqli_num_rows(mysqli_query($conn, $search_sql))==0)
 	{
 		$sql_check="select ledger_id from accounts_ledger where ledger_id=".$under;
-		$sql_query=mysql_query($sql_check);
-		if(mysql_num_rows($sql_query)==1){
+		$sql_query=mysqli_query($conn, $sql_check);
+		if(mysqli_num_rows($sql_query)==1){
 		$id=$_REQUEST['id'];
 		$sql2="UPDATE `accounts_ledger` SET 
 		`ledger_name` 		= '$name'	
@@ -74,8 +73,8 @@ if(mysql_num_rows(mysql_query($search_sql))==0)
 		$sql="UPDATE `sub_sub_ledger` SET
 		`sub_sub_ledger` = '$name'
 		WHERE `sub_sub_ledger_id` =$id LIMIT 1";
-		$query=mysql_query($sql);
-		$query=mysql_query($sql2);
+		$query=mysqli_query($conn, $sql);
+		$query=mysqli_query($conn, $sql2);
 		$type=1;
 		$msg='Successfully Updated.';
 		}
@@ -97,31 +96,32 @@ if(mysql_num_rows(mysql_query($search_sql))==0)
 {
 $id=$_REQUEST['id'];
 $sql="delete from `sub_sub_ledger` where `sub_sub_ledger_id`='$id' limit 1";
-$query=mysql_query($sql);
+$query=mysqli_query($conn, $sql);
 $sql="delete from `accounts_ledger` where `ledger_id`='$id' limit 1";
-$query=mysql_query($sql);
+$query=mysqli_query($conn, $sql);
 		$type=1;
 		$msg='Successfully Deleted.';
 }
 
 	$ddd="select * from sub_sub_ledger where sub_sub_ledger_id='$id'";
-	$data=mysql_fetch_row(mysql_query($ddd));
+	$data=mysqli_fetch_row(mysqli_query($conn, $ddd));
 }
 
 
-$sql="select  z.sub_sub_ledger_id,z.sub_sub_ledger_id,z.sub_sub_ledger,
-                              z.sub_ledger_id,
-                              a.sub_ledger
-                              FROM ".$table." z,
-                              sub_ledger a,
-                              accounts_ledger b,
-                              ledger_group c 
-
-                              where 
+$res="select  z.sub_sub_ledger_id,z.sub_sub_ledger_id,z.sub_sub_ledger,z.sub_ledger_id,a.sub_ledger
+                              FROM ".$table." z,sub_ledger a, accounts_ledger b,ledger_group c where 
                              a.ledger_id=b.ledger_id and 
                              b.ledger_group_id=c.group_id and 
-                             z.sub_ledger_id=a.sub_ledger_id and 
-                             c.group_for=".$_SESSION['usergroup'];
+                             z.sub_ledger_id=a.sub_ledger_id";
+$query=mysqli_query($conn, $res);
+while($row=mysqli_fetch_object($query)){
+    if(isset($_POST['deletedata'.$row->$unique]))
+    { if($row->has_transactions == 0){
+        mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$row->$unique.""));
+        mysqli_query($conn, ("DELETE FROM accounts_ledger WHERE ledger_id=".$row->$unique.""));
+    } else { echo "<h4 style='color:red'>It has transactions (".$row->has_transactions."). Hence you cannot delete the Sub-Ledger ID (".$row->sub_ledger_id.")</h4>";}
+        unset($_POST);
+    }} // end of deletedata
 ?>
 <?php require_once 'header_content.php'; ?>
 <?php require_once 'body_content.php'; ?>
@@ -175,5 +175,5 @@ $sql="select  z.sub_sub_ledger_id,z.sub_sub_ledger_id,z.sub_sub_ledger,
       </div>
     </div>
   </div>
-<?=$crud->report_templates_with_add_new($sql,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
+<?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
 <?=$html->footer_content();?>

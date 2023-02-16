@@ -13,12 +13,12 @@ $$unique=$_GET[$unique];
 if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
 
 {   $id=$_REQUEST['id'];
-    $name		= mysql_real_escape_string($_REQUEST['name']);
+    $name		= mysqli_real_escape_string($conn, $_REQUEST['name']);
     $name		= str_replace("'","",$name);
     $name		= str_replace("&","",$name);
     $name		= str_replace('"','',$name);
-    $under		= mysql_real_escape_string($_REQUEST['under']);
-    $balance	= mysql_real_escape_string($_REQUEST['balance']);
+    $under		= mysqli_real_escape_string($conn, $_REQUEST['under']);
+    $balance	= mysqli_real_escape_string($conn, $_REQUEST['balance']);
     //end
 
     if(isset($_POST['record']))
@@ -48,7 +48,8 @@ if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
 
                     $sub_ledger_id=number_format(next_sub_ledger_id($under), 0, '.', '');
                     sub_ledger_generate($sub_ledger_id,$name, $under, $balance, $now, $proj_id);
-                    ledger_generate($sub_ledger_id,$name,$ledger_data[0],'',$ledger_data[1],'','', time(),$proj_id,$ledger_data[2]);
+                    $ledger_type='sub-ledger';
+                    ledger_generate($sub_ledger_id,$name,$ledger_data[0],'',$ledger_data[1],'','', time(),$proj_id,$ledger_data[2],$ledger_type);
                     $type=1;
                     $msg='New Entry Successfully Inserted.';
                 } }  else  {

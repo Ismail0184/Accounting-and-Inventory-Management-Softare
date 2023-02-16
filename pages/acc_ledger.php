@@ -30,7 +30,8 @@ if(isset($_REQUEST['ledger_name'])||isset($_REQUEST['ledger_id']))
 	$msg='Given Name('.$ledger_name.') is already exists.';
 	} else {
 	$ledger_id=approximate_ledger_id($ledger_group_id);
-	 if(ledger_generate($ledger_id,$ledger_name,$ledger_group_id,$opening_balance,$balance_type,$depreciation_rate,$credit_limit, $now,$proj_id,$budget_enable))
+    $type= 'ledger';
+	 if(ledger_generate($ledger_id,$ledger_name,$ledger_group_id,$opening_balance,$balance_type,$depreciation_rate,$credit_limit, $now,$proj_id,$budget_enable,$type))
 		{ $type=1;
 		  $msg='New Entry Successfully Inserted.';}}}
 
