@@ -51,6 +51,7 @@ if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
                     ledger_generate($sub_ledger_id,$name,$ledger_data[0],'',$ledger_data[1],'','', time(),$proj_id,$ledger_data[2],$ledger_type);
                     $type=1;
                     $msg='New Entry Successfully Inserted.';
+                    unset($_POST);
                 } }  else  {
 
                 $type=0;
@@ -115,7 +116,7 @@ while($row=mysqli_fetch_object($query)){
         <div class="form-group" style="width: 100%">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Ledger:<span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                <input type="hidden" id="<?=$unique?>" name="<?=$unique?>" value="" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
+                <input type="hidden" id="<?=$unique?>" name="<?=$unique?>" value="<?=$$unique?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
                 <input type="text" id="name"  required="required" name="name" value="<?=$sub_ledger?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
             </div></div>
 
@@ -125,7 +126,7 @@ while($row=mysqli_fetch_object($query)){
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <select class="select2_single form-control" required name="under" id="under" style="width: 100%; font-size: 12px">
                     <option value=""></option>
-                    <?=foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $ledger_id, '1','order by ledger_id,ledger_name'); ?>   </select></div></div>
+                    <?=foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', ($_POST["under"]>0) ? $_POST["under"] : $ledger_id, '1','order by ledger_id,ledger_name'); ?>   </select></div></div>
         <?php if($_GET[$unique]):  ?>
             <div class="form-group" style="margin-left:30%">
                 <div class="col-md-6 col-sm-6 col-xs-12">
