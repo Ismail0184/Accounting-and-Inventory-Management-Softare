@@ -52,7 +52,7 @@ if(isset($$unique)) {
     { $$key=$value;}}
 
 $sql="select group_id,concat(group_id,' : ',group_name) from item_group order by group_id";
-$res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.',IF(status=1, "Active", "Inactive") as status from '.$table.' order by '.$unique;
+$res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.',IF(status=1, "Active",IF(status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' order by '.$unique;
 ?>
 <?php require_once 'header_content.php'; ?>
 <?php require_once 'body_content.php'; ?>
@@ -94,7 +94,6 @@ $res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.',IF(stat
                                         </div>
                                     </div>
 
-
                                     <div class="form-group">
                                         <?require_once 'support_html.php';?>
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Sub Group Name<span class="required">*</span></label>
@@ -114,7 +113,8 @@ $res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.',IF(stat
                                                      <option value="0"<?=($status=='0')? ' Selected' : '' ?>>Inactive</option>
                                                      <option value="SUSPENDED"<?=($status=='SUSPENDED')? ' Selected' : '' ?>>SUSPENDED</option>
                                                  </select>
-                                             </div></div>
+                                             </div>
+                                         </div>
 
                                     <div class="form-group" style="margin-left:40%">
                                         <div class="col-md-6 col-sm-6 col-xs-12">

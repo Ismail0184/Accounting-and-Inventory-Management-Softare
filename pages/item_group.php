@@ -69,7 +69,7 @@ if(isset($$unique))
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
-$res='select '.$unique.','.$unique.' as group_code,group_name,IF(status=1, "Active", "Inactive") as status from '.$table.' order by '.$unique;
+$res='select '.$unique.','.$unique.' as group_code,group_name,IF(status=1, "Active",IF(status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' order by '.$unique;
 ?>
 
 <?php require_once 'header_content.php'; ?>
