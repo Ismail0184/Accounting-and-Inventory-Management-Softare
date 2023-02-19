@@ -55,7 +55,7 @@ if(isset($$unique))
     while (list($key, $value)=each($data))
     { $$key=$value;}}
 
-$res = 'select * from '.$table.' order by '.$unique;
+$res = 'select '.$unique.', '.$unique.' as Code,'.$unique_field.',IF(status=1, "Active","Inactive") as status from '.$table.' order by ' . $unique;
 ?>
 
 <?php require_once 'header_content.php'; ?>
