@@ -75,6 +75,7 @@ $res='select
 								g.group_name,
                                 i.unit_name,
 								ib.brand_name,
+								(select Count(item_id) from journal_item where item_id=i.item_id) as has_entry,
 								i.status
                                 from
                                 '.$table.' i,
@@ -88,17 +89,22 @@ $res='select
 								sg.group_id=g.group_id and
                                 ib.id=i.brand_id
                                 order by g.group_id,sg.sub_group_id,i.'.$unique;
+$query=mysqli_query($conn, $res);
+while($row=mysqli_fetch_object($query)){
+    if(isset($_POST['deletedata'.$row->$unique]))
+    { if($row->has_entry == 0){
+        mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$row->$unique.""));
+    } else { echo "It has entry (".$row->has_transaction."). Hence you cannot delete the Item Id (".$row->item_id.")";}
+        unset($_POST);
+    }}
 
-								 $sql = "SELECT sg.sub_group_id,concat(sg.sub_group_id,' : ',sg.sub_group_name,' : ',g.group_name) FROM
-                        item_sub_group sg,
-                        item_group g
-                        where
-                        sg.group_id=g.group_id
-                        order by sg.sub_group_id";
+$sql = "SELECT sg.sub_group_id,concat(sg.sub_group_id,' : ',sg.sub_group_name,' : ',g.group_name) FROM item_sub_group sg,item_group g where sg.group_id=g.group_id order by sg.sub_group_id";
 $sql_unit="select unit_name, unit_name from unit_management";
 $sql_item_type="Select item_type,item_type from item_type";
 $sql_brand="Select id,brand_name from item_brand";
-$sql_brand_category="Select category_name,category_name from brand_category"
+$sql_brand_category="Select category_name,category_name from brand_category";
+
+
 ?>
 <?php require_once 'header_content.php'; ?>
 <style>
@@ -146,14 +152,14 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                     <? require_once 'support_html.php';?>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Custom Code<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Custom Code<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" name="finish_goods_code" id="finish_goods_code" value="<?=$finish_goods_code?>" style="width:100%; font-size: 12px" class="form-control col-md-7 col-xs-12" required />
                                         </div></div>
 
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Item Name<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Item Name<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="item_name" style="width:100%; font-size: 12px"  required   name="item_name" value="<?=$item_name;?>" class="form-control col-md-7 col-xs-12" >
                                         </div>
@@ -167,7 +173,7 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Group<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Group<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select class="select2_single form-control" style="width: 100%;" tabindex="-1" required="required" name="sub_group_id" id="sub_group_id">
                                                 <option></option>
@@ -177,7 +183,7 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Consumable<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Consumable<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="consumable_type" id="consumable_type">
                                                 <option value="<?=$consumable_type?>"><?=$consumable_type?></option>
@@ -189,7 +195,7 @@ $sql_brand_category="Select category_name,category_name from brand_category"
 
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Nature<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Nature<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="product_nature" id="product_nature">
                                                 <option value="<?=$product_nature?>"><?=$product_nature?></option>
@@ -201,8 +207,8 @@ $sql_brand_category="Select category_name,category_name from brand_category"
 
 
 
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Type:<span class="required">*</span></label>
+                                    <!--div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Type:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="exim_status" id="exim_status">
                                                 <option></option>
@@ -210,52 +216,54 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                                 <option value="Export" <?php if($exim_status=='Export') echo 'selected' ?>>Export</option>
                                                 <option value="Import" <?php if($exim_status=='Import') echo 'selected' ?>>Import</option>
                                             </select></div>
-                                    </div>
+                                    </div-->
 
 
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Category<span class="required">*</span></label>
+                                    <!---div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Category<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="brand_category" id="brand_category">                              <option></option>
                                                 <?=advance_foreign_relation($sql_brand_category,$brand_category);?>
                                                 </select>
                                                 </div>
-                                    </div>
+                                    </div-->
 
 
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Brand<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Brand<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="brand_id" id="brand_id">
                                                 <option value="<?=$brand_id?>" selected="selected"><?=$brand_id?></option>
                                                 <?=advance_foreign_relation($sql_brand,$brand_id);?>
                                                 </select>
-                                                </div>
-                                                </div>
+                                        </div>
+                                    </div>
 
 
 
 
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Type<span class="required">*</span></label>
+                                    <!--div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Type<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="sales_item_type" id="sales_item_type"><option></option>
                                             <?=advance_foreign_relation($sql_item_type,$sales_item_type);?>
-                                            </select></div></div>
+                                            </select>
+                                        </div>
+                                    </div-->
 
 
 
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Unit Name<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Unit Name<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <select style="width: 49%; font-size:11px" class="select2_single form-control" name="unit_name" id="unit_name">
-                                        <option></option>
+                                        <option value="0">--purchase unit--</option>
                                         <?=advance_foreign_relation($sql_unit,$unit_name);?>
                                         </select>
                                         <select style="width: 49%; font-size:11px" class="select2_single form-control" name="pack_unit" id="pack_unit">
-                                        <option></option>
+                                        <option value="0">--sales unit--</option>
                                         <?=advance_foreign_relation($sql_unit,$pack_unit);?>
                                         </select>
                                         </div>
@@ -267,7 +275,7 @@ $sql_brand_category="Select category_name,category_name from brand_category"
 
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Pack Size<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Pack Size<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="pack_size" style="width:100%; font-size: 12px"  required   name="pack_size" value="<?=$pack_size;?>" class="form-control col-md-7 col-xs-12" >
                                         </div>
@@ -276,14 +284,14 @@ $sql_brand_category="Select category_name,category_name from brand_category"
 
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Gross Weight<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Gross Weight<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="g_weight" style="width:100%; font-size: 12px"    name="g_weight" value="<?=$g_weight;?>" class="form-control col-md-7 col-xs-12" >
                                         </div>
                                     </div>
 
  <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Shelf Life:<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Shelf Life:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="shelf_life" style="width:100%; font-size: 12px" name="shelf_life" value="<?=$shelf_life;?>" class="form-control col-md-7 col-xs-12" >
                                         </div>
@@ -292,7 +300,7 @@ $sql_brand_category="Select category_name,category_name from brand_category"
 
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Cost<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Cost<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="material_cost" style="width:33%; font-size: 11px; float:left"    name="material_cost" value="<?=$material_cost;?>" class="form-control col-md-7 col-xs-12" placeholder="material_cost" title="Material Cost">
 
@@ -306,20 +314,20 @@ $sql_brand_category="Select category_name,category_name from brand_category"
 
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Price:<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Price:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="d_price" style="width:33%; font-size: 11px; left:left" name="d_price" value="<?=$d_price;?>" class="form-control col-md-7 col-xs-12" placeholder="DP" title="Dealer Price">
                                             <input type="text" id="t_price" style="width:33%; font-size: 11px; margin-left:1px" name="t_price" value="<?=$t_price;?>" class="form-control col-md-7 col-xs-12" placeholder="TP" title="Trade Price">                                             <input type="text" id="m_price" style="width:33%; font-size: 11px; float:right" name="m_price" value="<?=$m_price;?>" class="form-control col-md-7 col-xs-12" placeholder="MRP" title="Market Price">
                                         </div>
                                     </div>
 
-                                   <div class="form-group">
+                                   <!--div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Dealer Comission (%):</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="com_on_d_price" style="width:33%; font-size: 11px; left:left" name="com_on_d_price" value="<?=$com_on_d_price;?>" class="form-control col-md-7 col-xs-12" placeholder="DP" title="Dealer Price">
                                             <input type="text" id="com_on_t_price" style="width:33%; font-size: 11px; margin-left:1px" name="com_on_t_price" value="<?=$com_on_t_price;?>" class="form-control col-md-7 col-xs-12" placeholder="TP" title="Trade Price">                                             <input type="text" id="com_on_m_price" style="width:33%; font-size: 11px; float:right" name="com_on_m_price" value="<?=$com_on_m_price;?>" class="form-control col-md-7 col-xs-12" placeholder="MRP" title="Market Price">
                                         </div>
-                                    </div>
+                                    </div-->
 
 
 
@@ -346,17 +354,18 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                     </div>
 
 
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Invoice Qty Type:<span class="required">*</span></label>
+                                    <!--div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Invoice Qty Type:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <select style="width: 100%; font-size:11px" class="select2_single form-control" name="quantity_type" id="quantity_type">
                                         <option></option>
                                         <?=advance_foreign_relation($sql_unit,$quantity_type);?>
                                         </select>
-                                        </div></div>
+                                        </div>
+                                    </div-->
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status:<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="status" id="status">
                                                 <option value="Active" <?php if($status=='Active') echo 'selected' ?>>Active</option>
@@ -365,8 +374,8 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Comission Status:<span class="required">*</span></label>
+                                    <!--div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Comission Status:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="commission_status" id="commission_status">
                                                 <option></option>
@@ -380,10 +389,10 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="revenue_persentage" style="width:100%; font-size: 11px; float:left" name="revenue_persentage" value="<?=$revenue_persentage;?>" class="form-control col-md-7 col-xs-12" placeholder="Persentage">
                                         </div>
-                                    </div>
+                                    </div-->
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">VAT Item Group:<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">VAT Item Group:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select style="width: 100%" class="select2_single form-control" name="VAT_item_group" id="VAT_item_group">
                                               <option></option>
@@ -402,7 +411,7 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                     </div>
 
                                     <!--div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Serial:<span class="required">*</span></label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Serial:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="serial" style="width:100%; font-size: 12px" name="serial" value="<?=$serial;?>" class="form-control col-md-7 col-xs-12" >
                                         <!--/div>
@@ -417,11 +426,16 @@ $sql_brand_category="Select category_name,category_name from brand_category"
                                     <?php else : ?>
                                     <div class="form-group" style="margin-left:40%">
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <button type="submit" name="record" id="record"  style="font-size:12px" class="btn btn-primary">Add New Item</button></div></div> <?php endif; ?>
-
-
-                        </form>
-                    </div></div></div><?php if(!isset($_GET[$unique])): ?></div><?php endif; ?>
+                                            <button type="submit" name="record" id="record"  style="font-size:12px" class="btn btn-primary">Add New Item</button>
+                                        </div>
+                                    </div> <?php endif; ?>
+                                </form>
+        </div>
+      </div>
+    </div>
+    <?php if(!isset($_GET[$unique])): ?>
+</div>
+                            <?php endif; ?>
 <?php if(!isset($_GET[$unique])):?>
 <?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
 <?php endif; ?>

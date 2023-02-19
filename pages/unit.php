@@ -79,7 +79,7 @@ if(isset($$unique))
     { $$key=$value;}
 
 }
-$res='select '.$unique.','.$unique.' as Code,'.$unique_field.',unit_detail from '.$table.' order by '.$unique;
+$res='select '.$unique.','.$unique.' as Code,'.$unique_field.',unit_detail,IF(status=1, "Active", "Inactive") as status from '.$table.' order by '.$unique;
 ?>
 
 
