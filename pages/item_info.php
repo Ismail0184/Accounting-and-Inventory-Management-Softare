@@ -193,7 +193,6 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                             </select></div>
                                     </div>
 
-
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Nature<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
@@ -202,10 +201,9 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                                 <option value="Salable">Salable</option>
                                                 <option value="Purchasable">Purchasable</option>
                                                 <option value="Both">Both</option>
-                                            </select></div></div>
-
-
-
+                                            </select>
+                                        </div>
+                                    </div>
 
                                     <!--div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Type:<span class="required text-danger">*</span></label>
@@ -240,9 +238,6 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                         </div>
                                     </div>
 
-
-
-
                                     <!--div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Type<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
@@ -251,9 +246,6 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                             </select>
                                         </div>
                                     </div-->
-
-
-
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Unit Name<span class="required text-danger">*</span></label>
@@ -269,19 +261,12 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                         </div>
                                     </div>
 
-
-
-
-
-
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Pack Size<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="pack_size" style="width:100%; font-size: 12px"  required   name="pack_size" value="<?=$pack_size;?>" class="form-control col-md-7 col-xs-12" >
                                         </div>
                                     </div>
-
-
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Gross Weight<span class="required text-danger">*</span></label>
@@ -290,14 +275,12 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                         </div>
                                     </div>
 
- <div class="form-group">
+                                    <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Shelf Life:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="shelf_life" style="width:100%; font-size: 12px" name="shelf_life" value="<?=$shelf_life;?>" class="form-control col-md-7 col-xs-12" >
                                         </div>
                                     </div>
-
-
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Cost<span class="required text-danger">*</span></label>
@@ -308,10 +291,6 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                             <input type="text" id="production_cost" required style="width:33%; font-size: 11px; float:right" name="production_cost" value="<?=$production_cost;?>" class="form-control col-md-7 col-xs-12" placeholder="COGS" title="COGS">
                                         </div>
                                     </div>
-
-
-
-
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Price:<span class="required text-danger">*</span></label>
@@ -329,8 +308,6 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                         </div>
                                     </div-->
 
-
-
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">SD :</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
@@ -340,15 +317,10 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                         </div>
                                     </div>
 
-
-
-
-
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">VAT :</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" id="VAT_percentage" style="width:48%; font-size: 11px; float:left" name="VAT_percentage" value="<?=$VAT_percentage;?>" class="form-control col-md-7 col-xs-12" placeholder="Percentage">
-
                                             <input type="text" id="VAT" style="width:48%; font-size: 11px; float:right" name="VAT" value="<?=$VAT;?>" class="form-control col-md-7 col-xs-12" placeholder="VAT Price">
                                         </div>
                                     </div>
