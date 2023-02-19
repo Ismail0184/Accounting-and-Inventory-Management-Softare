@@ -52,7 +52,7 @@ if(isset($$unique)) {
     { $$key=$value;}}
 
 $sql="select group_id,concat(group_id,' : ',group_name) from item_group order by group_id";
-$res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.' from '.$table.' order by '.$unique;
+$res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.',IF(status=1, "Active", "Inactive") as status from '.$table.' order by '.$unique;
 ?>
 <?php require_once 'header_content.php'; ?>
 <?php require_once 'body_content.php'; ?>
@@ -90,7 +90,9 @@ $res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.' from '.
                                             <select class="select2_single form-control" style="width:100%" name="group_id" id="group_id">
                                                 <option></option>
                                                  <?=advance_foreign_relation($sql,$group_id);?>
-                                               </select></div></div>
+                                               </select>
+                                        </div>
+                                    </div>
 
 
                                     <div class="form-group">
@@ -103,6 +105,17 @@ $res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.' from '.
 
 
                                      <?php if($_GET[$unique]):  ?>
+
+                                         <div class="form-group" style="width: 100%">
+                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status</label>
+                                             <div class="col-md-6 col-sm-6 col-xs-12">
+                                                 <select class="select2_single form-control" style="width:100%; font-size:11px" name="status" id="status">
+                                                     <option value="1"<?=($status=='1')? ' Selected' : '' ?>>Active</option>
+                                                     <option value="0"<?=($status=='0')? ' Selected' : '' ?>>Inactive</option>
+                                                     <option value="SUSPENDED"<?=($status=='SUSPENDED')? ' Selected' : '' ?>>SUSPENDED</option>
+                                                 </select>
+                                             </div></div>
+
                                     <div class="form-group" style="margin-left:40%">
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <button type="submit" name="modify" id="modify" class="btn btn-primary">Modify</button>

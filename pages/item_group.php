@@ -69,7 +69,7 @@ if(isset($$unique))
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
-$res='select '.$unique.','.$unique.' as group_code,group_name from '.$table.' order by '.$unique;
+$res='select '.$unique.','.$unique.' as group_code,group_name,IF(status=1, "Active", "Inactive") as status from '.$table.' order by '.$unique;
 ?>
 
 <?php require_once 'header_content.php'; ?>
@@ -110,15 +110,25 @@ $res='select '.$unique.','.$unique.' as group_code,group_name from '.$table.' or
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Group Name<span class="required">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             
-                                            <input type="text" id="group_name" style="width:100%"  required   name="group_name" value="<?php echo $group_name;?>" class="form-control col-md-7 col-xs-12" >
+                                            <input type="text" id="group_name" style="width:100%; font-size: 11px"  required   name="group_name" value="<?php echo $group_name;?>" class="form-control col-md-7 col-xs-12" >
                                         </div>
                                     </div>
 
 
                                     <?php if($_GET[$unique]):  ?>
+                                        <div class="form-group" style="width: 100%">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select class="select2_single form-control" style="width:100%; font-size:11px" name="status" id="status">
+                                                    <option value="1"<?=($status=='1')? ' Selected' : '' ?>>Active</option>
+                                                    <option value="0"<?=($status=='0')? ' Selected' : '' ?>>Inactive</option>
+                                                    <option value="SUSPENDED"<?=($status=='SUSPENDED')? ' Selected' : '' ?>>SUSPENDED</option>
+                                                </select>
+                                            </div></div>
+
                                     <div class="form-group" style="margin-left:40%">
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <button type="submit" name="modify" id="modify" class="btn btn-primary">Modify Group</button>
+                                                <button type="submit" name="modify" id="modify" style="font-size:12px" class="btn btn-primary">Modify Group</button>
                                         </div></div>
                                     <?php else : ?>
                                     <div class="form-group" style="margin-left:40%">
