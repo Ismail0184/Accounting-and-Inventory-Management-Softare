@@ -101,7 +101,7 @@ if(isset($$unique))
     { $$key=$value;}}
 
 
-$res="SELECT * from ".$table."";
+$res="SELECT id,section_name,company_name,com_short_name,address,contact_person,contact_number,website,VAT_regno,logo,logo_color,TIN,BIN,Trade_license_no,telephone,IF(status=1, 'Active','Inactive') as status from ".$table."";
 $result=mysqli_query($conn, $res);
 while($data=mysqli_fetch_object($result)){
     $id=$data->ZONE_CODE;
@@ -148,13 +148,16 @@ while($data=mysqli_fetch_object($result)){
                         <div class="modal-body">
                             <?php endif; ?>
                             <form  name="addem" id="addem" class="form-horizontal form-label-left" style="font-size: 11px" method="post" enctype="multipart/form-data">
-                                
-                            
-                            
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Territory<span class="required">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Section Id<span class="required">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                        <input type="file" name="fileToUpload">
+                                        <input type="text" class="form-control" style="font-size: 11px" name="section_id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">section_name<span class="required">*</span></label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="text" class="form-control" style="font-size: 11px" name="section_id">
                                     </div>
                                 </div>
 

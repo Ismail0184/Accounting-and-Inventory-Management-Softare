@@ -77,6 +77,8 @@ if(isset($_POST['modify']))
         $_POST['edit_by']=$_SESSION['userid'];
         $crud->update($unique);
         $type=1;
+        echo "<script>self.opener.location = '$page'; self.blur(); </script>";
+        echo "<script>window.close(); </script>";
 		}
 
 
@@ -134,7 +136,7 @@ if(isset($_POST['deletedata'.$row->$unique]))
 
 
 
-                            
+                            <?php if(!isset($_GET[$unique])): ?>
                             <div class="form-group" style="width: 100%">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger Group<span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -144,6 +146,7 @@ if(isset($_POST['deletedata'.$row->$unique]))
                                     </select>
                                 </div>
                             </div>
+                            <?php endif; ?>
 
                             <div class="form-group" style="width: 100%">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger  Name<span class="required">*</span></label>

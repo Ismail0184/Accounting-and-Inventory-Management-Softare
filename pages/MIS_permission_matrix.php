@@ -48,14 +48,10 @@ if(isset($_POST['cancel']))
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="select2_single form-control" style="width: 50%; flot:left" tabindex="-1" required="required" name="user_id" id="user_id">
                                 <option></option>
-                                <? $sql_user_id="SELECT  u.user_id,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',d.DEPT_SHORT_NAME,')') FROM 						 
-							personnel_basic_info p,
-							department d,
-							users u
-							 where p.PBI_JOB_STATUS='In Service' and 							 
-							 p.PBI_DEPARTMENT=d.DEPT_ID and 
-							 u.PBI_ID=p.PBI_ID		 
-							  order by p.PBI_NAME";
+                                <? $sql_user_id="SELECT  user_id,concat(user_id,' : ',fname) as uesrname FROM 
+							users 
+							 where 1		 
+							  order by user_id";
                                 advance_foreign_relation($sql_user_id,$_SESSION[MIS_permission_matrix]);?>
                             </select>
                        <?php if(isset($_SESSION[MIS_permission_matrix])){ ?>
