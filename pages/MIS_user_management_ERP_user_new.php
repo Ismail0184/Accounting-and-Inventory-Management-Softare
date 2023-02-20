@@ -6,6 +6,7 @@ $now=time();
 $unique='user_id';
 $unique_field='fname';
 $table="users";
+$table2="user_activity_management";
 $page="MIS_user_management_ERP_user.php";
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
@@ -19,6 +20,8 @@ if(prevent_multi_submit()){
         {
             $_POST['entry_date'] = date("Y-m-d"); 
             $_POST['status'] = '1';            
+            $crud->insert();
+            $crud      =new crud($table2);
             $crud->insert();
             unset($_POST);
             unset($$unique);

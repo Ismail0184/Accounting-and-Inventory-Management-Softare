@@ -1,5 +1,5 @@
-<?php
-require_once 'support_file.php';
+<?php require_once 'support_file.php';?>
+<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Intercompany Receipt Voucher';
 
 
@@ -270,7 +270,7 @@ $find_API_customer_list=find_all_field('dev_API_received','','API_name="API_cust
         var targetWin = window.open(pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
     }
 </script>
-<?php require_once 'body_content_entry_mod.php'; ?>
+<?php require_once 'body_content_nva_sm.php'; ?>
 
 <div class="col-md-8 col-xs-12">
     <div class="x_panel">

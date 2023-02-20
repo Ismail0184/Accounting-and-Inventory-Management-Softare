@@ -2,11 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/MIS_user_management_ERP_user_new.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/developer_create_company.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/developer_create_company.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_user_management_ERP_user_new.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_user_management_ERP_user_new.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_cheque_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_cheque_payment_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_contra_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_contra_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_intercompany_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_intercompany_journal_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_journal_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher_single.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher_single.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/production_wastage_issue.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/production_wastage_issue.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,18 +39,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/mac/Software/OOP ERP/icpd.icpbd-erp.com/pages",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mac/Software/OOP ERP/icpd.icpbd-erp.com/pages&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/pages" />
@@ -71,7 +76,8 @@
       <workItem from="1676524114359" duration="15222000" />
       <workItem from="1676693926515" duration="2543000" />
       <workItem from="1676780043686" duration="17900000" />
-      <workItem from="1676865955018" duration="3586000" />
+      <workItem from="1676865955018" duration="4776000" />
+      <workItem from="1676908229873" duration="4200000" />
     </task>
     <servers />
   </component>

@@ -211,7 +211,7 @@ journal_info j,
  ";
 ?>
 
-<?php require_once 'header_content.php'; ?>
+<?php require_once 'body_content_nva_sm.php'; ?>
     <style>
         input[type=text]:focus {
             background-color: lightblue;

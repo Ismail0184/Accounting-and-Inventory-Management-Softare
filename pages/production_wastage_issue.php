@@ -1,162 +1,21 @@
 <?php
- require_once 'support_file.php'; 
- $title='Production Wastage Issue Entry';
+require_once 'support_file.php';?>
+<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
+
+$title='Production Wastage Issue Entry';
  $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
 				$todaysss=$dateTime->format("d/m/Y  h:i A");
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title><?php echo $userRow[proj_name]; ?> | <?php echo $title; ?></title>
-
-    <!-- Bootstrap -->
-    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!-- bootstrap-wysiwyg -->
-    <link href="../vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
-    <!-- Select2 -->
-    <link href="../vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-    <!-- Switchery -->
-    <link href="../vendors/switchery/dist/switchery.min.css" rel="stylesheet">
-    <!-- starrr -->
-    <link href="../vendors/starrr/dist/starrr.css" rel="stylesheet">
-    <!-- bootstrap-daterangepicker -->
-    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-
-    <!-- Custom Theme Style -->
-    <link href="../build/css/custom.min.css" rel="stylesheet">
- 
+<?php require_once 'header_content.php'; ?>
   <SCRIPT language=JavaScript>
 function reload(form)
 {
 	var val=form.item_id.options[form.item_id.options.selectedIndex].value;
 	self.location='production_wastage_issue.php?item_id=' + val ;
-}
+}</SCRIPT>
+<?php require_once 'body_content_nva_sm.php'; ?>
 
-
-</script>
-
-
-
-    <script>
-        var x = 0;
-        var y = 0;
-        var z = 0;
-        function calc(obj) {
-            var e = obj.id.toString();
-            if (e == 'qtys') {
-                x = Number(obj.value);
-                y = Number(document.getElementById('rate').value);
-            } else {
-                x = Number(document.getElementById('qtys').value);
-                y = Number(obj.value);
-            }
-            z = x * y;
-            document.getElementById('total').value = z;
-            document.getElementById('update').innerHTML = z;
-        }
-		
-		
-		var submit = document.querySelector("input[type=submit]");
-  
-/* set onclick on submit input */   
-submit.setAttribute("onclick", "return test()");
-
-//submit.addEventListener("click", test);
-
-function test() {
-
-  if (confirm('Are you sure you want to submit this form?')) {         
-    return true;         
-  } else {
-    return false;
-  }
-
-}
-    </script>
-    
-    
-    
-  </head>
-
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="<?php echo $webiste; ?>" class="site_title"><i class="fa fa-paw"></i> <span>ICPBD</span></a>
-            </div>
-
-            <div class="clearfix"></div>
-
-            <!-- menu profile quick info -->
-           <?php include ("pro.php");  ?>
-            <!-- /menu profile quick info -->
-
-            <br />
-
-            <!-- sidebar menu -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                         <?php include("sidebar_menus.php"); ?>
-
-            </div>
-            <!-- /sidebar menu -->
-
-            <!-- /menu footer buttons -->
-            <div class="sidebar-footer hidden-small">
-            <?php include("menu_footer.php"); ?>
-            </div>
-            <!-- /menu footer buttons -->
-          </div>
-        </div>
-
-        <!-- top navigation -->
-        <div class="top_nav">
-         <?php include("top.php"); ?>
-        </div>
-        <!-- /top navigation -->
-
-        <!-- page content -->
-        <div class="right_col" role="main">
-          <div class="">
-           
-           
-
-            <div class="row">
-              
-
-              
-
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2><?php echo $title; ?></h2>
-                     <ul class="nav navbar-right panel_toolbox">
-                     <div class="input-group pull-right">
-								<a target="_new" class="btn btn-sm btn-default"  href="production_wastage_report.php">
-									<i class="fa fa-plus-circle"></i> <span class="language" style="color:#000">Production Wastage Report</span>
-								</a>
-                                
-                                
-								</div>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <br />
                               
                     
 
@@ -193,198 +52,168 @@ $inirow=mysql_fetch_array($resultsssss);
 
  
  
- $ofp=getSVALUE("production_floor_receive_detail", "Sum(no_of_pack)", " where custom_pr_no='$_SESSION[initiate_production_wastage]'");
- $ratesss=getSVALUE("production_floor_receive_detail", "Sum(rate) as rate", " where custom_pr_no='$_SESSION[initiate_production_wastage]'");
- $amountsss=getSVALUE("production_floor_receive_detail", "Sum(amount) as amount", " where custom_pr_no='$_SESSION[initiate_production_wastage]'");
- ?>   
+ $ofp=find_a_field("production_floor_receive_detail", "Sum(no_of_pack)", "custom_pr_no='$_SESSION[initiate_production_wastage]'");
+ $ratesss=find_a_field("production_floor_receive_detail", "Sum(rate) as rate", "custom_pr_no='$_SESSION[initiate_production_wastage]'");
+ $amountsss=find_a_field("production_floor_receive_detail", "Sum(amount) as amount", "custom_pr_no='$_SESSION[initiate_production_wastage]'");
+ ?>
+<?php
+
+$item_id=$_POST[item_id];
+$rate=$_POST[rate];
+$qtys=$_POST[qtys];
+$amounts=$rate*$qtys;
+$mfg=$_POST[mfg];
+$no_of_pack=$_POST[no_of_pack];
+$po_no=$_POST[po_no];
+
+$tdates=date("Y-m-d");
+$idatess=date('Y-m-d');
+$day = date('l', strtotime($idatess));
+$dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
+$timess=$dateTime->format("d-m-y  h:i A");
+
+//echo "$timess";
 
 
-
-                    
-                    <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post">
-
-
-<table style="width:100%">
-<tr>
-<td style="width:50%">
-
-<div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Ref. NO<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                <input type="text" id="last-name" style="width:250px" required="required" name="invoice" value="<?=($_SESSION[initiate_production_wastage]!='')? $inirow[ref_no] : automatic_number_generate("","production_wastage_master","ref_no","date='".date('Y-m-d')."' and ref_no like '$sekeyword%'"); ?>" class="form-control col-md-7 col-xs-12" <?php if($_SESSION[initiate_production_wastage]){ ?> readonly <?php } ?> >
-                          </div>
-                      </div> </td>
+$add=$_POST[add];
+if (isset($_POST['add'])){
+    $valid = true;
+    $packsize=getSVALUE("item_info", "pack_size", " where item_id='$item_id'");
+    list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $_POST[mfg]);
+    $totalqtys=($_POST[qtys]*$packsize);
+    $batch=$_POST[batch];
+    $m =$_POST[mfg];
+    $mfg=date('Y-m-d' , strtotime($m));
 
 
+    if ($valid){
+        if($qtys>0){
 
-<td>
-                 <div class="form-group">
-                   
-                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date<span class="required">*</span></label>
-                   <div class="col-md-6 col-sm-6 col-xs-12">
-	                	
-	            <input type="text" id="ps_date" style="width:250px" required="required" name="ps_date" value="<?php if($_SESSION[initiate_production_wastage]){ echo date('m/d/y' , strtotime($inirow[date])); } else { echo ''; } ?>" class="form-control col-md-7 col-xs-12" >
-
-                      </div>  
-	                </div>
-                   </td></tr> 
-                    
-                    
-                    
-                 
-                      
-                      
-                     <tr><td> 
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">CMU<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-						
-						
-                       
-						
-						
-						
-                        <select id="first-name" required="required" style="width:250px"   name="warehouse_id" class="select2_single form-control">
-                        <?php if($_SESSION[initiate_production_wastage]){ ?>
-                        <option value="<?php echo $inirow[warehouse_from]; ?>" selected><?=$warename=getSVALUE("warehouse", "warehouse_name", " where warehouse_id='$inirow[warehouse_from]'");?></option>
-                        <?php } ?>
-                        <option value="">Choose ......</option>
-                        
-                        <?php $resultVENDOR=mysql_query("Select * from warehouse where use_type in ('PL')  order by warehouse_id");
-						while($rowVENDOR=mysql_fetch_array($resultVENDOR)){
-						?> 
-                                         
-                 <option value="<?php echo $rowVENDOR[warehouse_id]; ?>"><?php echo $rowVENDOR[warehouse_name]; ?></option>
-                      
-                    <?php } ?></select></div></div> </td>
-
-                      
-                   <td>
-        <div class="form-group">
-                   
-                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Note<span class="required">*</span></label>
-                   <div class="col-md-6 col-sm-6 col-xs-12">
-	                	
-	            <input type="text" id="remarkspro" style="width:250px"   name="remarkspro" value="<?php if($_SESSION[initiate_production_wastage]){ echo$inirow[remarks]; } else { echo ''; } ?>" class="form-control col-md-7 col-xs-12" >
-
-                      </div>  
-	                </div></td></tr>
-        
-               
-                        
-                       
-               <tr><td colspan="2">   
-               
-               <div class="form-group" style="margin-left:40%">
-               
-               <div class="col-md-6 col-sm-6 col-xs-12">
-               <?php if($_SESSION[initiate_production_wastage]){  ?>
-			   
-			   <!---a href="production_wastage_issue.php" style="font-size:20px; font-weight:bold">Refresh page</a--->
-               <button type="submit" name="updatePS" class="btn btn-success">Update Wastage Issue Info</button>
-			   
-			 <?php   } else {?>
-               <button type="submit" name="initiate" onclick='return window.confirm("Are you confirm?");' class="btn btn-success">Initiate Production</button>
-               <?php } ?>
-               </div></div>   
-               </tr></table>
-               
-                          
-               
-               
-               </form>
-               
-               
-               
-               
-               
-<!----------------------------------- initiate end--------------------------------------------------------------------->               
-               
-               
-               
-               
-               
- <?php                    
+            $_SESSION[spinvoice]=$invoice;
 
 
-;
-				$item_id=$_POST[item_id];
-				$rate=$_POST[rate];
-				$qtys=$_POST[qtys];
-				$amounts=$rate*$qtys;
-				$mfg=$_POST[mfg];
-				$no_of_pack=$_POST[no_of_pack];
-				$po_no=$_POST[po_no];
-
-				$tdates=date("Y-m-d");
-				$idatess=date('Y-m-d'); 
-                $day = date('l', strtotime($idatess));
-				$dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-				$timess=$dateTime->format("d-m-y  h:i A");
-				
-				//echo "$timess";
-
-
-$add=$_POST[add];                    
-if (isset($_POST['add'])){	
-$valid = true;
-$packsize=getSVALUE("item_info", "pack_size", " where item_id='$item_id'");
-list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $_POST[mfg]);	
-$totalqtys=($_POST[qtys]*$packsize);
-$batch=$_POST[batch];
-$m =$_POST[mfg];
-$mfg=date('Y-m-d' , strtotime($m)); 	 
-	 
-	 
-if ($valid){
-	if($qtys>0){
-		
-	$_SESSION[spinvoice]=$invoice;	
-		
- 
- $productiondetails =mysql_query("INSERT INTO production_westage_detail
+            $productiondetails =mysql_query("INSERT INTO production_westage_detail
 		(pi_no,date,ref_no, item_id, warehouse_from, warehouse_to, total_unit, unit_price, total_amt,lot, batch, mfg,ip) VALUES 
 
 ('".$_SESSION[pi_no]."','".$inirow['date']."','".$_SESSION[initiate_production_wastage]."','$item_id','$inirow[warehouse_to]','$inirow[warehouse_to]','$totalqtys','','".$total_amt."','$_POST[lot]','$batch','$mfg','$ip')");
 
-  ?>
-	
-<?php }}} ?>
-                   
-                      
+            ?>
+
+        <?php }}} ?>
 
 
 
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2><?php echo $title; ?></h2>
+            <a  style="float: right" class="btn btn-sm btn-default"  href="production_wastage_report.php">
+                <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Reports</span>
+            </a>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
+                <table style="width:100%">
+                    <tr>
+                        <td style="width:50%">
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Ref. NO<span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="last-name" style="font-size: 11px" required="required" name="invoice" value="<?=($_SESSION[initiate_production_wastage]!='')? $inirow[ref_no] : automatic_number_generate("","production_wastage_master","ref_no","date='".date('Y-m-d')."' and ref_no like '$sekeyword%'"); ?>" class="form-control col-md-7 col-xs-12"  readonly />
+                                </div>
+                            </div>
+                        </td>
 
-<?php
+                        <td>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date<span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="date" style="font-size:11px;" MAX="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" required="required" name="ps_date" value="<?php if($_SESSION[initiate_production_wastage]){ echo date('m/d/y' , strtotime($inirow[date])); } else { echo ''; } ?>" class="form-control col-md-7 col-xs-12" >
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
 
-if($_SESSION[initiate_production_wastage]){
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">CMU / Warehouse<span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="first-name" required="required" style="font-size: 11px"   name="warehouse_id" class="select2_single form-control">
+                                        <option selected></option>
+                                        <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$warehouse_id);?></select>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Remarks<span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <textarea type="text" id="remarkspro" style="font-size: 11px"   name="remarks" class="form-control col-md-7 col-xs-12"><?=$remarks?></textarea>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
 
- ?>
-
-
-<form action="" name="addem" id="addem" class="form-horizontal form-label-left" method="post">
+                    <tr>
+                        <td colspan="2">
+                            <div class="form-group" style="margin-left:40%">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <?php if($_SESSION[initiate_production_wastage]){  ?>
+                                        <button type="submit" name="modify" id="" style="font-size:11px" onclick='return window.confirm("Are you confirm to Updated?");' class="btn btn-primary">Modify Info</button>
+                                    <?php   } else {?>
+                                        <button type="submit" name="initiate" style="font-size:11px" onclick='return window.confirm("Are you confirm to Initiated?");' class="btn btn-primary">Initiate PS Entry</button>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+               
+                          
                
 
- <div class="x_title">
-                    
-                    <div class="clearfix"></div>
-                  </div>
-                   
-                  
+               
+               
+               
+               
 
- <table style="width:100%" id="datatable-buttons" class="table table-striped table-bordered">
+               
+               
+               
+               
+
                       
 
 
-                      <tbody>
-                       <tr>
-                        
-                      <td style="width:20%" align="center">
-                      
-                      <select class="select2_single form-control" style="width:400px" tabindex="-1" required="required" onchange="javascript:reload(this.form)" name="item_id" >
+
+
+<?php if($_SESSION[initiate_production_wastage]){?>
+    <form id="ismail" name="ismail"  method="post" style="font-size: 11px"  class="form-horizontal form-label-left">
+    <table align="center" class="table table-striped table-bordered" style="width:98%">
+        <thead>
+        <tr style="background-color: bisque">
+            <th>SL</th>
+            <th>Code</th>
+            <th>Product</th>
+            <th style="width:5%; text-align:center">UOM</th>
+            <th style="width:10%; text-align:center">Batch</th>
+            <th style="width:10%; text-align:center">Lot</th>
+            <th style="width:10%; text-align:center">MFG</th>
+            <th style="width:10%; text-align:center">Qty</th>
+            <th style="width:15%; text-align:center">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td style="width:20%; text-align: center">
+                <select class="select2_single form-control" style="width:400px" tabindex="-1" required="required" onchange="javascript:reload(this.form)" name="item_id" >
                             <option></option>
                             
                             <?php if($_GET[item_id]){ ?>
@@ -756,162 +585,6 @@ unset($_SESSION[post_item_id]);
 
               </div>
             
-<?php } ?>               
-              
-   
+<?php } ?>
 
-
-
-
-
-
-
-
-
-
-
-
-
-              
-          </div>
-        </div>
-        <!-- /page content -->
-
-        <!-- footer content -->
-        
-        <!-- /footer content -->
-      </div>
-    </div>
-
-    <!-- jQuery -->
-    <script src="../vendors/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- FastClick -->
-    <script src="../vendors/fastclick/lib/fastclick.js"></script>
-    <!-- NProgress -->
-    <script src="../vendors/nprogress/nprogress.js"></script>
-    <!-- bootstrap-progressbar -->
-    <script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-    <!-- iCheck -->
-    <script src="../vendors/iCheck/icheck.min.js"></script>
-    <!-- bootstrap-daterangepicker -->
-    <script src="../vendors/moment/min/moment.min.js"></script>
-    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <!-- bootstrap-wysiwyg -->
-    <script src="../vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
-    <script src="../vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
-    <script src="../vendors/google-code-prettify/src/prettify.js"></script>
-    <!-- jQuery Tags Input -->
-    <script src="../vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
-    <!-- Switchery -->
-    <script src="../vendors/switchery/dist/switchery.min.js"></script>
-    <!-- Select2 -->
-    <script src="../vendors/select2/dist/js/select2.full.min.js"></script>
-    <!-- Parsley -->
-    <script src="../vendors/parsleyjs/dist/parsley.min.js"></script>
-    <!-- Autosize -->
-    <script src="../vendors/autosize/dist/autosize.min.js"></script>
-    <!-- jQuery autocomplete -->
-    <script src="../vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
-    <!-- starrr -->
-    <script src="../vendors/starrr/dist/starrr.js"></script>
-
-    <!-- Custom Theme Scripts -->
-    <script src="../build/js/custom.min.js"></script>
-
-    <!-- bootstrap-daterangepicker -->
-    <script>
-      $(document).ready(function() {
-        $('#ps_date').daterangepicker({
-			
-          singleDatePicker: true,
-          calender_style: "picker_4",
-		  
-        }, function(start, end, label) {
-          console.log(start.toISOString(), end.toISOString(), label);
-        });
-      });
-    </script>
-    
-    
-    
-    <script>
-      $(document).ready(function() {
-        $('#mfg').daterangepicker({
-			
-          singleDatePicker: true,
-          calender_style: "picker_4",
-		  
-        }, function(start, end, label) {
-          console.log(start.toISOString(), end.toISOString(), label);
-        });
-      });
-    </script>
-    <!-- /bootstrap-daterangepicker -->
-
-   
-
-    <!-- Select2 -->
-    <script>
-      $(document).ready(function() {
-        $(".select2_single").select2({
-          placeholder: "select your choice",
-          allowClear: true
-        });
-        $(".select2_group").select2({});
-        $(".select2_multiple").select2({
-          maximumSelectionLength: 4,
-          placeholder: "With Max Selection limit 4",
-          allowClear: true
-        });
-      });
-    </script>
-    <!-- /Select2 -->
-    
-    
-    
-    
-
-   
-    
-
-   
-
-   
-
-    <!-- Starrr -->
-    <script>
-      $(document).ready(function() {
-        $(".stars").starrr();
-
-        $('.stars-existing').starrr({
-          rating: 4
-        });
-
-        $('.stars').on('starrr:change', function (e, value) {
-          $('.stars-count').html(value);
-        });
-
-        $('.stars-existing').on('starrr:change', function (e, value) {
-          $('.stars-count-existing').html(value);
-        });
-      });
-	  
-	  
-	  
-	  $('#rate').keyup(function(){
-        var qtys;
-        var rate;
-        qtys = parseFloat($('#qtys').val());
-        rate = parseFloat($('#rate').val());
-		
-        var amounta = qtys * rate;
-        $('#amounta').val(amounta.toFixed(2));
-
-
-    });
-    </script>
-    <!-- /Starrr -->
-  </body>
-</html>
+<?=$html->footer_content();?>
