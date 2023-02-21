@@ -39,7 +39,7 @@ function reload1(form)
     }
 
 </style>
-<?php require_once 'body_content.php'; ?>
+<?php require_once 'body_content_nva_sm.php'; ?>
 
 
 

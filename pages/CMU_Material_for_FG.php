@@ -108,7 +108,7 @@ line_id=".$_GET[line_id]." and i.item_id not in (select row_item_id from product
      </script>
  </head>
 
-<?php require_once 'body_content.php'; ?>
+<?php require_once 'body_content_nva_sm.php'; ?>
  <?php if(!isset($_GET[$unique])){ ?>
                     <!-- input section-->
                     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -122,18 +122,14 @@ line_id=".$_GET[line_id]." and i.item_id not in (select row_item_id from product
                                 <form style="font-size: 11px"  name="addem" id="addem" class="form-horizontal form-label-left" method="post">
                                     <? require_once 'support_html.php';?>
                                     <input type="hidden" id="line_ids" style="width:100%"  required   name="line_ids" value="<?=$_GET[warehouse_id]?>" class="form-control col-md-7 col-xs-12" >
-
-
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Warehouse<span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                         <select  class="select2_single form-control" onchange="javascript:reload(this.form)" style="width: 100%;" tabindex="-1" required="required"  name="line_id" id="line_id">
-                        <option selected></option>
-                        <?=advance_foreign_relation($sql_plant,$_GET[line_id]);?>
-                                   </select>
-                    
-                                            
+                                            <option selected></option>
+                                            <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$_GET[line_id]);?>
+                                        </select>
                                     </div></div>
 
 

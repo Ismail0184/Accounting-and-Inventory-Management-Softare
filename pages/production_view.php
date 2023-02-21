@@ -282,24 +282,19 @@ if($GET_status=='UNCHECKED' || $GET_status=='MANUAL' || $GET_status=='RETURNED')
 <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" >
     <table align="center" style="width: 50%;">
         <tr><td>
-                <input type="date"  style="width:150px; font-size: 11px; height: 25px"  value="<?php if(isset($_POST[f_date])) { echo $_POST[f_date];} else {echo date('Y-m-01'); }?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
+                <input type="date"  style="width:150px; font-size: 11px;"  value="<?php if(isset($_POST[f_date])) { echo $_POST[f_date];} else {echo date('Y-m-01'); }?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
             <td style="width:10px; text-align:center"> -</td>
-            <td><input type="date"  style="width:150px;font-size: 11px; height: 25px"  value="<?php if(isset($_POST[t_date])) { echo $_POST[t_date];} else {echo date('Y-m-d'); }?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
+            <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?php if(isset($_POST[t_date])) { echo $_POST[t_date];} else {echo date('Y-m-d'); }?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
             <td style="width:10px; text-align:center"> -</td>
-             <td><select  class="form-control" style="width: 200px; height:25px; font-size:11px; vertical-align:middle" tabindex="-1" required="required"  name="warehouse_from" id="warehouse_from">
+             <td><select  class="form-control" style="width: 200px;font-size:11px; vertical-align:middle" tabindex="-1" required="required"  name="warehouse_from" id="warehouse_from">
                         <option selected></option>
-                        <? $sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),upp.* FROM  
-                            user_plant_permission upp,
-							warehouse w  WHERE  upp.warehouse_id=w.warehouse_id and 
-							 upp.user_id=".$_SESSION[userid]." and upp.status>0					 
-							  order by w.warehouse_id";
-                        advance_foreign_relation($sql_plant,$_POST[warehouse_from]);?>
-                    </select></td>
+                     <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$_POST[warehouse_from]);?>
+                 </select></td>
             <td style="padding:10px"><button type="submit" style="font-size: 11px; height: 30px" name="viewreport"  class="btn btn-primary">View Producion</button></td>
            
         </tr></table>
         <?=$crud->report_templates_with_status($resultss,"Production View");?>
                                 </form>
-    <?php } ?> 
+    <?php } ?>
 
-    <?php require_once 'footer_content.php' ?>
+<?=$html->footer_content();?>

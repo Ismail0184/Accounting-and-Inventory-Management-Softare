@@ -1,5 +1,5 @@
-<?php
- require_once 'support_file.php'; 
+<?php require_once 'support_file.php';?>
+<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
  $title='Bill Received Entry';
 
 $table="Bill_Received_Entry";
@@ -79,7 +79,7 @@ function reload(form)
 	self.location='Bill_Received_Entry.php?vendor_id=' + val ;
 }
 </script>
-<?php require_once 'body_content.php'; ?>
+<?php require_once 'body_content_nva_sm.php'; ?>
     
                <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
@@ -139,7 +139,7 @@ function reload(form)
 <div class="form-group">                   
                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Rcv. Date<span class="required">*</span></label>
                <div class="col-md-6 col-sm-6 col-xs-12">
-               <input type="text" id="rcv_Date"  required="required" name="rcv_Date" style="width:100%; font-size: 11px" class="form-control col-md-7 col-xs-12" ></div></div></td><tr>
+               <input type="date"   required="required" name="rcv_Date" style="width:100%; font-size: 11px" class="form-control col-md-7 col-xs-12" ></div></div></td><tr>
                
                
                
@@ -215,16 +215,4 @@ function reload(form)
                </td></tr></table>
                
                </form></div></div></div>
-<?php require_once 'footer_content.php' ?>
-<script>
-      $(document).ready(function() {
-        $('#rcv_Date').daterangepicker({
-			
-          singleDatePicker: true,
-          calender_style: "picker_4",
-		  
-        }, function(start, end, label) {
-          console.log(start.toISOString(), end.toISOString(), label);
-        });
-      });
-    </script>
+<?=$html->footer_content();?>

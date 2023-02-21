@@ -11,7 +11,6 @@ $details_unique = 'id';
 $table_journal_item='journal_item';
 $page="procurement_asset_purchase.php";
 $crud      =new crud($table);
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
 
 
 if(prevent_multi_submit()) {

@@ -1,5 +1,5 @@
-<?php
-require_once 'support_file.php';
+<?php require_once 'support_file.php';?>
+<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title="Add FG";
 
 $now=time();
@@ -109,18 +109,16 @@ i.item_id not in (select fg_item_id from production_line_fg where line_id=".$_SE
             <br />
 
             <form  name="addem" id="addem" class="form-horizontal form-label-left" style="font-size: 11px" method="post">
-                <? require_once 'support_html.php';?>
-
-
-
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Factory / Warehouse<span class="required">*</span></label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
                     <input type="hidden" value="" name="<?=$unique?>" id="<?=$unique?>">                    
                     <select  class="select2_single form-control" style="width:100%; font-size: 11px; height: 30px"  tabindex="-1" required="required"  name="line_id" id="line_id">
                         <option selected></option>
-                        <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$_SESSION['line_id_FG']);?></select>
-                                  </div></div>
+                        <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$_SESSION['line_id_FG']);?>
+                    </select>
+                    </div>
+                </div>
 
 
                 <?php if($_SESSION['line_id_FG']>0){ ?>
