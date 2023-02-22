@@ -1,251 +1,81 @@
-<?php
- require_once 'support_file.php'; 
+<?php require_once 'support_file.php';?>
+<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
  $title='Item Specifications';
+
+
+$item_master = find_all_field('item_info','','item_id='.$_GET['item_id']);
+
+
 ?>
+<?php
+$initiate=$_POST[initiate];
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+$d =$_POST[ps_date];
+$ps_date=date('Y-m-d' , strtotime($d));
+$invoice=$_POST[invoice];
+$billno=$_POST[billno];
+$enat=date('Y-m-d h:s:i');
+if(isset($initiate)){
 
-    <title><?php echo $userRow[proj_name]; ?> | <?php echo $title; ?></title>
+    $insert=mysql_query("INSERT INTO item_SPECIFICATION (item_id,TEST_PARAMETERS,RESULT,SPECIFICATION,entry_by,entry_at,ip)  VALUES ('$_POST[item_id]','$_POST[TEST_PARAMETERS]','$_POST[RESULT]','$_POST[SPECIFICATION]','$_SESSION[userid]','$enat','$ip')");
 
-    <!-- Bootstrap -->
-    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!-- bootstrap-wysiwyg -->
-    <link href="../vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
-    <!-- Select2 -->
-    <link href="../vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-    <!-- Switchery -->
-    <link href="../vendors/switchery/dist/switchery.min.css" rel="stylesheet">
-    <!-- starrr -->
-    <link href="../vendors/starrr/dist/starrr.css" rel="stylesheet">
-    <!-- bootstrap-daterangepicker -->
-    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    $_SESSION[initiate_daily_production]=$invoice;
+    $_SESSION[pr_no] =getSVALUE("production_floor_receive_master", "pr_no", " where custom_pr_no='$_SESSION[initiate_daily_production]'");
+    ; ?>
+    <meta http-equiv="refresh" content="0;item_specifications.php?item_id=<?php echo $_GET[item_id]; ?>">
+<?php }
 
-    <!-- Custom Theme Style -->
-    <link href="../build/css/custom.min.css" rel="stylesheet">
- 
-  <SCRIPT language=JavaScript>
+
+if(isset($_POST[Finish])){ ?>
+    <meta http-equiv="refresh" content="0;item_specifications.php">
+<?php } ?>
+
+
+
+
+
+<?php require_once 'header_content.php'; ?>
+<SCRIPT language=JavaScript>
 function reload(form)
 {
 	var val=form.item_id.options[form.item_id.options.selectedIndex].value;
 	self.location='item_specifications.php?item_id=' + val ;
-}
-
-
-</script>
-
-
-
-    <script>
-        var x = 0;
-        var y = 0;
-        var z = 0;
-        function calc(obj) {
-            var e = obj.id.toString();
-            if (e == 'qtys') {
-                x = Number(obj.value);
-                y = Number(document.getElementById('rate').value);
-            } else {
-                x = Number(document.getElementById('qtys').value);
-                y = Number(obj.value);
-            }
-            z = x * y;
-            document.getElementById('total').value = z;
-            document.getElementById('update').innerHTML = z;
-        }
-		
-		
-		var submit = document.querySelector("input[type=submit]");
-  
-/* set onclick on submit input */   
-submit.setAttribute("onclick", "return test()");
-
-//submit.addEventListener("click", test);
-
-function test() {
-
-  if (confirm('Are you sure you want to submit this form?')) {         
-    return true;         
-  } else {
-    return false;
-  }
-
-}
-    </script>
-    
-    
-    
-  </head>
-
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="<?php echo $webiste; ?>" class="site_title"><i class="fa fa-paw"></i> <span>ICPBD</span></a>
-            </div>
-
-            <div class="clearfix"></div>
-
-            <!-- menu profile quick info -->
-           <?php include ("pro.php");  ?>
-            <!-- /menu profile quick info -->
-
-            <br />
-
-            <!-- sidebar menu -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                         <?php include("sidebar_menus.php"); ?>
-
-            </div>
-            <!-- /sidebar menu -->
-
-            <!-- /menu footer buttons -->
-            <div class="sidebar-footer hidden-small">
-            <?php include("menu_footer.php"); ?>
-            </div>
-            <!-- /menu footer buttons -->
-          </div>
-        </div>
-
-        <!-- top navigation -->
-        <div class="top_nav">
-         <?php include("top.php"); ?>
-        </div>
-        <!-- /top navigation -->
-
-        <!-- page content -->
-        <div class="right_col" role="main">
-          <div class="">
-           
-           
-
-            <div class="row">
-              
-
-              
-
-              <div class="col-md-12 col-sm-12 col-xs-12">
+}</script>
+<?php require_once 'body_content.php'; ?>
+             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
                     <h2><?php echo $title; ?></h2>
-                     <ul class="nav navbar-right panel_toolbox">
-                     <div class="input-group pull-right">
-								<a target="_new" class="btn btn-sm btn-default"  href="production_report.php">
-									<i class="fa fa-plus-circle"></i> <span class="language" style="color:#000">Production Report</span>
-								</a>
-                                
-                                
-								</div>
-                    </ul>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <br />
-                              
-                    
-
-<?php 
-$initiate=$_POST[initiate];
-
-$d =$_POST[ps_date];
-$ps_date=date('Y-m-d' , strtotime($d)); 
-$invoice=$_POST[invoice];
-$billno=$_POST[billno];
-$enat=date('Y-m-d h:s:i');
-if(isset($initiate)){	
-	
-$insert=mysql_query("INSERT INTO item_SPECIFICATION (item_id,TEST_PARAMETERS,RESULT,SPECIFICATION,entry_by,entry_at,ip)  VALUES ('$_POST[item_id]','$_POST[TEST_PARAMETERS]','$_POST[RESULT]','$_POST[SPECIFICATION]','$_SESSION[userid]','$enat','$ip')");	
-
-$_SESSION[initiate_daily_production]=$invoice;
-$_SESSION[pr_no] =getSVALUE("production_floor_receive_master", "pr_no", " where custom_pr_no='$_SESSION[initiate_daily_production]'");
-; ?>
-<meta http-equiv="refresh" content="0;item_specifications.php?item_id=<?php echo $_GET[item_id]; ?>">
-<?php }
-
-
-if(isset($_POST[Finish])){ ?>   
-<meta http-equiv="refresh" content="0;item_specifications.php">
-<?php } ?>
-
-                    
-                    <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post">
-
-
-
-
-
-
-
-
-<div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Item Name<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-						
-						<select class="select2_single form-control" onchange="javascript:reload(this.form)" style="width:400px" tabindex="-1" required="required"  name="item_id" id="item_id" >
-                            <option></option>
-                          <?php if($_GET[item_id]) ?> <option selected value="<?php echo $_GET[item_id]; ?>"><?=$nam=getSVALUE("item_info", "item_name", " where item_id='$_GET[item_id]'");?></option> 
-                            <?php 
-							$result=mysql_query("SELECT i.*,sg.*,g.* FROM 
-							item_info i,
-							item_sub_group sg,
-							item_group g
-							
-							where 
-							i.sub_group_id=sg.sub_group_id and 
-							sg.group_id=g.group_id and g.group_id in ('200000000','300000000','400000000','500000000','1096000100000000')
-							
-							   order by g.group_id,i.item_name");
-							while($row=mysql_fetch_array($result)){  ?>
-                  <option  value="<?php echo $row[item_id]; ?>"><?php echo $row[finish_goods_code]; ?>-<?php echo $row[item_name]; ?> (<?=$packsizeitem=getSVALUE("item_sub_group", "sub_group_name", " where sub_group_id='$row[sub_group_id]'");?>)</option>
-                    <?php } ?>
-                          </select></div></div> 
-
-
-
-<?php if($_GET[item_id]) {?> 
-                  <div class="form-group">                   
-                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Unit<span class="required">*</span></label>
-                   <div class="col-md-6 col-sm-6 col-xs-12">
-	                	
-	            <input type="text" id="remarkspro" style="width:400px"   name="remarkspro" value="<?=$nam=getSVALUE("item_info", "unit_name", " where item_id='$_GET[item_id]'");?>" class="form-control col-md-7 col-xs-12" readonly >
-
-                      </div>  
-	                </div>
-<?php } ?>
-
-
-
-                    
-                    
-                             
-        <div class="form-group">
-                   
-                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">TEST PARAMETERS<span class="required">*</span></label>
-                   <div class="col-md-6 col-sm-6 col-xs-12"> 
-                   <select class="select2_single form-control"  style="width:400px" tabindex="-1" required="required"  name="TEST_PARAMETERS" id="TEST_PARAMETERS" >
-                            <option></option>
-                          <?php if($_GET[item_id]) ?> <option selected value="<?php echo $_GET[item_id]; ?>"><?=$nam=getSVALUE("item_info", "item_name", " where item_id='$_GET[item_id]'");?></option> 
-                            <?php 
-							$result=mysql_query("SELECT * FROM PARAMETERS  order by PARAMETERS_CODE");
-							while($row=mysql_fetch_array($result)){  ?>
-                  <option  value="<?php echo $row[PARAMETERS_CODE]; ?>"><?php echo $row[PARAMETERS_CODE]; ?>-<?php echo $row[PARAMETERS_Name]; ?></option>
-                    <?php } ?>
-                          </select>
+                      <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post">
+                          <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
+                              <thead>
+                              <tr style="background-color: bisque">
+                                  <th style="text-align: center">Item Name</th>
+                                  <th style="text-align: center">In Stock</th>
+                                  <th style="text-align: center">D Price</th>
+                                  <th style="text-align: center">Unit Price</th>
+                                  <th style="text-align: center">Invoice Qty</th>
+                                  <th style="text-align: center">Unit Amount</th>
+                                  <th style="text-align: center">Action</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <td style="vertical-align: middle">
+                                      <select class="select2_single form-control" onchange="javascript:reload(this.form)" style="width:400px" tabindex="-1" required="required"  name="item_id" id="item_id" >
+                                              <option></option>
+                                              <? advance_foreign_relation(find_all_item($product_nature="'Purchasable','Both'"),($_GET[item_id]>0)? $_GET[item_id] : $edit_value->item_id);?>
+                                          </select>
+                                  </td>
+                                  <td><?=$item_master->unit_name;?></td>
+                                  <td>
+                                  <select class="select2_single form-control"  style="width:400px" tabindex="-1" required="required"  name="TEST_PARAMETERS" id="TEST_PARAMETERS" >
+                                      <option></option>
+                                      <?=foreign_relation('PARAMETERS', 'id', 'concat(PARAMETERS_CODE," : ", PARAMETERS_Name)',$do_type, '1'); ?>
+                                  </select>
 
                       </div>  
 	                </div>     
@@ -425,265 +255,8 @@ $link='#';
       </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="../vendors/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- FastClick -->
-    <script src="../vendors/fastclick/lib/fastclick.js"></script>
-    <!-- NProgress -->
-    <script src="../vendors/nprogress/nprogress.js"></script>
-    <!-- bootstrap-progressbar -->
-    <script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-    <!-- iCheck -->
-    <script src="../vendors/iCheck/icheck.min.js"></script>
-    <!-- bootstrap-daterangepicker -->
-    <script src="../vendors/moment/min/moment.min.js"></script>
-    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <!-- bootstrap-wysiwyg -->
-    <script src="../vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
-    <script src="../vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
-    <script src="../vendors/google-code-prettify/src/prettify.js"></script>
-    <!-- jQuery Tags Input -->
-    <script src="../vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
-    <!-- Switchery -->
-    <script src="../vendors/switchery/dist/switchery.min.js"></script>
-    <!-- Select2 -->
-    <script src="../vendors/select2/dist/js/select2.full.min.js"></script>
-    <!-- Parsley -->
-    <script src="../vendors/parsleyjs/dist/parsley.min.js"></script>
-    <!-- Autosize -->
-    <script src="../vendors/autosize/dist/autosize.min.js"></script>
-    <!-- jQuery autocomplete -->
-    <script src="../vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
-    <!-- starrr -->
-    <script src="../vendors/starrr/dist/starrr.js"></script>
 
-    <!-- Custom Theme Scripts -->
-    <script src="../build/js/custom.min.js"></script>
 
-    <!-- iCheck -->
-
-    <script src="../vendors/iCheck/icheck.min.js"></script>
-
-    <!-- Datatables -->
-
-    <script src="../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-
-    <script src="../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-
-    <script src="../vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-
-    <script src="../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-
-    <script src="../vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-
-    <script src="../vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-
-    <script src="../vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-
-    <script src="../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-
-    <script src="../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-
-    <script src="../vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-
-    <script src="../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-
-    <script src="../vendors/datatables.net-scroller/js/datatables.scroller.min.js"></script>
-
-    <script src="../vendors/jszip/dist/jszip.min.js"></script>
-
-    <script src="../vendors/pdfmake/build/pdfmake.min.js"></script>
-
-    <script src="../vendors/pdfmake/build/vfs_fonts.js"></script>
-    
-
-
-
-    <!-- Custom Theme Scripts -->
-
-    <script src="../build/js/custom.min.js"></script>
-
-
-
-    <!-- Datatables -->
-
-    <script>
-
-      $(document).ready(function() {
-
-        var handleDataTableButtons = function() {
-
-          if ($("#datatable-buttons").length) {
-
-            $("#datatable-buttons").DataTable({
-
-              dom: "Bfrtip",
-
-              buttons: [
-
-                {
-
-                  extend: "copy",
-
-                  className: "btn-sm"
-
-                },
-
-                {
-
-                  extend: "csv",
-
-                  className: "btn-sm"
-
-                },
-
-                {
-
-                  extend: "excel",
-
-                  className: "btn-sm"
-
-                },
-
-                {
-
-                  extend: "pdfHtml5",
-
-                  className: "btn-sm"
-
-                },
-
-                {
-
-                  extend: "print",
-
-                  className: "btn-sm"
-
-                },
-
-              ],
-
-              responsive: true
-
-            });
-
-          }
-
-        };
-
-
-
-        TableManageButtons = function() {
-
-          "use strict";
-
-          return {
-
-            init: function() {
-
-              handleDataTableButtons();
-
-            }
-
-          };
-
-        }();
-
-
-
-        $('#datatable').dataTable();
-
-
-
-        $('#datatable-keytable').DataTable({
-
-          keys: true
-
-        });
-
-
-
-        $('#datatable-responsive').DataTable();
-
-
-
-        $('#datatable-scroller').DataTable({
-
-          ajax: "js/datatables/json/scroller-demo.json",
-
-          deferRender: true,
-
-          scrollY: 380,
-
-          scrollCollapse: true,
-
-          scroller: true
-
-        });
-
-
-
-        $('#datatable-fixed-header').DataTable({
-
-          fixedHeader: true
-
-        });
-
-
-
-        var $datatable = $('#datatable-checkbox');
-
-
-
-        $datatable.dataTable({
-
-          'order': [[ 1, 'asc' ]],
-
-          'columnDefs': [
-
-            { orderable: false, targets: [0] }
-
-          ]
-
-        });
-
-        $datatable.on('draw.dt', function() {
-
-          $('input').iCheck({
-
-            checkboxClass: 'icheckbox_flat-green'
-
-          });
-
-        });
-
-
-
-        TableManageButtons.init();
-
-      });
-
-    </script>
- <!-- Select2 -->
-    <script>
-      $(document).ready(function() {
-        $(".select2_single").select2({
-          placeholder: "select your choice",
-          allowClear: true
-        });
-        $(".select2_group").select2({});
-        $(".select2_multiple").select2({
-          maximumSelectionLength: 4,
-          placeholder: "With Max Selection limit 4",
-          allowClear: true
-        });
-      });
-    </script>
-    <!-- /Select2 -->
-    
-    <!-- /Datatables -->
-
-  </body>
-
+<?=$html->footer_content();mysqli_close($conn);?>
+<?php ob_end_flush();
+ob_flush(); ?>

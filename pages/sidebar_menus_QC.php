@@ -20,8 +20,96 @@ $QC_total_cehcked_and_verified=$QC_production_checked+$QC_sales_return_checked+$
 <div class="menu_section">
     <ul class="nav side-menu">
         <li><a href="dashboard.php"><i class="fa fa-home"></i>Home</a></li>
+        <?php
+        $result = mysqli_query($conn, "SET NAMES utf8");//the main trick
+        if($_SESSION['language']=='Bangla') {
+            $result="Select
+		pmm.*,
+		dmm.faicon as iconmain,
+		dmm.main_menu_name_BN as main_menu_name,
+		dmm.sl,
+		dmm.url as main_url
+		from
+		user_permission_matrix_main_menu pmm,
+		dev_main_menu dmm
+		where
+		pmm.main_menu_id=dmm.main_menu_id and
+		pmm.user_id='".$_SESSION["userid"]."' and
+		pmm.company_id='".$_SESSION['companyid']."'  and
+		dmm.module_id='".$_SESSION['module_id']."' and
+		dmm.main_menu_id not in ('10052','10005') and
+		dmm.status=1 and pmm.status=1
+		order by dmm.sl";
+        } else if($_SESSION['language']=='English') {
+            $result="Select
+		pmm.*,
+		dmm.faicon as iconmain,
+		dmm.main_menu_name,
+		dmm.sl,
+		dmm.url as main_url
+		from
+		user_permission_matrix_main_menu pmm,
+		dev_main_menu dmm
+		where
+		pmm.main_menu_id=dmm.main_menu_id and
+		pmm.user_id='".$_SESSION["userid"]."' and
+		pmm.company_id='".$_SESSION['companyid']."'  and
+		dmm.module_id='".$_SESSION['module_id']."' and
+		dmm.main_menu_id not in ('10052','10005') and
+		dmm.status=1 and pmm.status=1
+		order by dmm.sl";
 
-  <?php
+        }
+        $master_result=mysqli_query($conn, $result);
+        while($mainrow=mysqli_fetch_object($master_result)):?>
+                <li><a href="#"><i class="<?=$mainrow->iconmain;?>"></i><?=$mainrow->main_menu_name;?>
+                        <?php if($mainrow->main_menu_id=="10044") if($checkandverified>0) : ?><?='[<span style="color:red;font-weight:bold;">'.$checkandverified.'</span>]'?><?php else : echo'';endif; ?>
+                        <?php if($mainrow->main_url=='#'){?><span class="fa fa-chevron-down"></span><?php } ?></a>
+                    <ul class="nav child_menu">
+                        <?php
+                        if($_SESSION['language']=='Bangla') {
+                            $result="Select
+					psm.*,
+					dsm.sub_menu_id,
+					dsm.sub_menu_name_BN as sub_menu_name,
+					dsm.sub_url
+					from
+					user_permission_matrix_sub_menu psm,
+					dev_sub_menu dsm
+					where
+					dsm.sub_menu_id=psm.sub_menu_id and
+					psm.user_id='".$_SESSION["userid"]."' and
+					psm.company_id='".$_SESSION['companyid']."' and
+					psm.main_menu_id='".$mainrow->main_menu_id."' and
+					dsm.module_id='".$_SESSION['module_id']."' and
+					dsm.status=1 and psm.status=1
+					order by dsm.sl";
+                        } else if($_SESSION['language']=='English') {
+                            $result="Select
+					psm.*,
+					dsm.sub_menu_id,
+					dsm.sub_menu_name,
+					dsm.sub_url
+					from
+					user_permission_matrix_sub_menu psm,
+					dev_sub_menu dsm
+					where
+					dsm.sub_menu_id=psm.sub_menu_id and
+					psm.user_id='".$_SESSION["userid"]."' and
+					psm.company_id='".$_SESSION['companyid']."' and
+					psm.main_menu_id='".$mainrow->main_menu_id."' and
+					dsm.module_id='".$_SESSION['module_id']."' and
+					dsm.status=1 and psm.status=1
+					order by dsm.sl";
+                        }
+                        $sub_menu=mysqli_query($conn, $result);
+                        while($subnrow=mysqli_fetch_object($sub_menu)): ?>
+                            <li><a href="<?=$subnrow->sub_url;?>"><?=$subnrow->sub_menu_name;?></a></li>
+                        <?php endwhile; ?></ul></li>
+        <?php endwhile; ?>
+
+
+    <?php
 $zone2="Select
 psm.*,
 dsm.sub_menu_id,
@@ -36,7 +124,7 @@ dsm.sub_menu_id=psm.sub_menu_id and
 psm.user_id='".$_SESSION["userid"]."' and
 psm.company_id='".$_SESSION['companyid']."' and
 dsm.module_id='".$_SESSION['module_id']."' and
-dsm.status=1 and psm.status=1
+dsm.status=1 and psm.status=1 and dsm.main_menu_id=0
 order by dsm.sl";
 $sub_menu=mysqli_query($conn, $zone2);
 while($subnrow=mysqli_fetch_object($sub_menu)): ?>
