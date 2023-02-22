@@ -53,17 +53,12 @@ function reload1(form)
                       <div class="col-md-7 col-sm-12 col-xs-12">
                           <div class="x_panel">
                               <div class="x_content">
-                                  <?php if ($_GET['report_id']=='5002001'):?>
+                                  <?php if ($_GET['report_id']=='5002001' || $_GET['report_id']=='5002002') :?>
                                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">CMU / Warehouse</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="select2_single form-control"  style="width:100%;font-size: 11px" tabindex="-1" required="required"  name="warehouse_id" id="warehouse_id">
-                                <? $sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),upp.* FROM  
-                            user_plant_permission upp,
-							warehouse w  WHERE  upp.warehouse_id=w.warehouse_id and 
-							 upp.user_id=".$_SESSION[userid]." and upp.status>0					 
-							  order by w.warehouse_id";
-                                advance_foreign_relation($sql_plant,$warehouse_id);?>
+                                <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$_POST[warehouse_id]);?>
                             </select>
                         </div>
                     </div>

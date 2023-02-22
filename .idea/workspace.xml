@@ -3,13 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/Bill_Received_Entry.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Bill_Received_Entry.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/CMU_FG_Production_Setup.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/CMU_FG_Production_Setup.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/CMU_Material_for_FG.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/CMU_Material_for_FG.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/bill_received_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/bill_received_view.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/procurement_asset_purchase.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/procurement_asset_purchase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/accounts_material_landed_cost.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_material_landed_cost.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/developer_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/developer_report.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/production_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/production_reportview.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/production_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/production_select_report.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/production_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/production_view.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Production.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Production.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +74,9 @@
       <workItem from="1676780043686" duration="17900000" />
       <workItem from="1676865955018" duration="4776000" />
       <workItem from="1676908229873" duration="5679000" />
-      <workItem from="1676953678733" duration="4431000" />
+      <workItem from="1676953678733" duration="6744000" />
+      <workItem from="1676984082767" duration="1749000" />
+      <workItem from="1677038876107" duration="1967000" />
     </task>
     <servers />
   </component>

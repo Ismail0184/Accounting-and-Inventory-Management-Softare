@@ -71,10 +71,9 @@ $query="Select r.report_id,r.report_id,r.report_name,ol.optgroup_label_name,m.mo
 
 
                                 <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
-                                    <input type="hidden" name="optgroup_label_id" value="">
                                     <? require_once 'support_html.php';?>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Parents<span class="required">*</span></label>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Modules<span class="required">*</span></label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required" id="module_id"  name="module_id">
                                                     <option></option>
@@ -106,6 +105,13 @@ $query="Select r.report_id,r.report_id,r.report_name,ol.optgroup_label_name,m.mo
                                                 <option value="1">Active</option>
                                                 <option value="0">Inactive</option>
                                             </select></div></div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Report ID<span class="required">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text"  style="width:100%"  required  name="report_id" value="<?=$report_id;?>" class="form-control col-md-7 col-xs-12" >
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Report Name<span class="required">*</span></label>

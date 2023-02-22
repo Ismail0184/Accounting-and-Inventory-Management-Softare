@@ -98,72 +98,10 @@ if($sectionid=='400000'){
 
 
 
-<?php if ($_POST['report_id']=='1'):?>    
-<title>Sales Info Master | <?=$_SESSION['company_name'];?></title>
-        <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
-        <p align="center" style="margin-top:-18px; font-size: 15px">Sales Info Master</p>
+<?php if ($_POST['report_id']=='1'):?>
+<h1></h1>
 
-        <table align="center" id="customers"  style="width:95%; border: solid 1px #999; border-collapse:collapse; ">
-            <thead>
-            <p style="width:95%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-                echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
-            <tr style="border: solid 1px #999;font-weight:bold; font-size:11px; background-color: #FFCCFF">
-                <th style="border: solid 1px #999; padding:2px">SL</th>
-                <th style="border: solid 1px #999; padding:2px; width:5%">Region</th>
-                <th style="border: solid 1px #999; padding:2px; width:10%">Territory</th>
-                <th style="border: solid 1px #999; padding:2px; width:8%">Name of TSM</th>
-                <th style="border: solid 1px #999; padding:2px; width: 15%">Super Distributor</th>
-                <th style="border: solid 1px #999; padding:2px">Sub Distributor</th>
-                <th style="border: solid 1px #999; padding:2px">SO Code</th>
-                <th style="border: solid 1px #999; padding:2px; width: 10%">Name of SO</th>
-                <th style="border: solid 1px #999; padding:2px; width: 10%">Type</th>
-            </tr></thead>
-                    <tbody>
-                <? 	$res=mysqli_query($conn, 'select p.PBI_ID,p.so_type,p.PBI_ID_UNIQUE as SO_code,p.PBI_NAME, p.PBI_JOB_STATUS as status,e.*,
-								(SELECT PBI_NAME from personnel_basic_info where PBI_ID=p.tsm) as tsm, 
-								(select sub_dealer_name_e from sub_db_info where sub_db_code=p.sub_db_code)	as sub_dealer,
-								  a.AREA_NAME as territory,b.BRANCH_NAME as region,
-								 (select dealer_name_e from dealer_info where dealer_code=(select super_dealer_code from sub_db_info where sub_db_code=p.sub_db_code)) as dealer			
-								
-								from 
-								personnel_basic_info p ,
-								essential_info e,
-								area a,
-								branch b								
-															
-								where 
-								p.PBI_ID=e.PBI_ID and 
-								p.PBI_JOB_STATUS in ("In Service") and 
-								a.PBI_ID=p.tsm and 	
-								a.Region_code=b.BRANCH_ID and
-								
-								p.PBI_DESIGNATION like "60" group by p.PBI_ID order by p.tsm,dealer,sub_dealer,p.PBI_ID');
-                while($PBI_ROW=mysqli_fetch_object($res)){
-
-
-
-                    ?>
-
-                    <tr style="border: solid 1px #999; font-size:10px; font-weight:normal">
-                        <td align="center" style="border: solid 1px #999; padding:2px"><?=$i=$i+1;?></td>
-                        <td align="center" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->region;?></td>
-                        <td align="center" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->territory;?></td>
-                        <td align="left" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->tsm?></td>
-                        <td align="left" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->dealer?></td>
-                        <td align="left" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->sub_dealer?></td>
-                        <td align="center" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->SO_code;?></td>
-                        <td align="left" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->PBI_NAME;?></td>
-                        <td align="center" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->so_type;?></td>
-                    </tr>
-                <?php } ?>
-                </tbody></table>
-
-
-
-
-
-
-<?php elseif ($_POST['report_id']=='70000'): 
+<?php elseif ($_POST['report_id']=='5002002'):
 if($_POST['warehouse_id']>0) 					$warehouse_id=$_POST['warehouse_id'];
 if(isset($warehouse_id))				{$plat_con=' and w.warehouse_id='.$warehouse_id;} 
 if($_POST['item_id']>0) 					$item_id=$_POST['item_id'];

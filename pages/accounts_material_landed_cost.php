@@ -98,7 +98,7 @@ if(prevent_multi_submit()){
             $_POST['tr_from'] = 'Opening';
             $_POST['tr_no'] = $_SESSION[material_landed_cost_item_group];
             $_POST['sr_no'] = $row[id];
-            $_POST['lot_number'] = automatic_number_generate("","journal_item","lot_number","ji_date='".$date."'")++;;
+            //$_POST['lot_number'] = automatic_number_generate("","journal_item","lot_number","ji_date='".$date."'")++;;
             $crud      =new crud($table_journal_item);
             $crud->insert();
 
@@ -267,4 +267,4 @@ if(isset($_SESSION[material_landed_cost_item_group]))
         <button type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm?");' name="confirmsave" id="confirmsave" class="btn btn-success" style="float: right; margin-right: 1%;font-size: 12px">Confirm Standard Cost</button>
     </form><br>
 <?php } ?>
-<?php require_once 'footer_content.php' ?>
+<?=$html->footer_content();mysqli_close($conn);?>
