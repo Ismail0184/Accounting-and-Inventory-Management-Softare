@@ -158,6 +158,7 @@ while($subnrow=mysqli_fetch_object($sub_menu)): ?>
 				pmm.user_id='".$_SESSION["userid"]."' and
 				pmm.company_id='".$_SESSION['companyid']."'  and
 				dmm.module_id='".$_SESSION['module_id']."' and
+				dmm.main_menu_id not in ('10068') and 
 				dmm.status=1 and pmm.status=1
 				order by dmm.sl";
         $master_result=mysqli_query($conn, $result);
