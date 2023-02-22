@@ -1301,7 +1301,7 @@ function sub_sub_ledger_generate($sub_ledger_id,$name, $under, $balance, $now, $
 }
 
 
-function ledger_generate($ledger_id,$ledger_name,$ledger_group_id,$opening_balance,$balance_type,$depreciation_rate,$credit_limit, $opening_balance_on,$proj_id,$budget_enable='NO',$type,$parent)
+function ledger_generate($ledger_id,$ledger_name,$ledger_group_id,$opening_balance,$balance_type,$depreciation_rate,$credit_limit, $opening_balance_on,$proj_id,$budget_enable='NO',$parent,$type)
 {
  global $conn;
  $ledger_group=substr($ledger_group_id,0,4);
@@ -1316,7 +1316,7 @@ function ledger_generate($ledger_id,$ledger_name,$ledger_group_id,$opening_balan
 		`opening_balance_on` ,
 		`proj_id`,
 		`budget_enable`,
-		group_for,section_id,company_id,entry_at,entry_by,parent,type)
+		group_for,section_id,company_id,entry_at,entry_by,parent,`type`)
 		VALUES ('$ledger_id','$ledger_name', '$ledger_group', '$opening_balance', '$balance_type', '$depreciation_rate', '$credit_limit', '$opening_balance_on','$proj_id','$budget_enable','".$_SESSION['usergroup']."','".$_SESSION['sectionid']."','".$_SESSION['companyid']."','".date('Y-m-d H:i:s')."','".$_SESSION['userid']."','$parent','$type')";
  if(mysqli_query($conn, $sql))
   return TRUE;

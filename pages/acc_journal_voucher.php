@@ -211,7 +211,7 @@ journal_info j,
  ";
 ?>
 
-<?php require_once 'body_content_nva_sm.php'; ?>
+<?php require_once 'header_content.php'; ?>
     <style>
         input[type=text]:focus {
             background-color: lightblue;
@@ -224,7 +224,7 @@ journal_info j,
             var targetWin = window.open(pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
         }
     </script>
-<?php require_once 'body_content_entry_mod.php'; ?>
+<?php require_once 'body_content_nva_sm.php'; ?>
 
     <div class="col-md-8 col-xs-12">
         <div class="x_panel">

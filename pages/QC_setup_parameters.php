@@ -1,6 +1,6 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
-$title='QC Parameter';
+$title='QC Testing Parameter';
 $unique='id';
 $unique_field='PARAMETERS_Name';
 $table='PARAMETERS';
@@ -22,10 +22,15 @@ if(isset($_POST['record'])) {
 
 if(isset($_POST['modify'])) {
         $crud->update($unique);
-        $type=1;
+        unset($_POST);
 		echo "<script>self.opener.location = '$page'; self.blur(); </script>";
         echo "<script>window.close(); </script>";
 }}
+
+if(isset($$unique))
+{   $condition=$unique."=".$$unique;
+    $data=db_fetch_object($table,$condition);
+    while (list($key, $value)=each($data)){ $$key=$value;}}
 
 $res="Select p.id,p.PARAMETERS_CODE as code,p.PARAMETERS_Name as name,
        IF(p.status=1, 'Active','Inactive') as status
@@ -73,14 +78,15 @@ while($row=mysqli_fetch_object($query)){
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Parameter Code<span class="required text-danger">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="PARAMETERS_CODE" style="font-size: 11px"  required  name="PARAMETERS_CODE" value="<?=$_SESSION[PARAMETERS_CODE];?>" class="form-control col-md-7 col-xs-12" >
+                                <input type="hidden" name="<?=$unique?>" value="<?=$$unique?>">
+                                <input type="text" id="PARAMETERS_CODE" style="font-size: 11px"  required  name="PARAMETERS_CODE" value="<?=$PARAMETERS_CODE;?>" class="form-control col-md-7 col-xs-12" >
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Parameter Name<span class="required">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="PARAMETERS_Name" style="font-size: 11px"  required  name="PARAMETERS_Name" value="<?php if($_SESSION[initiate_daily_production]){ echo$inirow[remarks]; } else { echo ''; } ?>" class="form-control col-md-7 col-xs-12" >
+                                <input type="text" id="PARAMETERS_Name" style="font-size: 11px"  required  name="PARAMETERS_Name" value="<?=$PARAMETERS_Name;?>" class="form-control col-md-7 col-xs-12" >
                             </div>
                         </div>
                         <hr/>
