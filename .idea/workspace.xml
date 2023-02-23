@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/inspection_print_view_pr.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/Inspection_Work_Sheet.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Inspection_Work_Sheet.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/QC_good_received_note.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/QC_good_received_note.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/item_specifications.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/item_specifications.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/inspection_print_view_pr.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/inspection_print_view_pr.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +75,7 @@
       <workItem from="1676953678733" duration="6744000" />
       <workItem from="1676984082767" duration="1749000" />
       <workItem from="1677038876107" duration="18452000" />
-      <workItem from="1677128838295" duration="5260000" />
+      <workItem from="1677128838295" duration="10862000" />
     </task>
     <servers />
   </component>

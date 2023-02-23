@@ -13,6 +13,7 @@ $journal_item="journal_item";
 $sj_unique='tr_no';
 $page='QC_good_received_note.php';
 $page_worksheet='inspection_print_view_pr.php';
+$page_inspection_sheet='Inspection_Work_Sheet.php';
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
 $targeturl="<meta http-equiv='refresh' content='0;$page'>";
@@ -305,7 +306,8 @@ td{
                             <th style="text-align:center; width: 10%">Unit Price</th>
                             <th style="text-align:center; width: 10%">Amount</th>
                             <th style="text-align:center; width: 10%">Status</th>
-                            <th style="text-align:center; width: 10%">WS</th>
+                            <th style="text-align:center;">Worksheet</th>
+                            <th style="text-align:center;">Inspection Sheet</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -325,11 +327,12 @@ td{
                                 <td style="vertical-align:middle"><?=$row[finish_goods_code];?></td>
                                 <td style="vertical-align:middle;" onclick='OpenPopupCenter("<?=$page?>?<?=$unique?>=<?=$_GET[$unique]?>&item_id=<?=$row['item_id']?>&line_id=<?=$row['id']?>", "TEST!?", 850, 600)'><?=$row[item_name];?></td>
                                 <td style="vertical-align:middle; text-align:center"><?=$row[unit_name];?></td>
-                                <td align="center" style=" text-align:right;vertical-align:middle;"><?=$row[qty]; ?></td>
-                                <td align="center" style=" text-align:center;vertical-align:middle;"><?=$row[rate]; ?></td>
-                                <td align="center" style="text-align:right;vertical-align:middle;"><?=number_format($row[amount],2);?></td>
-                                <td align="center" style="text-align:center;vertical-align:middle;"><?=($row[batch_split_status]=='CHECKED')? '<span class="label label-success" style="font-size:10px">CHECKED</span>' : '<span class="label label-default" style="font-size:10px">UNCHECKED</span>'?></td>
-                                <td align="center" style="text-align:center;vertical-align:middle;" onclick='OpenPopupCenter("<?=$page_worksheet?>?item_id=<?=$row['item_id']?>&pr_no=<?=$row['pr_no']?>&id=<?=$row['id']?>", "TEST!?", 850, 600)'><img src="../assets/images/icon/worksheet.png" height="30" width="30"></td>
+                                <td style=" text-align:right;vertical-align:middle;"><?=$row[qty]; ?></td>
+                                <td style=" text-align:center;vertical-align:middle;"><?=$row[rate]; ?></td>
+                                <td style="text-align:right;vertical-align:middle;"><?=number_format($row[amount],2);?></td>
+                                <td style="text-align:center;vertical-align:middle;"><?=($row[batch_split_status]=='CHECKED')? '<span class="label label-success" style="font-size:10px">CHECKED</span>' : '<span class="label label-default" style="font-size:10px">UNCHECKED</span>'?></td>
+                                <td style="text-align:center;vertical-align:middle;" onclick='OpenPopupCenter("<?=$page_worksheet?>?item_id=<?=$row['item_id']?>&pr_no=<?=$row['pr_no']?>&id=<?=$row['id']?>", "TEST!?", 850, 600)'><img src="../assets/images/icon/worksheet.png" height="25" width="25"></td>
+                                <td style="text-align:center;vertical-align:middle;" onclick='OpenPopupCenter("<?=$page_inspection_sheet?>?item_id=<?=$row['item_id']?>&pr_no=<?=$row['pr_no']?>&id=<?=$row['id']?>", "TEST!?", 850, 600)'><img src="../assets/images/icon/inspection.png" height="25" width="25"></td>
 
                             </tr>
                             <?php  $ttotal_unit=$ttotal_unit+$row[total_unit];

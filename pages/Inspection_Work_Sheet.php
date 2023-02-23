@@ -2,156 +2,28 @@
  require_once 'support_file.php'; 
  $title='Inspection Work Sheet';
 unset($_SESSION['Inspection_Work_Sheet_ID']);
+$item_info = find_all_field('item_info','','item_id='.$_GET['item_id']);
+$QC_IWS_master = find_all_field('QC_Inspection_Work_Sheet_master','','item_id='.$_GET['item_id']);
+$pr_master = find_all_field('purchase_receive','','item_id='.$_GET['item_id'].' and id='.$_GET['id'].' and pr_no='.$_GET['pr_no']);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?php echo $userRow[proj_name]; ?> | <?php echo $title; ?></title>
-
-    <!-- Bootstrap -->
-    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!-- bootstrap-wysiwyg -->
-    <link href="../vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
-    <!-- Select2 -->
-    <link href="../vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-    <!-- Switchery -->
-    <link href="../vendors/switchery/dist/switchery.min.css" rel="stylesheet">
-    <!-- starrr -->
-    <link href="../vendors/starrr/dist/starrr.css" rel="stylesheet">
-    <!-- bootstrap-daterangepicker -->
-    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-
-    <!-- Custom Theme Style -->
-    <link href="../build/css/custom.min.css" rel="stylesheet">
- 
-  <SCRIPT language=JavaScript>
+<?php require_once 'header_content.php'; ?>
+<SCRIPT language=JavaScript>
 function reload(form)
 {
 	var val=form.productcode.options[form.productcode.options.selectedIndex].value;
 	self.location='purchase.php?productcodeget=' + val ;
 }
-
-
 </script>
-
-
-
-    <script>
-        var x = 0;
-        var y = 0;
-        var z = 0;
-        function calc(obj) {
-            var e = obj.id.toString();
-            if (e == 'qtys') {
-                x = Number(obj.value);
-                y = Number(document.getElementById('rate').value);
-            } else {
-                x = Number(document.getElementById('qtys').value);
-                y = Number(obj.value);
-            }
-            z = x * y;
-            document.getElementById('total').value = z;
-            document.getElementById('update').innerHTML = z;
-        }
-		
-		
-		var submit = document.querySelector("input[type=submit]");
-  
-/* set onclick on submit input */   
-submit.setAttribute("onclick", "return test()");
-
-//submit.addEventListener("click", test);
-
-function test() {
-
-  if (confirm('Are you sure you want to submit this form?')) {         
-    return true;         
-  } else {
-    return false;
-  }
-
-}
-    </script>
-    
-    
-    
-  </head>
-
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="<?php echo $webiste; ?>" class="site_title"><i class="fa fa-paw"></i> <span>ICPBD</span></a>
-            </div>
-
-            <div class="clearfix"></div>
-
-            <!-- menu profile quick info -->
-           <?php include ("pro.php");  ?>
-            <!-- /menu profile quick info -->
-
-            <br />
-
-            <!-- sidebar menu -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                         <?php include("sidebar_menus.php"); ?>
-
-            </div>
-            <!-- /sidebar menu -->
-
-            <!-- /menu footer buttons -->
-            <div class="sidebar-footer hidden-small">
-            <?php include("menu_footer.php"); ?>
-            </div>
-            <!-- /menu footer buttons -->
-          </div>
-        </div>
-
-        <!-- top navigation -->
-        <div class="top_nav">
-         <?php include("top.php"); ?>
-        </div>
-        <!-- /top navigation -->
-
-        <!-- page content -->
-        <div class="right_col" role="main">
-          <div class="">
-           
-           
-
-            <div class="row">
-              
-
-              
+<?php if(isset($_GET[pr_no])):
+    require_once 'body_content_without_menu.php'; else :
+    require_once 'body_content.php'; endif;  ?>
 
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
                     <h2><?php echo $title; ?></h2>
-                     <ul class="nav navbar-right panel_toolbox">
-                     <div class="input-group pull-right">
-								<a target="_new" class="btn btn-sm btn-default"  href="production_report.php">
-									<i class="fa fa-plus-circle"></i> <span class="language" style="color:#000">Inspection Work Sheet Report</span>
-								</a>
-                                
-                                
-								</div>
-                    </ul>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">

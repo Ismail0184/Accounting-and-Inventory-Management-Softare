@@ -15,8 +15,6 @@
 function hide()
 { document.getElementById("pr").style.display="none";}
 </script>
-
-
 <style type="text/css">
 <!--
 .style1 {color: #000000}
@@ -46,7 +44,7 @@ function hide()
                             </tr>
                             
                             <tr>
-                              <td style="text-align:center; font-size:15px; font-weight:bold;"><span class="style1">Work Sheet</span></td>
+                              <td style="text-align:center; font-size:15px; font-weight:bold;"><span class="style1">Worksheet <br>(<?=$pr_master->work_sheet?> Copy)</span></td>
                             </tr>
                             </table>
                         </td>
@@ -90,17 +88,6 @@ function hide()
                         <td  align="left" valign="middle" style="width:2%">: </td>
                         <td><?=$pr_master->rcv_Date;?></td>
                       </tr>
-                      
-                      
-                       <tr>
-                        <th align="left" valign="top">Analyst Name</th>
-                        <td  align="left" valign="middle" style="width:2%">: </td>
-                        <td><?php $analyst=getSVALUE("QC_Inspection_Work_Sheet_master", "analyst", "where item_id='$_GET[fgid]' and MAN_ID='$_GET[custom_pr_no]'");
-				
-						 echo $analystname=getSVALUE("user_activity_management", "fname", "where  user_id='".$analyst."'");
-						?></td>
-                      </tr>
-                      
                     </table></td>
                   <td width="40%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="3"  style="font-size:13px">
                       <tr>
@@ -111,20 +98,17 @@ function hide()
                       <tr>
                         <th align="left" valign="middle">Lot No.</th>
                         <td  align="left" valign="middle" style="width:2%">: </td>
-                        <td><?
-						$packsize=getSVALUE("item_info", "pack_size", "where  item_id='$_GET[fgid]'");
-						$unit=getSVALUE("item_info", "unit_name", "where  item_id='$_GET[fgid]'"); ?>
-						 <?=getSVALUE("production_floor_receive_detail", "total_unit", "where  pr_no='$_GET[prno]'")/$packsize?></td>
+                        <td><?=$hghjg;?></td>
                       </tr>
                       <tr>
                         <th align="left" valign="middle">Quantity</th>
                         <td  align="left" valign="middle" style="width:2%">: </td>
-                        <td><?=$aqty=getSVALUE("QC_Inspection_Work_Sheet_master", "accepted_qty", "where item_id='$_GET[fgid]' and MAN_ID='$_GET[custom_pr_no]'")/$packsize;?> (<?=$unit?>)</td>
+                        <td><?=($pr_master->qty/$item_info->pack_size);?> (<?=$item_info->unit_name?>)</td>
                       </tr>
                       
                       
                       <tr>
-                        <th align="left" valign="middle">Samp. Size</th>
+                        <th align="left" valign="middle">Sample Size</th>
                         <td  align="left" valign="middle" style="width:2%">: </td>
                         <td><?=$aqty=getSVALUE("QC_Inspection_Work_Sheet_master", "Sample_Size", "where item_id='$_GET[fgid]' and MAN_ID='$_GET[custom_pr_no]'");?></td>
                       </tr>
@@ -161,21 +145,21 @@ function hide()
         <tr>
           <td align="center" bgcolor="#FFFFFF"><strong>S. No</strong></td>
           <td align="center" bgcolor="#FFFFFF"><strong>TEST PARAMETERS</strong></td>
-          <td align="center" bgcolor="#FFFFFF"><strong>RESULT</strong></td>
           <td align="center" bgcolor="#FFFFFF"><strong>SPECIFICATION</strong></td>
-          
+            <td align="center" bgcolor="#FFFFFF"><strong>RESULT</strong></td>
+
+
         </tr>
         <?php
-		
-		$speresult=mysql_query("Select * from item_SPECIFICATION where  item_id='$_GET[fgid]'");
-		while($sprow=mysql_fetch_array($speresult)){
-		 ?>
+        $res=mysqli_query($conn,"Select isp.TEST_PARAMETERS,isp.SPECIFICATION,concat(p.PARAMETERS_CODE,' : ',PARAMETERS_Name) as parameters from item_SPECIFICATION isp, PARAMETERS p where  isp.item_id='$_GET[item_id]' and isp.TEST_PARAMETERS=p.id order by isp.id");
+		while($data=mysqli_fetch_object($res)){?>
         <tr>
-          <td align="center" valign="top"><?=$i?></td>
-          <td align="left" valign="top"><?=$sprow[TEST_PARAMETERS];?></td>
-          <td align="left" valign="top"><?=$sprow[RESULT];?></td>
-          <td align="center" valign="top"><?=$sprow[SPECIFICATION];?></td>
-          
+          <td align="center" valign="top"><?=$i=$i+1;?></td>
+          <td align="left" valign="top"><?=$data->parameters;?></td>
+          <td align="center" valign="top"><?=$data->SPECIFICATION;?></td>
+            <td align="left" valign="top"></td>
+
+
         </tr>
         <?php } ?>
       </table></td>
@@ -191,9 +175,10 @@ function hide()
           
              <table style="font-size:11px; margin-top:50px" width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-               
+                <td style="text-align: center"><?=$_SESSION['username']?></td>
+                <td></td>
+                <td></td>
+
               </tr>
               
               <tr>
@@ -214,3 +199,4 @@ function hide()
 </table>
 </body>
 </html>
+<?php $work_sheet_copy=mysqli_query($conn, "UPDATE purchase_receive set work_sheet='Duplicate' where id=".$_GET['id']);?>
