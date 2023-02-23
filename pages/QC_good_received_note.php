@@ -12,6 +12,7 @@ $lc_lc_received_batch_split="lc_lc_received_batch_split";
 $journal_item="journal_item";
 $sj_unique='tr_no';
 $page='QC_good_received_note.php';
+$page_worksheet='inspection_print_view_pr.php';
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
 $targeturl="<meta http-equiv='refresh' content='0;$page'>";
@@ -304,6 +305,7 @@ td{
                             <th style="text-align:center; width: 10%">Unit Price</th>
                             <th style="text-align:center; width: 10%">Amount</th>
                             <th style="text-align:center; width: 10%">Status</th>
+                            <th style="text-align:center; width: 10%">WS</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -318,15 +320,16 @@ td{
                             $i=$i+1;
                             $ids=$row[id];
                             ?>
-                            <tr style="cursor:pointer" onclick='OpenPopupCenter("<?=$page?>?<?=$unique?>=<?=$_GET[$unique]?>&item_id=<?=$row['item_id']?>&line_id=<?=$row['id']?>", "TEST!?", 850, 600)'>
+                            <tr style="cursor:pointer" >
                                 <td style="width:3%; vertical-align:middle"><?php echo $i; ?></td>
                                 <td style="vertical-align:middle"><?=$row[finish_goods_code];?></td>
-                                <td style="vertical-align:middle;"><?=$row[item_name];?></td>
+                                <td style="vertical-align:middle;" onclick='OpenPopupCenter("<?=$page?>?<?=$unique?>=<?=$_GET[$unique]?>&item_id=<?=$row['item_id']?>&line_id=<?=$row['id']?>", "TEST!?", 850, 600)'><?=$row[item_name];?></td>
                                 <td style="vertical-align:middle; text-align:center"><?=$row[unit_name];?></td>
                                 <td align="center" style=" text-align:right;vertical-align:middle;"><?=$row[qty]; ?></td>
                                 <td align="center" style=" text-align:center;vertical-align:middle;"><?=$row[rate]; ?></td>
                                 <td align="center" style="text-align:right;vertical-align:middle;"><?=number_format($row[amount],2);?></td>
                                 <td align="center" style="text-align:center;vertical-align:middle;"><?=($row[batch_split_status]=='CHECKED')? '<span class="label label-success" style="font-size:10px">CHECKED</span>' : '<span class="label label-default" style="font-size:10px">UNCHECKED</span>'?></td>
+                                <td align="center" style="text-align:center;vertical-align:middle;" onclick='OpenPopupCenter("<?=$page_worksheet?>?item_id=<?=$row['item_id']?>&pr_no=<?=$row['pr_no']?>&id=<?=$row['id']?>", "TEST!?", 850, 600)'><img src="../assets/images/icon/worksheet.png" height="30" width="30"></td>
 
                             </tr>
                             <?php  $ttotal_unit=$ttotal_unit+$row[total_unit];
@@ -400,7 +403,7 @@ if($srn>0): ?>
                             <th>Challan No</th>
                             <th>VAT Challan</th>
                             <th style="">Entry By</th>
-                            <th style="">Entry At</th-->
+                            <th style="">Entry At</th>
                         </tr>
                         </thead>
                         <tbody>
