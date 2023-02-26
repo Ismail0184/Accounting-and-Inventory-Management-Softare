@@ -46,10 +46,11 @@ if(prevent_multi_submit()) {
                                 <? $sql_user_id="SELECT  u.user_id,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',d.DEPT_SHORT_NAME,')') FROM 						 
 							personnel_basic_info p,
 							department d,
-							user_activity_management u
+							users u
 							 where p.PBI_JOB_STATUS='In Service' and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
-							 u.PBI_ID=p.PBI_ID and d.DEPT_ID=6		 
+							 u.PBI_ID=p.PBI_ID and d.DEPT_ID=6 and
+							 u.account_status in ('active')
 							  order by p.PBI_NAME";
                                 advance_foreign_relation($sql_user_id,$_SESSION[user_permission_reportview_accounts]);?>
                             </select>
