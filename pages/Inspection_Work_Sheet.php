@@ -5,6 +5,8 @@ unset($_SESSION['Inspection_Work_Sheet_ID']);
 $item_info = find_all_field('item_info','','item_id='.$_GET['item_id']);
 $QC_IWS_master = find_all_field('QC_Inspection_Work_Sheet_master','','item_id='.$_GET['item_id']);
 $pr_master = find_all_field('purchase_receive','','item_id='.$_GET['item_id'].' and id='.$_GET['id'].' and pr_no='.$_GET['pr_no']);
+
+$ins= date('Ymd').date("hisa");
 ?>
 
 
@@ -16,6 +18,14 @@ function reload(form)
 	self.location='purchase.php?productcodeget=' + val ;
 }
 </script>
+<style>
+    input[type=text]{
+        font-size: 11px;
+    }
+    input[type=date]{
+        font-size: 11px;
+    }
+</style>
 <?php if(isset($_GET[pr_no])):
     require_once 'body_content_without_menu.php'; else :
     require_once 'body_content.php'; endif;  ?>
@@ -143,11 +153,11 @@ $data=mysql_fetch_object($mysqlquery);
 ?>
 <table width="95%"  style="border:none; margin-top:-30px; color:#999; " cellspacing="0" cellpadding="1">
 
-<tr style="border:none"><th style="text-align:left; width:15%">Item Name</th><th style="text-align:center; width:5%">:</th><td colspan="4" style="text-align:left; font-size:18px;"><strong><em><?=$data->item_name; ?> (<?=$data->unit_name; ?>)</em></strong></td></tr>
+<tr style="border:none"><th style="text-align:left; width:15%">Item Name</th><th style="text-align:center; width:5%">:</th><td colspan="4" style="text-align:left; font-size:18px;"><strong><em><?=$item_info->item_name; ?> (<?=$item_info->unit_name; ?>)</em></strong></td></tr>
 
 <tr style="border:none"><th style="text-align:left; width:15%">Insp. Lot No.</th><th style="text-align:center; width:2%">:</th><td  style="text-align:left; font-size:18px; color:red">
         <input type="hidden" id="warehouseid"  required="required" name="warehouseid" value="<?=$data->warehouse_id?>" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px" readonly >
-<input type="text" id="inspection_lot_no"  required="required" name="inspection_lot_no" value="<?=automatic_number_generate("","QC_Inspection_Work_Sheet_master","inspection_lot_no","inspection_for='FG' and inspection_date='".date('Y-m-d')."'");?>" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px" readonly >
+<input type="text" id="inspection_lot_no"  required="required" name="inspection_lot_no" value="<?=$ins?>" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px" readonly >
 </td>
     <th style="text-align:left; width:15%">No of Pack</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="text" name="no_of_pack" id="no_of_pack" value="<?=$data->no_of_pack;?>"  readonly class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px"  ></td>
 
@@ -158,7 +168,7 @@ $data=mysql_fetch_object($mysqlquery);
 <tr style="border:none">
 <th style="text-align:left; width:15%">Mfg Date</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red">
 
-        <input type="text" id="mfg"  required="required" name="mfg" value="" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" >
+        <input type="date"  required="required" name="mfg" value="" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" >
 
     </td>
 
@@ -168,14 +178,14 @@ $data=mysql_fetch_object($mysqlquery);
 
 
 <tr style="border:none">
-<th style="text-align:left; width:15%">Exp Date</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="text" name="Exp_date" id="Exp_date"  class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" /></td>
+<th style="text-align:left; width:15%">Exp Date</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="date" name="Exp_date"  class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" /></td>
 
 <th style="text-align:left; width:15%">Sample Size</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="text" name="Sample_Size" id="Sample_Size" value="<?=$btch=getSVALUE("production_floor_receive_detail","lot","Where custom_pr_no='".$_GET[custom_pr_no]."' and item_id=".$_GET[item_id]); ?>" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" ></td>
 </tr>
 
 
 <tr style="border:none">
-<th style="text-align:left; width:15%">Receipt Date</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="text" name="Receipt_date" id="Receipt_date" value="<?=$lot= getSVALUE('MAN_details','man_date','MAN_ID="'.$_GET[manid].'" and item_id='.$_GET[item_id]); ?>" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" ></td>
+<th style="text-align:left; width:15%">Receipt Date</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="date" name="Receipt_date" value="<?=$lot= getSVALUE('MAN_details','man_date','MAN_ID="'.$_GET[manid].'" and item_id='.$_GET[item_id]); ?>" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" ></td>
 
 <th style="text-align:left; width:15%;">Received Qty</th><th style="text-align:center; width:2%">:</th><td style="color:#000; font-size:12px; vertical-align:bottom">
         <input type="text" name="Received_Qty" id="Received_Qty" value="<?=$data->Receivedqty; ?> (<?=$data->unit_name?>)" readonly class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" >
@@ -185,7 +195,7 @@ $data=mysql_fetch_object($mysqlquery);
 
 
 <tr style="border:none">
-<th style="text-align:left; width:15%">Release Date</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="text" name="Release_Date" id="Release_Date" value="" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" ></td>
+<th style="text-align:left; width:15%">Release Date</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="date" name="Release_Date" value="" class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" ></td>
 
 <th style="text-align:left; width:15%">Approved Qty</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="text" name="approved_qty_man" id="approved_qty_man" value="<?=$data->Receivedqty; ?> (<?=$data->unit_name?>)" readonly class="form-control col-md-7 col-xs-12" style="height:25px; width:130px; margin-top:5px" ></td>
 </tr>
@@ -388,189 +398,4 @@ $data=mysql_fetch_object($mysqlquery);
                 </div>
 
               </div>
-            
-             
-              
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-              
-          </div>
-        </div>
-        <!-- /page content -->
-
-        <!-- footer content -->
-        
-        <!-- /footer content -->
-      </div>
-    </div>
-
-   <!-- jQuery -->
-    <script src="../vendors/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- FastClick -->
-    <script src="../vendors/fastclick/lib/fastclick.js"></script>
-    <!-- NProgress -->
-    <script src="../vendors/nprogress/nprogress.js"></script>
-    <!-- bootstrap-progressbar -->
-    <script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-    <!-- iCheck -->
-    <script src="../vendors/iCheck/icheck.min.js"></script>
-    <!-- bootstrap-daterangepicker -->
-    <script src="../vendors/moment/min/moment.min.js"></script>
-    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <!-- bootstrap-wysiwyg -->
-    <script src="../vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
-    <script src="../vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
-    <script src="../vendors/google-code-prettify/src/prettify.js"></script>
-    <!-- jQuery Tags Input -->
-    <script src="../vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
-    <!-- Switchery -->
-    <script src="../vendors/switchery/dist/switchery.min.js"></script>
-    <!-- Select2 -->
-    <script src="../vendors/select2/dist/js/select2.full.min.js"></script>
-    <!-- Parsley -->
-    <script src="../vendors/parsleyjs/dist/parsley.min.js"></script>
-    <!-- Autosize -->
-    <script src="../vendors/autosize/dist/autosize.min.js"></script>
-    <!-- jQuery autocomplete -->
-    <script src="../vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
-    <!-- starrr -->
-    <script src="../vendors/starrr/dist/starrr.js"></script>
-
-    <!-- Custom Theme Scripts -->
-    <script src="../build/js/custom.min.js"></script>
-
-    <!-- bootstrap-daterangepicker -->
-    <script>
-      $(document).ready(function() {
-        $('#Release_Date').daterangepicker({
-			
-          singleDatePicker: true,
-          calender_style: "picker_4",
-		  
-        }, function(start, end, label) {
-          console.log(start.toISOString(), end.toISOString(), label);
-        });
-      });
-    </script>
-    
-    
-    
-    <script>
-      $(document).ready(function() {
-        $('#mfg').daterangepicker({
-			
-          singleDatePicker: true,
-          calender_style: "picker_4",
-		  
-        }, function(start, end, label) {
-          console.log(start.toISOString(), end.toISOString(), label);
-        });
-      });
-    </script>
-
-        <script>
-            $(document).ready(function() {
-                $('#Exp_date').daterangepicker({
-
-                    singleDatePicker: true,
-                    calender_style: "picker_4",
-
-                }, function(start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-            });
-        </script>
-
-        <script>
-            $(document).ready(function() {
-                $('#Receipt_date').daterangepicker({
-
-                    singleDatePicker: true,
-                    calender_style: "picker_4",
-
-                }, function(start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-            });
-        </script>
-    <!-- /bootstrap-daterangepicker -->
-
-   
-
-    <!-- Select2 -->
-    <script>
-      $(document).ready(function() {
-        $(".select2_single").select2({
-          placeholder: "select your choice",
-          allowClear: true
-        });
-        $(".select2_group").select2({});
-        $(".select2_multiple").select2({
-          maximumSelectionLength: 4,
-          placeholder: "With Max Selection limit 4",
-          allowClear: true
-        });
-      });
-    </script>
-    <!-- /Select2 -->
-    
-    
-    
-    
-
-   
-    
-
-   
-
-   
-
-    <!-- Starrr -->
-    <script>
-      $(document).ready(function() {
-        $(".stars").starrr();
-
-        $('.stars-existing').starrr({
-          rating: 4
-        });
-
-        $('.stars').on('starrr:change', function (e, value) {
-          $('.stars-count').html(value);
-        });
-
-        $('.stars-existing').on('starrr:change', function (e, value) {
-          $('.stars-count-existing').html(value);
-        });
-      });
-	  
-	  
-	  
-	  $('#rate').keyup(function(){
-        var qtys;
-        var rate;
-        qtys = parseFloat($('#qtys').val());
-        rate = parseFloat($('#rate').val());
-		
-        var amounta = qtys * rate;
-        $('#amounta').val(amounta.toFixed(2));
-
-
-    });
-    </script>
-    <!-- /Starrr -->
-  </body>
-</html>
+<?=$html->footer_content();mysqli_close($conn);?>
