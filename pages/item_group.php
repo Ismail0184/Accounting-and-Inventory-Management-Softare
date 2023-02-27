@@ -8,50 +8,33 @@ $page="item_group.php";
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
 
-if(isset($_POST[$unique_field]))
-
-{
-
+if(isset($_POST[$unique_field])) {
     $$unique = $_POST[$unique];
     if(isset($_POST['record']))
-
     {
-
         $_POST['entry_at']=time();
         $_POST['entry_by']=$_SESSION['user']['id'];
         $_POST['ledger_group_id']=$inventory;
-
         $min=number_format(($inventory*1000000000000)+100000000, 0, '.', '');
         $max=number_format(($inventory*1000000000000)+1000000000000, 0, '.', '');
         $_POST[$unique]=number_format(next_value('group_id','item_group','100000000',$min,$min,$max), 0, '.', '');
         $crud->insert();
-        $type=1;
         $msg='New Entry Successfully Inserted.';
         unset($_POST);
         unset($$unique);
     }
 
-
-
 //for Modify..................................
-
-
-
 
     if(isset($_POST['modify']))
     {
-
         $_POST['edit_at']=time();
         $_POST['edit_by']=$_SESSION['userid'];
         $crud->update($unique);
-        $type=1;
-
-        echo $targeturl;
-    }
-
+        echo "<script>self.opener.location = '$page'; self.blur(); </script>";
+        echo "<script>window.close(); </script>";    }
 
 //for Delete..................................
-
     if(isset($_POST['delete']))
     {
         $condition=$unique."=".$$unique;
@@ -69,7 +52,15 @@ if(isset($$unique))
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
-$res='select '.$unique.','.$unique.' as group_code,group_name,IF(status=1, "Active",IF(status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' order by '.$unique;
+$res='select g.'.$unique.',g.'.$unique.' as group_code,g.group_name,(SELECT COUNT(sub_group_id) from item_sub_group where group_id=g.group_id) as has_child,IF(g.status=1, "Active",IF(g.status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' g order by g.'.$unique;
+$query=mysqli_query($conn, $res);
+while($data=mysqli_fetch_object($query)){
+    if(isset($_POST['deletedata'.$data->$unique]))
+    { if($data->has_child == 0){
+        mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$data->$unique.""));
+    } else { echo "It has child (".$data->has_child."). Hence you cannot delete the Group ID (".$data->group_id.")";}
+        unset($_POST);
+    }}
 ?>
 
 <?php require_once 'header_content.php'; ?>

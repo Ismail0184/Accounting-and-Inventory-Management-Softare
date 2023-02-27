@@ -10,8 +10,8 @@ require ("../app/classes/curd_function.php");
 require ("../app/classes/director.class.php");
 require ("../app/db/db.php");
 require ("../app/classes/function_module_create.php");
-$crud      =new crud();
-$html      =new htmldiv();
+$crud      = new crud();
+$html      = new htmldiv();
 
 
  // if session is not set this will redirect to login page

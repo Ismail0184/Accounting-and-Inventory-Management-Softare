@@ -2,11 +2,11 @@
 
 require_once 'support_file.php';
 $title='Report';
-$from_date=date('Y-m-d' , strtotime($_POST[f_date]));
-$to_date=date('Y-m-d' , strtotime($_POST[t_date]));
+$from_date=date('Y-m-d' , strtotime($_POST['f_date']));
+$to_date=date('Y-m-d' , strtotime($_POST['t_date']));
 
-$pfrom_date=date('Y-m-d' , strtotime($_POST[pf_date]));
-$pto_date=date('Y-m-d' , strtotime($_POST[pt_date]));
+$pfrom_date=date('Y-m-d' , strtotime($_POST['pf_date']));
+$pto_date=date('Y-m-d' , strtotime($_POST['pt_date']));
 list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $date);
 
 $ledger_id=$_REQUEST["ledger_id"];
@@ -1533,7 +1533,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         if(isset($item_id))				{$item_con=' and sd.item_id='.$item_id;}
         if($_POST['do_no']>0) 					$do_no=$_POST['do_no'];
         if(isset($do_no))				{$do_no_con=' and sd.do_no='.$do_no;}
-        $datecon=' and sd.do_date between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+        $datecon=' and sd.do_date between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
         $result='Select
 				sd.*,
 				d.dealer_custom_code,
@@ -1586,7 +1586,6 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
             </tr>
             <?php
             $total_sales_amount=$total_sales_amount+$data->total_amt;
-            $total_do=$data->total_do;
         }
         $toatl_sales_reguler=find_a_field('sale_do_details','SUM(total_amt)','do_type in ("","sales") and do_date between "'.$from_date.'" and "'.$to_date.'" and dealer_type not in ("export") ');
         $toatl_sales=find_a_field('sale_do_details','SUM(total_amt)','do_type not in ("","sales") and do_date between "'.$from_date.'" and "'.$to_date.'" and dealer_type in ("export")')

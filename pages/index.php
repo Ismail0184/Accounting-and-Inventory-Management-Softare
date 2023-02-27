@@ -3,8 +3,8 @@ session_start();
 require_once ('base.php');
 if(isset($_SESSION['login_email'])!="")
 {header("Location: dashboard.php");}
-if($_GET[module]>0){
-    $_SESSION['module_id']=$_GET[module];
+if($_GET['module']>0){
+    $_SESSION['module_id']=$_GET['module'];
 }
 if(isset($_POST['btn-login']))
 	{   $user_email = trim($_POST['user_email']);
@@ -16,31 +16,34 @@ if(isset($_POST['btn-login']))
 			$count = $stmt->rowCount();
 if($row['password']==$user_password){
 $_SESSION['login_email'] = $row['username'];
-$_SESSION['companyid']= $row[company_id];
-$_SESSION['sectionid']= $row[section_id];	
-$_SESSION["userid"] = $row[user_id];
-$_SESSION["PBI_ID"] = $row[PBI_ID];
-$_SESSION["username"] = $row[fname];
-$_SESSION["email"] = $row[email];
-$_SESSION["warehouse"] = $row[warehouse_id];
-$_SESSION["department"]= $row[department];
-$_SESSION["dep_power_level"]= $row[dep_power_level];
-$_SESSION["userlevel"]= $row[level];
+$_SESSION['companyid']= $row['company_id'];
+$_SESSION['sectionid']= $row['section_id'];
+$_SESSION["userid"] = $row['user_id'];
+$_SESSION["PBI_ID"] = $row['PBI_ID'];
+$_SESSION["username"] = $row['fname'];
+$_SESSION["email"] = $row['email'];
+$_SESSION["warehouse"] = $row['warehouse_id'];
+$_SESSION["department"]= $row['department'];
+$_SESSION["dep_power_level"]= $row['dep_power_level'];
+$_SESSION["userlevel"]= $row['level'];
 $_SESSION["language"] = 'English';
-$_SESSION["logo_color"]= $row[logo_color];
-$_SESSION["designation"]= $row[designation];
-$_SESSION["status"]= $row[status];
+$_SESSION["logo_color"]= $row['logo_color'];
+$_SESSION["designation"]= $row['designation'];
+$_SESSION["status"]= $row['status'];
 //$_SESSION["PASSCODE"]= $row[password];
-$_SESSION['usergroup']=$row[group_for];
-$_SESSION['gander']=$row[gander];
-$_SESSION['userpic']=$row[picture_url];
+$_SESSION['usergroup']=$row['group_for'];
+$_SESSION['gander']=$row['gander'];
+$_SESSION['userpic']=$row['picture_url'];
 $_SESSION['create_date']=date('Y-m-d');
 $res=mysqli_query($conn, "SELECT * FROM company WHERE  section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
  $userRow=mysqli_fetch_array($res);
-$_SESSION['company_name']=$userRow[company_name];
-$_SESSION['company_address']=$userRow[address];
-$_SESSION['com_short_name']=$userRow[com_short_name];
-$_SESSION['section_name']=$userRow[section_name];
+$_SESSION['company_name']=$userRow['company_name'];
+$_SESSION['company_address']=$userRow['address'];
+$_SESSION['com_short_name']=$userRow['com_short_name'];
+$_SESSION['section_name']=$userRow['section_name'];
+
+$login_activity_insert = mysqli_query($conn, "INSERT INTO user_activity_log (user_id,ip)
+VALUES ('$row[user_id]','$ip')");
 header("Location: dashboard.php");
 			} else{
 				echo "email or password does not exist."; // wrong details

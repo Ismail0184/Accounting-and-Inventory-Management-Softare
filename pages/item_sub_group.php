@@ -52,7 +52,16 @@ if(isset($$unique)) {
     { $$key=$value;}}
 
 $sql="select group_id,concat(group_id,' : ',group_name) from item_group order by group_id";
-$res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.',IF(status=1, "Active",IF(status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' order by '.$unique;
+$res='select sg.'.$unique.',sg.'.$unique.' as Sub_group_code,sg.'.$unique_field.',(SELECT COUNT(item_id) from item_info where sub_group_id=sg.sub_group_id) as has_child
+,IF(sg.status=1, "Active",IF(sg.status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' sg order by sg.'.$unique.'';
+$query=mysqli_query($conn, $res);
+while($data=mysqli_fetch_object($query)){
+    if(isset($_POST['deletedata'.$data->$unique]))
+    { if($data->has_child == 0){
+        mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$data->$unique.""));
+    } else { echo "It has child (".$data->has_child."). Hence you cannot delete the Sub-Group ID (".$data->sub_group_id.")";}
+        unset($_POST);
+    }}
 ?>
 <?php require_once 'header_content.php'; ?>
 <?php require_once 'body_content.php'; ?>
@@ -100,11 +109,9 @@ $res='select '.$unique.','.$unique.' as Sub_group_code,'.$unique_field.',IF(stat
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <input type="text" id="sub_group_name" style="width:100%; font-size: 12px"  required   name="sub_group_name" value="<?=$sub_group_name;?>" class="form-control col-md-7 col-xs-12" >
                                         </div>
-                                    </div><br>
-
+                                    </div>
 
                                      <?php if($_GET[$unique]):  ?>
-
                                          <div class="form-group" style="width: 100%">
                                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status</label>
                                              <div class="col-md-6 col-sm-6 col-xs-12">

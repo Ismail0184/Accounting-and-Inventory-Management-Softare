@@ -1,8 +1,6 @@
 <?php
 require_once 'support_file.php';
 $title='Depot Expenses Voucher';
-
-
 $unique='payment_no';
 $unique_field='voucher_date';
 $table_journal_master="payment";
@@ -16,7 +14,7 @@ $jv=next_journal_voucher_id();
 if(prevent_multi_submit()) {
 
     if (isset($_POST['delete'])) {
-        $condition =$unique."=".$$$unique;
+        $condition =$unique."=".$$unique;
         $crud->delete_all($condition);
         unset($_POST);
     }
