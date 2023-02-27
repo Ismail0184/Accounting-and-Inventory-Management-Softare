@@ -1,13 +1,13 @@
 <?php
 
-/* Created on: 2/05/2022
+/* Created on: 25/02/2023
  * Author: Md Ismail Hossain
  *
  * Description: This class manages crud.
  */
 
 
-//include('..app/config/base.php');
+
 require_once 'base.php';
 class crud{
     public  $table_name;
@@ -1030,7 +1030,7 @@ public function body_content(){
 	return false;
 }
 
-public function header_content($title){
+public function header_content($title,$unique){
 	 if($title==NULL) return NULL;
 	$str.='<!DOCTYPE html>
 <html lang="en">

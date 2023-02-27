@@ -15,8 +15,13 @@ echo $day."<br>";
 echo $month."<br>";
 echo $year;
 
-echo $yearismail;
 
+preg_match('#^(\d{2})-(\d{2})-(\d{4})$#', $orderdate, $results);
+$month = $results[1];
+$day   = $results[2];
+$year  = $results[3];
+
+echo $month;
 
 ?>
 </body>
