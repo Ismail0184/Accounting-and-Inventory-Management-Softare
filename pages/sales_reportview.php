@@ -23,7 +23,8 @@ if($sectionid=='400000'){
 if(!empty($_POST['order_by'])) $order_by_GET=$_POST['order_by'];
 if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET;}
 if(!empty($_POST['order_by']) && !empty($_POST['sort'])) $order_by_GET=$_POST['order_by'];
-if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET.' '.$_POST[sort].'';}
+if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET.' '.$_POST['sort'].'';}
+$report_id = $_POST['report_id'];
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +66,7 @@ if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET.' '.$_POST[sor
 
 
 
-<?php if ($_POST['report_id']=='9001001'):?>
+<?php if ($report_id=='9001001'):?>
     <title>Sales Invoice List</title>
     <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
     <h4 align="center" style="margin-top:-15px">Sales Invoice List</h4>
@@ -75,7 +76,7 @@ if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET.' '.$_POST[sor
     <?php if($_POST['warehouse_id']){?>
         <h5 align="center" style="margin-top:-15px">Warehouse : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$_POST[warehouse_id].'')?></h5>
     <?php } ?>
-    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
     <?php
     $datecon=' and m.do_date between  "'.$from_date.'" and "'.$to_date.'"';
     if($_POST['warehouse_id']>0) 			 $warehouse_id=$_POST['warehouse_id'];
@@ -180,13 +181,13 @@ order by c.do_no";
         </tr></tbody>
     </table>
 
-<?php elseif ($_POST['report_id']=='9001002'):?>
-    <h2 align="center"><?=$_SESSION[company_name]?></h2>
+<?php elseif ($report_id=='9001002'):?>
+    <h2 align="center"><?=$_SESSION['company_name']?></h2>
     <h4 align="center" style="margin-top:-10px">Sales Summery</h4>
-    <?php if($_POST[item_id]){?>
-        <h5 align="center" style="margin-top:-10px">Item Name:  <?=find_a_field('item_info','item_name','item_id='.$_POST[item_id].'');?></h5>
+    <?php if($_POST['item_id']){?>
+        <h5 align="center" style="margin-top:-10px">Item Name:  <?=find_a_field('item_info','item_name','item_id='.$_POST['item_id'].'');?></h5>
     <?php } ?>
-    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
     <table id="customers" align="center"  style="width:98%; border: solid 1px #999; border-collapse:collapse;">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -277,8 +278,6 @@ order by c.do_no";
         $toatl_sales_reguler=find_a_field('sale_do_details','SUM(total_amt)','do_type in ("","sales") and do_date between "'.$from_date.'" and "'.$to_date.'" and dealer_type not in ("export") ');
         $toatl_sales_export=find_a_field('sale_do_details','SUM(total_amt)','do_type in ("","sales") and do_date between "'.$from_date.'" and "'.$to_date.'" and dealer_type in ("export")')
         ?>
-
-
         <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
             <td style="border: solid 1px #999; padding:2px; text-align: right" colspan="17">Local Sales in Amount  = </td>
             <td style="border: solid 1px #999; padding:2px; text-align: right"><?=number_format($toatl_sales_reguler,2);?></td>
@@ -307,7 +306,7 @@ order by c.do_no";
         </tbody>
     </table>
 
-<?php elseif ($_POST['report_id']=='9004001'):
+<?php elseif ($report_id=='9004001'):
     ?>
     <style>
         #customers {
@@ -326,7 +325,6 @@ order by c.do_no";
     <title>Sales Info Master | <?=$_SESSION['company_name'];?></title>
     <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
     <p align="center" style="margin-top:-18px; font-size: 15px">Sales Info Master</p>
-
     <table align="center" id="customers"  style="width:95%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <p style="width:95%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -349,25 +347,18 @@ order by c.do_no";
 								(select sub_dealer_name_e from sub_db_info where sub_db_code=p.sub_db_code)	as sub_dealer,
 								  a.AREA_NAME as territory,b.BRANCH_NAME as region,
 								 (select dealer_name_e from dealer_info where dealer_code=(select super_dealer_code from sub_db_info where sub_db_code=p.sub_db_code)) as dealer
-
 								from
 								personnel_basic_info p ,
 								essential_info e,
 								area a,
 								branch b
-
 								where
 								p.PBI_ID=e.PBI_ID and
 								p.PBI_JOB_STATUS in ("In Service") and
 								a.PBI_ID=p.tsm and
 								a.Region_code=b.BRANCH_ID and
 								p.PBI_DESIGNATION like "60" group by p.PBI_ID order by p.tsm,dealer,sub_dealer,p.PBI_ID');
-        while($PBI_ROW=mysqli_fetch_object($res)){
-
-
-
-            ?>
-
+        while($PBI_ROW=mysqli_fetch_object($res)){?>
             <tr style="border: solid 1px #999; font-size:10px; font-weight:normal">
                 <td align="center" style="border: solid 1px #999; padding:2px"><?=$i=$i+1;?></td>
                 <td align="center" style="border: solid 1px #999; padding:2px"><?=$PBI_ROW->region;?></td>
@@ -384,14 +375,11 @@ order by c.do_no";
         </tbody></table>
 
 
-<?php elseif ($_POST['report_id']=='9004002'):
+<?php elseif ($report_id=='9004002'):
   $sql="SELECT d.dealer_code,d.dealer_code,d.account_code as ledger_id,d.dealer_name_e as customer_name,t.town_name as town,a.AREA_NAME as territory,b.BRANCH_NAME as region,d.propritor_name_e as propritor_name,d.contact_person,d.contact_number,d.address_e as address,d.national_id,d.TIN_BIN as 'TIN / BIN'  from dealer_info d, town t, area a, branch b WHERE
 d.town_code=t.town_code and a.AREA_CODE=d.area_code and b.BRANCH_ID=d.region and
    d.canceled in ('".$_POST[canceled]."') ".$order_by.""; echo reportview($sql,'Customer Report','98');
   ?>
-
-
-
 <?php elseif ($_POST['reporttypes']=='500001'):?>
     <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
     <p align="center" style="margin-top:-18px; font-size: 15px">Transaction Statement</p>
@@ -399,7 +387,7 @@ d.town_code=t.town_code and a.AREA_CODE=d.area_code and b.BRANCH_ID=d.region and
     <?php if($_POST[lc_id]){ ?>
     <p align="center" style="margin-top:-10px; font-size: 12px"><strong>LC No:</strong> <?=getSVALUE('lc_lc_master','lc_no','where id='.$_REQUEST['lc_id']);?></p>
 <?php } ?>
-    <p align="center" style="margin-top:-10px; font-size: 11px"><strong>Period From :</strong> <?=$_POST[f_date]?> <strong>to</strong> <?=$_POST[t_date]?></p>
+    <p align="center" style="margin-top:-10px; font-size: 11px"><strong>Period From :</strong> <?=$_POST['f_date']?> <strong>to</strong> <?=$_POST['t_date']?></p>
     <table align="center"  style="width:95%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <p style="width:95%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -427,7 +415,7 @@ d.town_code=t.town_code and a.AREA_CODE=d.area_code and b.BRANCH_ID=d.region and
             $emp_id.=" and a.tr_from='".$tr_from."'";}
         if($lc_id> 0)
         {   $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$from_date' AND '$to_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup']." AND a.lc_id=$lc_id ";
-            $total=mysql_fetch_row(mysql_query($total_sql));
+            $total=mysqli_fetch_row(mysqli_query($conn, $total_sql));
             $c="select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate<'$from_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup']." AND a.lc_id=$lc_id".$emp_id;
             $p="select
 a.jvdate,
@@ -465,7 +453,7 @@ order by a.jvdate,a.id";
 
         } else  {
             $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$from_date' AND '$to_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup'].$emp_id;
-            $total=mysql_fetch_row(mysql_query($total_sql));
+            $total=mysqli_fetch_row(mysqli_query($conn, $total_sql));
             $c="select sum(a.dr_amt)-sum(a.cr_amt) from
             journal a,
             accounts_ledger b
@@ -514,14 +502,10 @@ order by a.jvdate,a.id";
             $t_total=$total[1]-$total[0];	}
         /* ===== Opening Balance =======*/
 
-        $psql=mysql_query($c);
-        $pl = mysql_fetch_row($psql);
+        $psql=mysqli_query($conn, $c);
+        $pl = mysqli_fetch_row($psql);
         $blance=$pl[0];
         ?>
-
-
-
-
         <tr style="border: solid 1px #999;font-weight:bold; font-size:11px">
             <td align="center" bgcolor="#FFCCFF">#</td>
             <td colspan="2" align="center" bgcolor="#FFCCFF"><?=$from_date;?></td>
@@ -538,8 +522,8 @@ order by a.jvdate,a.id";
         <?php
         ////////////////////////////////////
         //echo $p;
-        $sql=mysql_query($p);
-        while($data=mysql_fetch_row($sql))
+        $sql=mysqli_query($conn, $p);
+        while($data=mysqli_fetch_row($sql))
         {
             $pi++;
             ?>
@@ -565,7 +549,6 @@ order by a.jvdate,a.id";
 
                         <br />
                         <?php
-
                         $vendor=getSVALUE('sale_do_chalan','distinct dealer_code','where chalan_no="'.$data[7].'"');
                         $vendorname=getSVALUE('dealer_info','dealer_name_e','where dealer_code="'.$vendor.'"');
                         echo '<font style="">'.$vendorname.'</font>';
@@ -597,135 +580,9 @@ order by a.jvdate,a.id";
     </div>
 
 
-<?php elseif ($_POST['reporttypes']=='4001'):
-/////////////////////////////////////Received and Payments----------------------------------------------------------
-    ?>
-
-
-
-
-
-
-
-
-
-    <h2 align="center"><?=$_SESSION['company_name'];?></h2>
-
-
-
-    <h4 align="center" style="margin-top:-13px">Ledger wise Installment Report</h4>
-    <h4 align="center" style="margin-top:-13px">Ledger Name: 0<?=$_REQUEST['ledgercode'];?> - <?=getSVALUE('sales_do_installment','distinct customer_name','where customer_code='.$_REQUEST['ledgercode']);?></h4>
-    <!--h5 align="center" style="margin-top:-13px">Period From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5-->
-
-
-
-
-
-    <table align="center"  style="width:95%; border: solid 1px #999; border-collapse:collapse; ">
-
-        <thead>
-
-        <p style="width:95%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-
-            echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
-
-
-
-        <tr style="border: solid 1px #999;font-weight:bold; font-size:12px"> <th style="width: 2%">#</th>
-            <th style="border: solid 1px #999; padding:2px">Invoice</th>
-            <th style="border: solid 1px #999; padding:2px">Installment No</th>
-            <th style="border: solid 1px #999; padding:2px">Sales Amount</th>
-            <th style="border: solid 1px #999; padding:2px">Installment</th>
-            <th style="border: solid 1px #999; padding:2px">Month</th>
-            <th style="border: solid 1px #999; padding:2px">Installment Amount</th>
-            <th style="border: solid 1px #999; padding:2px">Received Amount</th>
-            <th style="border: solid 1px #999; padding:2px">Status</th>
-        </tr>
-
-        <? 	$res=mysql_query('select * from sales_do_installment where customer_code='.$_REQUEST['ledgercode'].'');
-        while($req=mysql_fetch_object($res)){
-
-
-            ?>
-            <tr style="border: solid 1px #999; font-size:11px; text-decoration: none">
-                <td style="border: solid 1px #999; padding:2px"><?=$i=$i+1;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: center"><?=$req->do_no;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: center"><?=$req->installment_ID;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: right"><?=$req->advance_amt;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: center"><?=$req->installment_no;?> of <?=$req->total_installment;?></td>
-                <td style="border: solid 1px #999; padding:2px"><?=$req->current_mon;?> - <?=$req->current_year;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: right"><?=$alpay=$req->payable_amt;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: right"><?=$alpay=$req->received_amount;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: center"><?php if ($req->status=='COMPLETED') echo '<font>Received</font>'; else echo '<font style="color: red; font-weight: bold">Pending</font>'; ?></td>
-            </tr>
-        <?php
-
-           $totalreceiableamount=$totalreceiableamount+$req->payable_amt;
-            $totalreceivedamount=$totalreceivedamount+$req->received_amount;
-        } ?>
-
-
-
-    </table>
-
-<br><br>
-
-    <table align="center"  style="width:95%; ">
-        <tr style="text-emphasis: right;font-size: 12px; font-weight: bold">
-            <td style="text-align: right; width: 90%">Total Installment Amount: </td>
-            <td style="text-align: right;"><?=number_format($totalreceiableamount,2);?></td>
-
-        </tr>
-        <tr style="text-emphasis: right;font-size: 12px; font-weight: bold">
-            <td style="text-align: right; width: 90%">Total Received Amount: </td>
-            <td style="text-align: right;"><?=number_format($totalreceivedamount,2);?></td>
-
-        </tr>
-
-
-
-        <tr style="text-emphasis: right;font-size: 12px; font-weight: bold">
-            <td style="text-align: right; width: 90%">Outstanding Balance: </td>
-            <td style="text-align: right; text-decoration: overline"><?=number_format($totalreceiableamount-$totalreceivedamount,2);?></td>
-
-        </tr>
-    </table>
-
-
-    </div>
-
-    </div>
-
-    </div>
-
-
-
-
-
-
-<?php elseif ($_POST['reporttypes']=='5001'):
-
-/////////////////////////////////////Received and Payments----------------------------------------------------------
-
-    ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <?php elseif ($_POST['reporttypes']=='5002'):?>
-
 <title>Lifting Report</title>
-
     <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
     <h4 align="center" style="margin-top:-15px">Stock Lifting Report</h4>
     <?php if($_POST['dealer_code']){?>
@@ -830,11 +687,7 @@ order by d.id';
 
 
 <?php elseif ($_POST['reporttypes']=='5003'):?>
-
-
-
     <title>Super DB Opening Report</title>
-
     <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
     <h4 align="center" style="margin-top:-15px">SUB DB Opening Report</h4>
     <?php if($_POST['sub_db_code']){?>
@@ -1817,7 +1670,7 @@ p.PBI_ID=a.PBI_id and working_day between '".$_POST[f_date]."' and '".$_POST[t_d
 
 
 
-<?php elseif ($_POST['report_id']=='9003002'):?>
+<?php elseif ($report_id=='9003002'):?>
 <title>Daily IMS Report</title>
     <?php
     $datecon=' and d.ims_date between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
@@ -1848,7 +1701,7 @@ area a
 
 
 
-<?php elseif ($_POST['report_id']=='9003001'):?>
+<?php elseif ($report_id=='9003001'):?>
 
     <style>
         #customers {
@@ -1936,7 +1789,7 @@ area a
     </div></div></div>
 
 
-    <?php elseif ($_POST['report_id']=='9005001'):?>
+    <?php elseif ($report_id=='9005001'):?>
         <title>Cash Collection (Country)</title>
         <?php
         $datecon=' and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
@@ -1950,7 +1803,7 @@ area a
 				j.ledger_id=d.account_code and j.tr_from not in ("Sales","SalesReturn","Journal_info") '.$datecon.'
 				group by d.dealer_code order by b.sl,a.AREA_NAME,t.town_name'; echo reportview($query,'Cash Collection (Country)','99');?>
 
-    <?php elseif ($_POST['report_id']=='9005002'):?>
+    <?php elseif ($report_id=='9005002'):?>
         <title>Cash Collection (Region)</title>
         <?php
         $datecon=' and d.region="'.$_POST[BRANCH_ID].'" and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
@@ -1979,7 +1832,7 @@ area a
 				d.account_code=j.ledger_id and j.tr_from not in ("Sales","SalesReturn","Journal_info") '.$datecon.'
 				group by d.dealer_code'; echo reportview($query,'Cash Collection (Region)','99');?>
 
-    <?php elseif ($_POST['report_id']=='9005003'):?>
+    <?php elseif ($report_id=='9005003'):?>
         <title>Cash Collection (Territory)</title>
         <?php
         $datecon=' and d.area_code="'.$_POST[AREA_CODE].'" and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
@@ -2009,7 +1862,7 @@ area a
 				group by d.dealer_code'; echo reportview($query,'Cash Collection (Territory)','99');?>
 
 
-<?php elseif ($_POST['report_id']=='9002005'):?>
+<?php elseif ($report_id=='9002005'):?>
             <?php
             $datecon=' and d.area_code="'.$_POST[AREA_CODE].'" and sdc.do_date between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
             $query='Select
@@ -2035,7 +1888,7 @@ area a
     				d.region=b.BRANCH_ID '.$datecon.'
     				group by d.dealer_code'; echo reportview($query,'Shipment (Territory-Wise)','99');?>
 
-    <?php elseif ($_POST['report_id']=='9005004'):?>
+    <?php elseif ($report_id=='9005004'):?>
         <title>Cash Collection (Town)</title>
         <?php
         $datecon=' and d.town_code="'.$_POST[town_code].'" and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
@@ -2063,7 +1916,7 @@ area a
 				 d.region=b.BRANCH_ID and
 				j.ledger_id=d.account_code and j.tr_from not in ("Sales","SalesReturn","Journal_info") '.$datecon.'
 				group by d.dealer_code'; echo reportview($query,'Cash Collection (Town)','99');?>
-    <?php elseif ($_POST['report_id']=='9005005'):?>
+    <?php elseif ($report_id=='9005005'):?>
         <title>Cash Collection (Dealer)</title>
         <?php
         $datecon=' and d.dealer_code="'.$_POST[dealer_code].'" and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
@@ -2093,7 +1946,7 @@ area a
 				group by d.dealer_code'; echo reportview($query,'Cash Collection (Dealer)','99');?>
 
 
-        <?php elseif ($_POST['report_id']=='9002009'):?>
+        <?php elseif ($report_id=='9002009'):?>
             <title>Shipment Helper | Sales Report</title>
             <?php
             if($_POST['dealer_code']>0) 					$dealer_code=$_POST['dealer_code'];
@@ -2110,7 +1963,7 @@ area a
             							  order by i.".$_POST[order_by].""; echo reportview($query,'Shipment Helper','99');?>
 
 
-<?php elseif ($_POST['report_id']=='9002010'):?>
+<?php elseif ($report_id=='9002010'):?>
             <title>Shipment Helper | Sales Report</title>
             <?php
             if($_POST['dealer_code']>0) 					$dealer_code=$_POST['dealer_code'];
@@ -2132,7 +1985,7 @@ area a
              order by d.dealer_code,m.do_no,c.item_id"; echo reportview($query,'Invoice wise sales summery','99');?>
 
 
-    <?php elseif ($_POST['report_id']=='9006001'):?>
+    <?php elseif ($report_id=='9006001'):?>
        <title><?=$ledger_name=getSVALUE('accounts_ledger','ledger_name','where ledger_id='.$_REQUEST['ledger_id']);?> | Transaction Statement</title>
         <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
         <p align="center" style="margin-top:-18px; font-size: 15px">Transaction Statement</p>
@@ -2265,7 +2118,7 @@ order by a.jvdate,a.id";
     </tbody>
     </table>
 
-            <?php elseif ($_POST['report_id']=='9006002'):?>
+            <?php elseif ($report_id=='9006002'):?>
                 <title>Customer Outstanding Balance</title>
                 <?php
                 $datecon=' and j.jvdate<"'.$_POST[t_date].'"';
@@ -2293,7 +2146,7 @@ order by a.jvdate,a.id";
 				j.ledger_id=d.account_code  '.$datecon.'
 				group by d.dealer_code order by b.sl,a.AREA_NAME,t.town_name'; echo reportview($query,'Customer Outstanding Balance','99');?>
 
-            <?php elseif ($_POST['report_id']=='9005008'): if ($_POST['commission_status']=='0'): ?>
+            <?php elseif ($report_id=='9005008'): if ($_POST['commission_status']=='0'): ?>
                 <title>Collection & Shipment</title>
                 <h2 align="center"><?=$_SESSION[company_name]?></h2>
                 <h4 align="center" style="margin-top:-10px">Cash Collection and Shipment in Value (Total Country)</h4>

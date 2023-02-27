@@ -12,6 +12,7 @@ require ("../app/db/db.php");
 require ("../app/classes/function_module_create.php");
 $crud      = new crud();
 $html      = new htmldiv();
+$sectionid = $_GET['sectionid'];
 
 
  // if session is not set this will redirect to login page
@@ -23,13 +24,13 @@ $html      = new htmldiv();
 if($_SESSION['language']=='Bangla') {
     $module_get = "Select m.id as id,p.module_id,m.fa_icon,m.fa_icon_color,m.modulename_BN as module_details,m.module_short_name as modulename  from 
 dev_modules m,user_permissions_module p where 
- m.module_id=p.module_id and m.status>0 and p.user_id='" . $_SESSION[userid] . "' and 
+ m.module_id=p.module_id and m.status>0 and p.user_id='" . $_SESSION['userid'] . "' and 
 p.status>0  
 order by m.sl";
 } else if($_SESSION['language']=='English') {
     $module_get = "Select m.id as id,p.module_id,m.fa_icon,m.fa_icon_color,m.modulename as module_details,m.module_short_name as modulename  from 
 dev_modules m,user_permissions_module p where 
- m.module_id=p.module_id and m.status>0 and p.user_id='" . $_SESSION[userid] . "' and 
+ m.module_id=p.module_id and m.status>0 and p.user_id='" . $_SESSION['userid'] . "' and 
 p.status>0  
 order by m.sl";
 }
@@ -40,10 +41,10 @@ $main_manu_get="SELECT dmm.main_menu_id,dmm.quick_access_url,dmm.faicon,dmm.main
 }
 $url_current=parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 $link='?module=';
-if($_GET['sectionid']){
+if($sectionid){
     unset($_SESSION['sectionid']);
     unset($_SESSION['section_name']);
-    $_SESSION['sectionid']=$_GET['sectionid'];
+    $_SESSION['sectionid']=$sectionid;
 }
 if($_GET['module']){
     unset($_SESSION['module_id']);
@@ -58,4 +59,3 @@ if($_GET['language']){
     header('Location: dashboard.php');
 }
 ob_end_flush();?>
-

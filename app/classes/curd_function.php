@@ -309,12 +309,13 @@ ORDER BY zm.sl, zs.sl");
             foreach ($results as $category => $subcats) {
                 $str .= '<optgroup label="' . $category . '">';
                 foreach ($subcats as $subcategory) {
-                    if ($_GET[report_id] == $subcategory[report_id]) {
+                    $report_id = $_GET['report_id'];
+                    if ($report_id == $subcategory['report_id']) {
                         $selected = 'selected';
                     } else {
                         $selected = '';
                     }
-                    $str .= '<option style="height:20px" value="' . $subcategory[report_id] . '" ' . $selected . '>' . $subcategory[subzonename] . '</option>';
+                    $str .= '<option style="height:20px" value="' . $subcategory['report_id'] . '" ' . $selected . '>' . $subcategory['subzonename'] . '</option>';
                 }
                 $str .= '</optgroup>';
             }
@@ -593,7 +594,7 @@ ORDER BY zm.sl, zs.sl");
 					if($b=='1' || $b=='0'):
 					if($action==1 || $action==2):
                     $str .='<td style="vertical-align:middle; text-align:left">
-					<input type="checkbox" style="margin-top:-2px;" data="'.$row[0].'" class="status_checks btn '.(($row['status'])? ' btn-success': ' btn-danger').'" '.(($row['status'])? checked:'').' />'.(($row['status'])? ' Active': ' Deactivate').'</td>';
+					<input type="checkbox" style="margin-top:-2px;" data="'.$row[0].'" class="status_checks btn '.(($row['status'])? ' btn-success': ' btn-danger').'" '.(($row['status'])? 'checked':'').' />'.(($row['status'])? ' Active': ' Deactivate').'</td>';
 					endif; else:
                     $str .='<td style="vertical-align:middle">'.$b."</td>";
 					endif; endfor;
@@ -816,7 +817,6 @@ ORDER BY zm.sl, zs.sl");
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
                     $onclick='OpenPopupCenter("'.$link.'?v_type='.$v_type.'&vdate='.$row[1].'&v_no='.$row[2].'&view=Show&in='.$v_type.'", "TEST!?", 1000, 600)';
-
                     $str .="<tr".$class."><td style='text-align: left; cursor: pointer' onclick='".$onclick."'>".($sl=$sl+1)."</td>";
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
@@ -908,6 +908,7 @@ ORDER BY zm.sl, zs.sl");
                 while($row = mysqli_fetch_array($result)):
                     for($i=3;$i<$cols;$i++):
                         $b=$row[$i];
+                        $check_or_notification = '';
                         $str .="<a class='btn btn-app' href='$row[1]' style='height:'><span class='badge bg-red'>".$check_or_notification."</span><i class='".$row[2]."'></i> ".$b."</a>";
                         endfor;
                 endwhile;endif;
@@ -964,13 +965,11 @@ ORDER BY zm.zonecode, zs.sl");
                 $str .= '<ul class="nav child_menu">';
 
                 foreach($subcats as $subcategory){
-                    $str .= '<li><a href="'.$row[url].'">' . $subcategory . "</a></li>";
+                    $str .= '<li><a href="'.$row['url'].'">' . $subcategory . "</a></li>";
                 }
                 $str .= '</ul></li>';
             }
-
         }
-
         return $str;
     }
 
@@ -1534,9 +1533,9 @@ function reportview($sql,$title,$width,$tfoot,$colspan){
 		<title>'.$_SESSION['company_name'].' | '.$title.'</title>
         <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px">'.$_SESSION['company_name'].'</p>
         <p align="center" style="margin-top:-18px; font-size: 15px; font-weight: bold">'.$title.'</p> ';
-            if($_POST[f_date]>0){
+            if($_POST['f_date']>0){
                 $str.='
-		        <p align="center" style="margin-top:-15px; font-size: 12px">Date Interval: Between '.$_POST[f_date].' and '.$_POST[t_date].' </p>';
+		        <p align="center" style="margin-top:-15px; font-size: 12px">Date Interval: Between '.$_POST['f_date'].' and '.$_POST['t_date'].' </p>';
             }
             $str.='<table align="center" id="customers"  style="width:'.$width.'%; border: solid 1px #999; border-collapse:collapse;font-size:11px">';
             $str .='<thead><p style="width:'.$width.'%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: '.$now.' </p><tr  style="border: solid 1px #999;font-weight:bold; font-size:11px; background-color: #f5f5f5">';
@@ -1769,8 +1768,6 @@ function added_data_delete_edit_invoice($sql,$unique,$unique_GET,$COUNT_details_
     
     endif;
     $str .='</tfoot></table>';
-
-
 		endif;
     $str .='<button style="float: left; font-size: 11px; margin-left: 1%" type="submit" name="cancel" onclick="return window.confirm(\'Are you sure you want to delete this?\');" class="btn btn-danger">Delete</button>';
     if($COUNT_details_data>0):

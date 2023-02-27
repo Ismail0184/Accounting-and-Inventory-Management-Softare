@@ -110,20 +110,16 @@ for ($i = $startTime1; $i <= $endTime1; $i = $i + 86400) {
 }
 $r_count=${'day5'};
 
-$dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)','user_id='.$_SESSION[userid].' and module_id='.$_SESSION[module_id].'');
+$dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)','user_id='.$_SESSION['userid'].' and module_id='.$_SESSION['module_id'].'');
 ?>
 
 
-<?php if($_SESSION[module_id]=='11') { ?>
-
-
-
+<?php if($_SESSION['module_id']=='11') { ?>
     <table align="center" class="table table-striped table-bordered" style="width:90%;font-size:11px">
         <thead>
         <tr style="background-color: #F0F8FF">
             <th colspan="7" style="text-align: center; font-size: 15px; font-weight: bold">Individual Leave Status <?=date('Y')?></th>
         </tr>
-
         <tr>
             <th style="vertical-align: middle">Leave Status</th><?php
             $res=mysqli_query($conn, "select * from hrm_leave_type");
@@ -153,7 +149,7 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
             <td><a href="hrm_requisition_leave_report.php" target="new">Leave Already Taken</a></td>
             <?php $res=mysqli_query($conn, "select * from hrm_leave_type");
             while($leave_row=mysqli_fetch_object($res)){ ?>
-                <td style="text-align: center"><?php $leave_taken=find_a_field("hrm_leave_info","SUM(total_days)","type='".$leave_row->id."' and s_date between '$dfrom' and '$dto' and PBI_ID='".$_SESSION[PBI_ID]."'"); if($leave_taken>0){ echo $leave_taken,', Days';} else echo ''; ?></td>
+                <td style="text-align: center"><?php $leave_taken=find_a_field("hrm_leave_info","SUM(total_days)","type='".$leave_row->id."' and s_date between '$dfrom' and '$dto' and PBI_ID='".$_SESSION['PBI_ID']."'"); if($leave_taken>0){ echo $leave_taken,', Days';} else echo ''; ?></td>
                 <?php
                 $total_taken=$total_taken+$leave_taken;
             } ?>
@@ -169,7 +165,7 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
             $res=mysqli_query($conn, "select * from hrm_leave_type");
             while($leave_row=mysqli_fetch_object($res)){
                 ?>
-                <th style="text-align: center"><?=$leave_row->yearly_leave_days - find_a_field("hrm_leave_info","SUM(total_days)","type='".$leave_row->id."' and s_date between '$dfrom' and '$dto' and PBI_ID='".$_SESSION[PBI_ID]."'");?> , Days</th>
+                <th style="text-align: center"><?=$leave_row->yearly_leave_days - find_a_field("hrm_leave_info","SUM(total_days)","type='".$leave_row->id."' and s_date between '$dfrom' and '$dto' and PBI_ID='".$_SESSION['PBI_ID']."'");?> , Days</th>
             <?php } ?>
             <td style="text-align: center"><?php if($_SESSION['gander']=='1'){ echo ($totalpolicy-90)-$total_taken; } else { echo $totalpolicy-$total_taken;};?>, Days</td>
         </tr>
@@ -225,7 +221,7 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
                     $res=mysqli_query($conn, "SELECT * FROM hrm_announcement WHERE STATUS in ('ACTIVE') order by ADMIN_ANN_DID desc");
                     while($row=mysqli_fetch_object($res)){
                         ?>
-                        <li  style="vertical-align: middle; cursor: pointer" onclick="DoNavPOPUP('<?=$action->ADMIN_ANN_DID;?>', 'TEST!?', 600, 700)">
+                        <li  style="vertical-align: middle; cursor: pointer" onclick="DoNavPOPUP('<?=$row->ADMIN_ANN_DID;?>', 'TEST!?', 600, 700)">
                             <p style="vertical-align: middle">
                                 <span class="icon" ><i class="fa fa-square green"></i></span> <span class="name" style="vertical-align: middle"><?=$row->ADMIN_ANN_TYPE;?><br><font style="font-size: 10px;"><?=$row->ADMIN_ANN_SUBJECT;?></font></span>
                             </p>
@@ -245,7 +241,6 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
                 <ul class="legend list-unstyled">
                     <?php
                     $result=mysqli_query($conn, "SELECT  a.*,p.*,d.* FROM 
-							 
 							admin_action_detail a,
 							personnel_basic_info p,
 							department d						
@@ -253,7 +248,7 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
 							 a.PBI_ID=p.PBI_ID and 
 							 p.PBI_JOB_STATUS in ('In Service') and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID	and 
-							 a.PBI_ID=".$_SESSION[PBI_ID]."				 
+							 a.PBI_ID=".$_SESSION['PBI_ID']."				 
 							  order by p.PBI_NAME");
                     while($action=mysqli_fetch_object($result)){
                         ?>
@@ -291,8 +286,7 @@ $edatess="$year2-$monthe-$daye";
 
 
 
-                    <?php $res=mysql_query('select p2.*,d.*,de.* FROM 
-							 
+                    <?php $res=mysqli_query($conn, 'select p2.*,d.*,de.* FROM 
 							personnel_basic_info p2,
 							department d,
 							designation de 
@@ -300,7 +294,7 @@ $edatess="$year2-$monthe-$daye";
 							 p2.PBI_JOB_STATUS in ("In Service") and 
 							 p2.PBI_DESIGNATION=de.DESG_ID and  							 
 							 p2.PBI_DEPARTMENT=d.DEPT_ID order by p2.PBI_DOB asc ');
-				   while($birthday=mysql_fetch_object($res)){
+				   while($birthday=mysqli_fetch_object($res)){
                        $bday=$birthday->PBI_DOB;
                        list( $year2, $month2, $day2) = split('[/.-]', $bday);
                        if($month2==$mon){
@@ -308,7 +302,6 @@ $edatess="$year2-$monthe-$daye";
                         <li style="vertical-align: middle; cursor: pointer">
                             <p style="vertical-align: middle">
                                 <span class="icon" ><i class="fa fa-square grey"></i></span> <span class="name" style="vertical-align: middle"><?=$birthday->PBI_NAME;?></span>
-
                             </p>
                             <p style="font-size: 10px; margin-top: -10px"><?=$birthday->DESG_DESC;?></p>
                             <p style="font-size: 10px;margin-top: -10px; color: red"><?=date("d M", strtotime($birthday->PBI_DOB));?> (<strong><?=date("D", strtotime($birthday->PBI_DOB));?></strong>)</p>
@@ -340,22 +333,6 @@ $edatess="$year2-$monthe-$daye";
             </div>
         </div>
     </div>
-
-
-   
-
-
     <?php } else { ?>
-             <h1 style="text-align:center; margin-top:200px">Welcome to <?php if($_SESSION[module_id]>0) { ?> <?=getSVALUE("module_department", "modulename", " where id='$_SESSION[module_id]'");?> Module <?php } else { echo 'ERP Software. <br><font style="font-size: 15px">Please See the above menu</font>'; }?></h1>
-       <?php } ?>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            <?php ob_end_flush(); ?>
+             <h1 style="text-align:center; margin-top:200px">Welcome to <?php if($_SESSION['module_id']>0) { ?> <?=find_a_field('module_department', 'modulename','id='.$_SESSION['module_id']);?> Module <?php } else { echo 'ERP Software. <br><font style="font-size: 15px">Please See the above menu</font>'; }?></h1>
+       <?php } ?><?php ob_end_flush(); ?>

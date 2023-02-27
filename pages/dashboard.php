@@ -23,9 +23,7 @@
                 </div>
               </div>
               <?php } else {} ?>
-
-
 <?php if($_SESSION['module_id']>0):
-require_once("toptitle_".$_SESSION[module_name].".php"); else :
+require_once("toptitle_".$_SESSION['module_name'].".php"); else :
 endif; ?>
 <?=$html->footer_content();?>
