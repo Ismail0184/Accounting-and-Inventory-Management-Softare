@@ -137,7 +137,7 @@ where
  ";
 $re_query = mysqli_query($conn, $rs);
 while ($uncheckrow = mysqli_fetch_array($re_query)) {
-    $ids=$uncheckrow[jid];
+    $ids=$uncheckrow['jid'];
     if (isset($_POST['confirmsave']) && ($uncheckrow['payment_no']>0)) {
         add_to_journal_new($uncheckrow['paymentdate'], $proj_id, $jv, $uncheckrow['payment_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Payment', $uncheckrow['payment_no'], $uncheckrow['jid'], $uncheckrow['cc_code'], $uncheckrow['sub_ledger_id'], $_SESSION['usergroup'], $uncheckrow['cheq_no'], $uncheckrow['cheq_date'], $create_date, $ip, $now, $uncheckrow['day_name'], $thisday, $thismonth, $thisyear);
     } // end of confirm
@@ -150,8 +150,8 @@ while ($uncheckrow = mysqli_fetch_array($re_query)) {
         unset($_POST);
     } // end of editdata
 }
-if (isset($_REQUEST[id])) {
-    $edit_value=find_all_field(''.$table_payment.'','','id='.$_REQUEST[id].'');
+if (isset($_REQUEST['id'])) {
+    $edit_value=find_all_field(''.$table_payment.'','','id='.$_REQUEST['id'].'');
 }
 if (isset($_POST['confirmsave'])) {
     $up_payment="UPDATE ".$table_payment." SET entry_status='UNCHECKED' where ".$payment_unique."=".$_SESSION['initiate_debit_note']."";
@@ -240,7 +240,6 @@ where
                     <tr>
                         <th style="">Person to</th><th>:</th>
                         <td><input type="text" id="paid_to"  value="<?=$paid_to;?>" name="paid_to" class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;" ></td>
-
                         <th>Of Bank</th><th>:</th>
                         <td><input type="text" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>" class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;"></td>
                     </tr>
@@ -256,7 +255,7 @@ where
 
 
 
-                <?php if($_SESSION[initiate_debit_note]){
+                <?php if($_SESSION['initiate_debit_note']){
                     if($COUNT_details_data>0) {
                         $ml='40';
                         $display='style="margin-left:40%; margin-top: 22px;"';
@@ -273,7 +272,7 @@ where
 
                     <div class="form-group" <?=$display;?>>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <a  href="voucher_print_preview.php?v_type=payment&vo_no=<?=$_SESSION[initiate_debit_note];?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Payment Voucher</a>
+                            <a  href="voucher_print_preview.php?v_type=payment&vo_no=<?=$_SESSION['initiate_debit_note'];?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Payment Voucher</a>
                         </div></div>
                 <?php   } else {?>
                     <div class="form-group" style="margin-left:40%; margin-top: 15px">
@@ -286,10 +285,10 @@ where
 
 
 <?=recentvoucherview($sql2,'voucher_view_popup_ismail.php','payment','171px');?>
-<?php if($_SESSION[initiate_debit_note]):  ?>
+<?php if($_SESSION['initiate_debit_note']):  ?>
     <form action="<?=$page;?>" enctype="multipart/form-data" name="addem" id="addem" style="font-size: 11px" class="form-horizontal form-label-left" method="post">
-        <input type="hidden" name="<?=$unique?>" id="<?=$unique?>" value="<?=$_SESSION[initiate_debit_note];?>">
-        <input type="hidden" name="payment_no" id="payment_no" value="<?=$_SESSION[initiate_debit_note];?>">
+        <input type="hidden" name="<?=$unique?>" id="<?=$unique?>" value="<?=$_SESSION['initiate_debit_note'];?>">
+        <input type="hidden" name="payment_no" id="payment_no" value="<?=$_SESSION['initiate_debit_note'];?>">
         <input type="hidden" name="receipt_date" id="receipt_date" value="<?=$voucher_date;?>">
         <input type="hidden" name="Cheque_No" id="Cheque_No" value="<?=$Cheque_No;?>">
         <input type="hidden" name="paid_to" id="paid_to" value="<?=$paid_to;?>">
@@ -319,13 +318,12 @@ where
                         <option></option>
                         <?php foreign_relation('cost_center', 'id', 'CONCAT(id,"-", center_name)', $edit_value->cc_code, 'status=1'); ?>
                     </select></td>
-                <td style="width:15%;vertical-align: middle" align="center"><textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" value="<?=$_POST[narration];?>"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['debit_note_last_narration'];?></textarea>
-
+                <td style="width:15%;vertical-align: middle" align="center"><textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" value="<?=$_POST['narration'];?>"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['debit_note_last_narration'];?></textarea>
                 </td>
                 <td style="width:10%;vertical-align: middle" align="center">
                     <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
                 <td align="center" style="width:10%">
-                    <?php if (isset($_REQUEST[id])) { ?>
+                    <?php if (isset($_REQUEST['id'])) { ?>
                         <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  value="<?=$edit_value->dr_amt;?>" <?php if($edit_value->dr_amt>0)  echo ''; else echo 'readonly'; ?>  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                         <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px"  value="<?=$edit_value->cr_amt;?>" <?php if($edit_value->cr_amt>0)  echo ''; else echo 'readonly'; ?>  name="cr_amt" placeholder="Credit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                     <?php } else { ?>
@@ -333,7 +331,7 @@ where
                         <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px" name="cr_amt" placeholder="Credit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                     <?php } ?>
                 </td>
-                <td align="center" style="width:5%; vertical-align: middle "><?php if (isset($_REQUEST[id])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_REQUEST[id];?>" id="editdata<?=$_REQUEST[id];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
+                <td align="center" style="width:5%; vertical-align: middle "><?php if (isset($_REQUEST['id'])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_REQUEST['id'];?>" id="editdata<?=$_REQUEST['id'];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
                     <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td></tr>
             </tbody>
         </table>

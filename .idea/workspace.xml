@@ -3,17 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/MIS_user_management_ERP_user.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_user_management_ERP_user.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/MIS_user_management_ERP_user_new.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_user_management_ERP_user_new.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_admin_users.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_admin_users.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_sub_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_sub_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/emp_acess_unchecked_work_order.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/emp_acess_unchecked_work_order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Accounts.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Accounts.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales_regular_invoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_regular_invoice.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +78,7 @@
       <workItem from="1677128838295" duration="12597000" />
       <workItem from="1677382853456" duration="11352000" />
       <workItem from="1677470270892" duration="16561000" />
-      <workItem from="1677558830265" duration="8766000" />
+      <workItem from="1677558830265" duration="13739000" />
     </task>
     <servers />
   </component>
