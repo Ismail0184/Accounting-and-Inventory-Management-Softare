@@ -14,7 +14,7 @@ item_sub_group sg,
 item_group g WHERE  i.sub_group_id=sg.sub_group_id and
 sg.group_id=g.group_id
 order by i.item_name";
-$report_id = $_GET['report_id'];
+$report_id = $_REQUEST['report_id'];
 ?>
 
 

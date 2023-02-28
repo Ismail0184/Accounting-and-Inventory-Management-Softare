@@ -3,6 +3,8 @@
 $title='Sub sub Ledger';
 $table='sub_sub_ledger';
 $unique='sub_sub_ledger_id';
+$table_ledger="accounts_ledger";
+$unique_ledger="ledger_id";
 $page="acc_sub_sub_ledger.php";
 $now=time();
 $separator	= $_SESSION['separator'];
@@ -61,6 +63,9 @@ if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
         $_POST['edit_at']=time();
         $_POST['edit_by']=$_SESSION['userid'];
         $crud->update($unique);
+        mysqli_query($conn, "UPDATE ".$table_ledger." SET ledger_name='".$name."',status='".$_POST['status']."' where ledger_id=".$$unique);
+        echo "<script>self.opener.location = '$page'; self.blur(); </script>";
+        echo "<script>window.close(); </script>";
         echo 'Successfully Updated.';
     }
 
@@ -73,11 +78,12 @@ if(isset($_GET[$unique]))
     { $$key=$value;}}
 
 
-$res="select  z.sub_sub_ledger_id,z.sub_sub_ledger_id,z.sub_sub_ledger,z.sub_ledger_id,a.sub_ledger
-                              FROM ".$table." z,sub_ledger a, accounts_ledger b,ledger_group c where 
+$res='select  z.sub_sub_ledger_id,z.sub_sub_ledger_id,z.sub_sub_ledger,concat(z.sub_ledger_id, " : " ,a.sub_ledger) as sub_ledger,(select COUNT(ledger_id) from journal where ledger_id=z.sub_sub_ledger_id) as has_transactions,
+        IF(z.status=1, "Active",IF(z.status="SUSPENDED", "SUSPENDED","Inactive")) as status
+                              FROM '.$table.' z,sub_ledger a, accounts_ledger b,ledger_group c where 
                              a.ledger_id=b.ledger_id and 
                              b.ledger_group_id=c.group_id and 
-                             z.sub_ledger_id=a.sub_ledger_id";
+                             z.sub_ledger_id=a.sub_ledger_id';
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
     if(isset($_POST['deletedata'.$row->$unique]))

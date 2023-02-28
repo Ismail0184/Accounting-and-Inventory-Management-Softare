@@ -309,7 +309,4 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                                 </div></div> </div></form>
 <?php } ?>
 
-
-                
-        
-<?php require_once 'footer_content.php' ?>
+ <?=$html->footer_content();?>

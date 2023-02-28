@@ -90,7 +90,8 @@ if(isset($_GET[$unique]))
     while (list($key, $value)=each($data))
     { $$key=$value;}}
 
-$res='select al.'.$unique.',al.'.$unique.' as Code,al.'.$unique_field.',lg.group_name,(select COUNT(ledger_id) from journal where ledger_id=al.ledger_id) as has_transaction,IF(al.status=1, "Active", "Inactive") as status from '.$table.' al,ledger_group lg where 
+$res='select al.'.$unique.',al.'.$unique.' as Code,al.'.$unique_field.',lg.group_name,(select COUNT(ledger_id) from journal where ledger_id=al.ledger_id) as has_transaction,
+IF(al.status=1, "Active",IF(al.status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' al,ledger_group lg where 
 al.ledger_group_id=lg.group_id order by al.ledger_group_id,al.'.$unique;
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){

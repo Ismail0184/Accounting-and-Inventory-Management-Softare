@@ -26,6 +26,10 @@ if(prevent_multi_submit()){
             } else {
                 $_POST[gander]='1';
             }
+            $_POST['status'] = 1;
+            $_POST['section_id'] = $_SESSION['sectionid'];
+            $_POST['company_id'] = $_SESSION['companyid'];
+            $_POST['entry_date'] = date('Y-m-d');
             $crud->insert();
             $type=1;
             $msg='New Entry Successfully Inserted.';
@@ -68,7 +72,7 @@ if(prevent_multi_submit()){
         }}}
 
 // data query..................................
-if(isset($_GET[user_id]))
+if(isset($$unique))
 {   $condition=$unique."=".$$unique;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
@@ -162,6 +166,7 @@ $res='select '.$unique.','.$unique.' as User_id,username as user_name,'.$unique_
                                             <input type="text" class="form-control" value="<?=$mobile?>" name="mobile" style="font-size: 11px">
                                         </div>
                                     </div>
+                                    <?php if(isset($_GET[$unique])): ?>
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status<span class="required">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -173,6 +178,7 @@ $res='select '.$unique.','.$unique.' as User_id,username as user_name,'.$unique_
                                             </select>
                                         </div>
                                     </div>
+                                    <?php endif; ?>
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">User Level<span class="required">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">

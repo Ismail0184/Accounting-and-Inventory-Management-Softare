@@ -142,7 +142,6 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
                         <?php if($subnrow->sub_menu_id=="20183") if($mushak_challan>0) : ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$mushak_challan.' </span>]'?><?php else : echo'';endif; ?>
                         <?php if($subnrow->sub_menu_id=="20179") if($acc_inventory_cycle_counting_check>0) : ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$acc_inventory_cycle_counting_check.' </span>]'?><?php else : echo'';endif; ?>
                         <?php if($subnrow->sub_menu_id=="20223") if($special_invoice>0) : ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$special_invoice.' </span>]'?><?php else : echo'';endif; ?>
-
                     </a>
                  </li>
                  <?php endwhile; ?></ul><?php } ?></li>

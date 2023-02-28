@@ -5,9 +5,12 @@ $page="acc_sub_ledger.php";
 $now=time();
 $separator	= $_SESSION['separator'];
 $table="sub_ledger";
+$table_ledger="accounts_ledger";
 $unique="sub_ledger_id";
+$unique_ledger="ledger_id";
 $crud      =new crud($table);
 $$unique=$_GET[$unique];
+$$unique_ledger=$_GET[$unique];
 
 if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
 
@@ -63,20 +66,26 @@ if(isset($_POST['modify']))
     $_POST['edit_at']=time();
     $_POST['edit_by']=$_SESSION['userid'];
     $crud->update($unique);
-    $type=1;
+    mysqli_query($conn, "UPDATE ".$table_ledger." SET ledger_name='".$name."',status='".$_POST['status']."' where ledger_id=".$$unique);
+    echo "<script>self.opener.location = '$page'; self.blur(); </script>";
+    echo "<script>window.close(); </script>";
 }
+
 if(isset($_POST['cancel'])){echo "<script>window.close(); </script>";}
 if(isset($$unique))
 {   $condition=$unique."=".$$unique;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data)){ $$key=$value;}}
-$res="select a.sub_ledger_id,a.sub_ledger_id,a.sub_ledger, (select ledger_name from accounts_ledger where ledger_id=a.ledger_id) as ledger_name, c.group_name,(select COUNT(ledger_id) from journal where ledger_id=a.sub_ledger_id) as has_transactions FROM sub_ledger a,accounts_ledger b,ledger_group c where
-a.sub_ledger_id=b.ledger_id and b.ledger_group_id=c.group_id";
+$res='select a.sub_ledger_id,a.sub_ledger_id,a.sub_ledger, (select ledger_name from accounts_ledger where ledger_id=a.ledger_id) as ledger_name, c.group_name,(select COUNT(ledger_id) from journal where ledger_id=a.sub_ledger_id) as has_transactions,
+IF(a.status=1, "Active",IF(a.status="SUSPENDED", "SUSPENDED","Inactive")) as status
+FROM sub_ledger a,accounts_ledger b,ledger_group c where
+a.sub_ledger_id=b.ledger_id and b.ledger_group_id=c.group_id';
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
     if(isset($_POST['deletedata'.$row->$unique]))
     { if($row->has_transactions == 0){
         mysqli_query($conn, ("DELETE FROM ".$table." WHERE ".$unique."=".$row->$unique.""));
+        mysqli_query($conn, ("DELETE FROM ".$table_ledger." WHERE ".$unique_ledger."=".$row->$unique.""));
     } else { echo "<h4 style='color:red'>It has transactions (".$row->has_transactions."). Hence you cannot delete the Sub-Ledger ID (".$row->sub_ledger_id.")</h4>";}
         unset($_POST);
     }} // end of deletedata
@@ -127,7 +136,20 @@ while($row=mysqli_fetch_object($query)){
                 <select class="select2_single form-control" required name="under" id="under" style="width: 100%; font-size: 12px">
                     <option value=""></option>
                     <?=foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', ($_POST["under"]>0) ? $_POST["under"] : $ledger_id, '1','order by ledger_id,ledger_name'); ?>   </select></div></div>
+
+
         <?php if($_GET[$unique]):  ?>
+            <div class="form-group" style="width: 100%">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select class="select2_single form-control" style="width:100%; font-size:11px" name="status" id="status">
+                        <option value="1"<?=($status=='1')? ' Selected' : '' ?>>Active</option>
+                        <option value="0"<?=($status=='0')? ' Selected' : '' ?>>Inactive</option>
+                        <option value="SUSPENDED"<?=($status=='SUSPENDED')? ' Selected' : '' ?>>SUSPENDED</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group" style="margin-left:30%">
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <button type="submit" name="cancel" id="cancel" style="font-size:12px" class="btn btn-danger">Cancel</button>

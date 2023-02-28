@@ -1,8 +1,6 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Payment Voucher';
-
-
 //Image Attachment Function
 function image_upload_on_id2($path,$file,$id)
 {   $root=$path.'/'.$id.'.jpg';
@@ -42,17 +40,17 @@ if(prevent_multi_submit()) {
             $_POST['section_id'] = $_SESSION['sectionid'];
             $_POST['company_id'] = $_SESSION['companyid'];
             $_POST['ip'] = $ip;
-            $d = $_POST[voucher_date];
-            $_POST[voucher_date] = date('Y-m-d', strtotime($d));
-            if($_POST[Cheque_Date]>0){
-                $ckd = $_POST[Cheque_Date];
-                $_POST[Cheque_Date] = date('Y-m-d', strtotime($ckd));
+            $d = $_POST['voucher_date'];
+            $_POST['voucher_date'] = date('Y-m-d', strtotime($d));
+            if($_POST['Cheque_Date']>0){
+                $ckd = $_POST['Cheque_Date'];
+                $_POST['Cheque_Date'] = date('Y-m-d', strtotime($ckd));
             } else {
-                $_POST[Cheque_Date]='';
+                $_POST['Cheque_Date']='';
             }
             $_POST['entry_by'] = $_SESSION['userid'];
             $_POST['entry_at'] = date('Y-m-d H:s:i');
-            $_SESSION[initiate_debit_note] = $_POST[$unique];
+            $_SESSION['initiate_debit_note'] = $_POST[$unique];
             $_POST['journal_type'] = 'Payment';
             $_POST['MANUAL'] = 'MANUAL';
             $crud->insert();
@@ -61,13 +59,13 @@ if(prevent_multi_submit()) {
 
 //for modify PS information ...........................
         if (isset($_POST['modify'])) {
-            $d = $_POST[voucher_date];
-            $_POST[voucher_date] = date('Y-m-d', strtotime($d));
-            if($_POST[Cheque_Date]>0){
-                $ckd = $_POST[Cheque_Date];
-                $_POST[Cheque_Date] = date('Y-m-d', strtotime($ckd));
+            $d = $_POST['voucher_date'];
+            $_POST['voucher_date'] = date('Y-m-d', strtotime($d));
+            if($_POST['Cheque_Date']>0){
+                $ckd = $_POST['Cheque_Date'];
+                $_POST['Cheque_Date'] = date('Y-m-d', strtotime($ckd));
             } else {
-                $_POST[Cheque_Date]='';
+                $_POST['Cheque_Date']='';
             }
             $_POST['edit_at'] = time();
             $_POST['edit_by'] = $_SESSION['userid'];
@@ -79,61 +77,32 @@ if(prevent_multi_submit()) {
 
 //for single FG Add...........................
         if (isset($_POST['add'])) {
-            if ($_POST[dr_amt] > 0) {
+            if ($_POST['dr_amt'] > 0) {
                 $type = 'Debit';
-            } elseif ($_POST[cr_amt] > 0) {
+            } elseif ($_POST['cr_amt'] > 0) {
                 $type = 'Credit';
             }
-            $dd = $_POST[receipt_date];
-            $date = date('d-m-y', strtotime($dd));
-            $j = 0;
-            for ($i = 0; $i < strlen($date); $i++) {
-                if (is_numeric($date[$i])) {
-                    $time[$j] = $time[$j] . $date[$i];
-                } else {
-                    $j++;
-                }
-            }
-            $date = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 
-            if($_POST[Cheque_Date]) {
-                $c_dd = $_POST[Cheque_Date];
-                $c_date = date('d-m-y', strtotime($c_dd));
-                $j = 0;
-                for ($i = 0; $i < strlen($c_date); $i++) {
-                    if (is_numeric($c_date[$i])) {
-                        $ptime[$j] = $ptime[$j] . $c_date[$i];
-                    } else {
-                        $j++;
-                    }
-                }
-                $c_date = mktime(0, 0, 0, $ptime[1], $ptime[0], $ptime[2]);
-            } else {
-                $c_date='';
-            }
-
+            $date = date('Y-m-d');
             $tdates = date("Y-m-d");
             $day = date('l', strtotime($idatess));
             $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
             $timess = $dateTime->format("d-m-y  h:i A");
 
-
-            if (($_POST[dr_amt] && $_POST[cr_amt]) > 0) {
+            if (($_POST['dr_amt'] && $_POST['cr_amt']) > 0) {
                 echo "<script>alert('Yor are trying to input an invalid transaction!!'); window.location.href='".$page."';</script>";
-
             } else {
-                if ((($_POST[dr_amt] || $_POST[cr_amt]) > 0) && ($_SESSION[initiate_debit_note]>0)) {
-                    add_to_payment($_SESSION[initiate_debit_note],$date, $proj_id, $_POST[narration], $_POST[ledger_id], $_POST[dr_amt],
-                        $_POST[cr_amt], $type,$cur_bal,$_POST[paid_to],$_POST[Cheque_No],$c_date,$_POST[Cheque_of_bank],$manual_payment_no,$_POST[cc_code],$_POST[subledger_id],MANUAL,$ip,$_POST[receipt_date],$_SESSION[sectionid],$_SESSION[companyid],$_SESSION[userid],$create_date,$now,$day
+                if ((($_POST['dr_amt'] || $_POST['cr_amt']) > 0) && ($_SESSION['initiate_debit_note']>0)) {
+                    add_to_payment($_SESSION['initiate_debit_note'],$date, $proj_id, $_POST['narration'], $_POST['ledger_id'], $_POST['dr_amt'],
+                        $_POST['cr_amt'], $type,$cur_bal,$_POST['paid_to'],$_POST['Cheque_No'],$c_date,$_POST['Cheque_of_bank'],$manual_payment_no,$_POST['cc_code'],$_POST['subledger_id'],'MANUAL',$ip,$_POST['receipt_date'],$_SESSION['sectionid'],$_SESSION['companyid'],$_SESSION['userid'],$create_date,$now,$day
                         ,$thisday,$thismonth,$thisyear,$receive_ledger);
-                    $_SESSION[debit_note_last_narration]=$_POST[narration];
+                    $_SESSION['debit_note_last_narration']=$_POST['narration'];
                 }
                 if ($_FILES["attachment"]["tmp_name"] != '') {
-                    $path = '../page/payment_attch/' . $_SESSION[initiate_debit_note] . '.jpg';
+                    $path = '../page/payment_attch/' . $_SESSION['initiate_debit_note'] . '.jpg';
                     move_uploaded_file($_FILES["attachment"]["tmp_name"], $path);
                 }
             }}
-
     } // end post unique
 } // end prevent_multi_submit
 
@@ -169,28 +138,26 @@ where
 $re_query = mysqli_query($conn, $rs);
 while ($uncheckrow = mysqli_fetch_array($re_query)) {
     $ids=$uncheckrow[jid];
-    if (isset($_POST['confirmsave']) && ($uncheckrow[payment_no]>0)) {
-        add_to_journal_new($uncheckrow[paymentdate], $proj_id, $jv, $uncheckrow[payment_date], $uncheckrow[ledger_id], $uncheckrow[narration], $uncheckrow[dr_amt], $uncheckrow[cr_amt], Payment, $uncheckrow[payment_no], $uncheckrow[jid], $uncheckrow[cc_code], $uncheckrow[sub_ledger_id], $_SESSION[usergroup], $uncheckrow[cheq_no], $uncheckrow[cheq_date], $create_date, $ip, $now, $uncheckrow[day_name], $thisday, $thismonth, $thisyear);} // end of confirm
-
-
+    if (isset($_POST['confirmsave']) && ($uncheckrow['payment_no']>0)) {
+        add_to_journal_new($uncheckrow['paymentdate'], $proj_id, $jv, $uncheckrow['payment_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Payment', $uncheckrow['payment_no'], $uncheckrow['jid'], $uncheckrow['cc_code'], $uncheckrow['sub_ledger_id'], $_SESSION['usergroup'], $uncheckrow['cheq_no'], $uncheckrow['cheq_date'], $create_date, $ip, $now, $uncheckrow['day_name'], $thisday, $thismonth, $thisyear);
+    } // end of confirm
     if(isset($_POST['deletedata'.$ids]))
     {  $res=mysqli_query($conn, ("DELETE FROM ".$table_payment." WHERE id=".$ids));
         unset($_POST);
     } // end of deletedata
     if(isset($_POST['editdata'.$ids]))
-    {  mysqli_query($conn, ("UPDATE ".$table_payment." SET ledger_id='".$_POST[ledger_id]."', cc_code='".$_POST[cc_code]."',narration='".$_POST[narration]."',dr_amt='".$_POST[dr_amt]."',cr_amt='".$_POST[cr_amt]."' WHERE id=".$ids));
+    {  mysqli_query($conn, ("UPDATE ".$table_payment." SET ledger_id='".$_POST['ledger_id']."', cc_code='".$_POST['cc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids));
         unset($_POST);
     } // end of editdata
 }
-if (isset($_GET[id])) {
-    $edit_value=find_all_field(''.$table_payment.'','','id='.$_GET[id].'');
+if (isset($_REQUEST[id])) {
+    $edit_value=find_all_field(''.$table_payment.'','','id='.$_REQUEST[id].'');
 }
 if (isset($_POST['confirmsave'])) {
     $up_payment="UPDATE ".$table_payment." SET entry_status='UNCHECKED' where ".$payment_unique."=".$_SESSION['initiate_debit_note']."";
     $up_query=mysqli_query($conn, $up_payment);
     $up_master=mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=".$jv);
     $up_master=mysqli_query($conn, "UPDATE ".$table_journal_master." SET entry_status='UNCHECKED' where ".$unique."=".$_SESSION['initiate_debit_note']."");
-
     unset($_SESSION['initiate_debit_note']);
     unset($_SESSION['debit_note_last_narration']);
     unset($_POST);
@@ -220,9 +187,8 @@ $condition=$unique."=".$_SESSION['initiate_debit_note'];
     while (list($key, $value)=each($data))
     { $$key=$value;}}
 
-
 $sql2="select a.tr_no,a.jvdate as Date,a.jv_no as Voucher_No,SUM(a.dr_amt) as amount
-from  journal a where a.tr_from='Payment' and a.user_id='$_SESSION[userid]' and a.section_id='$_SESSION[sectionid]' and a.company_id='$_SESSION[companyid]'  group by a.tr_no  order by a.id desc limit 10";
+from  journal a where a.tr_from='Payment' and a.user_id='".$_SESSION['userid']."' and a.section_id='".$_SESSION['sectionid']."' and a.company_id='".$_SESSION['companyid']."'  group by a.tr_no  order by a.id desc limit 10";
 $rs="Select 
 j.id as jid,
 concat(a.ledger_id, ' : ' ,a.ledger_name) as Account_Head,
@@ -271,7 +237,6 @@ where
                         <th style="width:15%;">Transaction No<span class="required">*</span></th><th style="width: 2%">:</th>
                         <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($_SESSION['initiate_debit_note']!='')? $_SESSION['initiate_debit_note'] : automatic_voucher_number_generate($table_payment,$payment_unique,1,2); ?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                     </tr>
-
                     <tr>
                         <th style="">Person to</th><th>:</th>
                         <td><input type="text" id="paid_to"  value="<?=$paid_to;?>" name="paid_to" class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;" ></td>
@@ -360,7 +325,7 @@ where
                 <td style="width:10%;vertical-align: middle" align="center">
                     <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
                 <td align="center" style="width:10%">
-                    <?php if (isset($_GET[id])) { ?>
+                    <?php if (isset($_REQUEST[id])) { ?>
                         <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  value="<?=$edit_value->dr_amt;?>" <?php if($edit_value->dr_amt>0)  echo ''; else echo 'readonly'; ?>  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                         <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px"  value="<?=$edit_value->cr_amt;?>" <?php if($edit_value->cr_amt>0)  echo ''; else echo 'readonly'; ?>  name="cr_amt" placeholder="Credit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                     <?php } else { ?>
@@ -368,7 +333,7 @@ where
                         <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px" name="cr_amt" placeholder="Credit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                     <?php } ?>
                 </td>
-                <td align="center" style="width:5%; vertical-align: middle "><?php if (isset($_GET[id])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_GET[id];?>" id="editdata<?=$_GET[id];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
+                <td align="center" style="width:5%; vertical-align: middle "><?php if (isset($_REQUEST[id])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_REQUEST[id];?>" id="editdata<?=$_REQUEST[id];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
                     <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td></tr>
             </tbody>
         </table>

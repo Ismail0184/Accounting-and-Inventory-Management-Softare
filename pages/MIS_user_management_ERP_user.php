@@ -1,35 +1,51 @@
-<?php
-require_once 'support_file.php';
-$title="Add New User";
+<?php require_once 'support_file.php';?>
+<?php $title="Users";
 
 $now=time();
 $unique='user_id';
 $unique_field='fname';
 $table="users";
+$table2="user_activity_management";
 $page="MIS_user_management_ERP_user.php";
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
-$link="http://". $_SERVER['SERVER_NAME']."".'/51816/hrm_mod/pic/staff/';
 
 
 
 if(prevent_multi_submit()){
+    if(isset($_POST[$unique_field]))
+
+//for insert..................................
+    {    $$unique = $_POST[$unique];
         if(isset($_POST['record']))
         {
-            $user_details=find_all_field('personnel_basic_info','','PBI_ID='.$_POST[PBI_ID]);
-            $_POST['user_id'] = $_POST[PBI_ID];
-            $_POST['username'] = $user_details->PBI_ID_UNIQUE;
-            $_POST['password'] = $user_details->password;
-            $_POST['fname'] = $user_details->PBI_NAME;
-            $_POST['email'] = $user_details->PBI_EMAIL;
-            $_POST['mobile'] = $user_details->password;
-            $_POST['PBI_ID'] = $_POST[PBI_ID]; 
-            $_POST['entry_date'] = date("Y-m-d"); 
-            $_POST['status'] = '1';            
+            $_POST['picture_url']=$link.$_POST['PBI_ID'].'.jpeg';
+            $_POST['group_for']=$_SESSION['usergroup'];
+            if($_POST['gander']=='Female') {
+                $_POST['gander'] = '0';
+            } else {
+                $_POST['gander']='1';
+            }
+            $_POST['status'] = 1;
+            $_POST['section_id'] = $_SESSION['sectionid'];
+            $_POST['company_id'] = $_SESSION['companyid'];
+            $_POST['entry_date'] = date('Y-m-d');
             $crud->insert();
+            $crud      =new crud($table2);
+            $crud->insert();
+            $msg='New Entry Successfully Inserted.';
             unset($_POST);
             unset($$unique);
+        }
+
+        //for modify..................................
+        if(isset($_POST['modify']))
+        {
+            $_POST['edit_at']=time();
+            $_POST['edit_by']=$_SESSION['userid'];
+            $crud->update($unique);
+            echo "<script>self.opener.location = '$page'; self.blur(); </script>";
+            echo "<script>window.close(); </script>";
         }
 
 
@@ -43,15 +59,26 @@ if(prevent_multi_submit()){
             //echo $targeturl;
             echo "<script>self.opener.location = '$page'; self.blur(); </script>";
             echo "<script>window.close(); </script>";
-        }}
+        }
+
+//for Delete..................................
+        if(isset($_POST['delete']))
+        {   $condition=$unique."=".$$unique;
+            $crud->delete($condition);
+            unset($$unique);
+            $type=1;
+            $msg='Successfully Deleted.';
+            echo "<script>self.opener.location = '$page'; self.blur(); </script>";
+            echo "<script>window.close(); </script>";
+        }}}
 
 // data query..................................
-if(isset($_GET[PBI_ID]))
+if(isset($$unique))
 {   $condition=$unique."=".$$unique;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
-$resss='select '.$unique.','.$unique.' as ID,username as user_name,'.$unique_field.' as display_name,email,level,IF(status=1, "Active", "Inactive") as status from '.$table.' where dep_power_level not in ("APP") order by '.$unique;
+$res='select '.$unique.','.$unique.' as User_id,username as user_name,'.$unique_field.' as display_name,email,level,entry_date,expire_date,account_status as status from '.$table.' where 1 order by '.$unique.' desc';
 ?>
 
 
@@ -71,83 +98,109 @@ $resss='select '.$unique.','.$unique.' as ID,username as user_name,'.$unique_fie
             font-size: 11px;
         }
     </style>
-
+    <SCRIPT language=JavaScript>
+        function reload(form)
+        {
+            var val=form.PBI_ID.options[form.PBI_ID.options.selectedIndex].value;
+            self.location='<?=$page;?>?PBI_ID=' + val ;
+        }
+    </script>
 <?php require_once 'body_content.php'; ?>
 <?php if(isset($_GET[$unique])): ?>
-<div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2><?=$title;?></h2>
-                                <ul class="nav navbar-right panel_toolbox">
-                                    <div class="input-group pull-right"></div>
-                                </ul>
-                                <div class="clearfix"></div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><?=$title;?></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <div class="input-group pull-right"></div>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <?php else: ?>
+                <div class="modal fade" id="addModal">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">Add New Record
+                                    <button class="close" data-dismiss="modal">
+                                        <span>&times;</span>
+                                    </button>
+                                </h5>
                             </div>
-                            <div class="x_content">
-							<?php else: ?>                            
-<div class="modal fade" id="addModal">
-    <div class="modal-dialog modal-md">
-      <div class="modal-content">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title">Add New Record
-          <button class="close" data-dismiss="modal">
-            <span>&times;</span>
-          </button>
-          </h5>
-        </div>
-        <div class="modal-body">
-        <?php endif; ?>
-
-                <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
-                    <? require_once 'support_html.php';?>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">Employee <span class="required">*</span></label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="select2_single form-control" style="width: 100%;" tabindex="-1"  name="PBI_ID" id="PBI_ID">
-                                <option></option>
-                                <? $sql_PBI_ID="SELECT  p.PBI_ID,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' : ',d.DEPT_SHORT_NAME) FROM  
-							personnel_basic_info p,
-							department d
-							 where 
-							 p.PBI_JOB_STATUS in ('In Service') and 							 
-							 p.PBI_DEPARTMENT=d.DEPT_ID	and p.PBI_ID not in (select PBI_ID from user_activity_management where 1)				 
-							  order by p.PBI_NAME";
-                                advance_foreign_relation($sql_PBI_ID,$PBI_ID);?>
-                            </select></div></div>
-                            
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status<span class="required">*</span></label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select required name="account_status" id="account_status" style="width: 100%; font-size: 11px" class="form-control">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                                <option value="2">Banned</option>
-                            </select>
-                        </div></div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">User Level<span class="required">*</span></label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select required name="level" id="level" style="width: 100%; font-size: 11px" class="form-control">
-                                <option></option>
-                                
-                                <option value="5">User</option>
-                                <option value="4">Editor</option>
-                                <option value="3">Admin</option>
-                                <option value="2">Super Admin</option>
-                                <option value="1">Developer</option>
-                            </select>
-                        </div></div>
-
-                                    <hr> 
-
-                                    <?php if($_GET[$unique]):  ?>
-                                    <div class="form-group" style="margin-left:30%">
+                            <div class="modal-body">
+                                <?php endif;?>
+                                <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">User ID <span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <button type="submit" name="cancel" id="cancel" style="font-size:12px"  class="btn btn-danger">Cancel</button>
-                                        <button type="submit" name="modify" id="modify" style="font-size:12px" class="btn btn-primary">Modify</button>
-                                        </div></div>
+                                            <input type="text" class="form-control" value="<?=$user_id?>" <?=($_GET['user_id']>0)? 'readonly' : '';?> required name="user_id" style="font-size: 11px">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">Username <span class="required text-danger">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control" value="<?=($$unique>0)? $username : '';?>" <?=($_GET['user_id']>0)? 'readonly' : '';?> required name="username" style="font-size: 11px">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">Password <span class="required text-danger">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="password" value="<?=$password?>" <?=($_GET['user_id']>0)? 'readonly' : '';?> class="form-control" name="password" style="font-size: 11px">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">Full Name <span class="required text-danger">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control" value="<?=$fname?>" name="fname" style="font-size: 11px">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">Email <span class="required text-danger">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="email" class="form-control" value="<?=$email?>" name="email" style="font-size: 11px">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">Mobile <span class="required text-danger">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control" value="<?=$mobile?>" name="mobile" style="font-size: 11px">
+                                        </div>
+                                    </div>
+                                    <?php if(isset($_GET[$unique])): ?>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status<span class="required">*</span></label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select required name="account_status" id="account_status" style="width: 100%; font-size: 11px" class="form-control">
+                                                    <option></option>
+                                                    <option value="active" <?=($account_status=='active')? 'selected' : '';?>>Active</option>
+                                                    <option value="inactive" <?=($account_status=='inactive')? 'selected' : '';?>>Inactive</option>
+                                                    <option value="banned" <?=($account_status=='banned')? 'selected' : '';?>>Banned</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <? endif; ?>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">User Level<span class="required">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <select required name="level" id="level" style="width: 100%; font-size: 11px" class="form-control">
+                                                <option></option>
+                                                <option value="5" <?=($level==5)? 'selected' : '';?>>User</option>
+                                                <option value="4" <?=($level==4)? 'selected' : '';?>>Editor</option>
+                                                <option value="3" <?=($level==3)? 'selected' : '';?>>Admin</option>
+                                                <option value="2" <?=($level==2)? 'selected' : '';?>>Super Admin</option>
+                                                <option value="1" <?=($level==1)? 'selected' : '';?>>Developer</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <?php if($_GET[$unique]): ?>
+                                        <div class="form-group" style="margin-left:30%">
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <button type="submit" name="cancel" id="cancel" style="font-size:12px"  class="btn btn-danger">Cancel</button>
+                                                <button type="submit" name="modify" id="modify" style="font-size:12px" class="btn btn-primary">Modify</button>
+                                            </div>
+                                        </div>
                                     <?php else : ?>
                                         <div class="form-group" style="margin-left:40%">
                                             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -155,13 +208,20 @@ $resss='select '.$unique.','.$unique.' as ID,username as user_name,'.$unique_fie
                                                 <button type="submit" name="record" id="record" style="font-size:12px" class="btn btn-primary">Record</button>
                                             </div>
                                         </div>
-                                    <?php endif; ?>     
-                                    </form></div></div></div><?php if(!isset($_GET[$unique])): ?></div><?php endif; ?>
-                                        
+                                    <?php endif; ?>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <?php if(!isset($_GET[$unique])): ?></div><?php endif;?>
 
-<?php if(!isset($_GET[$unique])):?> 
-<?=$crud->report_templates_with_add_new($resss,$title,12,$action=$_SESSION["userlevel"],$create=1);?>  
-<?php endif; ?>
-<?=$html->footer_content();mysqli_close($conn);?>
-<?php ob_end_flush();
-ob_flush(); ?>
+
+
+
+
+
+
+                <?php if(!isset($_GET[$unique])){ ?>
+                    <?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
+                <?php } ?>
+<?=$html->footer_content();?>
