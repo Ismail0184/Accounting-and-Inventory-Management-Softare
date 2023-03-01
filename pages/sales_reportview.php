@@ -10,7 +10,7 @@ list( $day,$month,$year1) = split('[/.-]', $_REQUEST['datefrom']);
 $dofdate= '20'.$year1.'-'.$month.'-'.$day;
 list($dayt,$montht,$yeart) = split('[/.-]', $_REQUEST['dateto']);
 $dotdate= '20'.$yeart.'-'.$montht.'-'.$dayt;
-$warehouseid=$_POST[warehouse_id];
+$warehouseid=$_POST['warehouse_id'];
 $_SESSION['company_name']=getSVALUE('company','company_name','where company_id="'.$_SESSION['companyid'].'"');
 $sectionid=$_SESSION['sectionid'];
 $companyid=$_SESSION['companyid'];
@@ -71,10 +71,10 @@ $report_id = $_POST['report_id'];
     <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
     <h4 align="center" style="margin-top:-15px">Sales Invoice List</h4>
     <?php if($_POST['dealer_code']){?>
-        <h5 align="center" style="margin-top:-15px">Dealer : <?=find_a_field('dealer_info','dealer_name_e','dealer_code='.$_POST[dealer_code].'')?></h5>
+        <h5 align="center" style="margin-top:-15px">Dealer : <?=find_a_field('dealer_info','dealer_name_e','dealer_code='.$_POST['dealer_code'].'')?></h5>
     <?php } ?>
     <?php if($_POST['warehouse_id']){?>
-        <h5 align="center" style="margin-top:-15px">Warehouse : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$_POST[warehouse_id].'')?></h5>
+        <h5 align="center" style="margin-top:-15px">Warehouse : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$_POST['warehouse_id'].'')?></h5>
     <?php } ?>
     <h5 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
     <?php
@@ -378,7 +378,7 @@ order by c.do_no";
 <?php elseif ($report_id=='9004002'):
   $sql="SELECT d.dealer_code,d.dealer_code,d.account_code as ledger_id,d.dealer_name_e as customer_name,t.town_name as town,a.AREA_NAME as territory,b.BRANCH_NAME as region,d.propritor_name_e as propritor_name,d.contact_person,d.contact_number,d.address_e as address,d.national_id,d.TIN_BIN as 'TIN / BIN'  from dealer_info d, town t, area a, branch b WHERE
 d.town_code=t.town_code and a.AREA_CODE=d.area_code and b.BRANCH_ID=d.region and
-   d.canceled in ('".$_POST[canceled]."') ".$order_by.""; echo reportview($sql,'Customer Report','98');
+   d.canceled in ('".$_POST['canceled']."') ".$order_by.""; echo reportview($sql,'Customer Report','98');
   ?>
 <?php elseif ($_POST['reporttypes']=='500001'):?>
     <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
@@ -484,7 +484,7 @@ lc_lc_master lc
 where
 a.lc_id=lc.id and
 a.ledger_id=b.ledger_id and
-a.jvdate between '$from_date' AND '$to_date' and
+a.jvdate between '".$from_date."' AND '".$to_date."' and
 a.ledger_id like '$ledger_id' and
 b.group_for=".$_SESSION['usergroup']." and
 a.user_id=u.user_id

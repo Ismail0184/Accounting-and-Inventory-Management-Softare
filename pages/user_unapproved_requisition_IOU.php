@@ -150,35 +150,5 @@ if(isset($$unique))
         </div></div>
     <!-------------------End of  List View --------------------->
 <?php } ?>
-<!---page content----->
 
-
-
-
-<?php require_once 'footer_content.php' ?>
-<script>
-    $(document).ready(function() {
-        $('#s_date').daterangepicker({
-
-            singleDatePicker: true,
-            calender_style: "picker_4",
-
-        }, function(start, end, label) {
-            console.log(start.toISOString(), end.toISOString(), label);
-        });
-    });
-</script>
-
-
-<script>
-    $(document).ready(function() {
-        $('#e_date').daterangepicker({
-
-            singleDatePicker: true,
-            calender_style: "picker_4",
-
-        }, function(start, end, label) {
-            console.log(start.toISOString(), end.toISOString(), label);
-        });
-    });
-</script>
+<?=$html->footer_content();?>

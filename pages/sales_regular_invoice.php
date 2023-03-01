@@ -7,7 +7,6 @@ $table_detail='sale_do_details';
 $unique_detail='id';
 $title='Sales Invoice';
 
-
 if(isset($_POST['select_dealer_do'])) {
     $_SESSION['select_dealer_do_regular']=$_POST['dealer_code'];
 }
@@ -36,8 +35,6 @@ if(prevent_multi_submit()){
             $type=1;
             $msg='Successfully Updated.';
         } }
-
-
 
         if(isset($_POST['add'])&&($_POST[$unique_master]>0)){
             if($_POST['dist_unit']>$_POST['inStock_pcs']){
@@ -83,6 +80,7 @@ if(prevent_multi_submit()){
                         $_POST['t_price']   = '-1.00';
                         $_POST['gift_type']=$gift->gift_type;
                         $crud->insert();
+                        unset($_POST);
                     }else{
                         $in_stock_pcs = find_a_field('journal_item','sum(item_in)-sum(item_ex)','item_id="'.$gift_item->item_id.'" and warehouse_id="'.$_POST['depot_id'].'" ');
                         $_POST['pkt_size'] = $gift_item->pack_size;
@@ -109,6 +107,7 @@ if(prevent_multi_submit()){
                             echo '';
                         }else
                             $crud->insert();
+                        unset($_POST);
                     } // gift id
 
                         }
@@ -158,8 +157,6 @@ if(isset($_POST['confirm'])){
     $type=1;
     $msg='Successfully Instructed to Depot.';}
 
-
-
 // fatch unique master data
 if($_SESSION['unique_master_for_regular']>0)
 {   $condition=$unique_master."=".$_SESSION['unique_master_for_regular'];
@@ -168,7 +165,7 @@ if($_SESSION['unique_master_for_regular']>0)
     { $$key=$value;}}
 
 $dealer = find_all_field('dealer_info','','dealer_code='.$_SESSION['select_dealer_do_regular']);
-$item_all= find_all_field('item_info','','item_id="'.$_REQUEST['item_id'].'"');
+$item_all= find_all_field('item_info','','item_id="'.$_GET['item_id'].'"');
 if($_REQUEST['id']>0){
   $present_stock_sql=mysqli_query($conn, "Select i.item_id,i.finish_goods_code,i.item_name,i.unit_name,i.pack_size,
   REPLACE(FORMAT(SUM(j.item_in-j.item_ex), 0), ',', '') as Available_stock_balance
@@ -188,7 +185,6 @@ if($_REQUEST['id']>0){
   $ps_data=mysqli_fetch_object($present_stock_sql);
   $in_stock_pcs = $ps_data->Available_stock_balance;
   $ordered_qty = find_a_field('sale_do_details','sum(total_unit)','item_id="'.$_REQUEST['item_id'].'" and depot_id="'.$depot_id.'" and status in ("UNCHECKED","PROCESSING","MANUAL")');
-
 } else {
     $present_stock_sql=mysqli_query($conn, "Select i.item_id,i.finish_goods_code,i.item_name,i.unit_name,i.pack_size,
     REPLACE(FORMAT(SUM(j.item_in-j.item_ex), 0), ',', '') as Available_stock_balance
@@ -207,12 +203,10 @@ if($_REQUEST['id']>0){
     group by j.item_id order by i.item_id");
     $ps_data=mysqli_fetch_object($present_stock_sql);
   $inventory_stock = $ps_data->Available_stock_balance;
-  $ordered_qty = find_a_field('sale_do_details','sum(total_unit)','item_id="'.$_REQUEST['item_id'].'" and depot_id="'.$depot_id.'" and status in ("UNCHECKED","PROCESSING","MANUAL")');
+  $ordered_qty = find_a_field('sale_do_details','sum(total_unit)','item_id="'.$_GET['item_id'].'" and depot_id="'.$depot_id.'" and status in ("UNCHECKED","PROCESSING","MANUAL")');
   $in_stock_pcs= $inventory_stock-$ordered_qty;
 }
 $del_qty = find_a_field('sale_do_chalan','sum(total_unit)','item_id="'.$_REQUEST['item_id'].'" and depot_id="'.$depot_id.'" and status in ("UNCHECKED","CHECKED","PROCESSING")');
-
-
 $res='select a.id,a.gift_on_order as gift_id,concat(b.item_id," # ",b.finish_goods_code," # ",b.item_name) as item_description,b.unit_name as unit,b.pack_size,round(a.d_price, 2) as d_price,round(a.unit_price, 2) as unit_price,a.total_unit, a.total_amt
 from
 sale_do_details a,item_info b where b.item_id=a.item_id and a.do_no='.$_SESSION['unique_master_for_regular'].' order by a.id';
@@ -258,9 +252,9 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
                 <td style="vertical-align: middle"><select class="select2_single form-control" style="width:300px; font-size: 11px" tabindex="-1" required="required"  name="dealer_code" id="dealer_code">
                         <option></option>
                         <?php if(isset($_SESSION['select_dealer_do_regular'])>0): ?>
-                        <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $_SESSION[select_dealer_do_regular], 'dealer_code='.$_SESSION[select_dealer_do_regular]); ?>
+                        <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $_SESSION['select_dealer_do_regular'], 'dealer_code='.$_SESSION['select_dealer_do_regular']); ?>
                         <?php else: ?>
-                        <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $_SESSION[select_dealer_do_regular], 'canceled="YES"'); ?>
+                        <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $_SESSION['select_dealer_do_regular'], 'canceled="YES"'); ?>
                         <?php endif; ?>
                     </select>
                 </td>
@@ -297,7 +291,7 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
                             <th style="width: 15%">DO Date</th><th style="text-align: center; width: 2%">:</th><td><input type="date" style="width: 80%" name="do_date" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>"  max="<?=date('Y-m-d');?>" value="<?=($do_date!='')? $do_date : date('Y-m-d');?>"></td>
                             <th style="width: 15%">Do Type</th><th style="text-align: center; width: 2%">:</th>
                             <td><select style="width:80%; height:25px; font-size: 11px" name="do_type" id="do_type"  required>
-                                        <option value=""></option>
+                                        <option value="sales">Sales</option>
                                         <?php if(isset($_SESSION['unique_master_for_regular'])>0): ?>
                                         <?=foreign_relation('sales_type', 'do_type', 'type_name', $do_type, 'do_type="'.$do_type.'"'); ?>
                                         <?php else: ?>
@@ -338,8 +332,6 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
 
                 </div></div></div>
 
-
-
 <?php if(isset($_SESSION['unique_master_for_regular'])>0): ?>
 <form action="<?=$page;?>" name="addem" id="addem" class="form-horizontal form-label-left" method="post">
  <? require_once 'support_html.php';?>
@@ -361,7 +353,6 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
       <input style="width:155px;"  name="company_id" type="hidden" id="company_id" value="<?=$_SESSION['companyid']?>"/>
       <input style="width:155px;"  name="depot_id" type="hidden" id="depot_id" value="<?=$depot_id?>"/>
       <input style="width:155px;"  name="revenue_persentage" type="hidden" id="revenue_persentage" value="<?=$item_all->revenue_persentage?>"/>
-
  <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
         <thead>
         <tr style="background-color: bisque">
@@ -376,29 +367,23 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
         </thead>
         <tbody>
                     <tr>
-
                     <td style="vertical-align: middle">
                     <select class="select2_single form-control"  tabindex="-1" required="required" name="item_id" id="item_id" onchange="javascript:reload(this.form)">
                     <option></option>
-                    <? advance_foreign_relation(find_all_item($product_nature="'Salable','Both'"),($_REQUEST['item_id']>0)? $_REQUEST['item_id'] : $edit_value->item_id);?>
+                    <? advance_foreign_relation(find_all_item($product_nature="'Salable','Both'"),($_GET['item_id']>0)? $_GET['item_id'] : $edit_value->item_id);?>
                     </select>
                     </td>
-
                      <td style="width:10%; vertical-align: middle" align="center">
                      <input type="number" id="inStock_pcs" style="width:99%; height:37px; font-size:11px;text-align:center"  required="required" value="<?=$in_stock_pcs?>" name="inStock_pcs"  class="form-control col-md-7 col-xs-12" readonly class="total_amt" ></td>
                      <td style="vertical-align: middle"><input class="form-control col-md-7 col-xs-12" name="d_price" type="number" style="width:99%; height:37px; font-size:11px;text-align:center" readonly id="d_price" value="<?=$item_all->d_price?>" readonly="readonly"/></td>
-
                      <td style="width:10%; vertical-align: middle" align="center">
                      <input type="number" id="unit_price" style="width:99%; height:37px; font-size:11px;text-align:center" min="1" step="any" required="required" value="<?=($_REQUEST['item_id']>0)? $item_all->d_price : $edit_value->unit_price?>" readonly name="unit_price"  class="form-control col-md-7 col-xs-12" autocomplete="off" class="unit_price" ></td>
-
                      <td style="width:10%; vertical-align: middle" align="center">
                         <!--input placeholder="Crt"  name="pkt_unit" type="text" id="pkt_unit" style="width:45%; height:37px" onkeyup="avail_amount(),count()" required="required" class="form-control col-md-7 col-xs-12"  tabindex="4"/ -->
                      <input  class="form-control col-md-7 col-xs-12" name="dist_unit" type="number" onkeyup="doAlert(this.form);" min="1" id="dist_unit" style="width:99%; height:37px; text-align:center; font-size:11px" value="<?=$edit_value->dist_unit?>" required="required" class="dist_unit" />
                      <input name="pkt_size" type="hidden" class="input3" id="pkt_size"  style="width:55px;"  value="<?=$item_all->pack_size?>" readonly/></td>
-
                      <td align="center" style="width:10%; vertical-align: middle">
                      <input type="number" id="total_amt" style="width:99%; height:37px; font-size:11px;text-align:center" required="required" min="1" step="any"  name="total_amt" value="<?=$edit_value->total_amt?>" class="form-control col-md-7 col-xs-12" readonly autocomplete="off" class="total_amt" ></td>
-
                      <td align="center" style="width:5%; vertical-align: middle">
                        <?php if (isset($_REQUEST['id'])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_REQUEST['id'];?>" id="editdata<?=$_REQUEST['id'];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
                        <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td>
@@ -413,7 +398,6 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
                              });
                          });
                      </script>
-
                      <SCRIPT language=JavaScript>
                          function doAlert(form)
                          {   var val=form.dist_unit.value;

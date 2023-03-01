@@ -3,8 +3,8 @@ session_start();
 require_once ('base.php');
 if(isset($_SESSION['login_email'])!="")
 {header("Location: dashboard.php");}
-if($_GET['module']>0){
-    $_SESSION['module_id']=$_GET['module'];
+if($_REQUEST['module']>0){
+    $_SESSION['module_id']=$_REQUEST['module'];
 }
 if(isset($_POST['btn-login']))
 	{   $user_email = trim($_POST['user_email']);

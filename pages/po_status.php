@@ -1,8 +1,6 @@
 <?php
 require_once 'support_file.php';
-
 $title='View Work Order';
-
 $table = 'purchase_master';
 $table_details="purchase_invoice";
 $unique = 'po_no';
@@ -24,7 +22,6 @@ $po_master=find_all_field(''.$table.'','',''.$unique.'='.$$unique.'');
 $GET_status=find_a_field(''.$table.'','status',''.$unique.'='.$_GET[$unique]);
 
 if(isset($_POST['viewreport'])){
-
     $res='select  
     a.po_no,
     a.vendor_id, 
@@ -36,21 +33,20 @@ if(isset($_POST['viewreport'])){
     a.work_order_for_department as Created_By_Department,
     c.fname,
     p.PBI_NAME as Check_By,
-    a.delivery_within,a.status 
-    
+    a.delivery_within,
+    a.status 
     from 
     purchase_master a,
     warehouse b,
-    user_activity_management c,
+    users c,
     vendor v,
     personnel_basic_info p 
-    
     where  
     a.warehouse_id=b.warehouse_id and 
     a.entry_by=c.user_id and 
     a.checkby=p.PBI_ID and 
     a.vendor_id=v.vendor_id and
-    a.po_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'"
+    a.po_date between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"
     order by a.po_no desc';
     } else { 
     $res='select  
@@ -66,20 +62,18 @@ if(isset($_POST['viewreport'])){
     c.fname,
     p.PBI_NAME as Check_By,
     a.delivery_within,a.status 
-    
     from 
     purchase_master a,
     warehouse b,
     user_activity_management c,
     vendor v,
     personnel_basic_info p 
-    
     where  
     a.warehouse_id=b.warehouse_id and 
     a.entry_by=c.user_id and 
     a.checkby=p.PBI_ID and 
     a.vendor_id=v.vendor_id and
-    a.status in ("MANUAL","CANCELED") 
+    a.status in ("MANUAL","CANCELED","UNCHECKED") 
     order by a.po_no desc';
     }
 	?>
@@ -141,19 +135,12 @@ if(isset($_POST['viewreport'])){
                                 <td style="text-align: right"><?=number_format($req_data->amount,2);?></td>
                                 </tr>
                                 <?php $total=$total+$req_data->amount;  } ?>
-
-
-
-
                       <tr style="font-weight: bold">
-
                           <td colspan="9" align="right">TOTAL:</td>
                           <td align="right"><strong>
                                   <?  echo number_format(($total),2);?>
                               </strong></td>
                       </tr>
-
-
                       <? if($cash_discount>0){?>
                           <tr style="font-weight: bold">
                               <td colspan="9" align="right">Discount:</td>
@@ -162,8 +149,6 @@ if(isset($_POST['viewreport'])){
                                   </strong></td>
                           </tr>
                       <? }?>
-
-
                       <? if($tax_ait>0){?>
                           <tr style="font-weight: bold">
                               <td colspan="9" align="right">AIT/Tax (<?=$tax_ait?>%): </td>
@@ -186,8 +171,6 @@ if(isset($_POST['viewreport'])){
                           <? }
                           $tax_totals=($subtotal*$tax)/100;
                           ?>
-
-
                       <? if($transport_bill>0){?>
                           <tr style="font-weight: bold">
                               <td colspan="9" align="right">Transport Bill: </td>
@@ -200,8 +183,6 @@ if(isset($_POST['viewreport'])){
                               <td align="right"><strong> <? echo number_format(($labor_bill),2);?> </strong></td>
                           </tr>
                       <? }?>
-
-
                       <tr style="font-weight: bold">
                       <td colspan="9" align="right">Grand Total:</td>
                       <td align="right"><strong> <? echo number_format(($subtotal+$tax_totals+$transport_bill+$labor_bill),2);?> </strong></td>
@@ -218,22 +199,24 @@ if(isset($_POST['viewreport'])){
                     <? } else { echo '<h6 style="text-align: center;color: red;  font-weight: bold"><i>This work order was created by another person. So you are not able to do anything here!!</i></h6>';
 					}} else {echo '<h6 style="text-align: center;color: red;  font-weight: bold"><i>This purchase has been checked !!</i></h6>';}?>
                 
-             </div> </div></div></form>
-     <!-------------------End of  List View --------------------->
+             </div>
+         </div>
+     </div>
+     </form>
  <?php } ?>
-<?php if(!isset($_GET[$unique])){ ?>
 
+
+<?php if(!isset($_GET[$unique])){ ?>
 <form action="" name="addem" id="addem" class="form-horizontal form-label-left" method="post" >
         <table align="center" style="width: 50%;">
             <tr><td>
-                <input type="date"  style="width:150px; font-size: 11px;"  value="<?=($_POST[f_date]!='')? $_POST[f_date] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
+                <input type="date"  style="width:150px; font-size: 11px;"  value="<?=($_POST['f_date']!='')? $_POST['f_date'] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
                 <td style="width:10px; text-align:center"> -</td>
-                <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?=($_POST[t_date]!='')? $_POST[t_date] : date('Y-m-d') ?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
+                <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?=($_POST['t_date']!='')? $_POST['t_date'] : date('Y-m-d') ?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
                 <td style="padding:10px"><button type="submit" style="font-size: 11px; height: 30px" name="viewreport"  class="btn btn-primary">View Report</button></td>
-            </tr></table> 
+            </tr>
+        </table>
 </form>
-
-
 
 <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
@@ -257,13 +240,12 @@ if(isset($_POST['viewreport'])){
                 <tbody>
 
 <? 
-$qqq=mysql_query($res);
-while($data=mysql_fetch_object($qqq)){
+$qqq=mysqli_query($conn, $res);
+while($data=mysqli_fetch_object($qqq)){
     $i=$i+1;
 	$department=$data->Created_By_Department;
 	$link='po_print_view.php?potype='.$department.'&po_no='.$data->po_no;
 	list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $data->delivery_within); ?>
-
  <tr style=" cursor: pointer">
  <td style="text-align: center" onclick="DoNavPOPUP('<?=$data->po_no?>', 'TEST!?', 900, 600)"><?=$i?></td>
  <td  align="center" style="padding:5px">
@@ -276,7 +258,10 @@ while($data=mysql_fetch_object($qqq)){
  <td  align="left" style="padding:5px" onclick="DoNavPOPUP('<?=$data->po_no?>', 'TEST!?', 900, 600)"><?=$data->fname?></td>
  <td  align="left" style="padding:5px; width:8%" onclick="DoNavPOPUP('<?=$data->po_no?>', 'TEST!?', 900, 600)"><?= $day.'-'.$month.'-'.$year1?></td>
  <td  align="center" style="padding:5px" onclick="DoNavPOPUP('<?=$data->po_no?>', 'TEST!?', 900, 600)"><?=$data->type?></td>
-     <td  align="center" style=" <?php if( $data->status=='COMPLETED') { echo 'background-color:#9C6';  } else if ( $data->status=='UNCHECKED') { echo 'background-color:red';  } else if ( $data->status=='CHECKED') { echo 'background-color:yellow';  }  ?>;padding:5px"><?=$data->status?></td>
+     <td  align="center" style="padding:5px">
+
+         <span class="label label-<?php if( $data->status=='COMPLETED') { echo 'success';  } else if ( $data->status=='UNCHECKED') { echo 'default';  } else if ( $data->status=='CHECKED') { echo 'primary';  } else if ( $data->status=='PROCESSING') { echo 'info';  } else if ( $data->status=='RETURNED') { echo 'danger';  }  ?>" style="font-size:10px"><?=$data->status?></span>
+     </td>
      <td  align="left" style="padding:5px" onclick="DoNavPOPUP('<?=$data->po_no?>', 'TEST!?', 900, 600)"><?=$data->return_comments?></td>     
      <td style="text-align: center; vertical-align: middle"><a target="_blank" href="<?=$print_page;?>?<?=$unique;?>=<?=$data->po_no;?>"><img src="http://icpbd-erp.com/51816/warehouse_mod/images/print.png" width="20" height="20" /></a></td>
  </tr>

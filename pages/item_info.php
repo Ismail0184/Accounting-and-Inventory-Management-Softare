@@ -115,14 +115,6 @@ $sql_brand_category="Select category_name,category_name from brand_category";
 <?php if(isset($_GET[$unique])):
  require_once 'body_content_without_menu.php'; else :
  require_once 'body_content.php'; endif;  ?>
-
-
-
-
-
-
-
-
 <?php if(isset($_GET[$unique])): ?>
 <div class="col-md-5 col-sm-12 col-xs-12">
                         <div class="x_panel">
@@ -342,6 +334,7 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                             <select style="width: 100%" class="select2_single form-control" name="status" id="status">
                                                 <option value="Active" <?php if($status=='Active') echo 'selected' ?>>Active</option>
                                                 <option value="Inactive" <?php if($status=='Inactive') echo 'selected' ?>>Inactive</option>
+                                                <option value="Inactive" <?php if($status=='pending') echo 'selected' ?>>Pending</option>
                                             </select>
                                         </div>
                                     </div>

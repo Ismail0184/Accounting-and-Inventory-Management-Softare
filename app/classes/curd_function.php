@@ -6,8 +6,6 @@
  * Description: This class manages crud.
  */
 
-
-
 require_once 'base.php';
 class crud{
     public  $table_name;
@@ -15,7 +13,6 @@ class crud{
     public  $fields = array();
     public  $fields_empty = array();
     public  $fields_type = array();
-
 
     public function crud($table_name)
     {   global $conn;
@@ -33,8 +30,6 @@ class crud{
 		$this->table_name = $table_name;
     }
 
-
-
     public function insert($tag='',$id='')
     {
         $vars = get_vars($this->fields);
@@ -43,15 +38,12 @@ class crud{
         return $id;
     }
 
-
     public function update($tag)
     {   $vars = get_vars($this->fields);
         if ( count($vars) > 0 )
             db_update($this->table_name,$_POST[$tag],$vars,$tag);
         return $id;
-
     }
-
 	 public function delete($condition)
     {
         global $conn;
@@ -81,7 +73,6 @@ class crud{
         $str.='
 		<table  id="datatable-buttons" class="table table-striped table-bordered" style="width:100%; font-size: 11px">';
         $str .='<thead><tr class="oe_list_header_columns"><th>#</th>';
-
         if ($result = mysqli_query($conn , $sql)) {
             $cols = mysqli_num_fields($result);
             $fieldinfo = mysqli_fetch_fields($result);
@@ -96,7 +87,7 @@ class crud{
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.'  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
+                    $str .='<tr onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         $str .='<td>'.$b."</td>";}
@@ -127,7 +118,7 @@ class crud{
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.'  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
+                    $str .='<tr onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         $str .='<td>'.$b."</td>";}
@@ -159,7 +150,7 @@ class crud{
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer" onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer" onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         $str .='<td>'.$b."</td>";}
@@ -188,7 +179,7 @@ class crud{
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         $str .='<td>'.$b."</td>";}
@@ -238,7 +229,7 @@ else{				if($show[$i]!=1&&$sum[$i]!=0)$str .='<td style="text-align:right">'.num
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         $str .='<td>'.$b."</td>";}
@@ -274,7 +265,7 @@ else{				if($show[$i]!=1&&$sum[$i]!=0)$str .='<td style="text-align:right">'.num
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         $str .='<td>'.$b."</td>";}
@@ -347,7 +338,7 @@ ORDER BY zm.sl, zs.sl");
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td style="vertical-align:middle">'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td style="vertical-align:middle">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
 						if($b=='YES'):
@@ -418,7 +409,7 @@ ORDER BY zm.sl, zs.sl");
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td style="vertical-align:middle">'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td style="vertical-align:middle">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         if($b=='YES'):
@@ -503,7 +494,7 @@ ORDER BY zm.sl, zs.sl");
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td style="vertical-align:middle">'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td style="vertical-align:middle">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         if($b=='YES' || $b=='USED'):
@@ -588,7 +579,7 @@ ORDER BY zm.sl, zs.sl");
 			$sta2='';
             if (mysqli_num_rows($result)>0):
                 while($row = mysqli_fetch_array($result)):
-                    $str .='<tr'.$class.' style="cursor:pointer"><td style="vertical-align:middle" onclick="DoNavPOPUP('.$row[0].')">'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"><td style="vertical-align:middle" onclick="DoNavPOPUP('.$row[0].')">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++):
                         $b=$row[$i];
 					if($b=='1' || $b=='0'):
@@ -739,7 +730,7 @@ ORDER BY zm.sl, zs.sl");
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         $str .='<td>'.$b."</td>";}
@@ -781,7 +772,7 @@ ORDER BY zm.sl, zs.sl");
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td>'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         $str .='<td>'.$b."</td>";}
@@ -817,7 +808,7 @@ ORDER BY zm.sl, zs.sl");
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
                     $onclick='OpenPopupCenter("'.$link.'?v_type='.$v_type.'&vdate='.$row[1].'&v_no='.$row[2].'&view=Show&in='.$v_type.'", "TEST!?", 1000, 600)';
-                    $str .="<tr".$class."><td style='text-align: left; cursor: pointer' onclick='".$onclick."'>".($sl=$sl+1)."</td>";
+                    $str .="<tr><td style='text-align: left; cursor: pointer' onclick='".$onclick."'>".($sl=$sl+1)."</td>";
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         if(is_numeric($b)){
@@ -1388,8 +1379,7 @@ public function MIS_add_new_plant_cmu_warehouse($active,$res,$title,$unique,$c_c
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
                     $onclick='OpenPopupCenter("'.$link.'?v_type='.$v_type.'&vdate='.$row[1].'&v_no='.$row[2].'&view=Show&in='.$v_type.'", "TEST!?", 1000, 600)';
-
-                    $str .="<tr".$class."><td style='text-align: left; cursor: pointer' onclick='".$onclick."'>".($sl=$sl+1)."</td>";
+                    $str .="<tr><td style='text-align: left; cursor: pointer' onclick='".$onclick."'>".($sl=$sl+1)."</td>";
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         if(is_numeric($b)){
@@ -1429,7 +1419,6 @@ function recentdataview($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth){
                 $str .='<th>'.ucwords(str_replace('_', ' ',$val->name)).'</th>';
             }
             $str .='</tr></thead><tbody>';
-
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
@@ -1633,7 +1622,7 @@ function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data){
             $c=0;
             if (mysqli_num_rows($result)>0):
                 while($row = mysqli_fetch_array($result)):
-                    $str .='<tr'.$class.' style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++):
                         $b=$row[$i];
 
@@ -1687,7 +1676,7 @@ function added_data_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data,$pa
             $c=0;
             if (mysqli_num_rows($result)>0):
                 while($row = mysqli_fetch_array($result)):
-                    $str .='<tr'.$class.' style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++):
                         $b=$row[$i];
                         if(is_numeric($row[$i])):
@@ -1737,7 +1726,7 @@ function added_data_delete_edit_invoice($sql,$unique,$unique_GET,$COUNT_details_
             $c=0;
             if (mysqli_num_rows($result)>0):
                 while($row = mysqli_fetch_array($result)):
-                    $str .='<tr'.$class.' style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($row[0]).'</td>';
+                    $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($row[0]).'</td>';
                     for($i=1;$i<$cols;$i++):
                         $b=$row[$i];
                         if(is_numeric($row[$i])):
@@ -1802,7 +1791,7 @@ function added_data_delete_edit__special_invoice($sql,$unique,$unique_GET,$COUNT
             $c=0;
             if (mysqli_num_rows($result)>0):
                 while($row = mysqli_fetch_array($result)):
-                    $str .='<tr'.$class.' style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($row[0]).'</td>';
+                    $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($row[0]).'</td>';
                     for($i=1;$i<$cols;$i++):
                         $b=$row[$i];
                         if(is_numeric($row[$i])):
@@ -1868,7 +1857,7 @@ function added_data_delete_edit_purchase_order($sql,$unique,$unique_GET,$COUNT_d
             $c=0;
             if (mysqli_num_rows($result)>0):
                 while($row = mysqli_fetch_array($result)):
-                    $str .='<tr'.$class.' style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($row[0]).'</td>';
+                    $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($row[0]).'</td>';
                     for($i=1;$i<$cols;$i++):
                         $b=$row[$i];
                         if(is_numeric($row[$i])):
@@ -1933,7 +1922,7 @@ function adds_data_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data,$pag
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         if(is_numeric($row[$i])){
@@ -1975,7 +1964,7 @@ function dataview($sql,$unique,$unique_GET,$COUNT_details_data,$page){
             $c=0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
-                    $str .='<tr'.$class.' style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
+                    $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
                         $b=$row[$i];
                         if(is_numeric($row[$i])){

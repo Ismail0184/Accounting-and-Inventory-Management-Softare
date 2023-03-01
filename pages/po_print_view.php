@@ -2,14 +2,7 @@
 
 require_once 'support_file.php';
 require_once 'class.numbertoword.php';
-
-
-
-
-
 $po_no = $_REQUEST['po_no'];
-
-
 if(isset($_POST['cash_discount']))
 
 {
@@ -17,18 +10,18 @@ if(isset($_POST['cash_discount']))
 	$po_no = $_POST['po_no'];
 	$cash_discount = $_POST['cash_discount'];
 	$ssql='update purchase_master set cash_discount="'.$_POST['cash_discount'].'" where po_no="'.$po_no.'"';
-	mysql_query($ssql);
+	mysqli_query($conn, $ssql);
 
 }
 
 
 
 $sql1="select * from purchase_master where   po_no='$po_no'";
-$data=mysql_fetch_object(mysql_query($sql1));
+$data=mysqli_fetch_object(mysqli_query($conn, $sql1));
 $vendor=find_all_field('vendor','','vendor_id='.$data->vendor_id );
 $whouse=find_all_field('warehouse','address','warehouse_id='.$data->warehouse_id);
 $sql_proj = "select * from project_info where 1";
-$datasks = mysql_fetch_object(mysql_query($sql_proj));
+$datasks = mysqli_fetch_object(mysqli_query($conn, $sql_proj));
 
 //$proj_info = find_all_field('project_info','proj_name','proj_id='.$data->proj_id);
 $bd_style=$data->po_date;
@@ -158,9 +151,9 @@ $total=0;
 $sql2="select p.*,i.*,i.unit_name from purchase_invoice p, item_info i where p.item_id not in ('1096000100010313') and p.po_no='$po_no' and 
 p.item_id=i.item_id
 ";
-$data2=mysql_query($sql2);
+$data2=mysqli_query($conn, $sql2);
 //echo $sql2;
-while($info=mysql_fetch_object($data2)){
+while($info=mysqli_fetch_object($data2)){
 $pi++;
 $amount=$info->qty*$info->rate;
 $total=$total+($info->amount);

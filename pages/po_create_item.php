@@ -193,7 +193,7 @@ $sql_checked_by="SELECT  p.PBI_ID,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' : ',
 							 e.ESS_JOB_LOCATION=1 group by p.PBI_ID							 
 							  order by p.PBI_NAME";
 
-if($_SESSION[initiate_po_no]>0):		
+if($_SESSION['initiate_po_no']>0):
 $condition=$unique."=".$_SESSION[initiate_po_no];
 		$data=db_fetch_object($table_master,$condition);
 		while (list($key, $value)=each($data))
