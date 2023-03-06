@@ -30,6 +30,28 @@ $sql="SELECT i.item_id,concat(i.item_id,' : ',i.finish_goods_code,' : ',i.item_n
 return $sql;
 }
 
+function find_active_user_HO($value=''){
+ global $conn;
+ $sql = "SELECT  p.PBI_ID,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' : ',d.DEPT_SHORT_NAME) FROM
+    personnel_basic_info p,
+    department d,
+    essential_info e
+     where
+     p.PBI_JOB_STATUS in ('In Service') and
+     p.PBI_DEPARTMENT=d.DEPT_ID	and
+     p.PBI_ID=e.PBI_ID and
+     e.ESS_JOB_LOCATION=1 group by p.PBI_ID
+      order by p.PBI_NAME";
+ $res=mysqli_query($conn, $sql);
+ while($data=mysqli_fetch_row($res))
+ {
+  if($value==$data[0])
+   echo '<option value="'.$data[0].'" selected>'.$data[1].'</option>';
+  else
+   echo '<option value="'.$data[0].'">'.$data[1].'</option>';
+ }
+}
+
 function check_permission_main_menu($page){
 global $conn;
 $page_id_GET=find_a_field('dev_main_menu','main_menu_id','`url` LIKE "'.$page.'"');

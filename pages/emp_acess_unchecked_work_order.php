@@ -60,8 +60,8 @@ $master=find_all_field("".$table."","","".$unique."=".$_GET[$unique]."");
 
 	
 	
-if(isset($_POST[checked])){
-mysql_query("Update ".$table." SET status='CHECKED',checkby_date='$todayss' where ".$unique."=".$_GET[$unique]."");
+if(isset($_POST['checked'])){
+mysqli_query($conn, "Update ".$table." SET status='CHECKED',checkby_date='$todayss' where ".$unique."=".$_GET[$unique]."");
 $maild=find_a_field('essential_info','ESS_CORPORATE_EMAIL','PBI_ID='.$master->recommended);
 $to = $maild;
 				$subject = "A New Work Order";
@@ -120,7 +120,7 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                      <th>Vendor</th>
                      <th>Remarks</th>
                      <th style="width:20%">Entry By</th>
-                     <?php if(isset($_POST[viewreport])){ ?>
+                     <?php if(isset($_POST['viewreport'])){ ?>
                      <th style="width:15%">Checked By</th>
 					 <?php } ?>                     
                      <th style="width:10%">Current Status</th>
@@ -128,7 +128,7 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                      </thead>
                       <tbody>
                  <?php  if(isset($_POST[viewreport])){	
-				 $res=mysql_query('select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',po_date,r.status as current_status,r.checkby,r.checkby_date,
+				 $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',po_date,r.status as current_status,r.checkby,r.checkby_date,
 				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
 							 
 							personnel_basic_info p2,
@@ -145,11 +145,11 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
 				  WHERE r.checkby='.$_SESSION['PBI_ID'].' and 
 				  r.vendor_id=v.vendor_id and 
 				  r.po_type not in ("Asset") and
-				  r.po_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'"		  
+				  r.po_date between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"		  
 				   order by r.'.$unique.' DESC');
 				  
 				   } else {
-					    $res=mysql_query('select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',po_date,r.status as current_status,
+					    $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',po_date,r.status as current_status,
 				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
 							 
 							personnel_basic_info p2,
@@ -169,7 +169,7 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
 				  r.po_type not in ("Asset")		  
 				   order by r.'.$unique.' DESC');
  }
-				   while($req=mysql_fetch_object($res)){ ?>
+				   while($req=mysqli_fetch_object($res)){ ?>
                    <tr style="cursor: pointer">
                                 <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$i=$i+1;?></td>
                                 <td style="text-align: center"><a href="../page/po_documents/qoutationDoc/<?=$req->$unique.'.pdf';?>" target="_blank" style="color:#06F" title="Quotation Attached"><u><strong><?=$req->$unique;?></strong></u></a></td>
@@ -212,11 +212,11 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                      </tr>
                      </thead>
                       <tbody>
-                      <?php 	$res=mysql_query('Select td.*,i.* from '.$table_details.' td,
+                      <?php 	$res=mysqli_query($conn,'Select td.*,i.* from '.$table_details.' td,
 				 item_info i
 				  where td.item_id=i.item_id and 				  
 				  td.'.$unique.'='.$_GET[$unique].'');
-				   while($req_data=mysql_fetch_object($res)){
+				   while($req_data=mysqli_fetch_object($res)){
 				   ?>
                    <tr>
                                 <td><?=$i=$i+1;?></td>
@@ -298,7 +298,6 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
 								<?php if($current_status!=$required_status){ echo '<h6 style="text-align:center; color:red; font-weight:bold"><i>This work order has been checked!!</i></h6>';} else { ?>
                                      <table style="width:100%;font-size:12px">
                                           <td><input type="text" id="return_comments"  name="return_comments" class="form-control col-md-7 col-xs-12"  style="width:166px; font-size:11px; height:32px"  placeholder="return comments........" ><button type="submit" name="Return" style="font-size:12px" id="Return" class="btn btn-danger" onclick='return window.confirm("Are you confirm to Return?");'>Return the Work Order</button></td>
-                                         
                                          <td align="right"><button type="submit" style="font-size:12px" onclick='return window.confirm("Are you confirm to Checked the Purchase Order?");' name="checked" id="checked" class="btn btn-primary">Checked & Forward</button></td></tr></table>           
                                             <?php } ?>                               
                                                                                                                                    
