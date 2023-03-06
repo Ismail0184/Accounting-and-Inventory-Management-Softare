@@ -127,20 +127,11 @@ $sql="select a.id,a.id as AID,a.attendance_date as date,a.late_reason,a.place fr
                         <div class="x_panel">
                             <div class="x_title">
                                 <h2><?=$title;?></h2>
-                                <ul class="nav navbar-right panel_toolbox">
-                                    <div class="input-group pull-right">
-                                        <!--a target="_new" class="btn btn-sm btn-default"  href="user_permission2.php">
-                                            <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000">Uer Permission (SUB)</span>
-                                        </a-->
-                                    </div>
-                                </ul>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
-
                                 <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
                                     <? require_once 'support_html.php';?>
-
                                     <table style="width:100%; font-size: 11px"  cellpadding="0" cellspacing="0">
                                     <tr>
                                     <th style="width:15%">OD Date<span class="required">*</span></th>
@@ -149,36 +140,25 @@ $sql="select a.id,a.id as AID,a.attendance_date as date,a.late_reason,a.place fr
                                         <input type="date" id="attendance_date"  required="required" name="attendance_date"  class="form-control col-md-7 col-xs-12" style="font-size:11px;width:97%" value="<?=$attendance_date;?>">
                                         <input type="hidden" id="<?=$unique?>" style="width:97%"     name="<?=$unique?>" value="<?=$$unique?>" class="form-control col-md-7 col-xs-12" >
                                     </td>
-
-
                                     <th style="width:15%">Duty Place<span class="required">*</span></th>
                                     <th style="width:2%">:</th>
                                     <td>
                                     <input type="text" id="place" style="width:97%"  required   name="place"  value="<?=$place;?>"  class="form-control col-md-7 col-xs-12" ></td>
                                     </tr>
-
-
-
                                     <tr><td style="height:5px"></td></tr>
-
                                     <tr>
                                     <th style="width:15%">Purpose<span class="required">*</span></th>
                                     <th style="width:2%">:</th>
                                     <td><input type="text" id="late_reason" style="width:97%"  required   name="late_reason"   class="form-control col-md-7 col-xs-12" ></td>
-
-
                                     <th style="width:15%">Authorised Person<span class="required">*</span></th>
                                     <th style="width:2%">:</th>
                                     <td><select class="select2_single form-control" style="width: 97%;" tabindex="-1" required="required" name="authorised_by" id="authorised_by">
-                                                <option></option>
-                                                <?=advance_foreign_relation($sql_recommended_by,$authorised_by);?>
-                                            </select>
+                                            <option></option>
+                                            <?=advance_foreign_relation(find_active_user_HO($authorised_by));?>
+                                        </select>
                                           </td>
                                     </tr>
                                     </table>
-
-
-
                                         <br>
                                         <?php if($_GET[$unique]){  ?>
                                             <div class="form-group" style="margin-left:40%">
@@ -197,8 +177,6 @@ $sql="select a.id,a.id as AID,a.attendance_date as date,a.late_reason,a.place fr
                                             <button type="submit" name="record" id="record" style="font-size: 12px" onclick='return window.confirm("Are you confirm?");' class="btn btn-primary">Submit the Application</button>
                                             </div></div>
                                             <?php } ?>
-
-
                                 </form>
                                 </div>
                                 </div>

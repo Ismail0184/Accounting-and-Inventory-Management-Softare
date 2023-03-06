@@ -157,7 +157,6 @@ vendor v
         <div class="x_panel">
             <div class="x_content">
                 <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post">
-                    <? //require_once 'support_html.php';?>
                     <table align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">
                         <thead>
                         <tr style="background-color: bisque">

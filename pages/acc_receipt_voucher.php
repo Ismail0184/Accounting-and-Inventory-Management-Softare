@@ -36,7 +36,6 @@ $jv=next_journal_voucher_id();
 if(prevent_multi_submit()) {
     if(isset($_POST[$unique]))
     {
-
         if (isset($_POST['initiate'])) {
             $_POST['section_id'] = $_SESSION['sectionid'];
             $_POST['company_id'] = $_SESSION['companyid'];
@@ -227,7 +226,7 @@ cost_center c
     <div class="col-md-8 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2><?=$title;?></h2>
+                <h2><?=$title;?> <small>Single Entry</small></h2>
                 <a style="float: right" class="btn btn-sm btn-default"  href="acc_receipt_voucher_multiple.php">
                     <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Multiple Entry</span>
                 </a>
@@ -316,7 +315,7 @@ cost_center c
         <input type="hidden" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>">
         <table align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">
             <tbody>
-            <tr style="background-color: bisque">
+            <tr style="background-color: #3caae4; color:white">
                 <th style="text-align: center">Cash , Bank & Others</th>
                 <th style="text-align: center">Profit Center</th>
                 <th style="text-align: center">Narration</th>
@@ -325,18 +324,19 @@ cost_center c
                 <th style="text-align:center;">Action</th>
             </tr>
             <tbody>
-
             <tr>
                 <td style="width: 25%; vertical-align: middle" align="center">
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
                         <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value->ledger_id, 'ledger_group_id in ("1002","4007") and status=1'); ?>
-                    </select></td>
+                    </select>
+                </td>
                 <td align="center" style="width: 10%;vertical-align: middle">
                     <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="pc_code">
                         <option></option>
                         <?php foreign_relation('profit_center', 'id', 'CONCAT(id," : ", center_name)', $edit_value->pc_code, '1'); ?>
-                    </select></td>
+                    </select>
+                </td>
                 <td style="width:15%;vertical-align: middle" align="center">
                     <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['credit_note_last_narration'];?></textarea></td>
                 <td style="width:10%;vertical-align: middle" align="center">

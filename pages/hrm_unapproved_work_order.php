@@ -17,18 +17,14 @@ $required_status="CHECKED";
 $page="hrm_unapproved_work_order.php";
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
 
 if(prevent_multi_submit()){
-  
     if(isset($_POST['Return']))
     {		
     $_POST['status']='CANCELED';
 	$_POST['return_comments']=$_POST['return_comments'];
 	$_POST['return_at']=$todayss;
     $crud->update($unique);
-    $type=1;
-    //echo $targeturl;
     echo "<script>self.opener.location = '$page'; self.blur(); </script>";
     echo "<script>window.close(); </script>";
     }
@@ -43,8 +39,6 @@ if(isset($_POST['Deleted']))
     $condition = $unique . "=" . $$unique;
     $crud->delete_all($condition);	
     unset($$unique);
-    $type=1;
-    $msg='Successfully Deleted.';
     echo "<script>self.opener.location = '$page'; self.blur(); </script>";
     echo "<script>window.close(); </script>";
 }}
@@ -79,7 +73,46 @@ $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 mail($to,$subject,$txt,$headers); 
 echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                        echo "<script>window.close(); </script>";
-								}
+
+
+    if(isset($_POST['viewreport'])){
+        $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',r.po_date,r.status as current_status,r.checkby,r.checkby_date,r.entry_at,r.recommended_date,
+				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
+							personnel_basic_info p2,
+							department d,
+							designation de,
+							user_activity_management u 
+							 where 
+							 p2.PBI_ID=u.PBI_ID and
+							 u.user_id=r.entry_by and
+							 p2.PBI_DESIGNATION=de.DESG_ID and  							 
+							 p2.PBI_DEPARTMENT=d.DEPT_ID) as entry_by,r.po_details as Remarks
+							 from '.$table.' r,
+				  vendor v
+				  WHERE r.recommended='.$_SESSION['PBI_ID'].' and 
+				  r.vendor_id=v.vendor_id and 
+				  r.po_date between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"		  
+				   order by r.'.$unique.' DESC');
+
+    } else {
+        $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',r.po_date,r.status as current_status,r.checkby,r.checkby_date,r.entry_at,
+				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
+							personnel_basic_info p2,
+							department d,
+							designation de,
+							user_activity_management u 
+							 where 
+							 p2.PBI_ID=u.PBI_ID and
+							 u.user_id=r.entry_by and
+							 p2.PBI_DESIGNATION=de.DESG_ID and  							 
+							 p2.PBI_DEPARTMENT=d.DEPT_ID) as entry_by,r.po_details as Remarks
+							 from '.$table.' r,
+				  vendor v
+				  WHERE r.recommended='.$_SESSION['PBI_ID'].' and
+				  r.status="'.$required_status.'" and 
+				  r.vendor_id=v.vendor_id			  
+				   order by r.'.$unique.' DESC');
+    }								}
 ?>
 
 
@@ -104,7 +137,6 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                 <td style="padding:10px"><button type="submit" style="font-size: 11px; height: 30px" name="viewreport"  class="btn btn-primary">View Recommended Work Order</button></td>
             </tr></table>
      
-     
      <div class="col-md-12 col-sm-12 col-xs-12">
          <div class="x_panel">
              <div class="x_content">             
@@ -118,70 +150,28 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                      <th>Remarks</th>
                      <th style="width:15%">Entry By</th>
                      <th style="width:15%">Checked By</th>
-                     <?php if(isset($_POST[viewreport])){ ?>
+                     <?php if(isset($_POST['viewreport'])){ ?>
                      <th style="width:15%">Recommended By</th>
 					 <?php } ?>                     
                      <th style="width:10%">Current Status</th>
                      </tr>
                      </thead>
                       <tbody>
-                 <?php
-				 if(isset($_POST[viewreport])){	
-				 $res=mysql_query('select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',r.po_date,r.status as current_status,r.checkby,r.checkby_date,r.entry_at,r.recommended_date,
-				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
-							 
-							personnel_basic_info p2,
-							department d,
-							designation de,
-							user_activity_management u 
-							 where 
-							 p2.PBI_ID=u.PBI_ID and
-							 u.user_id=r.entry_by and
-							 p2.PBI_DESIGNATION=de.DESG_ID and  							 
-							 p2.PBI_DEPARTMENT=d.DEPT_ID) as entry_by,r.po_details as Remarks
-							 from '.$table.' r,
-				  vendor v
-				  WHERE r.recommended='.$_SESSION['PBI_ID'].' and 
-				  r.vendor_id=v.vendor_id and 
-				  r.po_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'"		  
-				   order by r.'.$unique.' DESC');
-				   
-				   } else {
-					    $res=mysql_query('select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',r.po_date,r.status as current_status,r.checkby,r.checkby_date,r.entry_at,
-				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
-							 
-							personnel_basic_info p2,
-							department d,
-							designation de,
-							user_activity_management u 
-							 where 
-							 p2.PBI_ID=u.PBI_ID and
-							 u.user_id=r.entry_by and
-							 p2.PBI_DESIGNATION=de.DESG_ID and  							 
-							 p2.PBI_DEPARTMENT=d.DEPT_ID) as entry_by,r.po_details as Remarks
-							 from '.$table.' r,
-				  vendor v
-				  WHERE r.recommended='.$_SESSION['PBI_ID'].' and
-				  r.status="'.$required_status.'" and 
-				  r.vendor_id=v.vendor_id			  
-				   order by r.'.$unique.' DESC');
- }
-				   while($req=mysql_fetch_object($res)){ ?>
+                 <?php while($req=mysqli_fetch_object($res)): ?>
                    <tr style="cursor: pointer">
-                                <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$i=$i+1;?></td>
-                                <td style="text-align: center"><a href="../page/po_documents/qoutationDoc/<?=$req->$unique.'.pdf';?>" target="_blank" style="color:#06F" title="Quotation Attached"><u><strong><?=$req->$unique;?></strong></u></a></td>
-                                <td><a href="../page/po_documents/mailCommDoc/<?=$req->$unique.'.pdf';?>" target="_blank" style="color:#06F" title="Email Conversation Attached"><u><strong><?=$req->po_date;?></strong></u></a></td>
-                                <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$req->vendor_name;?></td>
-                                <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$req->$unique_field;?></td>
-                                <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$req->entry_by;?><br><?=$req->entry_at;?></td>
-                                <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$req->checkby);?><br><?=$req->checkby_date;?></td>
-                                <?php if(isset($_POST[viewreport])){ ?>
-                                <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$req->recommended);?><br><?=$req->recommended_date;?></td>
-                                <?php } ?>                                
-                                <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$req->current_status;?></td>
-                                </tr>
-                                <?php } ?>
-                                
+                       <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$i=$i+1;?></td>
+                       <td style="text-align: center"><a href="../page/po_documents/qoutationDoc/<?=$req->$unique.'.pdf';?>" target="_blank" style="color:#06F" title="Quotation Attached"><u><strong><?=$req->$unique;?></strong></u></a></td>
+                       <td><a href="../page/po_documents/mailCommDoc/<?=$req->$unique.'.pdf';?>" target="_blank" style="color:#06F" title="Email Conversation Attached"><u><strong><?=$req->po_date;?></strong></u></a></td>
+                       <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$req->vendor_name;?></td>
+                       <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$req->$unique_field;?></td>
+                       <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$req->entry_by;?><br><?=$req->entry_at;?></td>
+                       <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$req->checkby);?><br><?=$req->checkby_date;?></td>
+                       <?php if(isset($_POST['viewreport'])){ ?>
+                           <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$req->recommended);?><br><?=$req->recommended_date;?></td>
+                       <?php } ?>
+                       <td onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)"><?=$req->current_status;?></td>
+                   </tr>
+                 <?php endwhile; ?>
                                 </tbody>
                                 </table>                            
                                 
@@ -191,20 +181,12 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
      <!-------------------End of  List View --------------------->
  <?php } ?>
 <?php if(isset($_GET[$unique])){ ?>
-
-
                     <!-- input section-->
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
-
                             <div class="x_content">
-                                <br />
-
                                 <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post">
                                     <? require_once 'support_html.php';?>
-                                    
-
-                                    
                   <table class="table table-striped table-bordered" style="width:100%;font-size:11px">
                    <thead>
                     <tr style="background-color: bisque">
@@ -244,19 +226,11 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                                 <td style="text-align: right"><?=number_format($req_data->amount,2);?></td>
                                 </tr>
                                 <?php $total=$total+$req_data->amount;  } ?>
-
-
-
-
                       <tr style="font-weight: bold">
-
                           <td colspan="9" align="right">TOTAL:</td>
-                          <td align="right"><strong>
-                                  <?  echo number_format(($total),2);?>
+                          <td align="right"><strong><?=number_format(($total),2);?>
                               </strong></td>
                       </tr>
-
-
                       <? if($cash_discount>0){?>
                           <tr style="font-weight: bold">
                               <td colspan="9" align="right">Discount:</td>
@@ -286,11 +260,7 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                               <td colspan="9" align="right">VAT(<?=$tax;?> %):</td>
                               <td align="right"><strong><?  echo number_format((($subtotal*$tax)/100),2);?></strong></td>
                           </tr>
-                          <? }
-                          $tax_totals=($subtotal*$tax)/100;
-                          ?>
-
-
+                          <? } $tax_totals=($subtotal*$tax)/100;?>
                       <? if($transport_bill>0){?>
                           <tr style="font-weight: bold">
                               <td colspan="9" align="right">Transport Bill: </td>
@@ -303,8 +273,6 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                               <td align="right"><strong> <? echo number_format(($labor_bill),2);?> </strong></td>
                           </tr>
                       <? }?>
-
-
                       <tr style="font-weight: bold">
                       <td colspan="9" align="right">Grand Total:</td>
                       <td align="right"><strong> <? echo number_format(($subtotal+$tax_totals+$transport_bill+$labor_bill),2);?> </strong>
@@ -330,8 +298,4 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                                 </div>
                                 </div>
 <?php } ?>
-
-
-
-
  <?=$html->footer_content();mysqli_close($conn);?>

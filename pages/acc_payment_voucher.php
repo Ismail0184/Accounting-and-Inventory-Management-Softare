@@ -223,7 +223,7 @@ where
 <div class="col-md-8 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-            <h2><?php echo $title; ?></h2>
+            <h2><?=$title;?> <small>Multiple Entry</small></h2>
             <a  style="float: right" class="btn btn-sm btn-default"  href="acc_payment_voucher_single.php">
                 <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Single Entry</span></a>
             <div class="clearfix"></div>
@@ -243,7 +243,6 @@ where
                         <th>Of Bank</th><th>:</th>
                         <td><input type="text" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>" class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;"></td>
                     </tr>
-
                     <tr>
                         <th style="">Cheque No</th><th>:</th>
                         <td><input type="text" id="Cheque_No"  value="<?=$Cheque_No;?>" name="Cheque_No"  class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;" ></td>
@@ -252,9 +251,6 @@ where
                         <td><input type="date" id="Cheque_Date"   value="<?=$Cheque_Date;?>" name="Cheque_Date"  class="form-control col-md-7 col-xs-12"  style="width: 90%; margin-top: 5px; font-size: 11px; vertical-align: middle"></td>
                     </tr>
                 </table>
-
-
-
                 <?php if($_SESSION['initiate_debit_note']){
                     if($COUNT_details_data>0) {
                         $ml='40';
@@ -268,22 +264,24 @@ where
                     <div class="form-group" style="margin-left:<?=$ml;?>%; margin-top: 15px">
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <button type="submit" name="modify" class="btn btn-primary" onclick='return window.confirm("Are you confirm to Update?");' style="font-size: 11px">Update Payment Voucher</button>
-                        </div></div>
-
+                        </div>
+                    </div>
                     <div class="form-group" <?=$display;?>>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <a  href="voucher_print_preview.php?v_type=payment&vo_no=<?=$_SESSION['initiate_debit_note'];?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Payment Voucher</a>
-                        </div></div>
+                        </div>
+                    </div>
                 <?php   } else {?>
                     <div class="form-group" style="margin-left:40%; margin-top: 15px">
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <button type="submit" name="initiate" class="btn btn-primary" style="font-size: 11px">Initiate Payment Voucher</button>
-                        </div></div>
+                        </div>
+                    </div>
                 <?php } ?>
-
-            </form></div></div></div>
-
-
+            </form>
+        </div>
+    </div>
+</div>
 <?=recentvoucherview($sql2,'voucher_view_popup_ismail.php','payment','171px');?>
 <?php if($_SESSION['initiate_debit_note']):  ?>
     <form action="<?=$page;?>" enctype="multipart/form-data" name="addem" id="addem" style="font-size: 11px" class="form-horizontal form-label-left" method="post">
@@ -298,7 +296,7 @@ where
         <input type="hidden" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>">
         <table align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">
             <tbody>
-            <tr style="background-color: bisque">
+            <tr style="background-color: #3caae4; color:white">
                 <th style="text-align: center">Cash , Bank & Expenses Head</th>
                 <th style="text-align: center">Cost Center</th>
                 <th style="text-align: center">Narration</th>
@@ -312,16 +310,20 @@ where
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
                         <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value->ledger_id, 'status=1'); ?>
-                    </select></td>
+                    </select>
+                </td>
                 <td align="center" style="width: 10%;vertical-align: middle">
                     <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="cc_code" id="cc_code">
                         <option></option>
                         <?php foreign_relation('cost_center', 'id', 'CONCAT(id,"-", center_name)', $edit_value->cc_code, 'status=1'); ?>
-                    </select></td>
-                <td style="width:15%;vertical-align: middle" align="center"><textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" value="<?=$_POST['narration'];?>"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['debit_note_last_narration'];?></textarea>
+                    </select>
+                </td>
+                <td style="width:15%;vertical-align: middle" align="center">
+                    <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" value="<?=$_POST['narration'];?>"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['debit_note_last_narration'];?></textarea>
                 </td>
                 <td style="width:10%;vertical-align: middle" align="center">
-                    <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
+                    <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" >
+                </td>
                 <td align="center" style="width:10%">
                     <?php if (isset($_REQUEST['id'])) { ?>
                         <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  value="<?=$edit_value->dr_amt;?>" <?php if($edit_value->dr_amt>0)  echo ''; else echo 'readonly'; ?>  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
@@ -335,12 +337,7 @@ where
                     <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td></tr>
             </tbody>
         </table>
-        <input name="count" id="count" type="hidden" value="" />
     </form>
-
-
-    <!-----------------------Data Save Confirm ------------------------------------------------------------------------->
-
 <?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_debit_note'],$COUNT_details_data);?><br><br>
 <?php endif;?>
 <?=$html->footer_content();mysqli_close($conn);?>

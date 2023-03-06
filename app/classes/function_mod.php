@@ -39,8 +39,7 @@ function find_active_user_HO($value=''){
      where
      p.PBI_JOB_STATUS in ('In Service') and
      p.PBI_DEPARTMENT=d.DEPT_ID	and
-     p.PBI_ID=e.PBI_ID and
-     e.ESS_JOB_LOCATION=1 group by p.PBI_ID
+     p.PBI_ID=e.PBI_ID group by p.PBI_ID
       order by p.PBI_NAME";
  $res=mysqli_query($conn, $sql);
  while($data=mysqli_fetch_row($res))

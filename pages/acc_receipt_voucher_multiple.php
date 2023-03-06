@@ -241,7 +241,7 @@ if(isset($_SESSION['initiate_credit_note']))
 <div class="col-md-8 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-            <h2><?=$title;?></h2>
+            <h2><?=$title;?> <small>Multiple Entry</small></h2>
             <a  style="float: right" class="btn btn-sm btn-default"  href="acc_receipt_voucher.php">
                 <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Single Entry</span></a>
             <a style="float: right" class="btn btn-sm btn-default"  href="acc_intercompany_journal_voucher.php">

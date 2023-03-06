@@ -1125,35 +1125,22 @@ $str .= '</div>
                         {   extend: "copy",
                             className: "btn-sm"
                         },
-
                         {
-
                             extend: "csv",
                             className: "btn-sm"
-
                         },
-
                         {
-
                             extend: "excel",
                             className: "btn-sm"
-
                         },
-
                         {
-
                             extend: "pdfHtml5",
                             className: "btn-sm"
-
                         },
-
                         {
-
                             extend: "print",
                             className: "btn-sm"
-
                         },
-
                     ],
                     responsive: true
                 });
@@ -1214,7 +1201,21 @@ $str .= '</div>
     });
 </script>
 <!-- /Select2 -->';
-if ($_GET) {} else {
+if ($_GET) {
+
+    $str .= '
+<script>
+    $(function() {
+        $(\'body\').removeClass(\'nav-md\').addClass(\'nav-sm\');
+        $(\'.left_col\').removeClass(\'scroll-view\').removeAttr(\'style\');
+        $(\'#sidebar-menu li\').removeClass(\'active\');
+        $(\'#sidebar-menu li ul\').slideUp();
+        });
+        $(document).ready(function(){
+            menuToggle();
+            });
+</script>';
+} else {
     $str .= '
 <script>
     $(function() {
@@ -1611,7 +1612,7 @@ function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data){
         $str.='
 		<input type="hidden" name="'.$unique.'" id="'.$unique.'"  value="'.$unique_GET.'">
 		<table id="customers" align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">';
-        $str .='<thead><tr style="background-color: bisque; "><th style="vertical-align:middle; text-align:center">#</th>';
+        $str .='<thead><tr style="background-color: #3caae4; color:white"><th style="vertical-align:middle; text-align:center">#</th>';
         if ($result = mysqli_query($conn , $sql)):
             $cols = mysqli_num_fields($result);
             $fieldinfo = mysqli_fetch_fields($result);

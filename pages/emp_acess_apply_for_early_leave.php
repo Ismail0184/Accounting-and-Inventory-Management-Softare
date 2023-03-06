@@ -174,16 +174,17 @@ $sql2="select a.id,a.id,a.s_date as date,a.reason,a.leave_status from ".$table."
                                     <td>
                                     <select style="width: 90%;margin-top: 2px;" class="select2_single form-control" name="leave_responsibility_name" id="leave_responsibility_name">
                       <option></option>
-                       <?=advance_foreign_relation($sql_leave_responsibility_name,$leave_responsibility_name);?>
-                      </select></td>
+                                        <?=advance_foreign_relation(find_active_user_HO($leave_responsibility_name));?>
+
+                                    </select></td>
 
                                     <th>Authorised Person</th>
                                     <th style="width:2%">:</th>
                                     <td>
            <select style="width: 90%;margin-top: 2px;" class="select2_single form-control" name="PBI_DEPT_HEAD" id="PBI_DEPT_HEAD">
                       <option></option>
-                      <?=advance_foreign_relation($sql_PBI_DEPT_HEAD,$PBI_DEPT_HEAD);?>
-                     </select></td>
+               <?=advance_foreign_relation(find_active_user_HO($PBI_DEPT_HEAD));?>
+           </select></td>
                                     </tr>
                                     </table>
 

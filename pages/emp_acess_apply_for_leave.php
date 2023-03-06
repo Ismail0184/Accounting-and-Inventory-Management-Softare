@@ -172,127 +172,104 @@ function reload(form)
          }
      }
  </script>
-<?php require_once 'body_content.php'; ?>
+<?php require_once 'body_content_nva_sm_with_menu.php'; ?>
 
-
-
-                    <!-- input section-->
-                    <div class="col-md-8 col-sm-12 col-xs-12">
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2><?=$title;?></h2>
-                                <ul class="nav navbar-right panel_toolbox">
-                                    <div class="input-group pull-right">
-                                    </div>
-                                </ul>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="x_content">
-                            <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post">
-                                    <? require_once 'support_html.php';?>
-
-                                    <table style="width:100%; font-size:11px;"  cellpadding="0" cellspacing="0">
-                                    <tr>
-
-                                     <th style="width: 15%">Type of Leave</th>
-         <th style="width:2%">:</th>
-         <td style="width: 35%">
-         <select class="select2_single form-control" name="type" id="type" required style="width:91%" onchange="javascript:reload(this.form)">
-                                        <option></option>
-									   <? foreign_relation('hrm_leave_type','id','leave_type_name',$type)?>
-									     </select>
-                                        <input type="hidden" id="<?=$unique?>" style="width:100%"     name="<?=$unique?>" value="<?=$$unique?>" class="form-control col-md-7 col-xs-12" >
-                                        </td>
-
+ <div class="col-md-8 col-sm-12 col-xs-12">
+     <div class="x_panel">
+         <div class="x_title">
+             <h2><?=$title;?> <?php if(!isset($_GET['type'])): ?><small class="text-danger">First you need to select a type of leave.</small> <?php endif; ?></h2>
+             <div class="clearfix"></div>
+         </div>
+         <div class="x_content">
+             <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post">
+                 <? require_once 'support_html.php';?>
+                 <table style="width:100%; font-size:11px;"  cellpadding="0" cellspacing="0">
+                     <tr>
+                         <th style="width: 15%">Type of Leave <span class="required text-danger">*</span></th>
+                         <th style="width:2%">:</th>
+                         <td style="width: 35%">
+                             <select class="select2_single form-control" name="type" id="type" required style="width:91%" onchange="javascript:reload(this.form)">
+                                 <option></option>
+                                 <?=foreign_relation('hrm_leave_type','id','leave_type_name',$type)?>
+                             </select>
+                             <input type="hidden" id="<?=$unique?>" style="width:100%"     name="<?=$unique?>" value="<?=$$unique?>" class="form-control col-md-7 col-xs-12" >
+                         </td>
                         <th style="width: 15%">Policy & Taken</th>
-              <th style="width:2%">:</th>
-              <td style="width: 33%">
-              <input type="text" id="policy" name="policy" style="width:45%; font-size:11px" value="<?=$policy;?>, Days" readonly class="form-control col-md-7 col-xs-12" >
-              <input type="text" id="alrady_taken" name="alrady_taken" style="width:45%; font-size:11px; float:right" value="<?=$alrady_taken;?>" readonly class="form-control col-md-7 col-xs-12" >
-              </td>
-
-                      </tr>
-                <tr><td style="height:5px"></td></tr>
-
-                                    <tr>
-                                    <th>Leave Address</th>
-              <th style="width:2%">:</th>
-              <td style="width: 20%"><textarea id="leave_address" style="width:91%; font-size:11px" name="leave_address" class="form-control col-md-7 col-xs-12" ><?=$leave_address;?></textarea></td>
-              <th>Reason</th>
-              <th style="width:2%">:</th><td style="width: 20%"><textarea  id="reason" style="width:100%;font-size:11px"  required   name="reason" value=""   class="form-control col-md-7 col-xs-12" ><?=$reason?></textarea></td>
-              </tr>
-               <tr><td style="height:5px"></td></tr>
-               <tr>
-              <th>R.P During Leave</th>
-              <th style="width:2%">:</th>
-              <td><select class="select2_single form-control" style="width:91%;" tabindex="-1" required="required" name="leave_responsibility_name" id="leave_responsibility_name">
-                                                <option></option>
-                                                <?=advance_foreign_relation($sql_leave_responsibility_name,$leave_responsibility_name);?>
-                                            </select></td>
-               <th>Mobile</th>
-              <th style="width:2%">:</th><td style="width: 20%"><input name="leave_mobile_number" type="text" id="leave_mobile_number" value="<?=$leave_mobile_number?>" style="font-size:11px; width:100%" placeholder="Mobile no. During Leave" class="form-control col-md-7 col-xs-12" required/></td>
-                                            </tr>
-
-
-              <tr><td style="height:5px"></td></tr>
-              <tr>
-              <th>Checke By</th>
-              <th style="width:2%">:</th><td><select class="select2_single form-control" style="width:91%;" tabindex="-1" required="required" name="PBI_IN_CHARGE" id="PBI_IN_CHARGE">
-                                                <option></option>
-                                                <?=advance_foreign_relation($sql_leave_PBI_IN_CHARGE,$PBI_IN_CHARGE);?>
-                                            </select></td>
-              <th>Authorized By</th>
-              <th style="width:2%">:</th>
-              <td>
-              <select class="select2_single form-control" style="width:100%;" tabindex="-1" required="required" name="PBI_DEPT_HEAD" id="PBI_DEPT_HEAD">
-                                                <option></option>
-                                                <?=advance_foreign_relation($sql_recommended_by,$PBI_DEPT_HEAD);?>
-                                            </select>
-              </td>
-              </tr>
-              <tr><td style="height:5px"></td></tr>
-              <tr><th>Duration <br>(from & to)</th>
-          <th style="width:2%">:</th>
-          <td colspan="4">
-              <input type="date" id="s_date" style="width:38.5%; font-size:11px" required="required" name="s_date" value="<?=$s_date?>" onchange="cal()" class="form-control col-md-7 col-xs-12" >
-              <input type="date" id="e_date" style="width:36.5%; margin-left: 4%; font-size:11px"  required   name="e_date" value="<?=$e_date;?>" onchange="cal()" class="form-control col-md-7 col-xs-12" >
-              <input type="text" id="applied" readonly name="applied" style="width:20%; font-size:11px;float:right" placeholder="days" class="form-control col-md-7 col-xs-12" >
-          </td></tr>
-                                    </table>
-
-
-
-                                        <br>
-
-                              <?php
-							  if($_GET['type']>0){
-							  if($alrady_taken >= $policy){ echo '<h6 style="text-align:center; color:red; font-weight:bold"><i>You cannot apply for leave more than the company policy !!!!</i></h6>';}
-
-
-	if (($_GET['type']==5) && ($_SESSION['gander']==1)) {
-							  echo '<h6 style="text-align:center; color:red; font-weight:bold"><i>Maternity leave is available for women only
-!!</i></h6>';
+                        <th style="width:2%">:</th>
+                        <td style="width: 33%">
+                        <input type="text" id="policy" name="policy" style="width:45%; font-size:11px" value="<?=$policy;?>, Days" readonly class="form-control col-md-7 col-xs-12" >
+                        <input type="text" id="alrady_taken" name="alrady_taken" style="width:45%; font-size:11px; float:right" value="<?=$alrady_taken;?>" readonly class="form-control col-md-7 col-xs-12" >
+                        </td>
+                     </tr>
+                     <tr><td style="height:5px"></td></tr>
+                     <tr>
+                         <th>Leave Address</th>
+                         <th style="width:2%">:</th>
+                         <td style="width: 20%"><textarea id="leave_address" style="width:91%; font-size:11px" name="leave_address" class="form-control col-md-7 col-xs-12" ><?=$leave_address;?></textarea></td>
+                         <th>Reason</th>
+                         <th style="width:2%">:</th><td style="width: 20%"><textarea  id="reason" style="width:100%;font-size:11px"  required   name="reason" value=""   class="form-control col-md-7 col-xs-12" ><?=$reason?></textarea></td>
+                     </tr>
+                    <tr><td style="height:5px"></td></tr>
+                     <tr>
+                         <th>R.P During Leave</th>
+                         <th style="width:2%">:</th>
+                         <td>
+                             <select class="select2_single form-control" style="width:91%;" tabindex="-1" required="required" name="leave_responsibility_name" id="leave_responsibility_name">
+                                 <option></option>
+                                 <?=advance_foreign_relation(find_active_user_HO($leave_responsibility_name));?>
+                             </select></td>
+                         <th>Mobile</th>
+                         <th style="width:2%">:</th><td style="width: 20%"><input name="leave_mobile_number" type="text" id="leave_mobile_number" value="<?=$leave_mobile_number?>" style="font-size:11px; width:100%" placeholder="Mobile no. During Leave" class="form-control col-md-7 col-xs-12" required/></td>
+                     </tr>
+                     <tr><td style="height:5px"></td></tr>
+                     <tr>
+                         <th>Checke By</th>
+                         <th style="width:2%">:</th>
+                         <td>
+                             <select class="select2_single form-control" style="width:91%;" tabindex="-1" required="required" name="PBI_IN_CHARGE" id="PBI_IN_CHARGE">
+                                 <option></option>
+                                 <?=advance_foreign_relation(find_active_user_HO($PBI_IN_CHARGE));?>
+                             </select></td>
+                         <th>Authorized By</th>
+                         <th style="width:2%">:</th>
+                         <td>
+                             <select class="select2_single form-control" style="width:100%;" tabindex="-1" required="required" name="PBI_DEPT_HEAD" id="PBI_DEPT_HEAD">
+                                 <option></option>
+                                 <?=advance_foreign_relation(find_active_user_HO($PBI_DEPT_HEAD));?>
+                             </select>
+                         </td>
+                     </tr>
+                     <tr><td style="height:5px"></td></tr>
+                     <tr>
+                         <th>Duration <br>(from & to)</th>
+                         <th style="width:2%">:</th>
+                         <td colspan="4">
+                             <input type="date" id="s_date" style="width:38.5%; font-size:11px" required="required" name="s_date" value="<?=$s_date?>" onchange="cal()" class="form-control col-md-7 col-xs-12" >
+                             <input type="date" id="e_date" style="width:36.5%; margin-left: 4%; font-size:11px"  required   name="e_date" value="<?=$e_date;?>" onchange="cal()" class="form-control col-md-7 col-xs-12" >
+                             <input type="text" id="applied" readonly name="applied" style="width:20%; font-size:11px;float:right" placeholder="days" class="form-control col-md-7 col-xs-12" >
+                         </td>
+                     </tr>
+                 </table>
+                 <?php
+                 if($_GET['type']>0){
+                     if($alrady_taken >= $policy){ echo '<h6 style="text-align:center; color:red; font-weight:bold"><i>You cannot apply for leave more than the company policy !!!!</i></h6>';}
+                     if (($_GET['type']==5) && ($_SESSION['gander']==1)) {
+                         echo '<h6 style="text-align:center; color:red; font-weight:bold"><i>Maternity leave is available for women only!!</i></h6>';
                     } else { ?>
-
-
-                                            <div class="form-group" style="margin-left:40%">
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <button type="submit" name="record" id="record" style="font-size:12px" onclick='return window.confirm("Are you confirm?");'  class="btn btn-primary">Submit the Application</button>
-                                            </div></div>
-                                            <?php }} else { if(!isset($_GET[$unique])): echo "<h6 style='text-align:center; color:red; font-weight:bold'>First you need to select a type of leave.</h6>"; endif; } ?>
-                                            <?php if(isset($_GET[$unique])){ ?>
-                                            <?php if($current_status!=$required_status){ echo '<h6 style="text-align:center; color:red; font-weight:bold"><i>This leave has been approved!!</i></h6>';} else { ?>
-                                            <input  name="delete" type="submit" style="font-size:12px; float:left; margin-left:10%" class="btn btn-danger" id="delete" value="Delete"/>
-                                                                                         <button type="submit" name="modify" id="modify" style="font-size:12px; float:right; margin-right:10%" class="btn btn-primary">Modify</button>
-
-                                           <?php }} ?>
-
-
-                                </form>
-                                </div>
-                                </div>
-                                </div>
-
+                         <div class="form-group" style="margin-left:40%">
+                             <div class="col-md-6 col-sm-6 col-xs-12">
+                                 <button type="submit" name="record" id="record" style="font-size:12px" onclick='return window.confirm("Are you confirm?");'  class="btn btn-primary">Submit the Application</button>
+                             </div></div>
+                     <?php }} else {} ?>
+                 <?php if(isset($_GET[$unique])){ ?>
+                     <?php if($current_status!=$required_status){ echo '<h6 style="text-align:center; color:red; font-weight:bold"><i>This leave has been approved!!</i></h6>';} else { ?>
+                         <input  name="delete" type="submit" style="font-size:12px; float:left; margin-left:10%" class="btn btn-danger" id="delete" value="Delete"/>
+                         <button type="submit" name="modify" id="modify" style="font-size:12px; float:right; margin-right:10%" class="btn btn-primary">Modify</button>
+                     <?php }} ?>
+             </form>
+         </div>
+     </div>
+ </div>
  <?php if(!isset($_GET[$unique])):?>
 <?=recentdataview($sql2,'voucher_view_popup_ismail.php','hrm_leave_info','282px','Recent Leave Applications','hrm_requisition_leave_report.php','4');?>
 <?php endif; ?>

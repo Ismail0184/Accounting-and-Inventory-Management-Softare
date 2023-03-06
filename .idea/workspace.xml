@@ -2,14 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pages/body_content_nva_sm_with_menu.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/classes/function_mod.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/function_mod.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/emp_acess_unchecked_work_order.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/emp_acess_unchecked_work_order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/hrm_requisition_food_beverage.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/hrm_requisition_food_beverage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/hrm_unapproved_requisition_food_beverage.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/hrm_unapproved_requisition_food_beverage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/hrm_unapproved_requisition_stationary.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/hrm_unapproved_requisition_stationary.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/purchase_sec_print_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/purchase_sec_print_view.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/unchecked_voucher_view_popup_purchase.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/unchecked_voucher_view_popup_purchase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_inventory_return_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_inventory_return_view.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher_single.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher_single.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/body_content.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/body_content.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/emp_acess_apply_for_early_leave.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/emp_acess_apply_for_early_leave.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/emp_acess_apply_for_late_attendance.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/emp_acess_apply_for_late_attendance.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/emp_acess_apply_for_leave.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/emp_acess_apply_for_leave.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/emp_acess_apply_for_outdoor_duty.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/emp_acess_apply_for_outdoor_duty.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/hrm_unapproved_work_order.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/hrm_unapproved_work_order.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales_gift_offer.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_gift_offer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/support_file.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/support_file.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/top.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/top.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +95,7 @@
       <workItem from="1677558830265" duration="18652000" />
       <workItem from="1677645200580" duration="35228000" />
       <workItem from="1677990626200" duration="8634000" />
+      <workItem from="1678077372451" duration="17931000" />
     </task>
     <servers />
   </component>

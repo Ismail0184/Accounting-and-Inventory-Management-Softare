@@ -156,16 +156,13 @@ $sql2="select a.id,a.attendance_date as date,a.late_reason as reason,concat(a.la
                                     <td>
             <input type="text" id="late_reason" style="width:90%; font-size:11px"  required value="<?=$late_reason;?>"  name="late_reason"   class="form-control col-md-7 col-xs-12" ></td>
 
-
-
-                                    <th>Approve By</td>
+                                        <th>Approve By</td>
                                     <th>:</td>
                                     <td>
            <select style="width: 100%;margin-top: 2px;" class="select2_single form-control" name="authorised_by" id="authorised_by">
-                      <option></option>
-                                            <?=advance_foreign_relation($sql_authorised_by,$authorised_by);?>
-
-                      </select>
+               <option></option>
+               <?=advance_foreign_relation(find_active_user_HO($authorised_by));?>
+           </select>
                                     </td>
                                     </tr>
                                     </table>

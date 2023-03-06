@@ -12,7 +12,9 @@ require ("../app/db/db.php");
 require ("../app/classes/function_module_create.php");
 $crud      = new crud();
 $html      = new htmldiv();
-$sectionid = $_GET['sectionid'];
+$sectionid = @$_GET['sectionid'];
+$moduleGET = @$_GET['module'];
+$languageGET = @$_GET['language'];
 
 
  // if session is not set this will redirect to login page
@@ -46,16 +48,16 @@ if($sectionid){
     unset($_SESSION['section_name']);
     $_SESSION['sectionid']=$sectionid;
 }
-if($_GET['module']){
+if($moduleGET){
     unset($_SESSION['module_id']);
     unset($_SESSION['module_name']);
-    $_SESSION['module_id']=$_GET['module'];
+    $_SESSION['module_id']=$moduleGET;
     $_SESSION['module_name']=find_a_field('module_department','module_short_name','module_id='.$_SESSION['module_id'].'');
     header('Location: dashboard.php');
 }
-if($_GET['language']){
+if($languageGET){
     unset($_SESSION['language']);
-    $_SESSION['language']=$_GET['language'];
+    $_SESSION['language']=$languageGET;
     header('Location: dashboard.php');
 }
 ob_end_flush();?>
