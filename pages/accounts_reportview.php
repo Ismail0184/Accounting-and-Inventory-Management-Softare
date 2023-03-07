@@ -15,7 +15,7 @@ $dofdate= '20'.$year1.'-'.$month.'-'.$day;
 
 list($dayt,$montht,$yeart) = preg_split("/[\/\.\-]+/", $_REQUEST['dateto']);
 $dotdate= '20'.$yeart.'-'.$montht.'-'.$dayt;
-$warehouseid=$_POST[warehouse_id];
+$warehouseid=$_POST['warehouse_id'];
 $_SESSION['company_name']=getSVALUE('company','company_name','where company_id="'.$_SESSION['companyid'].'"');
 $sectionid=$_SESSION['sectionid'];
 $companyid=$_SESSION['companyid'];
@@ -93,14 +93,14 @@ if($sectionid=='400000'){
         <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
         <p align="center" style="margin-top:-18px; font-size: 15px">Transaction Statement</p>
         <p align="center" style="margin-top:-10px; font-size: 12px; font-weight: bold"><?=($_REQUEST['ledger_id']>0)? 'Ledger Name: '.$_REQUEST['ledger_id'].' - '.$ledger_name.'' : 'All Transaction' ?></p>
-        <?php if($_POST[cc_code]){ ?>
+        <?php if($_POST['cc_code']){ ?>
         <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Cost Center:</strong> <?=getSVALUE('cost_center','center_name','where id='.$_REQUEST['cc_code']);?> (<?=$_REQUEST['cc_code'];?>)</p>
         <?php } ?>
 
-        <?php if($_POST[tr_from]){ ?>
+        <?php if($_POST['tr_from']){ ?>
         <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Transaction Type:</strong> <?=$_REQUEST['tr_from'];?></p>
         <?php } ?>
-        <p align="center" style="margin-top:-10px; font-size: 11px"><strong>Period From :</strong> <?=$_POST[f_date]?> to <?=$_POST[t_date]?></p>
+        <p align="center" style="margin-top:-10px; font-size: 11px"><strong>Period From :</strong> <?=$_POST['f_date']?> to <?=$_POST['t_date']?></p>
         <table align="center" id="customers"  style="width:95%; border: solid 1px #999; border-collapse:collapse; ">
             <thead>
             <p style="width:95%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -235,24 +235,10 @@ order by a.jvdate,a.id";
             <td align="right" bgcolor="#FFCCFF">&nbsp;</td>
             <td align="right" bgcolor="#FFCCFF"><?php if($blance>0) echo '(Dr)'.number_format($blance,2); elseif($blance<0) echo '(Cr) '.number_format(((-1)*$blance),0,'.','');else echo "0.00"; ?></td>
         </tr>
-
-
-
-
-
-
-
         <?php
-
-        ////////////////////////////////////
-
-        //echo $p;
         $sql=mysqli_query($conn, $p);
         while($data=mysqli_fetch_row($sql))
-        {
-        $pi++;
-        ?>
-
+        { $pi++; ?>
             <tr style="border: solid 1px #999; font-size:10px; font-weight:normal">
             <td align="center" style="border: solid 1px #999; padding:2px"><?php echo $pi;?></td>
                 <td align="center" style="border: solid 1px #999; padding:2px"><?=$data[0];?></td>
@@ -304,9 +290,9 @@ item_tariff_master hs
  i.H_S_code=hs.id and
 i.sub_group_id=sg.sub_group_id and
 sg.group_id=g.group_id and
-i.status in ('".$_POST[status]."') order by i.".$_POST[order_by].""?>
+i.status in ('".$_POST['status']."') order by i.".$_POST['order_by'].""?>
 <?=reportview($sql,'Item Info Master','99'); ?>
-<?php elseif ($_POST['report_id']=='1002003'): $LC_no=find_a_field('lc_lc_master','lc_no','id='.$_POST[lc_id]);?>
+<?php elseif ($_POST['report_id']=='1002003'): $LC_no=find_a_field('lc_lc_master','lc_no','id='.$_POST['lc_id']);?>
     <style>
         #customers {
             font-family: "Gill Sans", sans-serif;
@@ -338,8 +324,8 @@ i.status in ('".$_POST[status]."') order by i.".$_POST[order_by].""?>
         <tbody>
         <?php
         $lc_id =$_REQUEST['lc_id'];
-        if($_POST[subledger_id]>0){
-            $subledger_id.=" and a.sub_ledger_id='".$_POST[subledger_id]."'";}
+        if($_POST['subledger_id']>0){
+            $subledger_id.=" and a.sub_ledger_id='".$_POST['subledger_id']."'";}
         if($lc_id > 0)
         { $p="select
 a.jvdate,
@@ -400,7 +386,7 @@ order by a.jvdate,a.id";}
     </div>
     </div>
 
-<?php elseif ($_POST['report_id']=='718_922'):?>
+<?php elseif ($_POST['report_id']=='1002007'):?>
     <style>
         #customers {}
         #customers td {}
@@ -413,16 +399,15 @@ order by a.jvdate,a.id";}
         <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
         <p align="center" style="margin-top:-18px; font-size: 15px">Imbalance Voucher</p>
         <p align="center" style="margin-top:-10px; font-size: 12px; font-weight: bold">Ledger Name: <?=$_REQUEST['ledger_id'];?> - <?=getSVALUE('accounts_ledger','ledger_name','where ledger_id='.$_REQUEST['ledger_id']);?></p>
-        <?php if($_POST[cc_code]){ ?>
+        <?php if($_POST['cc_code']){ ?>
         <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Cost Center:</strong> <?=getSVALUE('cost_center','center_name','where id='.$_REQUEST['cc_code']);?> (<?=$_REQUEST['cc_code'];?>)</p>
         <?php } ?>
-
-        <?php if($_POST[tr_from]){ ?>
+        <?php if($_POST['tr_from']){ ?>
         <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Transaction Type:</strong> <?=$_REQUEST['tr_from'];?></p>
         <?php } ?>
 
 
-        <p align="center" style="margin-top:-10px; font-size: 11px"><strong>Period From :</strong> <?=$_POST[f_date]?> <strong>to</strong> <?=$_POST[t_date]?></p>
+        <p align="center" style="margin-top:-10px; font-size: 11px"><strong>Period From :</strong> <?=$_POST['f_date']?> <strong>to</strong> <?=$_POST['t_date']?></p>
         <table align="center" id="customers"  style="width:95%; border: solid 1px #999; border-collapse:collapse; ">
             <thead>
             <p style="width:95%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -465,71 +450,6 @@ order by a.jvdate,a.id";}
     </div>
     </div>
 
-<?php elseif ($_POST['report_id']=='5011'):?>
-    <title>Collection Transferred Report (Rice)</title>
-    <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
-    <h4 align="center" style="margin-top:-15px">Collection Transferred Report (Rice)</h4>
-    <?php if($_POST['dealer_code']){?>
-        <h5 align="center" style="margin-top:-15px">Dealer : <?=find_a_field('dealer_info','dealer_name_e','dealer_code='.$_POST[dealer_code].'')?></h5>
-    <?php } ?>
-    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
-    <table align="center"  style="width:80%; border: solid 1px #999; border-collapse:collapse;">
-        <thead>
-        <p style="width:80%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-            echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
-        <tr style="border: solid 1px #999;font-weight:bold; font-size:11px">
-            <th style="border: solid 1px #999; padding:2px">SL</th>
-            <th style="border: solid 1px #999; padding:2px; %">ID No</th>
-            <th style="border: solid 1px #999; padding:2px; %">Transferred Date</th>
-            <th style="border: solid 1px #999; padding:2px; %">Dealer Name</th>
-            <th style="border: solid 1px #999; padding:2px; %">Dealer Account Ledger</th>
-            <th style="border: solid 1px #999; padding:2px; %">Transferred to Bank</th>
-            <th style="border: solid 1px #999; padding:2px; %">Amount</th>
-
-        </tr></thead>
-
-
-        <tbody>
-        <?php
-        $datecon=' and t.transferred_date between  "'.$from_date.'" and "'.$to_date.'"';
-        if($_POST['dealer_code']>0) 			 $dealer_code=$_POST['dealer_code'];
-        if(isset($dealer_code))				{$dealer_code_CON=' and t.dealer_code='.$dealer_code;}
-
-        $res='select t.*,d.*,l.*
-
-from
-
-rice_amount_transferred t,
-dealer_info d,
-accounts_ledger l
-
-where
-t.dealer_code=d.dealer_code and
-t.bank_ledger=l.ledger_id
-'.$datecon.$dealer_code_CON.' group by t.id
-order by t.id';
-
-        $query=mysqli_query($conn, $res);
-        while($data=mysqli_fetch_array($query)){
-            $i=$i+1; ?>
-
-
-            <tr style="border: solid 1px #999; font-size:10px; font-weight:normal;">
-                <td style="border: solid 1px #999; text-align:center"><?php echo $i; ?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data[id];?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data[transferred_date];?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data[dealer_name_e];?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data[account_code];?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data[ledger_name];?></td>
-                <td style="border: solid 1px #999; text-align:right;  padding:2px"><?=number_format($data[amount],2);?></td>
-                </tr>
-            <?php  $total_qty=$total_qty+$data[amount]; } ?>
-        <tr style="font-size:12px"><td colspan="6" style="text-align:right; "><strong>Total = </strong></td>
-            <td style="border: solid 1px #999; text-align:right;  padding:2px"><strong><?=number_format($total_qty,2)?></strong></td>
-        </tr>
-        </tbody>
-    </table>
-
 
 <?php elseif ($_POST['report_id']=='1010001'):?>
 <style>
@@ -544,12 +464,12 @@ order by t.id';
     <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
     <h4 align="center" style="margin-top:-15px">Sales Invoice List</h4>
     <?php if($_POST['dealer_code']){?>
-        <h5 align="center" style="margin-top:-15px">Dealer : <?=find_a_field('dealer_info','dealer_name_e','dealer_code='.$_POST[dealer_code].'')?></h5>
+        <h5 align="center" style="margin-top:-15px">Dealer : <?=find_a_field('dealer_info','dealer_name_e','dealer_code='.$_POST['dealer_code'].'')?></h5>
     <?php } ?>
     <?php if($_POST['warehouse_id']){?>
-        <h5 align="center" style="margin-top:-15px">Warehouse : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$_POST[warehouse_id].'')?></h5>
+        <h5 align="center" style="margin-top:-15px">Warehouse : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$_POST['warehouse_id'].'')?></h5>
     <?php } ?>
-    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
 
 
 
@@ -559,7 +479,6 @@ $datecon=' and m.do_date between  "'.$from_date.'" and "'.$to_date.'"';
         if(isset($warehouse_id))				{$warehouse_id_CON=' and m.depot_id='.$warehouse_id;}
 		if($_POST['dealer_code']>0) 			 $dealer_code=$_POST['dealer_code'];
         if(isset($dealer_code))				{$dealer_code_CON=' and m.dealer_code='.$dealer_code;}
-
         if($_POST['do_type']>0) 			 $do_type=$_POST['do_type'];
         if(isset($do_type))				{$do_type_con=' and m.do_type='.$do_type_con;}
 $sql="select
@@ -601,8 +520,6 @@ a.PBI_ID=p.PBI_ID".$warehouse_id_CON.$datecon.$pg_con.$dealer_code_CON.$dtype_co
 group by c.do_no
 order by c.do_no";
 $query = mysqli_query($conn, $sql); ?>
-
-
 <table align="center" id="customers"  style="width:95%; border: solid 1px #999; border-collapse:collapse;">
 <thead>
         <p style="width:95%; text-align:right; font-size:10px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -667,12 +584,9 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
 
 
 <?php elseif ($_POST['report_id']=='1001001'):?>
-
     <title>Chart of Accounts</title>
-
     <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
     <h4 align="center" style="margin-top:-15px">Chart of Accounts</h4>
-
     <table align="center"  style="width:90%; border: solid 1px #999; border-collapse:collapse;">
         <thead>
         <p style="width:80%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -682,10 +596,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
             <th style="border: solid 1px #999; padding:2px; %">ledger Name</th>
             <th style="border: solid 1px #999; padding:2px; %">Sub Ledger</th>
             <th style="border: solid 1px #999; padding:2px; %">Sub Sub Ledger</th>
-
         </tr></thead>
-
-
         <tbody>
         <?
         $sql='select * from ledger_group order by group_id';
@@ -744,127 +655,10 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         <? }?>
         <? }?>
         <? }?>
-
         <? }?>
-
         <?php }?>
         </tbody>
     </table>
-
-
-
-<?php elseif ($_POST['report_id']=='50001'):?>
-
-
-
-
-
-<?php elseif ($_POST['report_id']=='4001'): ?>
-
-
-    <h2 align="center"><?=$_SESSION['company_name'];?></h2>
-    <h4 align="center" style="margin-top:-13px">Ledger wise Installment Report</h4>
-    <h4 align="center" style="margin-top:-13px">Ledger Name: 0<?=$_REQUEST['ledgercode'];?> - <?=getSVALUE('sales_do_installment','distinct customer_name','where customer_code='.$_REQUEST['ledgercode']);?></h4>
-    <!--h5 align="center" style="margin-top:-13px">Period From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5-->
-    <table align="center"  style="width:95%; border: solid 1px #999; border-collapse:collapse; ">
-
-        <thead>
-
-        <p style="width:95%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-
-            echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
-
-
-
-        <tr style="border: solid 1px #999;font-weight:bold; font-size:12px"> <th style="width: 2%">#</th>
-            <th style="border: solid 1px #999; padding:2px">Invoice</th>
-            <th style="border: solid 1px #999; padding:2px">Installment No</th>
-            <th style="border: solid 1px #999; padding:2px">Sales Amount</th>
-            <th style="border: solid 1px #999; padding:2px">Installment</th>
-            <th style="border: solid 1px #999; padding:2px">Month</th>
-            <th style="border: solid 1px #999; padding:2px">Installment Amount</th>
-            <th style="border: solid 1px #999; padding:2px">Received Amount</th>
-            <th style="border: solid 1px #999; padding:2px">Status</th>
-        </tr>
-
-        <? 	$res=mysqli_query($conn, 'select * from sales_do_installment where customer_code='.$_REQUEST['ledgercode'].'');
-        while($req=mysqli_fetch_object($res)){
-
-
-            ?>
-            <tr style="border: solid 1px #999; font-size:11px; text-decoration: none">
-                <td style="border: solid 1px #999; padding:2px"><?=$i=$i+1;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: center"><?=$req->do_no;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: center"><?=$req->installment_ID;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: right"><?=$req->advance_amt;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: center"><?=$req->installment_no;?> of <?=$req->total_installment;?></td>
-                <td style="border: solid 1px #999; padding:2px"><?=$req->current_mon;?> - <?=$req->current_year;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: right"><?=$alpay=$req->payable_amt;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: right"><?=$alpay=$req->received_amount;?></td>
-                <td style="border: solid 1px #999; padding:2px;text-align: center"><?php if ($req->status=='COMPLETED') echo '<font>Received</font>'; else echo '<font style="color: red; font-weight: bold">Pending</font>'; ?></td>
-            </tr>
-        <?php
-
-           $totalreceiableamount=$totalreceiableamount+$req->payable_amt;
-            $totalreceivedamount=$totalreceivedamount+$req->received_amount;
-        } ?>
-
-
-
-    </table>
-
-<br><br>
-
-    <table align="center"  style="width:95%; ">
-        <tr style="text-emphasis: right;font-size: 12px; font-weight: bold">
-            <td style="text-align: right; width: 90%">Total Installment Amount: </td>
-            <td style="text-align: right;"><?=number_format($totalreceiableamount,2);?></td>
-
-        </tr>
-        <tr style="text-emphasis: right;font-size: 12px; font-weight: bold">
-            <td style="text-align: right; width: 90%">Total Received Amount: </td>
-            <td style="text-align: right;"><?=number_format($totalreceivedamount,2);?></td>
-
-        </tr>
-
-
-
-        <tr style="text-emphasis: right;font-size: 12px; font-weight: bold">
-            <td style="text-align: right; width: 90%">Outstanding Balance: </td>
-            <td style="text-align: right; text-decoration: overline"><?=number_format($totalreceiableamount-$totalreceivedamount,2);?></td>
-
-        </tr>
-    </table>
-
-
-    </div>
-
-    </div>
-
-    </div>
-
-
-
-
-
-
-<?php elseif ($_POST['report_id']=='5001'):
-
-/////////////////////////////////////Received and Payments----------------------------------------------------------
-
-    ?>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <?php elseif ($_POST['report_id']=='1002004'):?>
@@ -899,32 +693,20 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
     }else {$ledger_con = 'b.ledger_group_id="'.$cash_and_bank_balance.'"';
     $ledger_conx = '1';}
 
-    //$cash=mysqli_fetch_row(mysqli_query($conn, "select b.ledger_id from accounts_ledger b where ".$ledger_con." and b.group_for=".$_SESSION['usergroup']." and b.ledger_name like '%ash%'"));
-    //$op_c1="select SUM(dr_amt)-SUM(cr_amt) from journal where ledger_id ='$cash[0]' and group_for=".$_SESSION['usergroup']." and jvdate<'$from_date' and 1";
-    //$op_c=mysqli_fetch_row(mysqli_query($conn, $op_c1));
-
-
-
-
     $op_b1="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$from_date' and b.group_for=".$_SESSION['usergroup']." GROUP  BY ledger_name";
     $cl_c="select SUM(dr_amt)-SUM(cr_amt) from journal where group_for=".$_SESSION['usergroup']." and ledger_id ='$cash[0]' and jvdate<'$to_date'";
     $cl_c=mysqli_fetch_row(mysqli_query($conn, $cl_c));
     $cl_b="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where b.group_for=".$_SESSION['usergroup']." and ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$to_date' and 1 GROUP  BY ledger_name";
  ?>
 
-
-
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
     <h4 align="center" style="margin-top:-15px">Receipt & Payment Statement</h4>
-    <?php if ($_POST[cc_code]>0) { ?><h4 align="center" style="margin-top:-15px">Cost Center :  <?= getSVALUE('cost_center','center_name','WHERE id="'.$_POST[cc_code].'"');?> </h4><?php } ?>
-    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
+    <?php if ($_POST['cc_code']>0) { ?><h4 align="center" style="margin-top:-15px">Cost Center :  <?= getSVALUE('cost_center','center_name','WHERE id="'.$_POST['cc_code'].'"');?> </h4><?php } ?>
+    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:70%; border: solid 1px #999; border-collapse:collapse;font-size:12px">
         <thead>
         <tr><th height="20" colspan="5" align="left">Opening Cash &amp; Bank Balance</th></tr></thead>
-        <!--tr style="font-size: 12px">
-            <td width="70%" style="border: solid 1px #999; padding:2px">Cash Opening  : </td>
-            <td width="30%" align="right" style="border: solid 1px #999; padding:2px"><?php if($op_c[0]==0) echo "0.00"; else {if($op_c[0]<0) echo "(".number_format($op_c[0]*(-1),2).")"; else echo number_format($op_c[0],2);}?></td>
-        </tr-->
+
 
         <?php
         $opb=mysqli_query($conn, $op_b1);
@@ -965,24 +747,13 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         $sql=mysqli_query($conn, $p);
         while($data=mysqli_fetch_row($sql))
         {            $pi++;
-
             $re_to=$re_to+$data[1];
-
             ?>
-
-
-
-
-
-
-
             <tr <? $i++; if($i%2==0)$cls=' class="alt"'; else $cls=''; echo $cls;?> style="font-weight: bold">
                 <td width="19%" align="center" style="border: solid 1px #999; padding:2px"><?php echo $pi;?></td>
                 <td colspan="2" align="left" style="border: solid 1px #999; padding:2px"><?php echo $data[0];?></td>
                 <td colspan="2" align="right" style="border: solid 1px #999; padding:2px"><?php echo number_format($data[1],2);?></td>
             </tr>
-
-
             <?php
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
@@ -1053,9 +824,6 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
                     $Li++;
                     //$re_to=$re_to+$data[1];
                     ?>
-
-
-
                 <tr onclick="DoNav('<?php echo $from_date;?>','<?php echo $to_date;?>','<?php echo $Ldata[2];?>');">
                     <td width="19%" align="center" style="border: solid 1px #999; padding:2px">&nbsp;</td>
                     <td width="14%" align="center" style="border: solid 1px #999; padding:2px"><?php echo $pi.'.'.$Li;?></td>
@@ -1086,25 +854,10 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
             $cl_to=$cl_to+$cl_b[1];
             ?>
             <tr <? $i++; if($i%2==0)$cls=' class="alt"'; else $cls=''; echo $cls;?> >
-              <td style="border: solid 1px #999; padding:2px"><?php echo $cl_b[0];?> </td>
+              <td style="border: solid 1px #999; padding:2px"><?=$cl_b[0];?> </td>
                 <td align="right" style="border: solid 1px #999; padding:2px"><?php if($cl_b[1]==0) echo "0.00"; else
                     {if($cl_b[1]<0) echo "(".number_format($cl_b[1]*(-1),2).")"; else echo number_format($cl_b[1],2);}?></td></tr>
         <?php }?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <tr>
             <th align="right" style="border: solid 1px #999; padding:2px">Total :</th>
             <th align="right" style="border: solid 1px #999; padding:2px"><?php if($cl_to==0) echo "0.00"; else
@@ -1119,392 +872,17 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-<?php elseif ($_POST['report_id']=='5003'):?>
-
-
-
-    <h2 align="center"><?=$_SESSION[company_name]?></h2>
-
-    <h4 align="center" style="margin-top:-10px">Stock Report</h4>
-
-    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
-
-
-
-    <table align="center"  style="width:90%; border: solid 1px #999; border-collapse:collapse; ">
-
-        <thead>
-
-        <tr style="font-size:13px; font-weight:bold">
-
-            <th style="border: solid 1px #999; padding:2px">S/L</th>
-
-            <th style="border: solid 1px #999; padding:2px"><div align="center">Code</div></th>
-
-            <th style="border: solid 1px #999; padding:2px"><div align="center">FG Code</div></th>
-
-            <th style="border: solid 1px #999; padding:2px">FG Description</th>
-
-            <th style="border: solid 1px #999; padding:2px">Unit</th>
-
-            <? if($_POST[warehouse_id_5]) {?><th style="border: solid 1px #999; padding:2px">SHOFIPUR DEPOT</th><?php } ?>
-
-            <? if($_POST[warehouse_id_12]) {?><th style="border: solid 1px #999; padding:2px">Dhaka Store</th><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_10]) {?><th style="border: solid 1px #999; padding:2px">Main DB</th><?php } ?>
-
-            <? if($_POST[warehouse_id_11]) {?><th style="border: solid 1px #999; padding:2px">Admin Store</th><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_6]) {?><th style="border: solid 1px #999; padding:2px">Ethical Toiletries Ltd</th><?php } ?>
-
-            <? if($_POST[warehouse_id_7]) {?><th style="border: solid 1px #999; padding:2px">Ahamed Oil Mills Ltd</th><?php } ?>
-
-            <? if($_POST[warehouse_id_8]) {?><th style="border: solid 1px #999; padding:2px">Kamal Auto Rice Mill</th><?php } ?>
-
-            <? if($_POST[warehouse_id_9]) {?><th style="border: solid 1px #999; padding:2px">Protik Food and Allied Ltd</th><?php } ?>
-
-            <? if($_POST[warehouse_id_17]) {?><th style="border: solid 1px #999; padding:2px">Boishaki Automatic Rice Mills Ltd.</th><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_15]) {?><th style="border: solid 1px #999; padding:2px">Stock in Transit (RM)</th><?php } ?>
-
-            <? if($_POST[warehouse_id_16]) {?><th style="border: solid 1px #999; padding:2px">Stock in Transit (FG)</th><?php } ?>
-
-
-
-
-
-            <? if($_POST[warehouse_id_13]) {?><th style="border: solid 1px #999; padding:2px">Dhaka Stock (Damage)</th><?php } ?>
-
-            <? if($_POST[warehouse_id_14]) {?><th style="border: solid 1px #999; padding:2px">Shofipur Stock (Damage)</th><?php } ?>
-
-            <? if($_POST[warehouse_id_18]) {?><th style="border: solid 1px #999; padding:2px">Boishaki Automatic Rice Mills Ltd. (Damage)</th><?php } ?>
-
-            <? if($_POST[warehouse_id_19]) {?><th style="border: solid 1px #999; padding:2px">Kamal Auto Rice Mill (Damage)</th><?php } ?>
-
-            <? if($_POST[warehouse_id_20]) {?><th style="border: solid 1px #999; padding:2px">Ahamed Oil Mills Ltd. (Damage)</th><?php } ?>
-
-            <? if($_POST[warehouse_id_21]) {?><th style="border: solid 1px #999; padding:2px">Ethical Toiletries Ltd. (Damage)</th><?php } ?>
-
-        </tr></thead>
-
-        <tbody>
-
-        <?php
-
-
-
-        $fgresult=mysqli_query($conn, "Select * from item_info where sub_group_id in ('200010000','800010000') and status in ('Active') order by finish_goods_code");
-
-        while($data=mysqli_fetch_array($fgresult)){
-
-            $j=$j+1;
-
-
-
-            ?>    <tr style="font-size: 11px">
-
-
-
-
-
-
-
-                <td style="width:2%; text-align:center;border: solid 1px #999; padding:2px"><?=$j?></td>
-
-                <td style="border: solid 1px #999; padding:2px" align="center"><?=$data[item_id] ?></td>
-
-                <td style="border: solid 1px #999; padding:2px" align="center"><?=$data[finish_goods_code] ?></td>
-
-                <td style="border: solid 1px #999; padding:2px"><?=$data[item_name]?></td>
-
-                <td style="border: solid 1px #999; padding:2px"><?=$data[unit_name]?></td>
-
-
-
-
-
-
-
-                <?php $finalfgstocks=0; ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <? if($_POST[warehouse_id_5]) {?>
-
-            <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin5= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="5" and ji_date <="2018-12-24"');
-
-                    echo number_format(($itemin5/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_12]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin12= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="12" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin12/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-
-
-
-
-                <? if($_POST[warehouse_id_6]) {?>
-
-            <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                    <? $itemin6= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="6" and ji_date <="2018-12-24"');
-
-                    echo number_format(($itemin6/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-                <? if($_POST[warehouse_id_7]) {?>
-
-            <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                    <? $itemin7= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="7" and ji_date <="2018-12-24"');
-
-                    echo number_format(($itemin7/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_8]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin8= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="8" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin8/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_9]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin9= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="9" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin9/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_17]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin17= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="17" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin17/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-
-
-
-
-            <? if($_POST[warehouse_id_10]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin10= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="10" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin10/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_11]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin11= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="11" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin11/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-
-
-
-
-            <? if($_POST[warehouse_id_13]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin13= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="13" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin13/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_14]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin14= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="14" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin14/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_15]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin15= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="15" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin15/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_16]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin16= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="16" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin16/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-
-
-
-
-            <? if($_POST[warehouse_id_18]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin18= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="18" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin18/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-
-
-            <? if($_POST[warehouse_id_19]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin19= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="19" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin19/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-            <? if($_POST[warehouse_id_20]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin20= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="20" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin20/$data[pack_size]),2); ?></td><?php } ?>
-
-
-
-
-
-            <? if($_POST[warehouse_id_21]) {?>
-
-                <td style="text-align:right;border: solid 1px #999; padding:2px">
-
-                <? $itemin21= getSVALUE('journal_item','SUM(item_in-item_ex)','WHERE item_id="'.$data[item_id].'" and warehouse_id="21" and ji_date <="2018-12-24"');
-
-                echo number_format(($itemin21/$data[pack_size]),2); ?></td><?php } ?>
-
-            <? $stockCtns=$stockCtns+$tl; } ?>
-
-
-
-        </tbody>
-
-
-
-
-
-
-
-        </table>
-
-
-
-
-
-
-
-        <br /><br />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php elseif ($_POST['report_id']=='1010002'):?>
 <title>Sales Report</title>
-    <h2 align="center"><?=$_SESSION[company_name]?></h2>
+    <h2 align="center"><?=$_SESSION['company_name']?></h2>
     <h4 align="center" style="margin-top:-10px">Sales Summery</h4>
-    <?php if($_POST[item_id]){?>
-    <h5 align="center" style="margin-top:-10px">Item Name:  <?=find_a_field('item_info','item_name','item_id='.$_POST[item_id].'');?></h5>
+    <?php if($_POST['item_id']){?>
+    <h5 align="center" style="margin-top:-10px">Item Name:  <?=find_a_field('item_info','item_name','item_id='.$_POST['item_id'].'');?></h5>
 <?php } ?>
-    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
     <table id="customers" align="center"  style="width:98%; border: solid 1px #999; border-collapse:collapse;">
-
         <thead>
-
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-
             echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
         <tr style="border: solid 1px #999;font-weight:bold; font-size:11px; background-color:#f5f5f5">
             <th style="border: solid 1px #999; padding:2px">SL</th>
@@ -1615,19 +993,16 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
 
 
 
-<?php elseif ($_POST['report_id']=='1010003'):
-/////////////////////////////////////Received and Payments----------------------------------------------------------
-
-    ?>
-    <h2 align="center"><?=$_SESSION[company_name]?></h2>
+<?php elseif ($_POST['report_id']=='1010003'):?>
+    <h2 align="center"><?=$_SESSION['company_name']?></h2>
     <h4 align="center" style="margin-top:-10px">Item wise COGS Sales</h4>
-    <?php if($_POST[item_id]){?>
-    <h5 align="center" style="margin-top:-10px">Item Name:  <?=find_a_field('item_info','item_name','item_id='.$_POST[item_id].'');?></h5>
+    <?php if($_POST['item_id']){?>
+    <h5 align="center" style="margin-top:-10px">Item Name:  <?=find_a_field('item_info','item_name','item_id='.$_POST['item_id'].'');?></h5>
 <?php } ?>
-    <?php if($_POST[do_type]){?>
-    <h5 align="center" style="margin-top:-10px">Invoice Type:  <?=$_POST[do_type]?></h5>
+    <?php if($_POST['do_type']){?>
+    <h5 align="center" style="margin-top:-10px">Invoice Type:  <?=$_POST['do_type']?></h5>
 <?php } ?>
-    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
     <table align="center"  style="width:95%; border: solid 1px #999; border-collapse:collapse;">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -1655,7 +1030,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         if($_POST['item_id']>0) 					$item_id=$_POST['item_id'];
         if(isset($item_id))				{$item_con=' and sd.item_id='.$item_id;}
         if($_POST['do_type']) 					$do_type=$_POST['do_type'];
-        if(isset($_POST['do_type']))				{$do_type_con=' and sd.challan_type="'.$_POST[do_type].'"';}
+        if(isset($_POST['do_type']))				{$do_type_con=' and sd.challan_type="'.$_POST['do_type'].'"';}
         $datecon=' and sd.do_date between  "'.$from_date.'" and "'.$to_date.'"';
         $result=mysqli_query($conn, 'Select
 				sd.*,
@@ -1691,14 +1066,14 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
 				order by sd.do_no,sd.id DESC');
         while($data=mysqli_fetch_object($result)){$i=$i+1; ?>
             <tr style="border: solid 1px #999; font-size:10px; font-weight:normal">
-                <td style="border: solid 1px #999; text-align:center"><?php echo $i; ?></td>
-                <td style="border: solid 1px #999; text-align:center"><?php echo $data->id; ?></td>
-                <!--td style="border: solid 1px #999; text-align:left"><?php echo $data->warehouse_name; ?></td-->
-                <td style="border: solid 1px #999; text-align:left"><?php echo $data->dealer_custom_code; ?></td>
-                <td style="border: solid 1px #999; text-align:left; padding:5px"><?php echo $data->dealer_name_e; ?></td>
-                <td style="border: solid 1px #999; text-align:left; padding:5px"><?php echo $data->do_no; ?></td>
-                <td style="border: solid 1px #999; text-align:left; padding:5px"><?php echo $data->do_date; ?></td>
-                <td style="border: solid 1px #999; text-align:left; padding:5px"><?php echo $data->challan_type; ?></td>
+                <td style="border: solid 1px #999; text-align:center"><?=$i; ?></td>
+                <td style="border: solid 1px #999; text-align:center"><?=$data->id;?></td>
+                <!--td style="border: solid 1px #999; text-align:left"><?=$data->warehouse_name; ?></td-->
+                <td style="border: solid 1px #999; text-align:left"><?=$data->dealer_custom_code; ?></td>
+                <td style="border: solid 1px #999; text-align:left; padding:5px"><?=$data->dealer_name_e; ?></td>
+                <td style="border: solid 1px #999; text-align:left; padding:5px"><?=$data->do_no; ?></td>
+                <td style="border: solid 1px #999; text-align:left; padding:5px"><?=$data->do_date; ?></td>
+                <td style="border: solid 1px #999; text-align:left; padding:5px"><?=$data->challan_type; ?></td>
                 <td style="border: solid 1px #999; padding:5px"><?=$data->AREA_NAME;?></td>
                 <!--td style="border: solid 1px #999; text-align:left; padding:2px"><?=$data->BRANCH_NAME;?></td-->
                 <td style="border: solid 1px #999; text-align:center;  padding:2px"><?=$data->FGCODE;?></td>
@@ -1716,12 +1091,8 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         </tbody>
         <tr style="border: solid 1px #999; font-size:10px; font-weight:normal; font-weight: bold"><td style="border: solid 1px #999; text-align:right;  padding:2px" colspan="14">Total COGS Sales Amount = </td><td style="border: solid 1px #999; text-align:right;  padding:2px"><?=number_format($total_amount,2);?></td></tr>
     </table></div>
-
     </div>
-
     </div>
-
-
 
 
 <?php elseif ($_POST['report_id']=='1007001'):?>
@@ -1740,9 +1111,9 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         }
     </style>
 <title>LC Summery</title>
-    <h2 align="center" style="margin-top: -8px"><?=$_SESSION[company_name];?></h2>
+    <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
     <h5 align="center" style="margin-top:-15px">LC Summery</h5>
-    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
+    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center" id="customers"  style="width:98%; border: solid 1px #999; border-collapse:collapse; font-size: 11px">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -1750,8 +1121,8 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         <tr style="border: solid 1px #999;font-weight:bold; font-size:11px">
             <th colspan="8" style="border: solid 1px #999; padding:2px; background-color: bisque">LC Information</th>
             <?php
-            $lctablew=mysql_query("Select * from LC_expenses_head where status in ('1')");
-            while($lcrow=mysql_fetch_array($lctablew)){
+            $lctablew=mysqli_query($conn, "Select * from LC_expenses_head where status in ('1')");
+            while($lcrow=mysqli_fetch_array($lctablew)){
                 $i=$i+1;
                 ?>
             <?php } ?>
@@ -1768,9 +1139,9 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
             <th style="border: solid 1px #999;">Buyer Origin</th>
             <th style="border: solid 1px #999;">LC Amount</th>
             <?php
-            $lctablew=mysql_query("Select * from LC_expenses_head where status in ('1')");
-            while($lcrow=mysql_fetch_array($lctablew)){
-                ?><th style="border: solid 1px #999; padding:2px; "><?=$lcrow[LC_expenses_head];?></th>
+            $lctablew=mysqli_query($conn, "Select * from LC_expenses_head where status in ('1')");
+            while($lcrow=mysqli_fetch_array($lctablew)){
+                ?><th style="border: solid 1px #999; padding:2px; "><?=$lcrow['LC_expenses_head'];?></th>
             <?php } ?>
         </tr></thead>
         <tbody>
@@ -1799,8 +1170,8 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
 				  '.$datecon.'
 group by llm.id
 				order by llm.id DESC';
-        $query2 = mysql_query($result);
-        while($data=mysql_fetch_object($query2)){
+        $query2 = mysqli_query($conn, $result);
+        while($data=mysqli_fetch_object($query2)){
             $g=$g+1; ?>
 
             <tr style="border: solid 1px #999; font-size:10px; font-weight:normal">
@@ -1813,9 +1184,9 @@ group by llm.id
                 <td style="border: solid 1px #999; text-align:left; padding:5px"><?php echo $data->origin; ?></td>
                 <td style="border: solid 1px #999; text-align:right; padding:5px"><?=number_format($data->lcamount,2); ?></td>
                 <?php
-                $lctablew=mysql_query("Select lh.* from LC_expenses_head lh where lh.status in ('1')");
-                while($lcrow=mysql_fetch_array($lctablew)){
-                    ?><td style="border: solid 1px #999; text-align:right; padding:2px"><?php $COST=find_a_field('lc_lc_master',''.$lcrow[db_column_name].'',''.$lcrow[db_column_name].'='.$lcrow[db_column_name].' and id='.$data->id.''); if($COST>0) echo $COST; else echo '';?></td>
+                $lctablew=mysqli_query($conn,"Select lh.* from LC_expenses_head lh where lh.status in ('1')");
+                while($lcrow=mysqli_fetch_array($lctablew)){
+                    ?><td style="border: solid 1px #999; text-align:right; padding:2px"><?php $COST=find_a_field('lc_lc_master',''.$lcrow['db_column_name'].'',''.$lcrow['db_column_name'].'='.$lcrow['db_column_name'].' and id='.$data->id.''); if($COST>0) echo $COST; else echo '';?></td>
                     <?php
                     $total_LC_COST=$total_LC_COST+$COST;
                 }
@@ -1836,7 +1207,8 @@ group by llm.id
     </div>
 
 
-<?php elseif ($_POST['report_id']=='1007002'): ?><title>LC Wise Cost Summery</title>
+<?php elseif ($_POST['report_id']=='1007002'): ?>
+    <title>LC Wise Cost Summery</title>
         <?php
         $result='Select
 				llm.id,
@@ -1866,9 +1238,9 @@ group by lld.item_id
 				order by llm.id, lld.id';
         $query2 = mysqli_query($conn, $result);
         while($data=mysqli_fetch_object($query2)){
-            $_POST[lc_id]=$_POST[lc_id];
-            $_POST[lcr_no]=$data->lcr_no;
-            $_POST[item_id]=$data->item_id;
+            $_POST['lc_id']=$_POST['lc_id'];
+            $_POST['lcr_no']=$data->lcr_no;
+            $_POST['item_id']=$data->item_id;
             $_POST['lc_comission'] = $_POST['lc_comission'.$data->id];
             $_POST['lc_insurance'] = $_POST['lc_insurance'.$data->id];
             $_POST['lc_bank_bill'] = $_POST['lc_bank_bill'.$data->id];
@@ -1884,13 +1256,13 @@ group by lld.item_id
             $_POST['BSTI_expense'] = $_POST['BSTI_expense'.$data->id];
             $_POST['total_LC_cost'] = $_POST['total_LC_cost'.$data->id];
 
-            $_POST[per_unit_cost]=$_POST['per_unit_cost'.$data->id];
-            $_POST[entry_by]=$_SESSION[userid];
-            $_POST[entry_at]=date("Y-m-d h:i:sa");
-            $_POST[section_id]=$_SESSION[sectionid];
-            $_POST[company_id]=$_SESSION[companyid];
+            $_POST['per_unit_cost']=$_POST['per_unit_cost'.$data->id];
+            $_POST['entry_by']=$_SESSION['userid'];
+            $_POST['entry_at']=date("Y-m-d h:i:sa");
+            $_POST['section_id']=$_SESSION['sectionid'];
+            $_POST['company_id']=$_SESSION['companyid'];
             $LC_item_wise_cost_sheet='LC_item_wise_cost_sheet';
-            if(isset($_POST[record_lc_cost])){
+            if(isset($_POST['record_lc_cost'])){
                 if(prevent_multi_submit()) {
                     $crud = new crud($LC_item_wise_cost_sheet);
                     $crud->insert();}}
@@ -1909,11 +1281,11 @@ group by lld.item_id
 
         }
     </style>
-    <h2 align="center" style="margin-top: -5px"><?=$_SESSION[company_name];?></h2>
+    <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
     <h5 align="center" style="margin-top:-15px">LC Wise Cost Summery</h5>
-    <h6 align="center" style="margin-top:-15px">LC No: <?=find_a_field('lc_lc_master','lc_no','id='.$_POST[lc_id].'');?></h6>
+    <h6 align="center" style="margin-top:-15px">LC No: <?=find_a_field('lc_lc_master','lc_no','id='.$_POST['lc_id'].'');?></h6>
     <form action="" method="post">
-    <input type="hidden" name="lc_id" value="<?=$_POST[lc_id]?>">
+    <input type="hidden" name="lc_id" value="<?=$_POST['lc_id']?>">
     <input type="hidden" name="report_id" value="1007002">
     <table align="center" id="customers" style="width:98%; border: solid 1px #999; border-collapse:collapse; font-size: 11px; margin-top: -5px">
         <thead>
@@ -1952,14 +1324,13 @@ group by lld.item_id
             <?php
             $lctablew=mysqli_query($conn, "Select * from LC_expenses_head where status in ('1')");
             while($lcrow=mysqli_fetch_array($lctablew)){
-                ?><th style="border: solid 1px #999;  width: 10% "><?=$lcrow[LC_expenses_head];?></th>
+                ?><th style="border: solid 1px #999;  width: 10% "><?=$lcrow['LC_expenses_head'];?></th>
             <?php } ?>
         </tr></thead>
         <tbody>
         <?php
-        $cost_recorded_status=find_a_field('LC_item_wise_cost_sheet','COUNT(id)','lc_id='.$_POST[lc_id]);
-        $customization_permmissin=find_a_field('lc_lc_master','cost_customization','id='.$_POST[lc_id]);
-
+        $cost_recorded_status=find_a_field('LC_item_wise_cost_sheet','COUNT(id)','lc_id='.$_POST['lc_id']);
+        $customization_permmissin=find_a_field('lc_lc_master','cost_customization','id='.$_POST['lc_id']);
         if($customization_permmissin=='1') echo '<h4 style="color:red">Permitted to modify<h4>'; else echo '';
         $result='Select
 				llm.id,
@@ -1982,7 +1353,7 @@ group by lld.item_id
 				where
 				llm.id=lld.lc_id and
 				lld.item_id=i.item_id and
-				llm.id='.$_POST[lc_id].' and
+				llm.id='.$_POST['lc_id'].' and
 				llr.lc_id=lld.lc_id and
 				llr.item_id=lld.item_id
 group by lld.item_id
@@ -2008,7 +1379,7 @@ group by lld.item_id
                 <td style="border: solid 1px #999; text-align:right; padding:5px"><?=($data->AIT>0)? $data->AIT : '-'?></td>
                 <td style="border: solid 1px #999; text-align:right; padding:5px"><?=($data->ATV>0)? $data->ATV : '-'?></td>
                 <?php
-                $totalqty=find_a_field('lc_lc_details','SUM(qty)','lc_id='.$_POST[lc_id].'');
+                $totalqty=find_a_field('lc_lc_details','SUM(qty)','lc_id='.$_POST['lc_id'].'');
                 $totalactualcollection=$totalactualcollection+$actualcollection;
                 $lctablew=mysqli_query($conn, "Select lh.* from LC_expenses_head lh where lh.status in ('1')");
                 $pwisecosetotal=0;
@@ -2067,7 +1438,6 @@ group by lld.item_id
                             var shipping_bill<?=$data->id?> = parseFloat($('#shipping_bill<?=$data->id?>').val()) || 0;
                             var labor_bill<?=$data->id?> = parseFloat($('#labor_bill<?=$data->id?>').val()) || 0;
                             var BSTI_expense<?=$data->id?> = parseFloat($('#BSTI_expense<?=$data->id?>').val()) || 0;
-
                             $('#total_others_cost<?=$data->id?>').val((lc_comission<?=$data->id?> + lc_insurance<?=$data->id?>
                                 + lc_bank_bill<?=$data->id?>+ freight_charge<?=$data->id?>+ lc_port_bill<?=$data->id?>+ lc_transport<?=$data->id?>
                                 + lc_mis_cost<?=$data->id?>+ lc_others<?=$data->id?>+ air_bill<?=$data->id?>+ duty<?=$data->id?>
@@ -2142,376 +1512,13 @@ group by lld.item_id
         </tbody>
     </table>
 <?php
-$LC_received=find_a_field('lc_lc_received','COUNT(id)','lc_id='.$_POST[lc_id]);
+$LC_received=find_a_field('lc_lc_received','COUNT(id)','lc_id='.$_POST['lc_id']);
 if($LC_received>0){
     if($cost_recorded_status>0){?><h5 align="center" style="color:red; font-weight: italic; font-weight: bold">This LC cost sheet has been recorded!!</h5> <?php } else { ?>
         <h1 align="center">
             <input type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm to cancel?");' name="record_lc_cost" value="Confirm the sheet & proceed to next"></p><?php } ?>
     <?php } else { ?> <h5 align="center" style="color:red; font-weight: italic; font-weight: bold">This LC has not yet been received!!</h5><?php } ?>
     </form>
-
-
-
-
-
-
-
-
-
-
-
-
-<?php elseif ($_POST['report_id']=='5005'):
-
-/////////////////////////////////////Received and Payments----------------------------------------------------------
-
-    ?>
-
-
-
-
-
-
-
-
-
-    <h2 align="center"><?=$_SESSION[company_name]?></h2>
-
-<h4 align="center" style="margin-top:-10px">Profit & Loss Against Rice</h4>
-
-    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
-
-
-
-
-
-
-
-    <table align="center"  style="width:98%; border: solid 1px #999; border-collapse:collapse;">
-
-        <thead>
-
-        <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-
-            echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
-
-
-
-        <tr style="border: solid 1px #999;font-weight:bold; font-size:11px">
-
-            <th style="border: solid 1px #999; padding:2px">SL</th>
-
-            <th style="border: solid 1px #999; padding:2px; %">PO</th>
-
-            <th style="border: solid 1px #999; padding:2px; ">Dealer Details</th>
-
-            <th style="border: solid 1px #999; padding:2px; ">Town</th>
-
-            <th style="border: solid 1px #999; padding:2px; ">DO</th>
-
-            <th style="border: solid 1px #999; padding:2px; ">DO Date</th>
-
-            <th style="border: solid 1px #999; padding:2px">Delivery Date</th>
-
-
-
-
-
-            <th style="border: solid 1px #999; padding:2px; ">Invoice Amount</th>
-
-            <th style="border: solid 1px #999; padding:2px;">Commission</th>
-
-            <th style="border: solid 1px #999; padding:2px">Transport Cost</th>
-
-
-
-            <th style="border: solid 1px #999; padding:2px">Net Sales</th>
-
-            <th style="border: solid 1px #999; padding:2px">COGS</th>
-
-        <th style="border: solid 1px #999; padding:2px">Profit / Loss</th>
-
-        <th style="border: solid 1px #999; padding:2px">Payment</th>
-
-        <th style="border: solid 1px #999; padding:2px">Outstanding</th>
-
-
-
-
-
-
-
-
-
-            </tr></thead>
-
-
-
-
-
-        <tbody>
-
-      <?php
-
-        $datecon=' and m.po_date between  "'.$from_date.'" and "'.$to_date.'"';
-
-		if($_POST[delivarystatus]=='Deliverd'){
-
-		$delivarystatus=' and sdm.challan_date!="0000-00-00"';
-
-		}
-
-
-
-		elseif($_POST[delivarystatus]=='UnDeliverd'){
-
-		$delivarystatus=' and sdm.challan_date="0000-00-00"';
-
-		}
-
-		else {
-
-			$delivarystatus='';
-
-			}
-
-
-
-        $result='Select
-
-		        distinct sdd.do_no,
-
-				m.*,
-
-				di.*,
-
-
-
-				pi.po_no as PO,
-
-				pi.po_date,
-
-				pi.vendor_id,
-
-				pi.item_id,
-
-				pi.warehouse_id,
-
-				pi.rate,
-
-				pi.do_rate as dorate,
-
-				pi.qty,
-
-				pi.amount,
-
-				pi.do_no as DONO,
-
-				SUM(sdd.total_amt) as INVOICEAMOUNT,
-
-				sdm.commission_amount as COMMISSIONAMOUNT,
-
-				sdm.transport_cost as TRANSPORTMOUNT,
-
-				SUM(pi.rate*sdd.total_unit) as COGS,
-
-				pi.section_id,
-
-				sdm.challan_date,
-
-				t.town_name as town,
-
-				(select SUM(dr_amt) from journal where do_no=sdm.do_no) as payment
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				from
-
-				purchase_master m,
-
-				purchase_invoice pi,
-
-				dealer_info di,
-
-				item_info i,
-
-				sale_do_details sdd,
-
-				sale_do_master sdm,
-
-				town t
-
-
-
-				where
-
-				m.po_no=pi.po_no and
-
-				i.item_id=sdd.item_id and
-
-				sdd.item_id=pi.item_id and
-
-				sdd.item_id not in ("1096000100010313") and
-
-				m.work_order_for_department in ("Sales") and
-
-				sdm.dealer_code=di.dealer_code and
-
-				sdm.do_no=sdd.do_no and
-
-				di.town_code=t.town_code and
-
-
-
-				sdd.do_no=pi.do_no
-
-				  '.$datecon.$delivarystatus.'
-
-
-
-				group by  sdm.do_no order by sdm.do_no DESC';
-
-        $query2 = mysqli_query($conn, $result);
-        while($data=mysqli_fetch_object($query2)){
-            $i=$i+1; ?>
-            <tr style="border: solid 1px #999; font-size:10px; font-weight:normal">
-                <td style="border: solid 1px #999; text-align:center"><?php echo $i; ?></td>
-                <td style="border: solid 1px #999; text-align:center"><a href="po_print_view.php?potype=Sales&po_no=<?=$data->PO?>" target="_blank"><?php echo $data->PO; ?></a></td>
-
-                <td style="border: solid 1px #999; text-align:left"><?php echo $data->dealer_name_e; ?></td>
-
-                <td style="border: solid 1px #999; text-align:left"><?php echo $data->town; ?></td>
-
-                <td style="border: solid 1px #999; text-align:center"><a href="chalan_bill_distributorsrice.php?v_no=<?=$data->DONO;?>" target="_blank"><?php echo $data->DONO; ?></a></td>
-
-                <td style="border: solid 1px #999; text-align:center; padding:5px"><?php echo $data->po_date; ?></td>
-
-                <td style="border: solid 1px #999; text-align:center; padding:5px"><?php if($data->challan_date!=='0000-00-00') echo $data->challan_date; else echo '<font style="color:red; font-weight:bold">Not yet delivered!</font>'; ?></td>
-
-
-
-       <td style="border: solid 1px #999; text-align:right; padding:5px"><?php echo number_format($data->INVOICEAMOUNT,2); ?></td>
-
-       <td style="border: solid 1px #999; text-align:right; padding:5px"><?=number_format($data->COMMISSIONAMOUNT,2); ?></td>
-
-       <td style="border: solid 1px #999; text-align:right; padding:5px"><?php if($data->TRANSPORTMOUNT>0) echo number_format($data->TRANSPORTMOUNT,2); else echo '-'; ?></td>
-
-
-
-
-
-                <td style="border: solid 1px #999; padding:5px;text-align:right;"><?PHP $NETSALES=$data->INVOICEAMOUNT-($data->COMMISSIONAMOUNT+$data->TRANSPORTMOUNT); echo number_format($NETSALES,2);?></td>
-
-                <td style="border: solid 1px #999; text-align:right; padding:2px"><?=number_format($data->COGS,2);?></td>
-
-                <td style="border: solid 1px #999; text-align:right;  padding:2px"><?php $totalprofitandloss=$data->INVOICEAMOUNT-($data->COMMISSIONAMOUNT+$data->TRANSPORTMOUNT+$data->COGS); echo number_format($totalprofitandloss,2);?></td>
-
-
-
-       <td style="border: solid 1px #999; text-align:right; padding:5px">
-
-	   <?php
-
-
-
-	   $payment=$data->payment;
-
-	   if($payment>0) echo number_format($payment,2); else echo '-'; ?></td>
-
-       <td style="border: solid 1px #999; text-align:right; padding:5px">
-
-	   <?php
-
-	   $outstanding=$data->COGS-$payment;
-
-	   if($outstanding>0 || $outstanding<0) echo number_format($outstanding,2); else echo '-'; ?>
-
-	   </td>
-
-
-
-        </tr>
-
-            <?php
-
-            $totalINVOICEAMOUNT=$totalINVOICEAMOUNT+$data->INVOICEAMOUNT;
-
-			 $totaCOMMISSIONAMOUNT=$totaCOMMISSIONAMOUNT+$data->COMMISSIONAMOUNT;
-
-			  $totalTRANSPORTAMOUNT=$totalTRANSPORTAMOUNT+$data->TRANSPORTMOUNT;
-
-			  $totalCOGSAMOUNT=$totalCOGSAMOUNT+$data->COGS;
-
-			  $TOTALNETSALES=$TOTALNETSALES+$NETSALES;
-
-			  $totalproandossAMOUNT=$totalproandossAMOUNT+$totalprofitandloss;
-
-			  $paymentTotal=$paymentTotal+$payment;
-
-			  $outstandingTotal=$outstandingTotal+$outstanding;
-
-
-
-
-
-        } ?>
-
-        <tr style="font-size:11px; font-weight:bold">
-
-
-
-        <td style="text-align:right;border: solid 1px #999; padding:5px" colspan="7"><strong>Total</strong></td>
-
-         <td style="text-align:right;border: solid 1px #999; padding:5px"><strong><?=number_format($totalINVOICEAMOUNT,2)?></strong></td>
-
-           <td style="text-align:right;border: solid 1px #999; padding:5px"><strong><?=number_format($totaCOMMISSIONAMOUNT,2)?></strong></td>
-
-            <td style="text-align:right;border: solid 1px #999; padding:5px"><strong><?=number_format($totalTRANSPORTAMOUNT,2)?></strong></td>
-
-            <td style="text-align:right;border: solid 1px #999; padding:5px"><strong><?=number_format($TOTALNETSALES,2)?></strong></td>
-
-            <td style="text-align:right;border: solid 1px #999; padding:5px"><strong><?=number_format($totalCOGSAMOUNT,2)?></strong></td>
-
-            <td style="text-align:right;border: solid 1px #999; padding:5px"><strong><?=number_format($totalproandossAMOUNT,2)?></strong></td>
-
-            <td style="text-align:right;border: solid 1px #999; padding:5px"><strong><?=number_format($paymentTotal,2)?></strong></td>
-
-            <td style="text-align:right;border: solid 1px #999; padding:5px"><strong><?=number_format($outstandingTotal,2)?></strong></td>
-
-      </tbody>
-
-    </table></div>
-
-    </div>
-
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2526,15 +1533,13 @@ if($LC_received>0){
         #customers tr:hover {background-color: #FFCCFF;}
         td{}
     </style>
-<title><?=$_SESSION['company_name'];?> | Account Receiable Status</title>
+<title><?=$_SESSION['company_name'];?> | Account Receivable Status</title>
         <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
         <p align="center" style="margin-top:-15px; font-size: 15px">Account Receiable Status</p>
-         <p align="center" style="margin-top:-15px; font-size: 15px">As On: <?=$_POST[t_date];?></p>
-         <?php if($_POST[dealer_type]){?>
-         <p align="center" style="margin-top:-15px; font-size: 15px">Customer Type: <?=$_POST[dealer_type];?></p>
+         <p align="center" style="margin-top:-15px; font-size: 15px">As On: <?=$_POST['t_date'];?></p>
+         <?php if($_POST['dealer_type']){?>
+         <p align="center" style="margin-top:-15px; font-size: 15px">Customer Type: <?=$_POST['dealer_type'];?></p>
          <?php } ?>
-
-
     <table align="center" id="customers"  style="width:90%; border: solid 1px #999; border-collapse:collapse; ">
                       <thead>
                       <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -2554,7 +1559,7 @@ if($LC_received>0){
                       <tbody>
                        <?php
 
-					   $datecon=' and j.jvdate<"'.$_POST[t_date].'"';
+					   $datecon=' and j.jvdate<"'.$_POST['t_date'].'"';
 
 						 if ($_POST['dealer_type'] != '' && $_POST['dealer_type'] != 'All') {
         $dealer_type_conn=" and d.dealer_type='" . $_POST['dealer_type'] . "'";
@@ -2569,32 +1574,21 @@ if($LC_received>0){
 				d.dealer_name_e as dealername,
 				t.town_name as town,
 				a.AREA_NAME as territory,
-
 				b.BRANCH_NAME as region,
-
 				SUM(j.cr_amt-j.dr_amt) actualcollection
 				from
-
 				dealer_info d,
 				town t,
 				area a,
-
 				branch b,
 				journal j
-
 				where
-
 				d.town_code=t.town_code and
 				a.AREA_CODE=d.area_code and
-
 				 d.region=b.BRANCH_ID and
 				j.ledger_id=d.account_code  '.$datecon.$dealer_type_conn.'
-
 				group by d.dealer_code order by b.sl,d.dealer_code');
 				$query2 = $result;
-
-
-
 while($data=mysqli_fetch_object($query2)){ ?>
                       <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
                         <td style="border: solid 1px #999; text-align:center"><?=$i=$i+1;?></td>
@@ -2620,217 +1614,6 @@ while($data=mysqli_fetch_object($query2)){ ?>
                 </div>
               </div>
 
-
-
-
-
-
-
-<?php elseif ($_POST['report_id']=='allcurrent'):
-
-/////////////////////////////////////Received and Payments----------------------------------------------------------
-
-    ?>
-
-
-
-
-
-
-
-
-
-<h2 align="center"><?=$_SESSION[company_name]?></h2>
-
-
-
-    <h4 align="center" style="margin-top:-10px">All Customer Current Balance</h4>
-
-    <h5 align="center" style="margin-top:-10px">Report as at <?=$_POST[tdate]?> </h5>
-
-
-
-
-
-
-
-    <table align="center"  style="width:90%; border: solid 1px #999; border-collapse:collapse; ">
-
-        <thead>
-
-        <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-
-            echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
-
-
-
-        <tr style="border: solid 1px #999;font-weight:bold; font-size:12px">
-
-            <th style="border: solid 1px #999; padding:2px">SL</th>
-
-            <th style="border: solid 1px #999; padding:2px; width:5%">Code</th>
-
-            <th style="border: solid 1px #999; padding:2px; width:10%">Accounts Code</th>
-
-            <th style="border: solid 1px #999; padding:2px">Customer Name</th>
-
-            <th style="border: solid 1px #999; padding:2px">Town</th>
-
-            <th style="border: solid 1px #999; padding:2px">Territory</th>
-
-            <!---th style="border: solid 1px #999; padding:2px">Area</th--->
-
-            <th style="border: solid 1px #999; padding:2px">Region</th>
-
-            <th style="border: solid 1px #999; padding:2px">Current Balance</th></tr></thead>
-
-
-
-
-
-        <tbody>
-
-        <?php
-
-        $datecon=' and j.jv_date<"'.$tdate.'"';
-
-        $result='Select
-
-				d.dealer_code,
-
-				d.account_code,
-
-				d.dealer_name_e as dealername,
-
-				t.town_name as town,
-
-				a.AREA_NAME as territory,
-
-
-
-				b.BRANCH_NAME as region,
-
-
-
-				SUM(j.cr_amt-j.dr_amt) actualcollection
-
-				from
-
-
-
-				dealer_info d,
-
-				town t,
-
-				area a,
-
-
-
-				branch b,
-
-				journal j
-
-
-
-				where
-
-
-
-				d.canceled!="No" and
-
-				d.customer_type not in ("display","vip","gift") and
-
-				d.town_code=t.town_code and
-
-				a.AREA_CODE=d.area_code and
-
-
-
-				 d.region=b.BRANCH_ID and
-
-				j.ledger_id=d.account_code  '.$datecon.'
-
-
-
-				group by d.dealer_code order by b.sl,a.AREA_NAME,t.town_name';
-
-        $query2 = mysqli_query($conn, $result);
-        while($data=mysqli_fetch_object($query2)){
-
-
-
-
-
-
-
-
-
-
-
-            $i=$i+1; ?>
-
-            <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
-
-                <td style="border: solid 1px #999; text-align:center"><?php echo $i; ?></td>
-
-                <td style="border: solid 1px #999; text-align:center"><?php echo $data->dealer_code; ?></td>
-
-                <td style="border: solid 1px #999; text-align:center"><?php echo $data->account_code; ?></td>
-
-                <td style="border: solid 1px #999; text-align:left; padding:5px"><?php echo $data->dealername; ?></td>
-
-                <td style="border: solid 1px #999; text-align:left; padding:5px; width:10%"><?=$data->town;?></td>
-
-                <td style="border: solid 1px #999; padding:5px"><?=$data->territory;?></td>
-
-                <!---td style="border: solid 1px #999; text-align:left; padding:5px"><?=$data->area;?></td-->
-
-                <td style="border: solid 1px #999; text-align:left; padding:2px"><?=$data->region;?></td>
-
-                <td style="border: solid 1px #999; text-align:right; padding:2px"><strong><?=number_format($actualcollection=$data->actualcollection,2);?></strong></td>
-
-            </tr>
-
-            <?php
-
-            $totaladjustment=$totaladjustment+$adjustment;
-
-            $totalcollection=$totalcollection+$collection;
-
-            $totalactualcollection=$totalactualcollection+$actualcollection;
-
-
-
-        } ?>
-
-        <tr><td colspan="7" style="text-align:right;border: solid 1px #999;">Total</td>
-
-
-
-            <td style="text-align:right;border: solid 1px #999;"><strong><?=number_format($totalactualcollection,2)?></strong></td>
-
-        </tr>
-
-        </tbody>
-
-    </table></div>
-
-</div>
-
-    </div>
-
-
-
-
-
-    <br><br></div></div>
-
-
-
-
-
-
-
 <?php elseif ($_POST['report_id']=='1004001'):?>
 <title>Trial Balance</title>
     <style>
@@ -2849,14 +1632,11 @@ while($data=mysqli_fetch_object($query2)){ ?>
     </style>
    <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
     <p align="center" style="margin-top:-20px">Trial Balance</p>
-    <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST[t_date]?></p>
+    <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST['t_date']?></p>
     <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
-
         <thead>
-
         <p style="width:85%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
             echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
-
         <tr style="border: solid 1px #999;font-weight:bold; font-size:12px" >
             <th style="border: solid 1px #999; padding:2px; width: 4%"><strong>SL</strong></th>
             <th style="border: solid 1px #999; padding:2px;"><strong>Account Particulars</strong></th>
@@ -2864,17 +1644,13 @@ while($data=mysqli_fetch_object($query2)){ ?>
             <th style="border: solid 1px #999; padding:2px; width:15%"><strong>Credit Amount</strong></th>
             <th style="border: solid 1px #999; padding:2px; width:15%"><strong>Balance</strong></th>
         </tr></thead>
-
         <tbody>
-
         <?php
-
-
 
         if($sectionid=='400000'){
             $sec_com_connectionT=' and 1';
         } else {
-            $sec_com_connectionT=" and b.section_id='".$_SESSION[sectionid]."' and b.company_id='".$_SESSION[companyid]."'";
+            $sec_com_connectionT=" and b.section_id='".$_SESSION['sectionid']."' and b.company_id='".$_SESSION['companyid']."'";
         }
         $total_dr=0;
         $total_cr=0;
@@ -2926,35 +1702,19 @@ while($data=mysqli_fetch_object($query2)){ ?>
                     <td style="border: solid 1px #999; padding:2px; text-align: right"><?php echo number_format($cr,2);?></td>
                     <td style="border: solid 1px #999; padding:2px; text-align: right"><?php echo number_format($dr-$cr,2);?></td>
                 </tr>
-
-
-
                 <?php
-
-
-
                 $total_dr=$total_dr+$dr;
                 $total_cr=$total_cr+$cr;
                 $t_dr=$t_dr+$dr;
                 $t_cr=$t_cr+$cr;
             }?>
-
-
-
             <tr bgcolor="#FFCCFF" style="font-size: 11px">
                 <th colspan="2"  style="border: solid 1px #999;  text-align: right; ">Total <?php echo $g[0];?>:</th>
                 <th style="border: solid 1px #999; text-align: right;"><?php echo number_format($total_dr,2);?></th>
                 <th style="border: solid 1px #999; text-align: right;"><?php echo number_format($total_cr,2)?></th>
                 <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_dr-$total_cr,2)?></th>
-
             </tr>
-
-
-
         <?php }?>
-
-
-
         <tr  style="font-size: 12px">
             <th colspan="2" style="border: solid 1px #999;  text-align: right;"><strong>Total Balance : </strong></th>
             <th style="border: solid 1px #999; text-align: right;"><strong><?php echo number_format($t_dr,2);?></strong></th>
@@ -2962,11 +1722,8 @@ while($data=mysqli_fetch_object($query2)){ ?>
             <th style="border: solid 1px #999; text-align: right;"><strong><?=number_format(($t_dr-$t_cr),2);?></strong></th>
         </tr>
         </tbody>
-
     </table></div>
-
     </div>
-
     </div>
 
 <?php elseif ($_POST['report_id']=='1004002'):?>
@@ -2986,7 +1743,7 @@ while($data=mysqli_fetch_object($query2)){ ?>
     </style>
     <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
     <p align="center" style="margin-top:-20px">Trial Balance (Group)</p>
-    <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST[t_date]?></p>
+    <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST['t_date']?></p>
     <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <tr style="border: solid 1px #999;font-weight:bold; font-size:12px; background-color: #FFCCFF" >
@@ -3003,11 +1760,11 @@ while($data=mysqli_fetch_object($query2)){ ?>
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
             {
-                $p = "select c.group_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal j,ledger_group c where a.ledger_id=j.ledger_id and a.ledger_group_id=c.group_id and j.jvdate <= '".$_POST[t_date]."' AND cc_code=$cc_code ".$sec_com_connection." group by c.group_name order by c.group_id";
+                $p = "select c.group_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal j,ledger_group c where a.ledger_id=j.ledger_id and a.ledger_group_id=c.group_id and j.jvdate <= '".$_POST['t_date']."' AND cc_code=$cc_code ".$sec_com_connection." group by c.group_name order by c.group_id";
             }
             else
             {
-                $p = "select c.group_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal j,ledger_group c where a.ledger_id=j.ledger_id and a.ledger_group_id=c.group_id and j.jvdate <= '".$_POST[t_date]."'".$sec_com_connection." group by c.group_name order by c.group_id";
+                $p = "select c.group_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal j,ledger_group c where a.ledger_id=j.ledger_id and a.ledger_group_id=c.group_id and j.jvdate <= '".$_POST['t_date']."'".$sec_com_connection." group by c.group_name order by c.group_id";
             }
             //echo $p;
             $pi=0;
@@ -3057,11 +1814,10 @@ while($data=mysqli_fetch_object($query2)){ ?>
     <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
     <p align="center" style="margin-top:-20px">Periodical Trial Balance</p>
     <p align="center" style="margin-top:-20px">Group Name: <?=find_a_field('ledger_group','group_name','group_id='.$_REQUEST['group_id']);?></p>
-    <p align="center" style="margin-top:-12px; font-size: 11px">From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></p>
+    <p align="center" style="margin-top:-12px; font-size: 11px">From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></p>
     <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <tr style="border: solid 1px #999;font-weight:bold; font-size:12px; background-color: #FFCCFF" >
-
             <th width="4%" height="20" align="center">S/N</th>
             <th width="42%" height="20" align="center">Ledger Group </th>
             <th width="15%" align="center">Opening</th>
@@ -3078,11 +1834,11 @@ while($data=mysqli_fetch_object($query2)){ ?>
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
             {
-                $g="select c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal j,ledger_group c where a.ledger_id=j.ledger_id and a.ledger_group_id=c.group_id and j.jvdate BETWEEN '".$_POST[f_date]."' AND '".$_POST[t_date]."'".$grp_con."".$sec_com_connection."  AND j.cc_code=$cc_code group by  c.group_id";
+                $g="select c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal j,ledger_group c where a.ledger_id=j.ledger_id and a.ledger_group_id=c.group_id and j.jvdate BETWEEN '".$_POST['f_date']."' AND '".$_POST['t_date']."'".$grp_con."".$sec_com_connection."  AND j.cc_code=$cc_code group by  c.group_id";
             }
             else
             {
-                $g="select c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal j,ledger_group c where a.ledger_id=j.ledger_id and a.ledger_group_id=c.group_id and j.jvdate BETWEEN '".$_POST[f_date]."' AND '".$_POST[t_date]."' ".$grp_con."".$sec_com_connection."  group by  c.group_id";
+                $g="select c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal j,ledger_group c where a.ledger_id=j.ledger_id and a.ledger_group_id=c.group_id and j.jvdate BETWEEN '".$_POST['f_date']."' AND '".$_POST['t_date']."' ".$grp_con."".$sec_com_connection."  group by  c.group_id";
             }
             $gsql=mysqli_query($conn, $g);
             while($g=mysqli_fetch_row($gsql))
@@ -3116,15 +1872,6 @@ while($data=mysqli_fetch_object($query2)){ ?>
                     $open=mysqli_fetch_row($ssql);
                     $opening = $open[0]-$open[1];
                     $pi++;
-//  if($p[2]>$p[1])
-//  {
-//	  $dr=0; $cr=$p[2]-$p[1];
-//  }
-//  else
-//  {
-//	  $dr=$p[1]-$p[2];
-//	  $cr=0;
-//  }
                     $dr=$p[1];
                     $cr=$p[2];
                     $closing = $opening + $dr - $cr;
@@ -3179,7 +1926,7 @@ while($data=mysqli_fetch_object($query2)){ ?>
     </style>
     <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
     <p align="center" style="margin-top:-20px">Periodical Trial Balance (Details)</p>
-    <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST[t_date]?></p>
+    <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST['t_date']?></p>
     <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <p style="width:85%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -3262,130 +2009,8 @@ while($data=mysqli_fetch_object($query2)){ ?>
             </tr>
     </table>
 
-<?php elseif ($_POST['report_id']=='5015'):?>
-    <title>Periodical Trial Balance (Group)</title>
-    <style>
-        #customers {
-            font-family: "Gill Sans", sans-serif;
-        }
-        #customers td {
-        }
-        #customers tr:ntd-child(even)
-        {background-color: #f0f0f0;}
-        #customers tr:hover {background-color: #ddd;}
-        td{text-align: center;}
-        th{text-align: center;border: solid 1px #999; padding:2px;}
-
-    </style>
-    <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
-    <p align="center" style="margin-top:-20px">Periodical Trial Balance (Group)</p>
-    <p align="center" style="margin-top:-12px; font-size: 11px">From <?=$_POST[t_date]?> to <?=$_POST[t_date]?></p>
-    <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
-        <thead>
-        <tr style="border: solid 1px #999;font-weight:bold; font-size:12px; background-color: #FFCCFF" >
-        <th width="4%" height="20" align="center">S/N</th>
-            <th width="42%" height="20" align="center">Ledger Group </th>
-            <th width="15%" align="center">Opening</th>
-            <th width="12%" align="center">Debit </th>
-            <th width="12%" align="center">Credit </th>
-            <th width="15%" height="20" align="center">Closing</th>
-        </tr>
-        <?php
-            $total_dr=0;
-            $total_cr=0;
-            if($com_id!='')
-                $con .= ' and com_id ='.$com_id;
-            $cc_code = (int) $_POST['cc_code'];
-            if($cc_code > 0)
-            {$g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and c.group_for=".$_SESSION['usergroup'].$con." AND b.cc_code=$cc_code group by c.group_name";
-            } else {
-                $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and c.group_for=".$_SESSION['usergroup'].$con." group by c.group_name";
-            }
-//echo $g;
-            $gsql=mysqli_query($conn, $g);
-            while($g=mysqli_fetch_row($gsql))
-            {$total_opening = 0; $total_closing = 0;
-                $total_dr=0;
-                $total_cr=0;
-                ?>
-                <?php
-                $cc_code = (int) $_POST['cc_code'];
-                if($cc_code > 0)
-                {
-                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
-                }
-                else
-                {
-                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and a.ledger_group_id='$g[3]' and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
-                }
-//echo $p;
-                $pi=0;
-                $sql=mysqli_query($conn, $p);
-                while($p=mysqli_fetch_row($sql))
-                {
-                    $query="select SUM(dr_amt),SUM(cr_amt) from journal where jvdate < '$from_date' and ledger_id='$p[3]' and group_for=".$_SESSION['usergroup'];
-                    $ssql=mysqli_query($conn, $query);
-                    $open=mysqli_fetch_row($ssql);
-                    $opening = $open[0]-$open[1];
-                    $pi++;
-                    if($p[2]>$p[1])
-                    {
-                        $dr=0; $cr=$p[2]-$p[1];
-                    }
-                    else
-                    {
-                        $dr=$p[1]-$p[2];
-                        $cr=0;
-                    }
-                    ?>
-                    <!--  <tr <? $i++; if($i%2==0)$cls=' class="alt"'; else $cls=''; echo $cls;?>>
-    <td align="center"><?php echo $pi;?></td>
-    <td align="left"><?php echo $p[0];?></td>
-    <td align="right"><?=number_format($opening,2).' '.$tag;?></td>
-    <td align="right"><?php echo number_format($dr,2);?></td>
-    <td align="right"><?php echo number_format($cr,2);?></td>
- </tr>-->
-                    <?php
-                    $total_opening = $opening + $total_opening;
-                    $total_dr=$total_dr+$dr;
-                    $total_cr=$total_cr+$cr;
-                    $t_dr=$t_dr+$dr;
-                    $t_cr=$t_cr+$cr;
-                    $total_closing = $opening + $total_dr - $total_cr;
-                    if($total_opening>0)
-                    { $tag='(Dr)';}
-                    elseif($total_opening<0)
-                    { $tag='(Cr)';$total_opening= $total_opening*(-1); }
-                    if($total_closing>0)
-                    { $tagc='(Dr)';}
-                    elseif($total_closing<0)
-                    { $tagc='(Cr)';$total_closing= $total_closing*(-1); }
-                }?>
-                <tr style="border: solid 1px #999; font-size:11px" <? $ia++; if($ia%2==0)$cls=' class="alt"'; else $cls=''; echo $cls;?>>
-                    <td align="right"><?=++$s;?></td>
-                    <td align="right"><a href="trial_balance_periodical_ledger.php?fdate=<?=$_REQUEST['fdate']?>&tdate=<?=$_REQUEST['tdate']?>&group_id=<?=$g[3]?>" target="_blank"><?php echo $g[0];?></a></td>
-                    <td align="right"><?php echo number_format($total_opening,2).$tag;?></td>
-                    <td align="right"><strong><?php echo number_format($total_dr,2);?></strong></td>
-                    <td align="right"><strong><?php echo number_format($total_cr,2)?></strong></td>
-                    <td align="right"><?php echo number_format($total_opening,2).$tagc;?></td>
-                </tr>
-            <?php }
-            $final = $t_dr - $t_cr;
-            if($final>0) $note = 'Total Balance Difference: <font color="#00CC00">(Dr)'.number_format($final,2).'</font>';
-            if($final<0) $note = 'Total Balance Difference: <font color="#FF3300">(Cr)'.number_format(((-1)*$final),2).'</font>';
-            ?>
-            <tr style="border: solid 1px #999; font-size:12px">
-                <th colspan="2" align="right"><?=$note?>&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                <th align="right">&nbsp;</th>
-                <th align="right"><strong><?php echo number_format($t_dr,2);?></strong></th>
-                <th align="right"><strong><?php echo number_format($t_cr,2)?></strong></th>
-                <th align="right">&nbsp;</th>
-            </tr>
-    </table>
-
-
 <?php elseif ($_POST['report_id']=='1002006'):
-    $profit_center=find_a_field('profit_center','profit_center_name','id='.$_POST[pc_code].'');
+    $profit_center=find_a_field('profit_center','profit_center_name','id='.$_POST['pc_code'].'');
     ?>
 
     <title><?=$profit_center;?></title>
@@ -3405,7 +2030,7 @@ while($data=mysqli_fetch_object($query2)){ ?>
     <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
     <p align="center" style="margin-top:-20px">Party / Customer Statement</p>
     <p align="center" style="margin-top:-15px; font-size: 13px">Profit Center : <?=$profit_center;?></p>
-    <p align="center" style="margin-top:-10px; font-size: 11px">From <?=$_POST[t_date]?> to <?=$_POST[t_date]?></p>
+    <p align="center" style="margin-top:-10px; font-size: 11px">From <?=$_POST['t_date']?> to <?=$_POST['t_date']?></p>
     <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <tr style="border: solid 1px #999;font-weight:bold; font-size:12px; background-color: #FFCCFF" >
@@ -3462,15 +2087,6 @@ while($data=mysqli_fetch_object($query2)){ ?>
                 $open=mysqli_fetch_row($ssql);
                 $opening = $open[0]-$open[1];
                 $pi++;
-//  if($p[2]>$p[1])
-//  {
-//	  $dr=0; $cr=$p[2]-$p[1];
-//  }
-//  else
-//  {
-//	  $dr=$p[1]-$p[2];
-//	  $cr=0;
-//  }
                 $dr=$p[1];
                 $cr=$p[2];
                 $closing = $opening + $dr - $cr;
@@ -3514,10 +2130,10 @@ while($data=mysqli_fetch_object($query2)){ ?>
 
 
 <?php elseif ($_POST['report_id']=='1005001'):
-    $fdate=$_POST[f_date];
-    $tdate=$_POST[t_date];
-    $comparisonF=$_POST[pf_date];
-    $comparisonT=$_POST[pt_date];
+    $fdate=$_POST['f_date'];
+    $tdate=$_POST['t_date'];
+    $comparisonF=$_POST['pf_date'];
+    $comparisonT=$_POST['pt_date'];
     ?>
 
     <style>
@@ -3605,9 +2221,6 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 			 $amount = $amount_cogs_Previous+$amount_cc_code_Previous; $FactoryPrevious = $amount;
 			 $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?rno=3&headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code='.$cc_code.'&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
         </tr>
-
-
-
         <tr style="color:#000; font-weight:bold; font-size: 12px">
             <td style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong>Gross Profit/Loss</strong></td>
             <td style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong><? $grossSalesCurrent = ($netSalesCurrent-$FactoryCurrent);
@@ -3660,26 +2273,14 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
             <td style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong><? $opertaingExpPrevious = ($adminExpPrevious+$SandDErowCurrentAmounttotalPre+$totalspxs+$marketingExpPrevious); echo number_format($opertaingExpPrevious,2); ?></strong></td>
         </tr>
 
-
-
-
-
         <tr style="border-left: solid 1px #999;border-bottom: solid 1px #FFF;border-right: solid 1px #999;background-color:#FFF; color:#FFF; font-weight:bold; font-size: 12px">
-
             <td style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong>Operating Profit </strong></td>
-
             <td style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong><? $operatingProfitCurrent = ($grossSalesCurrent-$opertaingExpCurrent);
-
                     if($operatingProfitCurrent>0){
-
                         $operatingProfitCurrents=number_format($operatingProfitCurrent,2);
-
                     } else {
-
                         $operatingProfitCurrents='('.number_format(substr($operatingProfitCurrent,1),2).')';
-
                     }
-
                     echo $operatingProfitCurrents; ?></strong></td>
 
             <td style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong><? $operatingProfitPrevious = ($grossSalesPrevious-$opertaingExpPrevious);
@@ -3717,10 +2318,6 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
             <td align="right"  style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong><? $otherExpCurrent = $totalfinancialcost+$totaleol+$totalembenifit+$totalroyality; echo number_format($otherExpCurrent,2); ?></strong></td>
             <td align="right"  style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong><? $otherExpPrevious = $totalfinancialcostpre+$totaleolpre+$totalembenifitpre+$totalroyalitypre; echo number_format($otherExpPrevious,2); ?></strong></td>
         </tr>
-
-
-
-
 
         <tr style="color:#000; font-weight:bold; font-size: 12px">
             <td style="border: solid 1px #999;text-align: right; padding-right:5px;color:#000"><strong>Net Operating Profit Over Expenses</strong></td>
@@ -3771,259 +2368,11 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
         <thead></table>
     <br>
 
-
-
-
-<?php elseif ($_POST['report_id']=='5008'):
-    $fdate='0000-00-00';
-    $tdate=$_POST[t_date];
-    $comparisonF=date('Y-m-d' , strtotime($t));
-    $comparisonT=date('Y-m-d' , strtotime($_POST[pt_date]));
-
-    ?>
-    <style>
-        #customers {
-            font-family: "Gill Sans", sans-serif;
-        }
-        #customers td {
-        }
-        #customers tr:ntd-child(even)
-        {background-color: #f0f0f0;}
-        #customers tr:hover {background-color: #ddd;}
-        td{text-align: center; }
-    </style>
-    <title><?=$_SESSION['company_name'];?> | Financial Statement<</title>
-    <h2 align="center"><?=$_SESSION['company_name'];?></h2>
-    <h4 align="center" style="margin-top:-13px">Financial Statement</h4>
-
-
-    <table align="center" id="customers" style="width:70%; border: solid 1px #999; border-collapse:collapse; ">
-        <thead><p style="width:85%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-            echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
-
-        <tr bgcolor="#FFCCFF" style="border: solid 1px #999;font-weight:bold; font-size:13px">
-            <th width="40%" style="border: solid 1px #999; padding:2px;"><span class="style1">PARTICULARS</span></th>
-            <th width="30%" align="center" style="border: solid 1px #999; padding:2px;"><div align="center">Current Period<br>( <?=$_REQUEST['t_date'];?> )</div></th>
-            <th width="30%" align="center" style="border: solid 1px #999; padding:2px;"><div align="center">Previous Period<br>( <?=$_REQUEST['pt_date'];?> )</div></th> </tr></thead>
-
-        <tr style="background:#FFF0F5; font-weight:bold; color:#FFF; font-size:14px;">
-            <td colspan="3" style="color:#000;border: solid 1px #999; padding:2px;; text-align: left" ><em>ASSETS</em></td></tr>
-        <tr style="font-weight:bold; color:#000; font-size:13px;"><td colspan="3" style="border: solid 1px #999; padding:2px; text-align: left;">Non current Assets :</td></tr>
-
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Property Plant Equipment"; echo $headname; ?></td>
-            <td  style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 14; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalPPE = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td  style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 14; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalPPEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px">Less: <?$headname="Accumulated Depreciation"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><strong><? $com_id = 15; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalADCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></strong></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><strong><? $com_id = 15; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $ADSearchRowPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></strong></td>
-        </tr>
-
-        <tr style="font-weight:bold; font-size: 12px">
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><strong></strong></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $grossAssetsCurrent = ($TotalPPE-$TotalADCurrent);
-                if($grossAssetsCurrent>0){
-                    $grossAssetsCurrents=number_format($grossAssetsCurrent,2);
-                } else {
-                    $grossAssetsCurrents=	"(".number_format(substr($grossAssetsCurrent,1),2).")";
-                }
-                echo $grossAssetsCurrents;?>
-            </td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;">
-                <? $grossAssetsPrevious = ($TotalPPEPrevious-$TotalADPrevious);
-                if($grossAssetsPrevious>0){
-                    $grossAssetsPreviouss=number_format($grossAssetsPrevious,2);
-                } else {
-                    $grossAssetsPreviouss=	"(".number_format(substr($grossAssetsPrevious,1),2).")";
-                }
-                echo $grossAssetsPreviouss;?>
-            </td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Inventory"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 16; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalInventoryCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 16; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalInventoryPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Accounts Receivable"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 17; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalARCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 17; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalARPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Advance, Deposit & Prepayment"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 19; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalADPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 19; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalADPPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Long Term Investment"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 23; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalLTICurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 23; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalLTIPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Deferred Expenses"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 22; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalDEPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 22; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalDEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Advance Income Tax"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 21; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalAITCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 21; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalAITPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Cash & Cash Equivalents"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$fdate,$tdate,'1002000100010000','1002000101000000',$sec_com_connection); $TotalCCECurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$comparisonF,$comparisonT,'1002000100010000','1002000101000000',$sec_com_connection); $TotalCCEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Bank Balance"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$fdate,$tdate,'1002000900010000','1002000901000000',$sec_com_connection); $TotalBBCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$comparisonF,$comparisonT,'1002000900010000','1002000901000000',$sec_com_connection); $TotalBBPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="font-weight:bold; font-size: 13px;">
-            <td style="text-align:right;"><strong>Total Current Assets</strong></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $TotalAssetsCurrent = ($TotalInventoryCurrent+$TotalARCurrent+$TotalADPCurrent+$TotalDEPCurrent+$TotalAITCurrent+$TotalCCECurrent+$TotalBBCurrent+$TotalLTICurrent);
-                if($TotalAssetsCurrent>0){
-                    $TotalAssetsCurrents=number_format($TotalAssetsCurrent,2);
-                } else {
-                    $TotalAssetsCurrents='('.number_format(substr($TotalAssetsCurrent,1),2).')';
-                }
-                echo $TotalAssetsCurrents; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;">
-                <? $TotalAssetsPrevious = ($TotalInventoryPrevious+$TotalARPrevious+$TotalADPPrevious+$TotalDEPrevious+$TotalAITPrevious+$TotalCCEPrevious+$TotalBBPrevious+$TotalLTIPrevious);
-                if($TotalAssetsPrevious>0){
-                    $TotalAssetsPreviouss=number_format($TotalAssetsPrevious,2);
-                } else {
-                    $TotalAssetsPreviouss='('.number_format(substr($TotalAssetsPrevious,1),2).')';
-                }
-                echo $TotalAssetsPreviouss; ?>
-            </td>
-        </tr>
-        <tr style="font-size: 14px; background:#FFF0F5;">
-            <td  style="border: solid 1px #999; padding:2px; text-align: right;"><strong><i>Total Asset</i></strong></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><strong><? $TotalAssetsCurrent = ($grossAssetsCurrent+$TotalAssetsCurrent);
-                    if($TotalAssetsCurrent>0){
-                        $TotalAssetsCurrents=number_format($TotalAssetsCurrent,2);
-                    } else {
-                        $TotalAssetsCurrents='('.number_format(substr($TotalAssetsCurrent,1),2).')';
-                    }
-                    echo $TotalAssetsCurrents; ?></strong></td>
-
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><strong><? $TotalAssetsPrevious = ($grossAssetsPrevious+$TotalAssetsPrevious);
-                    if($TotalAssetsPrevious>0){
-                        $TotalAssetsPreviouss=number_format($TotalAssetsPrevious,2);
-                    } else {
-                        $TotalAssetsPreviouss='('.number_format(substr($TotalAssetsPrevious,1),2).')';
-                    }
-                    echo $TotalAssetsPreviouss; ?></strong>
-            </td>
-        </tr>
-        <tr style="background:#FFF0F5; font-weight:bold; color:#FFF; font-size:14px;">
-            <td colspan="3" style="color:#000;border: solid 1px #999; padding:2px; text-align: left" ><em>EQUITY AND LIABILITIES</em>
-            </td>
-        </tr>
-        <tr style="font-weight:bold; color:#000; font-size:13px;"><td colspan="3" style="border: solid 1px #999; padding:2px; text-align: left;">Shareholder's Equity:</td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Share Capital"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 25; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalSCCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 25; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalSCPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="padding-left:20px; text-align: left"><?$headname="Reserves & Surplus"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 26; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalRNSCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 26; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalRNSPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px;padding-left:20px; text-align: left;"><?$headname="Profit / Loss"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $amount = sum_com_P_L($conn,$fdate,$tdate,$sec_com_connection); $patCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&income=3000&show=Show&expenses=4000" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $amount = sum_com_P_L($conn,$comparisonF,$comparisonT,$sec_com_connection); $patPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; padding:2px; text-align: right;"><td></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;font-size: 12px">
-                <strong><?php $totalSEQUITYCurrent=$TotalSCCurrent+$TotalRNSCurrent+$patCurrent; echo number_format($totalSEQUITYCurrent,2);?></strong></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;font-size: 12px">
-                <strong><?php $totalSEQUITYPrevious=$TotalSCPrevious+$TotalRNSPrevious+$patPrevious; echo number_format($totalSEQUITYPrevious,2);?></strong></td>
-        </tr>
-        <tr style="font-weight:bold; color:#000; font-size:13px;"><td colspan="3" style="border: solid 1px #999; padding:2px; text-align: left;"><strong>LONG TERM LOAN:</strong></td></tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Bank Loan(HPSM)"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 27; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalBLHPSMCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 27; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalBLHPSMPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Unsecured Loan"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 33; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalUNLCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 33; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalUNLPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="font-weight:bold;"><td></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right; font-size: 12px"><?php $totalLTOCurrent=$TotalBLHPSMCurrent+$TotalUNLCurrent; echo number_format($totalLTOCurrent,2)?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right; font-size: 12px"><?php $totalLTOPrevious=$TotalBLHPSMPrevious+$TotalUNLPrevious; echo number_format($totalLTOPrevious,2);?></td>
-        </tr>
-        <tr style="font-weight:bold; color:#000; font-size:13px;"><td colspan="3" style="border: solid 1px #999; padding:2px; text-align: left;"><strong>CURRENT LIABILITIES:</strong></td></tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Short Term Loan"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 29; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalSTLOANSMCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 29; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalSTLOANPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Provision for expenses"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 32; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalPFECurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 32; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalPFEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="PAccounts Payable"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 28; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalAPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 28; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalAPPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Statutory Payables"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 30; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalSPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 30; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalSPPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Intercompany Payable"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 18; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalIPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 18; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalIPPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Share Money Deposit"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 34; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalSMDCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 34; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalSMDPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="border: solid 1px #999; font-size:11px">
-            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Liability for Employee Benefits"; echo $headname; ?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 31; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalLEBCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 31; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalLEBPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-        </tr>
-        <tr style="font-weight:bold; font-size: 12px; text-align: right"><td style="text-align: right">Total Current Liabilities</td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right; text-decoration: double"><?php $totalCLIABILITIESCurrent=$TotalSTLOANSMCurrent+$TotalPFECurrent+$TotalAPCurrent+$TotalSPCurrent+$TotalIPCurrent+$TotalSMDCurrent+$TotalLEBCurrent; echo number_format($totalCLIABILITIESCurrent,2);?></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><?php $totalCLIABILITIESPrevious=$TotalSTLOANPrevious+$TotalPFEPrevious+$TotalAPPrevious+$TotalSPPrevious+$TotalIPPrevious+$TotalSMDPrevious+$TotalLEBPrevious; echo number_format($totalCLIABILITIESPrevious,2)?></td>
-        </tr>
-        <tr style="font-size: 14px; background:#FFF0F5;">
-            <td  style="border: solid 1px #999; padding:2px; text-align: right;"><strong><i>Total Equity and Liabilities</i></strong></td>
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><strong><? $TOTALENLCurrent =$totalSEQUITYCurrent+ $totalCLIABILITIESCurrent+$totalLTOCurrent;
-                    if($TOTALENLCurrent>0){
-                        echo number_format($TOTALENLCurrent,2); } else { echo '('.number_format(substr($TOTALENLCurrent,1),2).')'; } ?></strong></td>
-
-            <td style="border: solid 1px #999; padding:2px; text-align: right;"><strong><? //$patPrevious = $pbtPrevious-$incomeTaxPrevious; echo number_format($patPrevious,2); ?>
-                    <?
-                    $TOTALENLPrevious =$totalSEQUITYPrevious+ $totalCLIABILITIESPrevious+$totalLTOPrevious;
-                    if($TOTALENLPrevious>0){
-                        echo number_format($TOTALENLPrevious,2); } else { echo '('.number_format(substr($TOTALENLPrevious,1),2).')'; } ?></strong></td>
-        </tr>
-    </table>
-    <br><br>
-
-
 <?php elseif ($_POST['report_id']=='1005002'):
     $fdate='0000-00-00';
-    $tdate=$_POST[t_date];
-
+    $tdate=$_POST['t_date'];
     $comparisonF=date('Y-m-d' , strtotime($t));
-    $comparisonT=date('Y-m-d' , strtotime($_POST[pt_date]));
-
+    $comparisonT=date('Y-m-d' , strtotime($_POST['pt_date']));
     ?>
     <style>
         #customers {
@@ -4260,7 +2609,7 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 
 
 <?php elseif ($_POST['report_id']=='1008001'):?>
-<title><?=$warehouse_name= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST[warehouse_id].'"');?> : Transaction Statement</title>
+<title><?=$warehouse_name= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST['warehouse_id'].'"');?> : Transaction Statement</title>
     <style>
         #customers {
             font-family: "Gill Sans", sans-serif;
@@ -4276,7 +2625,7 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
         }
     </style>
 
-    <h3 align="center" style="margin-top: -12px"><?=$_SESSION[company_name]?></h3>
+    <h3 align="center" style="margin-top: -12px"><?=$_SESSION['company_name']?></h3>
     <h5 align="center" style="margin-top:-12px">Transaction Statement</h5>
     <h6 align="center" style="margin-top:-12px">Warehouse / CMU / Factory: <?=$warehouse_name;?></h6>
 
@@ -4285,7 +2634,7 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 <?php } elseif ($_POST['status']=='Issue'){?>
     <h4 align="center" style="margin-top:-10px">Status : Issue</h4>
 <?php } ?>
-    <h6 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
+    <h6 align="center" style="margin-top:-10px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center" id="customers"  style="width:98%; border: solid 1px #999; border-collapse:collapse;">
         <thead>
         <p style="width:98%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -4368,22 +2717,14 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 
 		    a.item_id=i.item_id '.$datecon.$warehouse_con.$item_con.$status_con.' order by a.ji_date,a.id asc');
         while($data=mysqli_fetch_object($result)){
-
-
-
-
-
             $i=$i+1; ?>
             <tr style="border: solid 1px #999; font-size:10px; font-weight:normal">
-                <td style="border: solid 1px #999; text-align:center"><?php echo $i; ?></td>
-                <td style="border: solid 1px #999; text-align:center"><?php echo $data->ID; ?></td>
-                <td style="border: solid 1px #999; text-align:center"><?php echo $data->Trnsdate; ?></td>
-
+                <td style="border: solid 1px #999; text-align:center"><?=$i;?></td>
+                <td style="border: solid 1px #999; text-align:center"><?=$data->ID;?></td>
+                <td style="border: solid 1px #999; text-align:center"><?=$data->Trnsdate;?></td>
                 <td style="border: solid 1px #999; text-align:center;  padding:2px"><?=$data->fg_code;?></td>
                 <td style="border: solid 1px #999; text-align:left;  padding:2px"><?=$data->item_name;?></td>
-                <td style="border: solid 1px #999; text-align:left"><?php echo $data->Category; ?></td>
-
-
+                <td style="border: solid 1px #999; text-align:left"><?=$data->Category; ?></td>
                 <td style="border: solid 1px #999; text-align:left;  padding:2px"><?=$data->UOM;?></td>
                 <td style="border: solid 1px #999; text-align:center;  padding:2px"><?=$data->packsize;?></td>
 
@@ -4434,11 +2775,9 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
         td{  text-align: center;}
     </style>
 
-    <h3 align="center" style="margin-top: -12px"><?=$_SESSION[company_name]?></h3>
+    <h3 align="center" style="margin-top: -12px"><?=$_SESSION['company_name']?></h3>
     <h5 align="center" style="margin-top:-12px">Closing balace Confirmation Report</h5>
-
-
-    <h6 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
+    <h6 align="center" style="margin-top:-10px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center" id="customers"  style="width:90%; border: solid 1px #999; border-collapse:collapse;">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -4456,7 +2795,7 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 
         <tbody>
         <?php
-        $datecon=' and p.paymentdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+        $datecon=' and p.paymentdate between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
         if($_POST['ledger_id']>0) 					$ledger_id=$_POST['ledger_id'];
         if(isset($ledger_id))				{$ledger_id_con=' and p.ledger_id='.$ledger_id;}
         $result=mysqli_query($conn, 'select p.*,al.*,v.*
@@ -4493,12 +2832,10 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 
 
 <?php elseif ($_POST['report_id']=='1008002'):?>
-
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
-
     <h5 align="center" style="margin-top:-15px">Present Stock (Material)</h5>
     <h6 align="center" style="margin-top:-15px">Warehouse Name: <?= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST[warehouse_id].'"');?> </h6>
-    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
+    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:80%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -4526,7 +2863,7 @@ item_sub_group s,
 item_group g
 where
 j.item_id=i.item_id and
-j.warehouse_id='".$_POST[warehouse_id]."' and
+j.warehouse_id='".$_POST['warehouse_id']."' and
 j.ji_date <= '".$to_date."' and
 i.sub_group_id=s.sub_group_id and
 s.group_id=g.group_id and
@@ -4559,7 +2896,7 @@ group by j.item_id order by g.group_id DESC,i.serial";
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
     <h5 align="center" style="margin-top:-15px">Present Stock (Finish Goods)</h5>
     <h6 align="center" style="margin-top:-15px">Warehouse Name: <?= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST[warehouse_id].'"');?> </h6>
-    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
+    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:80%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -4588,7 +2925,7 @@ item_sub_group s,
 item_group g
 where
 j.item_id=i.item_id and
-j.warehouse_id='".$_POST[warehouse_id]."' and
+j.warehouse_id='".$_POST['warehouse_id']."' and
 j.ji_date <= '".$to_date."' and
 i.sub_group_id=s.sub_group_id and
 s.group_id=g.group_id and
@@ -4624,7 +2961,7 @@ group by j.item_id order by g.group_id DESC,i.finish_goods_code";
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
     <h5 align="center" style="margin-top:-15px">Present Stock (Asset)</h5>
     <h6 align="center" style="margin-top:-15px">Warehouse Name: <?= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST[warehouse_id].'"');?> </h6>
-    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
+    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:80%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -4652,11 +2989,11 @@ item_sub_group s,
 item_group g
 where
 j.item_id=i.item_id and
-j.warehouse_id='".$_POST[warehouse_id]."' and
+j.warehouse_id='".$_POST['warehouse_id']."' and
 j.ji_date <= '".$to_date."' and
 i.sub_group_id=s.sub_group_id and
 s.group_id=g.group_id and
-g.group_id in ('".$_POST[group_id]."')
+g.group_id in ('".$_POST['group_id']."')
 group by j.item_id order by g.group_id DESC,i.serial";
         $persentrow = mysqli_query($conn, $fgresult);
         while($data=mysqli_fetch_object($persentrow)){ ?>
@@ -4689,7 +3026,7 @@ v.ledger_id=j.ledger_id group by v.ledger_id order by v.vendor_name"; echo repor
 
 
 <?php elseif ($_POST['report_id']=='1011001'):
-if($_POST[v_type]!=''){$v_type .= "AND j.tr_from = '".$_POST[v_type]."'";}
+if($_POST['v_type']!=''){$v_type .= "AND j.tr_from = '".$_POST['v_type']."'";}
 $sql="Select i.item_id,i.item_id,i.finish_goods_code as custom_code,i.item_name,i.unit_name, s.sub_group_name, g.group_name,lc.landad_cost,lc.entry_date as last_updated_date from
 item_info i,
 item_sub_group s,

@@ -4,60 +4,58 @@ $title='Mushak 6.3';
 $page="acc_mushak_6.3.php";
 $table='sale_do_chalan';
 $unique='do_no';
-$$unique=$_GET[$unique];
+$$unique = @$_GET[$unique];
+$do_no_GET = @$_GET['do_no'];
+$group_by_GET = @$_GET['group_by'];
 $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
 $timess = $dateTime->format("h:i A");
 $year=date('Y');
 $now=date('Y-m-d h:s:i');
 $table_VAT_Master='VAT_mushak_6_3';
 $table_VAT_details='VAT_mushak_6_3_details';
-$chalan_no=find_a_field('sale_do_chalan','distinct chalan_no','do_no='.$_GET[do_no]);
+$chalan_no=find_a_field('sale_do_chalan','distinct chalan_no','do_no='.$do_no_GET);
 $jv_no=find_a_field('journal','distinct jv_no','tr_from="Sales" and tr_no='.$chalan_no);
-$mushak=find_all_field('VAT_mushak_6_3','','do_no='.$_GET[do_no]);
+$mushak=find_all_field('VAT_mushak_6_3','','do_no='.$do_no_GET);
 $fiscal_year=find_a_field('fiscal_term','fiscal_year','status="1"');
 $fs_year=find_all_field('fiscal_term','','fiscal_year='.$mushak->fiscal_year);
-$VAT_narration='VAT against sale, Do No # '.$_GET[do_no].', Challan No # '.$chalan_no.', VAT 6.3 No # ';
-$SD_narration='SD against sale, Do No # '.$_GET[do_no].', Challan No # '.$chalan_no.', VAT 6.3 No # ';
+$VAT_narration='VAT against sale, Do No # '.$do_no_GET.', Challan No # '.$chalan_no.', VAT 6.3 No # ';
+$SD_narration='SD against sale, Do No # '.$do_no_GET.', Challan No # '.$chalan_no.', VAT 6.3 No # ';
 
 
 if(prevent_multi_submit()){
-    if(isset($_POST[delete])){
+    if(isset($_POST['delete'])){
         $sql_1=mysqli_query($conn, "INSERT INTO VAT_mushak_6_3_deleted (R_id,do_no,mushak_no,warehouse_id,dealer_code,issue_date,issue_time,responsible_person,source,entry_by,entry_at,checked_by,checked_at,duplicate_status) 
         SELECT id,do_no,mushak_no,warehouse_id,dealer_code,issue_date,issue_time,responsible_person,source,entry_by,entry_at,checked_by,checked_at,duplicate_status FROM VAT_mushak_6_3 WHERE
-        do_no=".$_GET[do_no]." and mushak_no=".$_POST[delete_mushak_no]."");
-
+        do_no=".$do_no_GET." and mushak_no=".$_POST['delete_mushak_no']."");
         $sql_1=mysqli_query($conn, "INSERT INTO VAT_mushak_6_3_details_deleted (R_id,do_no,issue_date,item_id,in_total_unit,total_unit,unit_price,total_price,rate_of_SD,amount_of_SD,rate_of_VAT,amount_of_VAT,total_including_all,entry_by,entry_at,warehouse_id,mushak_no,dealer_code,source) 
         SELECT id,do_no,issue_date,item_id,in_total_unit,total_unit,unit_price,total_price,rate_of_SD,amount_of_SD,rate_of_VAT,amount_of_VAT,total_including_all,entry_by,entry_at,warehouse_id,mushak_no,dealer_code,source FROM VAT_mushak_6_3_details WHERE
-        do_no=".$_GET[do_no]." and mushak_no=".$_POST[delete_mushak_no]."");
-        mysqli_query($conn, "Update VAT_mushak_6_3_deleted set deleted_by='".$_SESSION[userid]."' where do_no=".$_GET[do_no]." and mushak_no=".$_POST[delete_mushak_no]."");
-        mysqli_query($conn, "DELETE FROM journal WHERE tr_no=".$_POST[chalan_no]." and tr_from='Sales' and ledger_id in ('4015000100000000','1005000400000000','4016000100000000','1005000700000000')");
-        mysqli_query($conn, "DELETE FROM VAT_mushak_6_3_details WHERE do_no=".$_GET[do_no]." and mushak_no=".$_POST[delete_mushak_no]."");
-        mysqli_query($conn, "DELETE FROM VAT_mushak_6_3 WHERE do_no=".$_GET[do_no]." and mushak_no=".$_POST[delete_mushak_no]."");
-        mysqli_query($conn, "Update sale_do_master set mushak_challan_status='UNRECORDED' where do_no=".$_GET[do_no]."");
-
-
-
+        do_no=".$do_no_GET." and mushak_no=".$_POST['delete_mushak_no']."");
+        mysqli_query($conn, "Update VAT_mushak_6_3_deleted set deleted_by='".$_SESSION['userid']."' where do_no=".$do_no_GET." and mushak_no=".$_POST['delete_mushak_no']."");
+        mysqli_query($conn, "DELETE FROM journal WHERE tr_no=".$_POST['chalan_no']." and tr_from='Sales' and ledger_id in ('4015000100000000','1005000400000000','4016000100000000','1005000700000000')");
+        mysqli_query($conn, "DELETE FROM VAT_mushak_6_3_details WHERE do_no=".$do_no_GET." and mushak_no=".$_POST['delete_mushak_no']."");
+        mysqli_query($conn, "DELETE FROM VAT_mushak_6_3 WHERE do_no=".$do_no_GET." and mushak_no=".$_POST['delete_mushak_no']."");
+        mysqli_query($conn, "Update sale_do_master set mushak_challan_status='UNRECORDED' where do_no=".$do_no_GET."");
     }
 
-if(isset($_POST[record])){
-  $mushak_no_validation_check=find_a_field('VAT_mushak_6_3','mushak_no','mushak_no='.$_POST[mushak_no].' and fiscal_year="'.$fiscal_year.'" and warehouse_id='.$_POST[warehouse_id].'');
-  if($mushak_no_validation_check == $_POST[mushak_no]) {
+if(isset($_POST['record'])){
+  $mushak_no_validation_check=find_a_field('VAT_mushak_6_3','mushak_no','mushak_no='.$_POST['mushak_no'].' and fiscal_year="'.$fiscal_year.'" and warehouse_id='.$_POST['warehouse_id'].'');
+  if($mushak_no_validation_check == $_POST['mushak_no']) {
     $message='This Mushak No has already been input!!';
     echo "<script>alert('$message');</script>";
 
   }
-  elseif($_POST[mushak_no]>0 && !empty($_POST[issue_date])){
-  $_POST[do_no]=$_GET[do_no];
-  $_POST[mushak_no]=$_POST[mushak_no];
-  $_POST[warehouse_id]=$_POST[warehouse_id];
-  $_POST[dealer_code]=$_POST[dealer_code];
-  $_POST[issue_date]=$_POST[issue_date];
-  $_POST[issue_time]=$_POST[issue_time];
-  $_POST[responsible_person]=$_POST[responsible_person];
-  $_POST[entry_by]=$_SESSION[userid];
-  $_POST[entry_at]=$now;
-  $_POST[year]=$year;
-  $_POST[fiscal_year]=$fiscal_year;
+  elseif($_POST['mushak_no']>0 && !empty($_POST['issue_date'])){
+  $_POST['do_no']=@$do_no_GET;
+  $_POST['mushak_no']=@$_POST['mushak_no'];
+  $_POST['warehouse_id']=@$_POST['warehouse_id'];
+  $_POST['dealer_code']=@$_POST['dealer_code'];
+  $_POST['issue_date']=@$_POST['issue_date'];
+  $_POST['issue_time']=@$_POST['issue_time'];
+  $_POST['responsible_person']=@$_POST['responsible_person'];
+  $_POST['entry_by']=$_SESSION['userid'];
+  $_POST['entry_at']=$now;
+  $_POST['year']=$year;
+  $_POST['fiscal_year']=$fiscal_year;
   $crud = new crud($table_VAT_Master);
   $crud->insert();
 
@@ -65,47 +63,47 @@ if(isset($_POST[record])){
   $result=mysqli_query($conn, $query);
   while($data=mysqli_fetch_object($result)):
     $id=$data->item_id;
-    $_POST[do_no]=$_GET[do_no];
-    $_POST[item_id]=$id;
-    $_POST[total_unit]=$_POST['total_unit'.$id];
-    $_POST[unit_price]=$_POST['unit_price'.$id];
-    $_POST[total_price]=$_POST['total_price'.$id];
-    $_POST[rate_of_SD]=$_POST['rate_of_SD'.$id];
-    $_POST[amount_of_SD]=$_POST['amount_of_SD'.$id];
-    $_POST[rate_of_VAT]=$_POST['rate_of_VAT'.$id];
-    $_POST[amount_of_VAT]=$_POST['amount_of_VAT'.$id];
-    $_POST[total_including_all]=$_POST['total_including_all'.$id];
+    $_POST['do_no']=@$do_no_GET;
+    $_POST['item_id']=$id;
+    $_POST['total_unit']=$_POST['total_unit'.$id];
+    $_POST['unit_price']=$_POST['unit_price'.$id];
+    $_POST['total_price']=$_POST['total_price'.$id];
+    $_POST['rate_of_SD']=$_POST['rate_of_SD'.$id];
+    $_POST['amount_of_SD']=$_POST['amount_of_SD'.$id];
+    $_POST['rate_of_VAT']=$_POST['rate_of_VAT'.$id];
+    $_POST['amount_of_VAT']=$_POST['amount_of_VAT'.$id];
+    $_POST['total_including_all']=$_POST['total_including_all'.$id];
     if($_POST['total_unit'.$id]>0){
     $crud = new crud($table_VAT_details);
     $crud->insert();}
   endwhile;
 }
-    mysqli_query($conn, "Update sale_do_master SET mushak_challan_status='RECORDED' where do_no=".$_GET[do_no]);
+    mysqli_query($conn, "Update sale_do_master SET mushak_challan_status='RECORDED' where do_no=".$do_no_GET);
 
 }
 
 
-if(isset($_POST[create_journal])){
-  if($_POST[chalan_no]>0){
-  if (($_POST[ledger_1] > 0) && (($_POST[ledger_2] && $_POST[dr_amount_1]) > 0) && ($_POST[cr_amount_2] > 0)) {
-      add_to_journal_new($mushak->issue_date, $proj_id, $_POST[jv_no], $date, $_POST[ledger_1], $_POST[narration_1], $_POST[dr_amount_1], 0, Sales, $_POST[chalan_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST[pc_code], $_SESSION[wpc_DO]);
-      add_to_journal_new($mushak->issue_date, $proj_id, $_POST[jv_no], $date, $_POST[ledger_2], $_POST[narration_1], 0, $_POST[cr_amount_2], Sales, $_POST[chalan_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST[pc_code], $_SESSION[wpc_DO]);
+if(isset($_POST['create_journal'])){
+  if($_POST['chalan_no']>0){
+  if (($_POST['ledger_1'] > 0) && (($_POST['ledger_2'] && $_POST['dr_amount_1']) > 0) && ($_POST['cr_amount_2'] > 0)) {
+      add_to_journal_new($mushak->issue_date, $proj_id, $_POST['jv_no'], $date, $_POST['ledger_1'], $_POST['narration_1'], $_POST['dr_amount_1'], 0, Sales, $_POST['chalan_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+      add_to_journal_new($mushak->issue_date, $proj_id, $_POST['jv_no'], $date, $_POST['ledger_2'], $_POST['narration_1'], 0, $_POST['cr_amount_2'], Sales, $_POST['chalan_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
   }
 
-  if (($_POST[ledger_3] > 0) && (($_POST[ledger_4] && $_POST[dr_amount_3]) > 0) && ($_POST[cr_amount_4] > 0)) {
-      add_to_journal_new($mushak->issue_date, $proj_id, $_POST[jv_no], $date, $_POST[ledger_3], $_POST[narration_3], $_POST[dr_amount_3], 0, Sales, $_POST[chalan_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST[pc_code], $_SESSION[wpc_DO]);
-      add_to_journal_new($mushak->issue_date, $proj_id, $_POST[jv_no], $date, $_POST[ledger_4], $_POST[narration_3], 0, $_POST[cr_amount_4], Sales, $_POST[chalan_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST[pc_code], $_SESSION[wpc_DO]);
+  if (($_POST['ledger_3'] > 0) && (($_POST['ledger_4'] && $_POST['dr_amount_3']) > 0) && ($_POST['cr_amount_4'] > 0)) {
+      add_to_journal_new($mushak->issue_date, $proj_id, $_POST['jv_no'], $date, $_POST['ledger_3'], $_POST['narration_3'], $_POST['dr_amount_3'], 0, Sales, $_POST['chalan_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+      add_to_journal_new($mushak->issue_date, $proj_id, $_POST['jv_no'], $date, $_POST['ledger_4'], $_POST['narration_3'], 0, $_POST['cr_amount_4'], Sales, $_POST['chalan_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
   }
-  mysqli_query($conn, "Update sale_do_master SET mushak_challan_status='RECORDED' where do_no=".$_GET[do_no]);
+  mysqli_query($conn, "Update sale_do_master SET mushak_challan_status='RECORDED' where do_no=".$do_no_GET);
   unset($_POST);
   //echo "<script>self.opener.location = '$page'; self.blur(); </script>";
   echo "<script>window.close(); </script>";
 }
 }} // prevent_multi_submit
 
-$mushak=find_all_field('VAT_mushak_6_3','','do_no='.$_GET[do_no].'');
-$COUNT_mushak=find_a_field('VAT_mushak_6_3','COUNT(mushak_no)','do_no='.$_GET[do_no].'');
-$COUNT_journal=find_a_field('journal','COUNT(id)','ledger_id in ("4015000100000000") and tr_from="Sales" and tr_no="'.$chalan_no.'" and tr_id='.$_GET[do_no]);
+$mushak=find_all_field('VAT_mushak_6_3','','do_no='.$do_no_GET.'');
+$COUNT_mushak=find_a_field('VAT_mushak_6_3','COUNT(mushak_no)','do_no='.$do_no_GET.'');
+$COUNT_journal=find_a_field('journal','COUNT(id)','ledger_id in ("4015000100000000") and tr_from="Sales" and tr_no="'.$chalan_no.'" and tr_id='.$do_no_GET);
 
 
 $do_master=find_all_field('sale_do_master','','do_no='.$_GET[$unique]);
@@ -114,19 +112,18 @@ $dealer_master=find_all_field('dealer_info','','dealer_code='.$do_master->dealer
 $dealer_master=find_all_field('dealer_info','','dealer_code='.$do_master->dealer_code);
 
 
-$status=find_a_field('VAT_mushak_6_3','COUNT(id)','do_no='.$_GET[do_no]);
-$VAT_master=find_all_field('VAT_mushak_6_3','','do_no='.$_GET[do_no]);
+$status=find_a_field('VAT_mushak_6_3','COUNT(id)','do_no='.$do_no_GET);
+$VAT_master=find_all_field('VAT_mushak_6_3','','do_no='.$do_no_GET);
 $latest_id=find_a_field('VAT_mushak_6_3','MAX(mushak_no)','fiscal_year='.$fiscal_year.' and warehouse_id='.$do_master->depot_id);
 
 if($status>0){
-    if($_GET[group_by]=='VAT_item_group'){
+    if($group_by_GET=='VAT_item_group'){
         $query="SELECT mus.*,SUM(mus.total_unit) as total_unit,mus.total_price,vtg.group_name as item_name,mus.rate_of_SD,SUM(mus.amount_of_SD) as amount_of_SD,mus.rate_of_VAT,SUM(mus.amount_of_VAT) as amount_of_VAT,SUM(mus.total_including_all) as total_including_all,i.unit_name,i.SD AS VAT 
         from item_info i,VAT_mushak_6_3_details mus, VAT_item_group vtg
         where i.VAT_item_group=vtg.group_id and mus.item_id=i.item_id and i.item_id not in ('1096000100010312') and source='Sales' and mus.".$unique."=".$$unique." 
         group by i.VAT_item_group order by i.finish_goods_code";
     } else {
         $query="SELECT mus.*,SUM(mus.total_unit) as total_unit,mus.total_price,i.item_name,mus.rate_of_SD,mus.amount_of_SD,mus.rate_of_VAT,mus.amount_of_VAT,mus.total_including_all,i.unit_name,i.SD AS VAT from item_info i,VAT_mushak_6_3_details mus where mus.item_id=i.item_id and i.item_id not in ('1096000100010312') and source='Sales' and mus.".$unique."=".$$unique." group by mus.item_id order by i.finish_goods_code";
-
     }
 } else {
   $query="SELECT sdc.*,SUM(sdc.total_unit) as total_unit,i.item_name,i.unit_name,i.SD AS VAT,i.VAT_percentage,i.SD_percentage from ".$table." sdc, item_info i where sdc.item_id=i.item_id and i.item_id not in ('1096000100010312') and sdc.".$unique."=".$$unique." group by i.item_id order by i.finish_goods_code";
@@ -164,12 +161,12 @@ $result=mysqli_query($conn, $query);
             <p><input name="button" type="button" onclick="hide();window.print();" value="Print" /></p>
         </form>
     </div>
-    <form action="<?=$pate?>" method="get">
+    <form action="<?=$page?>" method="get">
 <input type="hidden" name="<?=$unique?>"  value="<?=$$unique?>" />
-<?php if($_GET[group_by]=='item_id'){?>
+<?php if($group_by_GET=='item_id'){?>
           <input type="hidden" name="group_by"  value="VAT_item_group" />
                   <p><input type="submit"  value="View by GROUP" /></p>
-<?php } elseif($_GET[group_by]=='VAT_item_group'){?>
+<?php } elseif($group_by_GET=='VAT_item_group'){?>
 <input type="hidden" name="group_by"  value="item_id" />
         <p><input type="submit"  value="View by Item" /></p>
       <?php } else { ?>
@@ -195,8 +192,8 @@ $result=mysqli_query($conn, $query);
 </table>
 <div style="text-align: center"><strong>কর চালানপত্র</strong></div>
 <div style="text-align: center">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</div>
-<div style="text-align: center">নিবন্ধিত ব্যক্তির নাম: <?=$_SESSION[company_name]?></div>
-<div style="text-align: center">নিবন্ধিত ব্যক্তির বিআইএন: <?=find_a_field('company','BIN','company_id="'.$_SESSION[companyid].'" and section_id='.$_SESSION[sectionid])?></div>
+<div style="text-align: center">নিবন্ধিত ব্যক্তির নাম: <?=$_SESSION['company_name']?></div>
+<div style="text-align: center">নিবন্ধিত ব্যক্তির বিআইএন: <?=find_a_field('company','BIN','company_id="'.$_SESSION['companyid'].'" and section_id='.$_SESSION['sectionid'])?></div>
 <div style="text-align: center">চালানপত্র ইস্যুর ঠিকানা : <?=$warehouse_master->VMS_address?></div>
 <br>
 <table style="width: 100%;">
@@ -271,7 +268,8 @@ $result=mysqli_query($conn, $query);
     if($status>0):
     while($data=mysqli_fetch_object($result)):
       $id=$data->item_id;
-      $ab=$data->SD_percentage;$ef=$data->VAT_percentage;
+      $ab=$data->SD_percentage;
+      $ef=$data->VAT_percentage;
       $cd=$data->total_unit*$data->VAT*$ab;?>
     <tr>
     <td style="border: 1px solid #CCC;text-align: center; margin: 10px"><?=$i=$i+1?></td>
@@ -425,7 +423,7 @@ $result=mysqli_query($conn, $query);
 <br><br>
 
 
-          <?php if($_GET[do_no]>0 && $COUNT_mushak>0 && $COUNT_journal==0): ?>
+          <?php if($do_no_GET>0 && $COUNT_mushak>0 && $COUNT_journal==0): ?>
           <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:none">
               <thead>
               <tr style="background-color: bisque">
@@ -491,13 +489,10 @@ $result=mysqli_query($conn, $query);
           </table>
           <h1 align="center">
           <input type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm to Record & Create?");' name="create_journal" value="Journal Create"></p>
-          <input type="hidden" name="delete_mushak_no" value="<?=$VAT_master->mushak_no?>">                              
-
+          <input type="hidden" name="delete_mushak_no" value="<?=$VAT_master->mushak_no?>">
           <button type="submit" name="delete" class="btn btn-primary" style="font-size: 11px" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm to delete?");'>Delete the Mushak - <?=$VAT_master->mushak_no?></button>
-  
         </h1>
         <?php endif; ?>
-        
         <?php
             if($status>0 && $COUNT_journal>0){?>
             <h3 style="text-align: center;color: red;  font-weight: bold"><i>Mushak challan has been recorded & forwarded to the releavent warehouse!!</i></h3>
