@@ -1,11 +1,8 @@
 <?php
 session_start();
-require_once ('base.php');
+require ("../app/db/base.php");
 if(isset($_SESSION['login_email'])!="")
 {header("Location: dashboard.php");}
-if($_REQUEST['module']>0){
-    $_SESSION['module_id']=$_REQUEST['module'];
-}
 if(isset($_POST['btn-login']))
 	{   $user_email = trim($_POST['user_email']);
 		$user_password = trim($_POST['password']);
@@ -107,31 +104,23 @@ header("Location: dashboard.php");
                                 </div>
                                 <div class="p-2">
                                     <form class="form-horizontal" action="" method="POST">
-        
                                         <div class="form-group">
                                             <label for="username">Username</label>
                                             <input type="text" name="user_email" class="form-control" style="font-size:11px" id="user_email" placeholder="Enter username">
                                         </div>
-                
                                         <div class="form-group">
                                             <label for="userpassword">Password</label>
                                             <input type="password" name="password" class="form-control" id="password" style="font-size:11px" placeholder="Enter password">
                                         </div>
-                
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="customControlInline">
                                             <label class="custom-control-label" for="customControlInline">Remember me</label>
                                         </div>
-                                        
                                         <div class="mt-3">
                                             <button class="btn btn-primary btn-block waves-effect waves-light" type="submit" name="btn-login">Log In</button>
                                         </div>
-            
-                                       
-
                                         <div class="mt-4 text-center">
                                             <h5 class="font-size-14 mb-3">Sign in with</h5>
-            
                                             <ul class="list-inline">
                                                 <li class="list-inline-item">
                                                     <a href="javascript::void()" class="social-list-item bg-primary text-white border-primary">
@@ -150,39 +139,28 @@ header("Location: dashboard.php");
                                                 </li>
                                             </ul>
                                         </div>
-
                                         <div class="mt-4 text-center">
                                             <a href="auth-recoverpw.html" class="text-muted"><i class="mdi mdi-lock mr-1"></i> Forgot your password?</a>
                                         </div>
                                     </form>
                                 </div>
-            
                             </div>
                         </div>
                         <div class="mt-5 text-center">
-                            
                             <div>
                                 <p>Don't have an account ? <a href="#" class="font-weight-medium text-primary"> Signup now </a> </p>
                                 <p>© <?=date('Y')?> ICP ERP. Crafted with <i class="mdi mdi-heart text-danger"></i> by Raresoft</p>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- JAVASCRIPT -->
         <script src="../assets/login/libs/jquery/jquery.min.js"></script>
         <script src="../assets/login/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="../assets/login/libs/metismenu/metisMenu.min.js"></script>
         <script src="../assets/login/libs/simplebar/simplebar.min.js"></script>
         <script src="../assets/login/libs/node-waves/waves.min.js"></script>
-        
-        <!-- App js -->
         <script src="../assets/login/js/app.js"></script>
     </body>
 </html>
-
-
-

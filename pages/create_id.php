@@ -56,7 +56,7 @@ function automatic_voucher_number_generate($table,$parameter,$condition,$voucher
     $date=date('Y-m-d');
 	$keyword=$_SESSION['userid'].$voucher_type;
 	list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $date);
-	$sql="Select ".$parameter." from ".$table." where create_date='".date('Y-m-d')."' and entry_by=".$_SESSION[userid]." and section_id=".$_SESSION[sectionid]." and company_id=".$_SESSION[companyid]." and ".$condition." and ".$parameter." like '".$keyword."%' ORDER BY ".$parameter." DESC LIMIT 1";
+	$sql="Select ".$parameter." from ".$table." where create_date='".date('Y-m-d')."' and entry_by=".$_SESSION['userid']." and section_id=".$_SESSION['sectionid']." and company_id=".$_SESSION['companyid']." and ".$condition." and ".$parameter." like '".$keyword."%' ORDER BY ".$parameter." DESC LIMIT 1";
     $result=mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) == 0){
 		$output=$keyword.substr($year1,2,3).$month.$day."001";

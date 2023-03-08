@@ -69,6 +69,7 @@ class crud{
     }
     public function link_report($sql,$link=''){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table  id="datatable-buttons" class="table table-striped table-bordered" style="width:100%; font-size: 11px">';
@@ -100,6 +101,7 @@ class crud{
     }
     public function link_report_popup($sql,$link=''){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table  id="datatable-buttons" class="table table-striped table-bordered" style="width:100%; font-size: 11px">';
@@ -131,6 +133,7 @@ class crud{
     }
     public function link_report_voucher($sql,$link=''){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table class="table table-striped table-bordered" id="customers" style="width:100%; font-size: 11px">';
@@ -164,6 +167,7 @@ class crud{
 
 	public function report_general($sql,$link=''){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table id="customers" style="width:100%; font-size: 11px">';
@@ -207,6 +211,7 @@ else{				if($show[$i]!=1&&$sum[$i]!=0)$str .='<td style="text-align:right">'.num
 
 	public function report_templates($sql,$link=''){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-12 col-sm-12 col-xs-12">
@@ -244,6 +249,7 @@ else{				if($show[$i]!=1&&$sum[$i]!=0)$str .='<td style="text-align:right">'.num
 
 	public function report_templates_with_data($sql,$title){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-12 col-sm-12 col-xs-12">
@@ -281,6 +287,7 @@ else{				if($show[$i]!=1&&$sum[$i]!=0)$str .='<td style="text-align:right">'.num
     function select_a_report($module_id)
     {
         global $conn;
+        $str = '';
         $query = mysqli_query($conn, "
 SELECT zm.optgroup_label_name,zs.report_name as subzonename,zs.report_id FROM module_reportview_optgroup_label AS zm
 RIGHT JOIN module_reportview_report AS zs ON zm.optgroup_label_id = zs.optgroup_label_id RIGHT JOIN user_permission_matrix_reportview AS p ON p.optgroup_label_id=zm.optgroup_label_id AND p.report_id=zs.report_id WHERE p.status in ('1') and p.module_id='".$module_id."' and p.user_id=".$_SESSION[userid]."
@@ -300,7 +307,7 @@ ORDER BY zm.sl, zs.sl");
             foreach ($results as $category => $subcats) {
                 $str .= '<optgroup label="' . $category . '">';
                 foreach ($subcats as $subcategory) {
-                    $report_id = $_GET['report_id'];
+                    $report_id = @$_GET['report_id'];
                     if ($report_id == $subcategory['report_id']) {
                         $selected = 'selected';
                     } else {
@@ -317,6 +324,7 @@ ORDER BY zm.sl, zs.sl");
     }
 	public function report_templates_with_status_periodical($sql,$status){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-12 col-sm-12 col-xs-12">
@@ -388,6 +396,7 @@ ORDER BY zm.sl, zs.sl");
     }
     public function report_templates_with_status($sql,$status){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-12 col-sm-12 col-xs-12">
@@ -463,6 +472,7 @@ ORDER BY zm.sl, zs.sl");
     }
     public function report_templates_with_status_add_new($sql,$title,$c_class,$action,$create){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-'.$c_class.' col-sm-12 col-xs-12">
@@ -549,6 +559,7 @@ ORDER BY zm.sl, zs.sl");
 
 	public function report_templates_with_add_active_inactive($sql,$title,$c_class,$action,$create){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-'.$c_class.' col-sm-12 col-xs-12">
@@ -600,6 +611,7 @@ ORDER BY zm.sl, zs.sl");
 
 	public function report_templates_with_add_new($sql,$title,$c_class,$action,$create){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-'.$c_class.' col-sm-12 col-xs-12">
@@ -697,6 +709,7 @@ ORDER BY zm.sl, zs.sl");
 
 	public function report_templates_JSON($sql,$title,$c_class){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-'.$c_class.' col-sm-12 col-xs-12">
@@ -746,6 +759,7 @@ ORDER BY zm.sl, zs.sl");
 
 	public function report_templates_with_title_and_class($sql,$title,$c_class){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-'.$c_class.' col-sm-12 col-xs-12">
@@ -788,6 +802,7 @@ ORDER BY zm.sl, zs.sl");
 
     public function recent_voucher_view($sql,$link,$v_type){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table class="table table-striped table-bordered" style="width:100%; font-size: 11px">';
@@ -827,6 +842,7 @@ ORDER BY zm.sl, zs.sl");
     }
     public function module_view($sql,$url,$link){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table style="width:100%; font-size: 12px">';
@@ -858,6 +874,7 @@ ORDER BY zm.sl, zs.sl");
     public function dashboard_modules($sql,$url,$link){
         global $conn;
         if($sql==NULL) return NULL;
+        $str = '';
         $str.='
 		<table style="width:100%; font-size: 12px">';
         $str .='<tr class="oe_list_header_columns">';
@@ -866,7 +883,7 @@ ORDER BY zm.sl, zs.sl");
             $cols = mysqli_num_fields($result);
             if (mysqli_num_rows($result)>0):
                 while($row = mysqli_fetch_array($result)):
-                    if($row[0]==$_SESSION['module_id']):
+                    if($row[0]==@$_SESSION['module_id']):
                         $check_or_notification="<i class='fa fa-check'></i>";
 						else :
                         $check_or_notification='';
@@ -888,6 +905,7 @@ ORDER BY zm.sl, zs.sl");
 
     public function dashboard_quick_access_menu($sql,$url,$link){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table style="width:100%; font-size: 12px">';
@@ -969,6 +987,7 @@ ORDER BY zm.zonecode, zs.sl");
 
     public function master_menu_view($sql,$link=''){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table style="width:100%; font-size: 12px">';
@@ -1016,11 +1035,13 @@ function paging($per_pg)
 
 class htmldiv extends crud {
 public function body_content(){
+    $str = '';
 	$str.='<!DOCTYPE html>';
 	return false;
 }
 
-public function header_content($title,$unique){
+public function header_content($title){
+    $str = '';
 	 if($title==NULL) return NULL;
 	$str.='<!DOCTYPE html>
 <html lang="en">
@@ -1050,14 +1071,11 @@ public function header_content($title,$unique){
     <link href="../assets/build/css/custom.min.css" rel="stylesheet">
     <!-- jQuery custom content scroller -->
     <link href="../assets/vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
-    <script type="text/javascript">
-        function DoNavPOPUP(lk)
-        {myWindow = window.open("'.$page.'?'.$unique.'="+lk, "myWindow", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no,directories=0,toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=500,height=500,left = 383,top = -1");}
-    </script>
 </head>';
 	return $str;
 }
 public function footer_content(){
+    $str = '';
 	$str.='</div>
 </div>
 </div>';
@@ -1241,6 +1259,7 @@ $str.='
 
 public function MIS_add_new_plant_cmu_warehouse($active,$res,$title,$unique,$c_class){
 	global $crud;
+    $str = '';
     if($active==0) return NULL;
 	if($unique>0){
 		$class_popup='';
@@ -1356,6 +1375,7 @@ public function MIS_add_new_plant_cmu_warehouse($active,$res,$title,$unique,$c_c
 
  function recentvoucherview($sql,$link,$v_type,$css){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-4 col-xs-12">
@@ -1400,6 +1420,7 @@ public function MIS_add_new_plant_cmu_warehouse($active,$res,$title,$unique,$c_c
 
 function recentdataview($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth){
         global $conn;
+    $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<div class="col-md-'.$divwidth.' col-xs-12">
@@ -1474,6 +1495,7 @@ function recentdataview($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth){
 
     function recentdataview_model($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         $str.='
 		<table align="center" class="table table-striped table-bordered" style="width:'.$divwidth.'%; font-size: 11px">';

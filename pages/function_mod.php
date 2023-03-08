@@ -82,7 +82,7 @@ function check_permission($page){
 	p.sub_menu_id=z.sub_menu_id and
 	z.sub_url like '".$page."' and
 	z.sub_menu_id='".$page_id_GET."' and
-	p.user_id='".$_SESSION[userid]."'";
+	p.user_id='".$_SESSION['userid']."'";
 	 $res=@mysqli_query($conn, $sql);
 	 $count=@mysqli_num_rows($res);
 	 if($count>0)
@@ -95,13 +95,6 @@ function check_permission($page){
 	  return NULL;
 	
 	}
-	
-
-
-
-
-
-
 
 function do_calander($field)
 {

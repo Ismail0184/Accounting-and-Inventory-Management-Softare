@@ -79,17 +79,17 @@ $dto=date('Y-m-d');
 
  // select loggedin users detail
  $todays=date("Y-m-d");
- $res=mysql_query("SELECT * FROM company WHERE companyid=".$_SESSION['companyid']);
- $userRow=mysql_fetch_array($res);
+ $res=mysqli_query($conn, "SELECT * FROM company WHERE companyid=".$_SESSION['companyid']);
+ $userRow=mysqli_fetch_array($res);
 
 if($_POST['mon']!=''){
-    $mon=$_POST['mon'];}
+    $mon=@$_POST['mon'];}
 else{
     $mon=date('m');
 }
 
 if($_POST['year']!=''){
-    $year=$_POST['year'];}
+    $year=@$_POST['year'];}
 else{
     $year=date('Y');
 }
@@ -120,11 +120,11 @@ $current_month_leave=find_a_field('hrm_leave_info','SUM(total_days)','half_or_fu
 $current_month_early_leave=find_a_field('hrm_leave_info','COUNT(id)','half_or_full="Half" and PBI_ID="'.$_SESSION['PBI_ID'].'" and s_date between "'.$sdte.'" and "'.$edte.'"');
 $current_month_od_attendance=find_a_field('hrm_od_attendance','count(id)','PBI_ID="'.$_SESSION['PBI_ID'].'" and attendance_date between "'.$sdte.'" and "'.$edte.'"');
 
-$dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)','user_id='.$_SESSION[userid].' and module_id='.$_SESSION[module_id].'');
+$dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)','user_id='.$_SESSION['userid'].' and module_id='.$_SESSION['module_id'].'');
 ?>
 
 
-<?php if($_SESSION[module_id]=='11') { ?>
+<?php if($_SESSION['module_id']=='11') { ?>
 
     <table align="center" class="table table-striped table-bordered" style="width:90%;font-size:11px">
         <thead>
@@ -134,8 +134,8 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
 
         <tr>
             <th style="vertical-align: middle">Leave Status</th><?php
-            $res=mysql_query("select * from hrm_leave_type");
-            while($leave_row=mysql_fetch_object($res)){
+            $res=mysqli_query($conn, "select * from hrm_leave_type");
+            while($leave_row=mysqli_fetch_object($res)){
                 ?>
                 <th style="text-align: center; vertical-align: middle"><?=$leave_row->leave_type_name;?></th>
             <?php } ?>
@@ -145,8 +145,8 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
         <tbody>
         <tr>
             <td>Company Leave Policy</td>
-            <?php $res=mysql_query("select * from hrm_leave_type");
-            while($leave_row=mysql_fetch_object($res)){ ?>
+            <?php $res=mysqli_query($conn, "select * from hrm_leave_type");
+            while($leave_row=mysqli_fetch_object($res)){ ?>
                 <td style="text-align: center"><?=$leave_row->yearly_leave_days;?>, Days</td>
                 <?php
                 $totalpolicy=$totalpolicy+$leave_row->yearly_leave_days;
@@ -159,8 +159,8 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
 
         <tr>
             <td><a href="hrm_requisition_leave_report.php" target="new">Leave Already Taken</a></td>
-            <?php $res=mysql_query("select * from hrm_leave_type");
-            while($leave_row=mysql_fetch_object($res)){ ?>
+            <?php $res=mysqli_query($conn, "select * from hrm_leave_type");
+            while($leave_row=mysqli_fetch_object($res)){ ?>
                 <td style="text-align: center"><?php $leave_taken=find_a_field("hrm_leave_info","SUM(total_days)","type='".$leave_row->id."' and s_date between '$dfrom' and '$dto' and PBI_ID='".$_SESSION[PBI_ID]."'"); if($leave_taken>0){ echo $leave_taken,', Days';} else echo ''; ?></td>
                 <?php
                 $total_taken=$total_taken+$leave_taken;
@@ -174,10 +174,10 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
         <tr>
             <td>Available Leave</td>
             <?php
-            $res=mysql_query("select * from hrm_leave_type");
-            while($leave_row=mysql_fetch_object($res)){
+            $res=mysqli_query($conn, "select * from hrm_leave_type");
+            while($leave_row=mysqli_fetch_object($res)){
                 ?>
-                <th style="text-align: center"><?=$leave_row->yearly_leave_days - find_a_field("hrm_leave_info","SUM(total_days)","type='".$leave_row->id."' and s_date between '$dfrom' and '$dto' and PBI_ID='".$_SESSION[PBI_ID]."'");?> , Days</th>
+                <th style="text-align: center"><?=$leave_row->yearly_leave_days - find_a_field("hrm_leave_info","SUM(total_days)","type='".$leave_row->id."' and s_date between '$dfrom' and '$dto' and PBI_ID='".$_SESSION['PBI_ID']."'");?> , Days</th>
             <?php } ?>
             <td style="text-align: center"><?php if($_SESSION['gander']=='1'){ echo ($totalpolicy-90)-$total_taken; } else { echo $totalpolicy-$total_taken;};?>, Days</td>
         </tr>
@@ -261,7 +261,7 @@ $dashboardpermission=find_a_field('user_permissions_dashboard','COUNT(module_id)
 							 a.PBI_ID=p.PBI_ID and 
 							 p.PBI_JOB_STATUS in ('In Service') and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID	and 
-							 a.PBI_ID=".$_SESSION[PBI_ID]."				 
+							 a.PBI_ID=".$_SESSION['PBI_ID']."				 
 							  order by p.PBI_NAME");
                     while($action=mysqli_fetch_object($result)){
                         ?>
@@ -299,7 +299,7 @@ $edatess="$year2-$monthe-$daye";
 
 
 
-                    <?php $res=mysql_query('select p2.*,d.*,de.* FROM 
+                    <?php $res=mysqli_query($conn, 'select p2.*,d.*,de.* FROM 
 							 
 							personnel_basic_info p2,
 							department d,
@@ -308,7 +308,7 @@ $edatess="$year2-$monthe-$daye";
 							 p2.PBI_JOB_STATUS in ("In Service") and 
 							 p2.PBI_DESIGNATION=de.DESG_ID and  							 
 							 p2.PBI_DEPARTMENT=d.DEPT_ID order by p2.PBI_DOB asc ');
-				   while($birthday=mysql_fetch_object($res)){
+				   while($birthday=mysqli_fetch_object($res)){
                        $bday=$birthday->PBI_DOB;
                        list( $year2, $month2, $day2) = split('[/.-]', $bday);
                        if($month2==$mon){
@@ -335,8 +335,8 @@ $edatess="$year2-$monthe-$daye";
             <div class="x_content">
                 <ul class="legend list-unstyled">
                     <?php
-                    $res=mysql_query("SELECT * FROM salary_holy_day WHERE holy_day between '$year-$mon-$cday' and '$dyear-$dmon-$dday' order by id asc limit 7");
-                    while($holiday=mysql_fetch_object($res)){
+                    $res=mysqli_query($conn, "SELECT * FROM salary_holy_day WHERE holy_day between '$year-$mon-$cday' and '$dyear-$dmon-$dday' order by id asc limit 7");
+                    while($holiday=mysqli_fetch_object($res)){
                                                ?>
                     <li style="vertical-align: middle; cursor: pointer">
                         <p style="vertical-align: middle">
@@ -350,7 +350,7 @@ $edatess="$year2-$monthe-$daye";
     </div>
 
 
-    <?php } elseif($_SESSION[module_id]=='10') {
+    <?php } elseif($_SESSION['module_id']=='10') {
 
 if($dashboardpermission>0){
 $totalemployee=find_a_field('personnel_basic_info','COUNT(PBI_ID)','PBI_JOB_STATUS="In Service"');
@@ -442,8 +442,8 @@ $totalemployee=find_a_field('personnel_basic_info','COUNT(PBI_ID)','PBI_JOB_STAT
                     </thead>
                     <tbody>
 <?php
-$resgender=mysql_query("SELECT PBI_SEX,COUNT(PBI_ID) as noofemployee from personnel_basic_info where PBI_JOB_STATUS='In Service' group by PBI_SEX");
-while($gender=mysql_fetch_object($resgender)){
+$resgender=mysqli_query($conn, "SELECT PBI_SEX,COUNT(PBI_ID) as noofemployee from personnel_basic_info where PBI_JOB_STATUS='In Service' group by PBI_SEX");
+while($gender=mysqli_fetch_object($resgender)){
 ?>
                     <tr>
                         <td style="text-align: center"><?=$gender->PBI_SEX;?></td>
@@ -464,8 +464,8 @@ while($gender=mysql_fetch_object($resgender)){
                     </thead>
                     <tbody>
                                         <?php
-$resmarital=mysql_query("SELECT PBI_MARITAL_STA,COUNT(PBI_ID) as noofemployee from personnel_basic_info where PBI_JOB_STATUS='In Service' group by PBI_MARITAL_STA");
-while($marital=mysql_fetch_object($resmarital)){
+$resmarital=mysqli_query($conn, "SELECT PBI_MARITAL_STA,COUNT(PBI_ID) as noofemployee from personnel_basic_info where PBI_JOB_STATUS='In Service' group by PBI_MARITAL_STA");
+while($marital=mysqli_fetch_object($resmarital)){
 ?>
                     <tr>
                         <td style="text-align: center"><?=$marital->PBI_MARITAL_STA;?></td>
@@ -488,10 +488,10 @@ while($marital=mysql_fetch_object($resmarital)){
             <div class="x_content">
                 <ul class="legend list-unstyled">
                     <?php
-                    $res=mysql_query("SELECT * FROM hrm_announcement WHERE STATUS in ('ACTIVE') order by ADMIN_ANN_DID desc");
-                    while($row=mysql_fetch_object($res)){
+                    $res=mysqli_query($conn, "SELECT * FROM hrm_announcement WHERE STATUS in ('ACTIVE') order by ADMIN_ANN_DID desc");
+                    while($row=mysqli_fetch_object($res)){
                         ?>
-                        <li  style="vertical-align: middle; cursor: pointer" onclick="DoNavPOPUP('<?=$action->ADMIN_ANN_DID;?>', 'TEST!?', 600, 700)">
+                        <li  style="vertical-align: middle; cursor: pointer" onclick="DoNavPOPUP('<?=$row->ADMIN_ANN_DID;?>', 'TEST!?', 600, 700)">
                             <p style="vertical-align: middle">
                                 <span class="icon" ><i class="fa fa-square green"></i></span> <span class="name" style="vertical-align: middle"><?=$row->ADMIN_ANN_TYPE;?><br><font style="font-size: 10px;"><?=$row->ADMIN_ANN_SUBJECT;?></font></span>
                             </p>
@@ -520,7 +520,7 @@ while($marital=mysql_fetch_object($resmarital)){
                     $sdatess="$year2-$months-$days";
                     $edatess="$year2-$monthe-$daye";
 
-                    $res=mysql_query('select p2.*,d.*,de.* FROM 							 
+                    $res=mysqli_query($conn, 'select p2.*,d.*,de.* FROM 							 
 							personnel_basic_info p2,
 							department d,
 							designation de 
@@ -528,15 +528,16 @@ while($marital=mysql_fetch_object($resmarital)){
 							 p2.PBI_JOB_STATUS in ("In Service") and 
 							 p2.PBI_DESIGNATION=de.DESG_ID and  							 
 							 p2.PBI_DEPARTMENT=d.DEPT_ID order by p2.PBI_DOB asc ');
-                    while($birthday=mysql_fetch_object($res)){
-                        $bday=$birthday->PBI_DOB;
-                        list( $year2, $month2, $day2) = split('[/.-]', $bday);
-                        if($month2==$mon){
-                            ?>
+                    while($birthday=mysqli_fetch_object($res)){
+                        $dsplit=$birthday->PBI_DOB;
+                        $dsplit = explode('-', $dsplit);
+                        //$day   = $dsplit[2];
+                        $month = $dsplit[1];
+                        //$year  = $dsplit[0];
+                        if($month==$mon){?>
                             <li style="vertical-align: middle; cursor: pointer">
                                 <p style="vertical-align: middle">
                                     <span class="icon" ><i class="fa fa-square grey"></i></span> <span class="name" style="vertical-align: middle"><?=$birthday->PBI_NAME;?></span>
-
                                 </p>
                                 <p style="font-size: 10px; margin-top: -10px"><?=$birthday->DESG_DESC;?></p>
                                 <p style="font-size: 10px;margin-top: -10px; color: red"><?=date("d M", strtotime($birthday->PBI_DOB));?> (<strong><?=date("D", strtotime($birthday->PBI_DOB));?></strong>)</p>
@@ -558,7 +559,7 @@ while($marital=mysql_fetch_object($resmarital)){
                 <div class="x_content">
                     <ul class="legend list-unstyled">
                         <?php
-                        $result=mysql_query("SELECT  a.*,p.*,d.* FROM 
+                        $result=mysqli_query($conn, "SELECT  a.*,p.*,d.* FROM 
 							 
 							admin_action_detail a,
 							personnel_basic_info p,
@@ -567,16 +568,16 @@ while($marital=mysql_fetch_object($resmarital)){
 							 a.PBI_ID=p.PBI_ID and 
 							 p.PBI_JOB_STATUS in ('In Service') and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID	and 
-							 a.PBI_ID=".$_SESSION[PBI_ID]."				 
+							 a.PBI_ID=".$_SESSION['PBI_ID']."				 
 							  order by p.PBI_NAME");
-                        while($action=mysql_fetch_object($result)){
+                        while($action=mysqli_fetch_object($result)):
                             ?>
                             <li style="vertical-align: middle; cursor: pointer" onclick="DoNavPOPUP('<?=$action->ADMIN_ACTION_DID;?>', 'TEST!?', 600, 700)">
                                 <p style="vertical-align: middle">
-                                    <span class="icon" ><i class="fa fa-square blue"></i></span> <span class="name" style="vertical-align: middle"><?=$action->ADMIN_ACTION_SUBJECT;?><br><font style="font-size: 10px;"><?=$row->ADMIN_ANN_SUBJECT;?></font></span>
+                                    <span class="icon" ><i class="fa fa-square blue"></i></span> <span class="name" style="vertical-align: middle"><?=$action->ADMIN_ACTION_SUBJECT;?><br><p style="font-size: 10px;"></p></span>
                                 </p>
                             </li>
-                        <?php } ?></ul>
+                        <?php endwhile; ?></ul>
                 </div>
             </div>
         </div>
@@ -590,8 +591,8 @@ while($marital=mysql_fetch_object($resmarital)){
             <div class="x_content">
                 <ul class="legend list-unstyled">
                     <?php
-                    $res=mysql_query("SELECT * FROM salary_holy_day WHERE holy_day between '$year-$mon-$cday' and '$dyear-$dmon-$dday' order by id asc limit 5");
-                    while($holiday=mysql_fetch_object($res)){
+                    $res=mysqli_query($conn, "SELECT * FROM salary_holy_day WHERE holy_day between '$year-$mon-$cday' and '$dyear-$dmon-$dday' order by id asc limit 5");
+                    while($holiday=mysqli_fetch_object($res)){
                         ?>
                         <li style="vertical-align: middle; cursor: pointer">
                             <p style="vertical-align: middle">
@@ -607,7 +608,7 @@ while($marital=mysql_fetch_object($resmarital)){
 
 
 
-<?php } elseif($_SESSION[module_id]=='1') {
+<?php } elseif($_SESSION['module_id']=='1') {
 if($dashboardpermission>0){  ?>
     <table style="width: 100%"><tr><td style="width: 25%">
                 <div class="col-md-3 col-sm-3 col-xs-12 profile_details" style="width: 100%;">
@@ -630,10 +631,10 @@ if($dashboardpermission>0){  ?>
                 <div class="col-md-3 col-sm-3 col-xs-12 profile_details" style="width: 100%;">
                     <div class="well profile_view" style="width: 100%">
                         <div class="col-sm-12">
-                            <h1 style="text-align: center; color: coral; font-weight: bold"><?=number_format($_SESSION[todayshipment_accounts],2);?></h1>
+                            <h1 style="text-align: center; color: coral; font-weight: bold"><?=number_format($_SESSION['todayshipment_accounts'],2);?></h1>
                             <h5 style="text-align: center">Today's Shipment </h5>
                             <br>
-                            <h5 style="text-align: center; color: darkturquoise; font-weight: bold"><?=number_format($_SESSION[shipmentMDT_accounts],2);?></h5>
+                            <h5 style="text-align: center; color: darkturquoise; font-weight: bold"><?=number_format($_SESSION['shipmentMDT_accounts'],2);?></h5>
                             <h6 style="text-align: center">MTD Shipment </h6>
                             <br>
                         </div>
@@ -648,10 +649,10 @@ if($dashboardpermission>0){  ?>
                 <div class="col-md-3 col-sm-3 col-xs-12 profile_details" style="width: 100%;">
                     <div class="well profile_view" style="width: 100%">
                         <div class="col-sm-12">
-                            <h1 style="text-align: center; color: lightseagreen; font-weight: bold"><?=number_format($_SESSION[todayspurchase_accounts],2);?></h1>
+                            <h1 style="text-align: center; color: lightseagreen; font-weight: bold"><?=number_format($_SESSION['todayspurchase_accounts'],2);?></h1>
                             <h5 style="text-align: center">Today's Purchase (Material)</h5>
                             <br>
-                            <h5 style="text-align: center; color: yellowgreen; font-weight: bold"><?=number_format($_SESSION[purchaseMDT_accounts],2);?></h5>
+                            <h5 style="text-align: center; color: yellowgreen; font-weight: bold"><?=number_format($_SESSION['purchaseMDT_accounts'],2);?></h5>
                             <h6 style="text-align: center">MTD Purchase (Material)</h6>
                             <br>
                         </div>
@@ -666,10 +667,10 @@ if($dashboardpermission>0){  ?>
                 <div class="col-md-3 col-sm-3 col-xs-12 profile_details" style="width: 100%;">
                     <div class="well profile_view" style="width: 100%">
                         <div class="col-sm-12">
-                            <h1 style="text-align: center; color: yellowgreen; font-weight: bold"><?=number_format($_SESSION[todayspurchaseST_accounts],2);?></h1>
+                            <h1 style="text-align: center; color: yellowgreen; font-weight: bold"><?=number_format($_SESSION['todayspurchaseST_accounts'],2);?></h1>
                             <h5 style="text-align: center">Today's Purchase (Stationary) </h5>
                             <br>
-                            <h5 style="text-align: center; color: lightseagreen; font-weight: bold"><?=number_format($_SESSION[purchaseSTMDT_accounts],2);?></h5>
+                            <h5 style="text-align: center; color: lightseagreen; font-weight: bold"><?=number_format($_SESSION['purchaseSTMDT_accounts'],2);?></h5>
                             <h6 style="text-align: center">MTD Payment (Stationary)</h6>
                             <br>
                         </div>
@@ -704,9 +705,9 @@ if($dashboardpermission>0){  ?>
                     <tbody>
 
                         <tr>
-                            <td style="text-align: center"><?=$_SESSION[noofvendor];?></td>
-                            <td style="text-align: center"><?=number_format($_SESSION[outstanding],2);?></td>
-                            <td style="text-align: center"><?=number_format($_SESSION[payment_this_month_account],2);?></td>
+                            <td style="text-align: center"><?=$_SESSION['noofvendor'];?></td>
+                            <td style="text-align: center"><?=number_format($_SESSION['outstanding'],2);?></td>
+                            <td style="text-align: center"><?=number_format($_SESSION['payment_this_month_account'],2);?></td>
                         </tr>
                     </tbody></table>
 
@@ -722,8 +723,8 @@ if($dashboardpermission>0){  ?>
                     <tbody>
                     <?php
 
-                    $res=mysql_query("SELECT COUNT(distinct a.ledger_id) as noofdealer, SUM(j.dr_amt-j.cr_amt) as Receivable from accounts_ledger a, journal j where a.ledger_group_id in ('1006') and a.ledger_id=j.ledger_id");
-                    $vendor=mysql_fetch_object($res);
+                    $res=mysqli_query($conn, "SELECT COUNT(distinct a.ledger_id) as noofdealer, SUM(j.dr_amt-j.cr_amt) as Receivable from accounts_ledger a, journal j where a.ledger_group_id in ('1006') and a.ledger_id=j.ledger_id");
+                    $vendor=mysqli_fetch_object($res);
                     ?>
                     <tr>
                         <td style="text-align: center"><?=$vendor->noofdealer;?></td>
@@ -751,8 +752,8 @@ if($dashboardpermission>0){  ?>
             <div class="x_content">
                 <ul class="legend list-unstyled">
                     <?php
-                    $res=mysql_query("SELECT * FROM salary_holy_day WHERE holy_day between '$year-$mon-$cday' and '$dyear-$dmon-$dday' order by id asc limit 5");
-                    while($holiday=mysql_fetch_object($res)){
+                    $res=mysqli_query($conn, "SELECT * FROM salary_holy_day WHERE holy_day between '$year-$mon-$cday' and '$dyear-$dmon-$dday' order by id asc limit 5");
+                    while($holiday=mysqli_fetch_object($res)){
                         ?>
                         <li style="vertical-align: middle; cursor: pointer">
                             <p style="vertical-align: middle">
@@ -767,24 +768,9 @@ if($dashboardpermission>0){  ?>
 <?php
     accounts_session();
 } else { ?>
-
-    <h1 style="text-align:center; margin-top:200px">Welcome to <?php if($_SESSION[module_id]>0) { ?> <?=getSVALUE("module_department", "modulename", " where id='$_SESSION[module_id]'");?> Module <?php } else { echo 'ERP Software. <br><font style="font-size: 15px">Please See the above menu</font>'; }?></h1>
-
-
+    <h1 style="text-align:center; margin-top:200px">Welcome to <?php if($_SESSION['module_id']>0) { ?> <?=find_a_field("module_department", "modulename", "id='".$_SESSION['module_id']."'");?> Module <?php } else { echo 'ERP Software. <br><font style="font-size: 15px">Please See the above menu</font>'; }?></h1>
 <?php } ?>
-
-
     <?php } else { ?>
-             <h1 style="text-align:center; margin-top:200px">Welcome to <?php if($_SESSION[module_id]>0) { ?> <?=getSVALUE("module_department", "modulename", " where id='$_SESSION[module_id]'");?> Module <?php } else { echo 'ERP Software. <br><font style="font-size: 15px">Please See the above menu</font>'; }?></h1>
+             <h1 style="text-align:center; margin-top:200px">Welcome to <?php if($_SESSION['module_id']>0) { ?> <?=find_a_field("module_department", "modulename", " where id='".$_SESSION['module_id']."'");?> Module <?php } else { echo 'ERP Software. <br><font style="font-size: 15px">Please See the above menu</font>'; }?></h1>
        <?php } ?>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             <?php ob_end_flush(); ?>

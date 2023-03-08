@@ -1,18 +1,13 @@
 <?php
 require_once ('support_file.php');
-$STO_received=find_a_field('production_issue_master','COUNT(pi_no)','verifi_status="CHECKED" and warehouse_to='.$_SESSION[warehouse].'');
-$DO_delivery_pending=find_a_field('sale_do_master','COUNT(do_no)','status="CHECKED" and depot_id='.$_SESSION[warehouse].'');
+$STO_received=find_a_field('production_issue_master','COUNT(pi_no)','verifi_status="CHECKED" and warehouse_to='.$_SESSION['warehouse'].'');
+$DO_delivery_pending=find_a_field('sale_do_master','COUNT(do_no)','status="CHECKED" and depot_id='.$_SESSION['warehouse'].'');
 $Material_issued_to_CMU=find_a_field('production_issue_master','COUNT(pi_no)','verifi_status="CHECKED" and ISSUE_TYPE="ISSUE"');
-$mushak_challan_pending=find_a_field('sale_do_master','COUNT(do_no)','mushak_challan_status="RECORDED" and status="COMPLETED" and depot_id='.$_SESSION[warehouse]);
-
+$mushak_challan_pending=find_a_field('sale_do_master','COUNT(do_no)','mushak_challan_status="RECORDED" and status="COMPLETED" and depot_id='.$_SESSION['warehouse']);
 $total_inventory_received=$STO_received+$Material_issued_to_CMU;
-$total_do=$total_do+$DO_delivery_pending;
+$total_do=$DO_delivery_pending;
 $total_mushak=$mushak_challan_pending;
 ?>
-
-
-
-
               <div class="menu_section">
                 <h3></h3>
                 <ul class="nav side-menu">
@@ -107,7 +102,6 @@ $total_mushak=$mushak_challan_pending;
 				$sub_menu=mysqli_query($conn, $result);
 				while($subnrow=mysqli_fetch_object($sub_menu)): ?>
                 <li><a href="<?=$subnrow->sub_url;?>"><?=$subnrow->sub_menu_name;?>
-                        <?php if($mainrow->sub_menu_id=="10005") if($QC_total_cehcked_and_verified>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$QC_total_cehcked_and_verified.' </span>]'?><?php } else {echo'';} ?>
                         <?php if($subnrow->sub_menu_id=="20180") if($STO_received>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$STO_received.' </span>]'?><?php } else {echo'';} ?>
                         <?php if($subnrow->sub_menu_id=="20212") if($Material_issued_to_CMU>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$Material_issued_to_CMU.' </span>]'?><?php } else {echo'';} ?>
                         <?php if($subnrow->sub_menu_id=="20181") if($DO_delivery_pending>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$DO_delivery_pending.' </span>]'?><?php } else {echo'';} ?>

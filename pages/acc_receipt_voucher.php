@@ -30,7 +30,7 @@ $table_receipt="receipt";
 $recpt_unique='receipt_no';
 $page="acc_receipt_voucher.php";
 $crud      =new crud($table_journal_master);
-$$unique = $_POST[$unique];
+$$unique = $_POST['voucherno'];
 $create_date=date('Y-m-d');
 $jv=next_journal_voucher_id();
 if(prevent_multi_submit()) {
@@ -105,9 +105,8 @@ if(prevent_multi_submit()) {
             }}
     } // end post unique
 } // end prevent_multi_submit
-
-
-if($_SESSION['initiate_credit_note']>0){
+$initiate_credit_note = @$_SESSION['initiate_credit_note'];
+if($initiate_credit_note>0){
 $rs="Select 
 j.id as jid,
 j.receipt_no,
@@ -203,7 +202,7 @@ cost_center c
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  entry_status='MANUAL' and 
- j.receipt_no='".$_SESSION['initiate_credit_note']."'";
+ j.receipt_no='".$initiate_credit_note."'";
 
 
 ?>
@@ -242,7 +241,7 @@ cost_center c
                             <th style="width:15%;">Transaction Date</th><th style="width: 2%;">:</th>
                             <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
                             <th style="width:15%;">Transaction No</th><th style="width: 2%">:</th>
-                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?php if($_SESSION['initiate_credit_note']>0){ echo $_SESSION['initiate_credit_note'];} else { echo
+                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?php if($initiate_credit_note>0){ echo $initiate_credit_note;} else { echo
                                 automatic_voucher_number_generate($table_receipt,$recpt_unique,1,1); } ?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                         </tr>
                         <tr>

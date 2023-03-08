@@ -17,12 +17,12 @@ $E_C_travel_expenses= find_a_field('travel_application_claim_master','count(trvC
 $external_receipt_voucher= find_a_field('receipt','count(id)','entry_status="UNCHECKED" and cr_amt>0 and received_from="External"');
 $mushak_challan= find_a_field('sale_do_master','count(do_no)','mushak_challan_status="UNRECORDED" and status="COMPLETED"');
 $special_invoice= find_a_field('sale_do_master','count(do_no)','status="UNCHECKED" and do_section="Special_invoice"');
-
+$dailyProduction = 0;
 $accounts_expenses_claim=$E_C_travel_expenses;
 $SD_VAT_TAX=$mushak_challan;
 $checkandverified_accounts=$special_invoice+$acc_inventory_cycle_counting_check+$external_receipt_voucher+$candv+$bankvoucher+$accounts_sales_return_view+$stocktransfertoCMU+$dailyProduction+$salaryUN+$grnverifi+$veriri1cc+$accounts_conversion_charge+$stationary_purchased_checked_AC+$accounts_inventory_return_view+$APAPPROVED;
 $_SESSION['accounts_notication']=$checkandverified_accounts;
-
+$module_id = @$_SESSION['module_id'];
 
 ?>
 
@@ -54,11 +54,10 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
 				pmm.main_menu_id=dmm.main_menu_id and
 				pmm.user_id='".$_SESSION["userid"]."' and
 				pmm.company_id='".$_SESSION['companyid']."'  and
-				dmm.module_id='".$_SESSION['module_id']."' and
+				dmm.module_id='".$module_id."' and
 				dmm.status=1 and pmm.status=1
 				order by dmm.sl";
                 } else if($_SESSION['language']=='English') {
-
                     $result = "Select
 				pmm.*,
 				dmm.faicon as iconmain,
@@ -72,7 +71,7 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
 				pmm.main_menu_id=dmm.main_menu_id and
 				pmm.user_id='" . $_SESSION["userid"] . "' and
 				pmm.company_id='" . $_SESSION['companyid'] . "'  and
-				dmm.module_id='" . $_SESSION['module_id'] . "' and
+				dmm.module_id='".$module_id."' and
 				dmm.status=1 and pmm.status=1
 				order by dmm.sl";
                 }
@@ -103,7 +102,7 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
 				psm.user_id='".$_SESSION["userid"]."' and
 				psm.company_id='".$_SESSION['companyid']."' and
 				psm.main_menu_id='".$mainrow->main_menu_id."' and
-				dsm.module_id='".$_SESSION['module_id']."' and
+				dsm.module_id='".$module_id."' and
 				dsm.status=1 and psm.status=1
 				order by dsm.sl";
                 } else if($_SESSION['language']=='English') {
@@ -120,12 +119,10 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
 				psm.user_id='".$_SESSION["userid"]."' and
 				psm.company_id='".$_SESSION['companyid']."' and
 				psm.main_menu_id='".$mainrow->main_menu_id."' and
-				dsm.module_id='".$_SESSION['module_id']."' and
+				dsm.module_id='".$module_id."' and
 				dsm.status=1 and psm.status=1
 				order by dsm.sl";
                 }
-
-
 				$sub_menu=mysqli_query($conn, $result);
 				while($subnrow=mysqli_fetch_object($sub_menu)): ?>
                 <li><a href="<?=$subnrow->sub_url;?>"><?=$subnrow->sub_menu_name;?>
@@ -150,5 +147,5 @@ $_SESSION['accounts_notication']=$checkandverified_accounts;
                     <?php endif; ?>
                  <?php endwhile; ?>
                 </ul>
-                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                  <p style="height: 300px"></p>
                 </div>
