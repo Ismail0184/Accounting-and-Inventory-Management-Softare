@@ -1,29 +1,29 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Accounts Ledger';
-$proj_id=$_SESSION['proj_id'];
+$proj_id=@$_SESSION['proj_id'];
 $now=time();
 $page="acc_ledger.php";
 $table="accounts_ledger";
 $unique="ledger_id";
 $unique_field="ledger_name";
 $crud      =new crud($table);
-$separator	= $_SESSION['separator'];
+$separator	= @$_SESSION['separator'];
 
 if(isset($_REQUEST['ledger_name'])||isset($_REQUEST['ledger_id']))
-{	$ledger_id			= mysqli_real_escape_string($conn, $_REQUEST['ledger_id']);
-	$ledger_name 		= mysqli_real_escape_string($conn, $_REQUEST['ledger_name']);
+{	$ledger_id			= @mysqli_real_escape_string($conn, $_REQUEST['ledger_id']);
+	$ledger_name 		= @mysqli_real_escape_string($conn, $_REQUEST['ledger_name']);
 	$ledger_name		= str_replace("'","",$ledger_name);
 	$ledger_name		= str_replace("&","",$ledger_name);
 	$ledger_name		= str_replace('"','',$ledger_name);
-	$ledger_group_id	= mysqli_real_escape_string($conn, $_REQUEST['ledger_group_id']);
-	$opening_balance	= mysqli_real_escape_string($conn, $_REQUEST['balance']);
-	$balance_type		= mysqli_real_escape_string($conn, $_REQUEST['b_type']);
-	$depreciation_rate	= mysqli_real_escape_string($conn, $_REQUEST['d_rate']);
-	$credit_limit		= mysqli_real_escape_string($conn, $_REQUEST['cr_limit']);
-	$date				= mysqli_real_escape_string($conn, $_REQUEST['open_date']);
+	$ledger_group_id	= @mysqli_real_escape_string($conn, $_REQUEST['ledger_group_id']);
+	$opening_balance	= @mysqli_real_escape_string($conn, $_REQUEST['balance']);
+	$balance_type		= @mysqli_real_escape_string($conn, $_REQUEST['b_type']);
+	$depreciation_rate	= @mysqli_real_escape_string($conn, $_REQUEST['d_rate']);
+	$credit_limit		= @mysqli_real_escape_string($conn, $_REQUEST['cr_limit']);
+	$date				= @mysqli_real_escape_string($conn, $_REQUEST['open_date']);
 	$now				= date_value($date);
-	$budget_enable		= mysqli_real_escape_string($conn, $_REQUEST['budget_enable']);
+	$budget_enable		= @mysqli_real_escape_string($conn, $_REQUEST['budget_enable']);
 	if(isset($_POST['record']))
 	{if(!ledger_excess($ledger_name))
 	{$type=0;
@@ -72,7 +72,7 @@ $sql="UPDATE `accounts_ledger` SET
 }
 
 if(isset($_POST['modify']))
-    {   $_POST['sub_ledger']=$name;
+    {   $_POST['ledger_name']=$ledger_name;
 		$_POST['edit_at']=time();
         $_POST['edit_by']=$_SESSION['userid'];
         $crud->update($unique);
@@ -89,7 +89,13 @@ if(isset($_GET[$unique]))
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
-
+$ledger_group_id = @$ledger_group_id;
+$ledger_name = @$ledger_name;
+$depreciation_rate = @$depreciation_rate;
+$budget_enable = @$budget_enable;
+$status = @$status;
+$unique_GET = @$_GET[$unique];
+$post_ledger_group_id = @$_POST['ledger_group_id'];
 $res='select al.'.$unique.',al.'.$unique.' as Code,al.'.$unique_field.',lg.group_name,(select COUNT(ledger_id) from journal where ledger_id=al.ledger_id) as has_transaction,
 IF(al.status=1, "Active",IF(al.status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' al,ledger_group lg where 
 al.ledger_group_id=lg.group_id order by al.ledger_group_id,al.'.$unique;
@@ -137,32 +143,29 @@ if(isset($_POST['deletedata'.$row->$unique]))
 
 
 
-                            <?php if(!isset($_GET[$unique])): ?>
+                            <?php if(!isset($unique_GET)): ?>
                             <div class="form-group" style="width: 100%">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger Group<span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="select2_single form-control" style="width:100%" name="ledger_group_id" id="ledger_group_id">
                                     <option></option>
-                                    <?=foreign_relation('ledger_group', 'group_id', 'CONCAT(group_id," : ", group_name)', ($_GET[$unique]!='')? $ledger_group_id : $_POST[ledger_group_id], '1','order by group_id'); ?>
+                                    <?=foreign_relation('ledger_group', 'group_id', 'CONCAT(group_id," : ", group_name)', ($unique_GET!='')? $ledger_group_id : $post_ledger_group_id, '1','order by group_id'); ?>
                                     </select>
                                 </div>
                             </div>
                             <?php endif; ?>
-
                             <div class="form-group" style="width: 100%">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger  Name<span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="ledger_name"  required="required" name="ledger_name" value="<?=$ledger_name;?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size:11px" >
                                 </div>
                             </div>
-
-                           
-                            
                             <div class="form-group" style="width: 100%;">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Depreciation Rate</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input type="number" id="depreciation_rate"   name="depreciation_rate" value="<?=$depreciation_rate;?>" class="form-control col-md-7 col-xs-12" step="any" style="width: 100%; font-size:11px" >
-                            </div></div>
+                            </div>
+                            </div>
                             
 
                             <div class="form-group" style="width: 100%">
@@ -173,9 +176,7 @@ if(isset($_POST['deletedata'.$row->$unique]))
                                     <option value="YES"<?php if($budget_enable=='YES') echo " Selected "?>>YES</option>
                                 </select>
                             </div></div>
-                            
-                            <?php if($_GET[$unique]):  ?>
-                            
+                            <?php if($unique_GET):  ?>
                             <div class="form-group" style="width: 100%">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -198,8 +199,7 @@ if(isset($_POST['deletedata'.$row->$unique]))
 
                     </form></div></div></div><?php if(!isset($_GET[$unique])): ?></div><?php endif; ?>
 <?php if(!isset($_GET[$unique])):?> 
-<?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1);?>  
+<?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1,$page);?>
 <?php endif; ?>
 <?=$html->footer_content();mysqli_close($conn);?>
-<?php ob_end_flush();
-ob_flush(); ?>
+<?php ob_end_flush(); ?>

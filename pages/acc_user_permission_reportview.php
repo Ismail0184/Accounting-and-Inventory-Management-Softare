@@ -6,26 +6,26 @@ $unique='id';
 $table="user_permissions_module";
 $page='acc_user_permission_reportview.php';
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
+$unique_GET = @$_GET[$unique];
     if(isset($_POST['view_report']))
-    {   $_SESSION[user_permission_reportview_accounts]=$_POST[user_id];
+    {   $_SESSION['user_permission_reportview_accounts']=$_POST['user_id'];
         }
 //for Delete..................................
     if(isset($_POST['cancel']))
-    {unset($_SESSION[user_permission_reportview_accounts]);}
+    {unset($_SESSION['user_permission_reportview_accounts']);}
 if(prevent_multi_submit()) {
-// insert permission..................................
     extract($_POST);
-    $report_id = mysqli_real_escape_string($conn, $report_id);
-    $status = mysqli_real_escape_string($conn, $status);
-    $report_in_database=find_a_field('user_permissions_reportview','COUNT(report_id)','report_id='.$report_id.' and user_id="'.$_SESSION[user_permission_reportview_accounts].'"');
+    $report_id = @mysqli_real_escape_string($conn, $report_id);
+    $status = @mysqli_real_escape_string($conn, $status);
+    $report_in_database=find_a_field('user_permissions_reportview','COUNT(report_id)','report_id='.$report_id.' and user_id="'.$_SESSION['user_permission_reportview_accounts'].'"');
     if($report_id>0){
     if($report_in_database>0) {
-        $sql = mysqli_query($conn, "UPDATE user_permissions_reportview SET status='$status' WHERE report_id='" . $report_id . "' and user_id='" . $_SESSION[user_permission_reportview_accounts] . "'");
+        $sql = mysqli_query($conn, "UPDATE user_permissions_reportview SET status='$status' WHERE report_id='".$report_id."' and user_id='" . $_SESSION['user_permission_reportview_accounts'] . "'");
     } else {
         $get_optgroup_label_id=find_a_field('module_reportview_report','optgroup_label_id','report_id='.$report_id.'');
-        $sql = mysqli_query($conn, "INSERT INTO user_permissions_reportview (report_id,optgroup_label_id,module_id,user_id,entry_by,entry_at,status,section_id,company_id) VALUES ('$report_id','$get_optgroup_label_id','1','$_SESSION[user_permission_reportview_accounts]','$_SESSION[userid]','$now','1','$_SESSION[sectionid]','$_SESSION[companyid]')");
+        $sql = mysqli_query($conn, "INSERT INTO user_permissions_reportview (report_id,optgroup_label_id,module_id,user_id,entry_by,entry_at,status,section_id,company_id) VALUES ('$report_id','$get_optgroup_label_id','1','".$_SESSION['user_permission_reportview_accounts']."','".$_SESSION['userid']."','$now','1','".$_SESSION['sectionid']."','".$_SESSION['companyid']."')");
     }}}
+$user_permission_reportview_accounts = @$_SESSION['user_permission_reportview_accounts']
 ?>
 
 <?php require_once 'header_content.php'; ?>
@@ -52,13 +52,13 @@ if(prevent_multi_submit()) {
 							 u.PBI_ID=p.PBI_ID and d.DEPT_ID=6 and
 							 u.account_status in ('active')
 							  order by p.PBI_NAME";
-                                advance_foreign_relation($sql_user_id,$_SESSION[user_permission_reportview_accounts]);?>
+                                advance_foreign_relation($sql_user_id,$user_permission_reportview_accounts);?>
                             </select>
                         </div>
                       </div>
                    <div class="form-group">
                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                       <?php if(isset($_SESSION[user_permission_reportview_accounts])){ ?>
+                       <?php if(isset($_SESSION['user_permission_reportview_accounts'])){ ?>
                         <button type="submit" name="cancel" class="btn btn-danger"  style="font-size: 11px">Cancel the User</button>
                        <?php } else { ?>
 						<button type="submit" name="view_report" class="btn btn-primary" style="font-size: 11px">View Available Reports</button>
@@ -67,7 +67,7 @@ if(prevent_multi_submit()) {
               </div></div>
 
 
-<?php if(isset($_SESSION[user_permission_reportview_accounts])){ ?>
+<?php if(isset($_SESSION['user_permission_reportview_accounts'])){ ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_content">
@@ -79,12 +79,10 @@ if(prevent_multi_submit()) {
                         <th>Report Group</th>
                         <th>Module</th>
                     </tr>
-
                     <?php $sql=mysqli_query($conn, "SELECT zm.optgroup_label_name,zs.report_name as subzonename,zs.report_id,
-       (select status from user_permissions_reportview where report_id=zs.report_id and user_id=".$_SESSION[user_permission_reportview_accounts].") as status
-       
+       (select status from user_permission_matrix_reportview where report_id=zs.report_id and user_id=".$_SESSION['user_permission_reportview_accounts'].") as status
        FROM module_reportview_optgroup_label AS zm
-RIGHT JOIN module_reportview_report AS zs ON zm.optgroup_label_id = zs.optgroup_label_id  WHERE zm.module_id=".$_SESSION[module_id]."
+RIGHT JOIN module_reportview_report AS zs ON zm.optgroup_label_id = zs.optgroup_label_id  WHERE zm.module_id=".$_SESSION['module_id']."
 ORDER BY zm.sl, zs.sl");
                     while($user=mysqli_fetch_array($sql)):
                         ?>

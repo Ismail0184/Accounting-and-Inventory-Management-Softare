@@ -3,24 +3,23 @@
 $title='Sub Ledger';
 $page="acc_sub_ledger.php";
 $now=time();
-$separator	= $_SESSION['separator'];
+$separator=@$_SESSION['separator'];
 $table="sub_ledger";
 $table_ledger="accounts_ledger";
 $unique="sub_ledger_id";
 $unique_ledger="ledger_id";
 $crud      =new crud($table);
-$$unique=$_GET[$unique];
-$$unique_ledger=$_GET[$unique];
+$unique_GET=@$_GET['sub_ledger_id'];
 
 if(isset($_REQUEST['name'])||isset($_REQUEST['id']))
 
 {   $id=$_REQUEST['id'];
-    $name		= mysqli_real_escape_string($conn, $_REQUEST['name']);
+    $name		= @mysqli_real_escape_string($conn, $_REQUEST['name']);
     $name		= str_replace("'","",$name);
     $name		= str_replace("&","",$name);
     $name		= str_replace('"','',$name);
-    $under		= mysqli_real_escape_string($conn, $_REQUEST['under']);
-    $balance	= mysqli_real_escape_string($conn, $_REQUEST['balance']);
+    $under		= @mysqli_real_escape_string($conn, $_REQUEST['under']);
+    $balance	= @mysqli_real_escape_string($conn, $_REQUEST['balance']);
     //end
 
     if(isset($_POST['record']))
@@ -66,16 +65,19 @@ if(isset($_POST['modify']))
     $_POST['edit_at']=time();
     $_POST['edit_by']=$_SESSION['userid'];
     $crud->update($unique);
-    mysqli_query($conn, "UPDATE ".$table_ledger." SET ledger_name='".$name."',status='".$_POST['status']."' where ledger_id=".$$unique);
+    mysqli_query($conn, "UPDATE ".$table_ledger." SET ledger_name='".$name."',status='".$_POST['status']."' where ledger_id=".$unique_GET);
     echo "<script>self.opener.location = '$page'; self.blur(); </script>";
     echo "<script>window.close(); </script>";
 }
 
 if(isset($_POST['cancel'])){echo "<script>window.close(); </script>";}
-if(isset($$unique))
-{   $condition=$unique."=".$$unique;
+if(isset($unique_GET))
+{   $condition=$unique."=".$unique_GET;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data)){ $$key=$value;}}
+$sub_ledger = @$sub_ledger;
+$ledger_id = @$ledger_id;
+$POST_under = @$_POST['under'];
 $res='select a.sub_ledger_id,a.sub_ledger_id,a.sub_ledger, (select ledger_name from accounts_ledger where ledger_id=a.ledger_id) as ledger_name, c.group_name,(select COUNT(ledger_id) from journal where ledger_id=a.sub_ledger_id) as has_transactions,
 IF(a.status=1, "Active",IF(a.status="SUSPENDED", "SUSPENDED","Inactive")) as status
 FROM sub_ledger a,accounts_ledger b,ledger_group c where
@@ -125,20 +127,20 @@ while($row=mysqli_fetch_object($query)){
         <div class="form-group" style="width: 100%">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Ledger:<span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                <input type="hidden" id="<?=$unique?>" name="<?=$unique?>" value="<?=$$unique?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
+                <input type="hidden" id="<?=$unique?>" name="<?=$unique?>" value="<?=$unique_GET?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
                 <input type="text" id="name"  required="required" name="name" value="<?=$sub_ledger?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
-            </div></div>
-
-
+            </div>
+        </div>
         <div class="form-group" style="width: 100%">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Under Ledger<span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <select class="select2_single form-control" required name="under" id="under" style="width: 100%; font-size: 12px">
                     <option value=""></option>
-                    <?=foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', ($_POST["under"]>0) ? $_POST["under"] : $ledger_id, '1','order by ledger_id,ledger_name'); ?>   </select></div></div>
-
-
-        <?php if($_GET[$unique]):  ?>
+                    <?=foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', ($POST_under>0) ? $POST_under : $ledger_id, '1','order by ledger_id,ledger_name'); ?>
+                </select>
+            </div>
+        </div>
+        <?php if($unique_GET):  ?>
             <div class="form-group" style="width: 100%">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -158,10 +160,9 @@ while($row=mysqli_fetch_object($query)){
         <?php else : ?>
             <div class="form-group" style="margin-left:40%">
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                    <button type="submit" name="record" id="record"  style="font-size:12px" class="btn btn-primary">Add New</button></div></div> <?php endif; ?></form></div></div></div><?php if(!isset($_GET[$unique])): ?></div><?php endif; ?>
-<?php if(!isset($_GET[$unique])):?>
-    <?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
+                    <button type="submit" name="record" id="record"  style="font-size:12px" class="btn btn-primary">Add New</button></div></div> <?php endif; ?></form></div></div></div><?php if(!isset($unique_GET)): ?></div><?php endif; ?>
+<?php if(!isset($unique_GET)):?>
+    <?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1,$page);?>
 <?php endif; ?>
 <?=$html->footer_content();mysqli_close($conn);?>
-<?php ob_end_flush();
-ob_flush(); ?>
+<?php ob_end_flush();?>

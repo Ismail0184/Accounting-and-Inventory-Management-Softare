@@ -8,47 +8,42 @@ $unique_field='warehouse_id';
 $table="warehouse_essential_data";
 $page="acc_ledger_config_for_warehouse.php";
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
+$unique_GET = @$_GET[$unique];
 
 
 if(prevent_multi_submit()){
 
-if(isset($_POST[add_cash_ledger])){
-  $_POST[entry_by] = $_SESSION['userid'];
-  $_POST[parameter_name] = 'cash_ledger';
+if(isset($_POST['add_cash_ledger'])){
+  $_POST['entry_by'] = $_SESSION['userid'];
+  $_POST['parameter_name'] = 'cash_ledger';
+  $_POST['status'] = '1';
+  $crud->insert();
+  unset($_POST);
+}
+
+if(isset($_POST['add_bank_ledger'])){
+  $_POST['entry_by'] = $_SESSION['userid'];
+  $_POST['parameter_name'] = 'bank_ledger';
+  $_POST['status'] = '1';
+  $crud->insert();
+  unset($_POST);
+}
+
+if(isset($_POST['add_expenses_ledger'])){
+  $_POST['entry_by'] = $_SESSION['userid'];
+  $_POST['parameter_name'] = 'expenses_ledger';
   $_POST[status] = '1';
   $crud->insert();
   unset($_POST);
 }
 
-if(isset($_POST[add_bank_ledger])){
-  $_POST[entry_by] = $_SESSION['userid'];
-  $_POST[parameter_name] = 'bank_ledger';
-  $_POST[status] = '1';
+if(isset($_POST['add_cost_center'])){
+  $_POST['entry_by'] = $_SESSION['userid'];
+  $_POST['parameter_name'] = 'cc_code';
+  $_POST['status'] = '1';
   $crud->insert();
   unset($_POST);
-}
-
-if(isset($_POST[add_expenses_ledger])){
-  $_POST[entry_by] = $_SESSION['userid'];
-  $_POST[parameter_name] = 'expenses_ledger';
-  $_POST[status] = '1';
-  $crud->insert();
-  unset($_POST);
-}
-
-if(isset($_POST[add_cost_center])){
-  $_POST[entry_by] = $_SESSION['userid'];
-  $_POST[parameter_name] = 'cc_code';
-  $_POST[status] = '1';
-  $crud->insert();
-  unset($_POST);
-}
-
-}
-
-
-	
+}}
 $res='select p.'.$unique.',p.'.$unique.' as Code,p.'.$unique_field.' as Employee_ID,p.PBI_NAME as Name, (select DESG_SHORT_NAME from designation where DESG_ID=p.PBI_DESIGNATION) as designation,
                                  (select DEPT_DESC from department where DEPT_ID=p.PBI_DEPARTMENT) as Department,DATE_FORMAT(p.PBI_DOJ, "%M %d, %Y") as DOJ,p.PBI_EMAIL,p.PBI_MOBILE as mobile,p.PBI_JOB_STATUS as status
                                  from '.$table.' p where p.PBI_JOB_STATUS in ("In Service","Not In Service") order by p.'.$unique;	
@@ -86,8 +81,6 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
-
- 
  <div class="" role="tabpanel" data-example-id="togglable-tabs">
                         <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
                           <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Cash Ledger</a></li>
@@ -100,13 +93,12 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
                         <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
                         <table style="width: 100%;">
                         <tr><td style="width:50%">
-                          
                             <div class="form-group" style="width: 100%;">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Warehouse<span class="required rcom">*</span></label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="select2_single form-control" style="width:100%" name="warehouse_id" id="warehouse_id">
                             <option></option>
-                            <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$warehouse_id);?>    
+                            <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$warehouse_id);?>
                             </select>                       
                             </div></div>
                             
@@ -125,10 +117,8 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
                             <button type="submit" name="add_cash_ledger" class="btn btn-primary" style="font-size: 11px">Add Cash Ledger</button>
                             </div></div>
                             </td>
-
-
                             <td style="vertical-align:top">
-                            <?=recentdataview_model($cash_ledger_view,'','','150px','Cash Ledger','acc_ledger_config_for_warehouse.php','90');?>
+                            <?=recentdataview_model($cash_ledger_view,'','','150px','Cash Ledger','acc_ledger_config_for_warehouse.php','90',$page);?>
                             </td></td> 
                             </tr>
                             </table> 
@@ -146,7 +136,7 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
                             <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="select2_single form-control" style="width:100%" name="warehouse_id" id="warehouse_id">
                             <option></option>
-                            <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$warehouse_id);?>    
+                            <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$warehouse_id);?>
                             </select>                       
                             </div></div>
                             
@@ -168,17 +158,13 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
 
 
                             <td style="vertical-align:top">
-                            <?=recentdataview_model($bank_ledger_view,'','','150px','Bank Ledger','acc_ledger_config_for_warehouse.php','90');?>
+                            <?=recentdataview_model($bank_ledger_view,'','','150px','Bank Ledger','acc_ledger_config_for_warehouse.php','90',$page);?>
                             </td></td> 
                             </tr>
                             </table>
 </form>
                           </div>
-                          
-                          
-                          
-                          
-                          
+
                           <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
                           <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
                           <table style="width: 100%;">
@@ -188,7 +174,7 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
                             <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="select2_single form-control" style="width:100%" name="warehouse_id" id="warehouse_id">
                             <option></option>
-                            <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$warehouse_id);?>    
+                            <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$warehouse_id);?>
                             </select>                       
                             </div></div>
                             
@@ -207,10 +193,8 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
                             <button type="submit" name="add_expenses_ledger" class="btn btn-primary" style="font-size: 11px">Add Expenses Ledger</button>
                             </div></div>
                             </td>
-
-
                             <td style="vertical-align:top">
-                            <?=recentdataview_model($expenses_ledger_view,'','','150px','Bank Ledger','acc_ledger_config_for_warehouse.php','90');?>
+                            <?=recentdataview_model($expenses_ledger_view,'','','150px','Bank Ledger','acc_ledger_config_for_warehouse.php','90',$page);?>
                             </td></td> 
                             </tr>
                             </table>
@@ -227,7 +211,7 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
                             <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="select2_single form-control" style="width:100%" name="warehouse_id" id="warehouse_id">
                             <option></option>
-                            <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$warehouse_id);?>    
+                            <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$warehouse_id);?>
                             </select>                       
                             </div></div>
                             
@@ -246,25 +230,13 @@ warehouse_essential_data wed, cost_center cc where wed.parameter_name='cc_code' 
                             <button type="submit" name="add_cost_center" class="btn btn-primary" style="font-size: 11px">Add Cost Center</button>
                             </div></div>
                             </td>
-
-
                             <td style="vertical-align:top">
-                            <?=recentdataview_model($cost_center_view,'','','150px','Bank Ledger','acc_ledger_config_for_warehouse.php','90');?>
+                            <?=recentdataview_model($cost_center_view,'','','150px','Bank Ledger','acc_ledger_config_for_warehouse.php','90',$page);?>
                             </td></td> 
                             </tr>
-                            </table>
-</form>
+                          </table>
+                          </form>
                           </div>
-
-                          
-
-                         
-                        
-        
-                          </div></div>
                         </div>
-                      </div>
-             </div>
-         </div>
-     </div>
+ </div></div></div>
 <?=$html->footer_content();?>

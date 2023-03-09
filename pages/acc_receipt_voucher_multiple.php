@@ -373,6 +373,6 @@ if(isset($_SESSION['initiate_credit_note']))
         <input name="count" id="count" type="hidden" value="" />
     </form>
 
-    <?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_credit_note'],$COUNT_details_data);?><br><br>
+    <?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_credit_note'],$COUNT_details_data,$page);?><br><br>
 <?php endif; mysqli_close($conn); ?>
 <?=$html->footer_content();?> 

@@ -68,7 +68,7 @@ where
 p.main_menu_id=dmm.main_menu_id and
 dmm.url like '".$page."' and
 dmm.main_menu_id='".$page_id_GET."' and
-p.user_id='".$_SESSION[userid]."'";
+p.user_id='".$_SESSION['userid']."'";
  $res=@mysqli_query($conn, $sql);
  $count=@mysqli_num_rows($res);
  if($count>0)
@@ -101,7 +101,7 @@ function check_permission($page){
 	p.sub_menu_id=z.sub_menu_id and
 	z.sub_url like '".$page."' and
 	z.sub_menu_id='".$page_id_GET."' and
-	p.user_id='".$_SESSION[userid]."'";
+	p.user_id='".$_SESSION['userid']."'";
 	 $res=@mysqli_query($conn, $sql);
 	 $count=@mysqli_num_rows($res);
 	 if($count>0)
@@ -1393,7 +1393,7 @@ function unauthorised_page_tried_to_view($page_id,$url)
         $day = date('l', strtotime($idatess));
         $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
         $timess = $dateTime->format("d-m-y  h:i A");
- $sql="INSERT INTO `unauthorised_page_tried_to_view` ( `page_id`, `url`, `user_id`, `date`, `time`, `ip`, `section_id`,`company_id`) VALUES ('$page_id', '$url', '$_SESSION[userid]', '$tdates','$timess','$ip','$_SESSION[sectionid]','$_SESSION[companyid]')";
+ $sql="INSERT INTO `unauthorised_page_tried_to_view` ( `page_id`, `url`, `user_id`, `date`, `time`, `ip`, `section_id`,`company_id`) VALUES ('$page_id', '$url', '".$_SESSION['userid']."', '$tdates','$timess','$ip','".$_SESSION['sectionid']."','".$_SESSION['companyid']."')";
  mysqli_query($conn, $sql);
  return 1;
 }

@@ -16,7 +16,7 @@ class crud{
 
     public function crud($table_name)
     {   global $conn;
-        $this->table_name = $table_name;
+        $this->table_name = @$table_name;
         $sql="SHOW COLUMNS FROM ".$this->table_name;
         $query=mysqli_query($conn, $sql);
         while($res=@mysqli_fetch_row($query))
@@ -27,7 +27,7 @@ class crud{
             $this->fields = array_merge($this->fields,array($name));
             $this->fields_type = array_merge($this->fields_type,array($name=>$type));
         }
-		$this->table_name = $table_name;
+		$this->table_name = @$table_name;
     }
 
     public function insert($tag='',$id='')
@@ -609,7 +609,7 @@ ORDER BY zm.sl, zs.sl");
 		mysqli_close($conn);
     }
 
-	public function report_templates_with_add_new($sql,$title,$c_class,$action,$create){
+	public function report_templates_with_add_new($sql,$title,$c_class,$action,$create,$page){
         global $conn;
         $str = '';
         if($sql==NULL) return NULL;
@@ -642,6 +642,7 @@ ORDER BY zm.sl, zs.sl");
 			$str .='</tr></thead><tbody>';
             $c=0;
             if (mysqli_num_rows($result)>0):
+                $sl = 0;
                 while($row = mysqli_fetch_array($result)):
                     $str .='<tr><td style="vertical-align:middle">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) :
@@ -931,6 +932,7 @@ ORDER BY zm.sl, zs.sl");
 
     public function get_submenu_under_mainmenu($sql,$url,$link){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
         if ($result = mysqli_query($conn , $sql)):
             $cols = mysqli_num_fields($result);
@@ -1493,7 +1495,7 @@ function recentdataview($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth){
 		mysqli_close($conn);
     }
 
-    function recentdataview_model($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth){
+    function recentdataview_model($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth,$page){
         global $conn;
         $str = '';
         if($sql==NULL) return NULL;
@@ -1504,6 +1506,7 @@ function recentdataview($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth){
         if ($result = mysqli_query($conn , $sql)) {
             $cols = mysqli_num_fields($result);
             $fieldinfo = mysqli_fetch_fields($result);
+            $ism = 0;
             foreach (array_slice($fieldinfo, 1) as $key=>$val) {
 				$ism=$ism+1;
                 $str .='<th>'.ucwords(str_replace('_', ' ',$val->name)).'</th>';
@@ -1512,6 +1515,7 @@ function recentdataview($sql,$link,$v_type,$css,$title,$viewmoreURL,$divwidth){
             $str .='</tr></thead><tbody>';
 
             $c=0;
+            $sl = 0;
             if (mysqli_num_rows($result)>0){
                 while($row = mysqli_fetch_array($result)) {
                     $onclick='';
@@ -1625,8 +1629,9 @@ function bl_pl_support_data_view($sql,$title,$width){
     }
 
 
-function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data){
+function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data,$page){
         global $conn;
+        $str = '';
         if($sql==NULL) return NULL;
 		$str.='
 		<form action=""  name="addem" id="addem" style="font-size: 11px" class="form-horizontal form-label-left" method="post">';
@@ -1648,7 +1653,6 @@ function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data){
                     $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++):
                         $b=$row[$i];
-
 						if(is_numeric($row[$i])):
                         $str .='<td style="vertical-align:middle; text-align:right">'.number_format($b,2)."</td>";
 						else :

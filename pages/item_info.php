@@ -6,11 +6,11 @@ $unique_field='item_name';
 $table='item_info';
 $page="item_info.php";
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
+$unique_GET = @$_GET[$unique];
 
 
 if(isset($_POST[$unique_field]))
-{ $$unique = $_POST[$unique];
+{ $unique_GET = @$_POST[$unique];
 //for Record..................................
     $_POST['item_name'] = str_replace('"',"``",$_POST['item_name']);
     $_POST['item_name'] = str_replace("'","`",$_POST['item_name']);
@@ -28,7 +28,7 @@ if(isset($_POST[$unique_field]))
         $type=1;
         $msg='New Entry Successfully Inserted.';
         unset($_POST);
-        unset($$unique);}
+        unset($unique_GET);}
 
 
 
@@ -50,45 +50,64 @@ if(isset($_POST[$unique_field]))
 
 //for Delete..................................
 if(isset($_POST['delete']))
-{   $condition=$unique."=".$$unique;
+{   $condition=$unique."=".$unique_GET;
     $crud->delete($condition);
-    unset($$unique);
+    unset($unique_GET);
     $type=1;
     $msg='Successfully Deleted.';
 }}
 
 
 
-if(isset($$unique))
-{   $condition=$unique."=".$$unique;
+if(isset($unique_GET))
+{   $condition=$unique."=".$unique_GET;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data)){ $$key=$value;}}
+$finish_goods_code = @$finish_goods_code;
+$item_name = @$item_name;
+$item_description = @$item_description;
+$sub_group_id = @$sub_group_id;
+$consumable_type = @$consumable_type;
+$product_nature = @$product_nature;
+$exim_status = @$exim_status;
+$brand_category = @$brand_category;
+$brand_id = @$brand_id;
+$unit_name = @$unit_name;
+$pack_unit = @$pack_unit;
+$pack_size = @$pack_size;
+$g_weight = @$g_weight;
+$shelf_life = @$shelf_life;
+$material_cost = @$material_cost;
+$conversion_cost = @$conversion_cost;
+$production_cost = @$production_cost;
+$m_price = @$m_price;
+$d_price = @$d_price;
+$t_price = @$t_price;
+$com_on_m_price = @$com_on_m_price;
+$com_on_d_price = @$com_on_d_price;
+$com_on_t_price = @$com_on_t_price;
+$SD_percentage = @$SD_percentage;
+$SD = @$SD;
+$VAT_percentage = @$VAT_percentage;
+$VAT = @$VAT;
+$quantity_type = @$quantity_type;
+$status = @$status;
+$commission_status = @$commission_status;
+$revenue_persentage = @$revenue_persentage;
+$VAT_item_group = @$VAT_item_group;
+$H_S_code = @$H_S_code;
+$serial = @$serial;
 
+$res='select i.'.$unique.',i.'.$unique.' as code,i.finish_goods_code as FG_Code,i.'.$unique_field.',sg.sub_group_name,g.group_name,i.unit_name,ib.brand_name,(select Count(item_id) from journal_item where item_id=i.item_id) as has_entry,i.status from '.$table.' i,
+item_sub_group sg,
+item_group g,
+item_brand ib
+WHERE
+i.sub_group_id=sg.sub_group_id and
+sg.group_id=g.group_id and
+ib.id=i.brand_id
+order by g.group_id,sg.sub_group_id,i.'.$unique;
 
-
-$res='select
-                                i.'.$unique.',
-                                i.'.$unique.' as code,
-                                i.finish_goods_code as FG_Code,
-                                i.'.$unique_field.',
-                                sg.sub_group_name,
-								g.group_name,
-                                i.unit_name,
-								ib.brand_name,
-								(select Count(item_id) from journal_item where item_id=i.item_id) as has_entry,
-								i.status
-                                from
-                                '.$table.' i,
-                                item_sub_group sg,
-								item_group g,
-								item_brand ib
-
-                                WHERE
-
-                                i.sub_group_id=sg.sub_group_id and
-								sg.group_id=g.group_id and
-                                ib.id=i.brand_id
-                                order by g.group_id,sg.sub_group_id,i.'.$unique;
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
     if(isset($_POST['deletedata'.$row->$unique]))
@@ -160,7 +179,7 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Item Description</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                            <textarea id="item_description" style="width:100%; height: 80px; font-size: 12px" name="item_description" value="<?=$item_name;?>" class="form-control col-md-7 col-xs-12" ></textarea>
+                                            <textarea id="item_description" style="width:100%; height: 80px; font-size: 12px" name="item_description" value="<?=$item_description;?>" class="form-control col-md-7 col-xs-12" ></textarea>
                                         </div>
                                     </div>
 
@@ -230,15 +249,6 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                         </div>
                                     </div>
 
-                                    <!--div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Product Type<span class="required text-danger">*</span></label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                            <select style="width: 100%" class="select2_single form-control" name="sales_item_type" id="sales_item_type"><option></option>
-                                            <?=advance_foreign_relation($sql_item_type,$sales_item_type);?>
-                                            </select>
-                                        </div>
-                                    </div-->
-
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Unit Name<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
@@ -287,7 +297,7 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Price:<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                            <input type="text" id="d_price" style="width:33%; font-size: 11px; left:left" name="d_price" value="<?=$d_price;?>" class="form-control col-md-7 col-xs-12" placeholder="DP" title="Dealer Price">
+                                            <input type="text" id="d_price" style="width:33%; font-size: 11px; text-align:left" name="d_price" value="<?=$d_price;?>" class="form-control col-md-7 col-xs-12" placeholder="DP" title="Dealer Price">
                                             <input type="text" id="t_price" style="width:33%; font-size: 11px; margin-left:1px" name="t_price" value="<?=$t_price;?>" class="form-control col-md-7 col-xs-12" placeholder="TP" title="Trade Price">                                             <input type="text" id="m_price" style="width:33%; font-size: 11px; float:right" name="m_price" value="<?=$m_price;?>" class="form-control col-md-7 col-xs-12" placeholder="MRP" title="Market Price">
                                         </div>
                                     </div>
@@ -383,7 +393,7 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                     </div-->
 
 <hr/>
-<?php if($_GET[$unique]):  ?>
+<?php if($unique_GET>0):  ?>
                                     <div class="form-group" style="margin-left:40%">
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <button type="submit" name="modify" id="modify" class="btn btn-primary">Modify Item</button>
@@ -398,12 +408,11 @@ $sql_brand_category="Select category_name,category_name from brand_category";
         </div>
       </div>
     </div>
-    <?php if(!isset($_GET[$unique])): ?>
+    <?php if(!isset($unique_GET)): ?>
 </div>
                             <?php endif; ?>
 <?php if(!isset($_GET[$unique])):?>
-<?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
+<?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1,$page);?>
 <?php endif; ?>
 <?=$html->footer_content();mysqli_close($conn);?>
-<?php ob_end_flush();
-ob_flush(); ?>
+<?php ob_end_flush();?>

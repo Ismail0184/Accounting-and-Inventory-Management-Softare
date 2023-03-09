@@ -1,4 +1,4 @@
-<input name="<?=$unique?>" type="hidden" id="<?=$unique?>" value="<?=$$unique?>"  />
+<input name="<?=$unique?>" type="hidden" id="<?=$unique?>" value="<?=$unique_GET?>"  />
 <input type="hidden" id="create_date" style="width:400px"    name="create_date" value="<?=$_SESSION['create_date'];?>" class="form-control col-md-7 col-xs-12" >
 <input type="hidden" id="entry_status" style="width:400px"    name="entry_status" value="MANUAL" class="form-control col-md-7 col-xs-12" >
 <input type="hidden" id="ip" style="width:400px"    name="ip" value="<?=$ip?>" class="form-control col-md-7 col-xs-12">

@@ -83,7 +83,6 @@ if(prevent_multi_submit()) {
             $date=date('Y-m-d');
             if (($_POST['dr_amt'] && $_POST['cr_amt']) > 0) {
                 echo "<script>alert('Yor are trying to input an invalid transaction!!')</script>";
-                echo $targeturl;
             } else {
 
                 if ((($_POST['dr_amt'] || $_POST['cr_amt']) > 0) && ($_SESSION['initiate_credit_note']>0)) {
@@ -373,6 +372,6 @@ cost_center c
                 form.dr_amt.focus();
             }</script>
     </form>
-    <?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_credit_note'],$COUNT_details_data);?><br><br>
+    <?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_credit_note'],$COUNT_details_data,$page);?><br><br>
 <?php endif; mysqli_close($conn); ?>
 <?=$html->footer_content();?> 

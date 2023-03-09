@@ -1,30 +1,26 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title="Users";
-
 $now=time();
 $unique='user_id';
 $unique_field='fname';
 $table="users";
 $page="acc_admin_users.php";
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
-
-
-
+$unique_GET = @$_GET[$unique];
 if(prevent_multi_submit()){
     if(isset($_POST[$unique_field]))
 
 //for insert..................................
-    {    $$unique = $_POST[$unique];
+    {    $unique_GET = $_POST[$unique];
         if(isset($_POST['record']))
         {
-            $_POST[picture_url]=$link.$_POST[PBI_ID].'.jpeg';
-            $_POST[group_for]=$_SESSION[usergroup];
-            if($_POST[gander]=='Female') {
-                $_POST[gander] = '0';
+            $_POST['picture_url']=$link.$_POST[PBI_ID].'.jpeg';
+            $_POST['group_for']=$_SESSION['usergroup'];
+            if($_POST['gander']=='Female') {
+                $_POST['gander'] = '0';
             } else {
-                $_POST[gander]='1';
+                $_POST['gander']='1';
             }
             $_POST['status'] = 1;
             $_POST['section_id'] = $_SESSION['sectionid'];
@@ -34,7 +30,7 @@ if(prevent_multi_submit()){
             $type=1;
             $msg='New Entry Successfully Inserted.';
             unset($_POST);
-            unset($$unique);
+            unset($unique_GET);
         }
 
         //for modify..................................
@@ -62,9 +58,9 @@ if(prevent_multi_submit()){
 
 //for Delete..................................
         if(isset($_POST['delete']))
-        {   $condition=$unique."=".$$unique;
+        {   $condition=$unique."=".$unique_GET;
             $crud->delete($condition);
-            unset($$unique);
+            unset($unique_GET);
             $type=1;
             $msg='Successfully Deleted.';
             echo "<script>self.opener.location = '$page'; self.blur(); </script>";
@@ -72,16 +68,23 @@ if(prevent_multi_submit()){
         }}}
 
 // data query..................................
-if(isset($$unique))
-{   $condition=$unique."=".$$unique;
+if(isset($unique_GET))
+{   $condition=$unique."=".$unique_GET;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
+
+$user_id = @$user_id;
+$username = @$username;
+$password = @$password;
+$fname = @$fname;
+$email = @$email;
+$mobile = @$mobile;
+$account_status = @$account_status;
+$level = @$level;
+$department = @$department;
 $res='select '.$unique.','.$unique.' as User_id,username as user_name,'.$unique_field.' as display_name,email,level,entry_date,expire_date,account_status as status from '.$table.' where department in ("Accounts") order by '.$unique.' desc';
 ?>
-
-
-
 <?php require_once 'header_content.php'; ?>
     <style>
         input[type=text]{
@@ -133,19 +136,19 @@ $res='select '.$unique.','.$unique.' as User_id,username as user_name,'.$unique_
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">User ID <span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" class="form-control" value="<?=$user_id?>" <?=($_GET['user_id']>0)? 'readonly' : '';?> required name="user_id" style="font-size: 11px">
+                                            <input type="text" class="form-control" value="<?=$user_id?>" <?=($unique_GET>0)? 'readonly' : '';?> required name="user_id" style="font-size: 11px">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">Username <span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" class="form-control" value="<?=$username?>" <?=($_GET['user_id']>0)? 'readonly' : '';?> required name="username" style="font-size: 11px">
+                                            <input type="text" class="form-control" value="<?=$username?>" <?=($unique_GET>0)? 'readonly' : '';?> required name="username" style="font-size: 11px">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width:30%">Password <span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="password" value="<?=$password?>" <?=($_GET['user_id']>0)? 'readonly' : '';?> class="form-control" name="password" style="font-size: 11px">
+                                            <input type="password" value="<?=$password?>" <?=($unique_GET>0)? 'readonly' : '';?> class="form-control" name="password" style="font-size: 11px">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -166,7 +169,7 @@ $res='select '.$unique.','.$unique.' as User_id,username as user_name,'.$unique_
                                             <input type="text" class="form-control" value="<?=$mobile?>" name="mobile" style="font-size: 11px">
                                         </div>
                                     </div>
-                                    <?php if(isset($_GET[$unique])): ?>
+                                    <?php if(isset($unique_GET)): ?>
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Status<span class="required">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -191,7 +194,7 @@ $res='select '.$unique.','.$unique.' as User_id,username as user_name,'.$unique_
                                         </div>
                                     </div>
                                     <hr>
-                                    <?php if($_GET[$unique]): if($department!=='Accounts'): echo "<h6 style='color: red; text-align: center'>Access Denied!! You don't have permission to edit the user. <br>A notification has been sent to the administrator that you attempted to view an unauthorized page.<br>If you try to view 2 more times your account will be banned. </h6>"; else: ?>
+                                    <?php if($unique_GET): if($department!=='Accounts'): echo "<h6 style='color: red; text-align: center'>Access Denied!! You don't have permission to edit the user. <br>A notification has been sent to the administrator that you attempted to view an unauthorized page.<br>If you try to view 2 more times your account will be banned. </h6>"; else: ?>
                                         <div class="form-group" style="margin-left:30%">
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <button type="submit" name="cancel" id="cancel" style="font-size:12px"  class="btn btn-danger">Cancel</button>
@@ -211,14 +214,7 @@ $res='select '.$unique.','.$unique.' as User_id,username as user_name,'.$unique_
                         </div>
                     </div>
                     <?php if(!isset($_GET[$unique])): ?></div><?php endif;?>
-
-
-
-
-
-
-
 <?php if(!isset($_GET[$unique])){ ?>
-    <?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1);?>
+    <?=$crud->report_templates_with_add_new($res,$title,12,$action=$_SESSION["userlevel"],$create=1,$page);?>
 <?php } ?>
 <?=$html->footer_content();?>

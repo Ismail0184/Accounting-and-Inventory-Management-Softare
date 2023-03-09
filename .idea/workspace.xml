@@ -3,7 +3,28 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/classes/function_mod.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/function_mod.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_admin_backdate_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_admin_backdate_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_admin_users.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_admin_users.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_contra_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_contra_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_journal_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_ledger_config_for_warehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger_config_for_warehouse.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_ledger_group.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger_group.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher_single.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher_single.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_ledger.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_sub_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_sub_ledger.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_user_permission_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_user_permission_reportview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/body_content_nva_sm_with_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/body_content_nva_sm_with_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/header_content.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/header_content.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/item_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/item_info.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/support_file.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/support_file.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/support_html.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/support_html.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +103,7 @@
       <workItem from="1678077372451" duration="25221000" />
       <workItem from="1678172248620" duration="12523000" />
       <workItem from="1678280254943" duration="9763000" />
-      <workItem from="1678335893835" duration="1791000" />
+      <workItem from="1678335893835" duration="14133000" />
     </task>
     <servers />
   </component>

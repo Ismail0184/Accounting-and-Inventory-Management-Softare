@@ -344,6 +344,6 @@ journal_info j,
 
     <!-----------------------Data Save Confirm ------------------------------------------------------------------------->
 
-    <?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_journal_note'],$COUNT_details_data);?><br><br>
+    <?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_journal_note'],$COUNT_details_data,$page);?><br><br>
 <?php endif;?>
 <?=$html->footer_content();mysqli_close($conn);?>
