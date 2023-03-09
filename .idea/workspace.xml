@@ -3,20 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/body_content.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/body_content.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/create_id.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/create_id.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/dashboard.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/date.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/date.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/function_mod.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/function_mod.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Accounts.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Accounts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Warehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Warehouse.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/support_file.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/support_file.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/support_html.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/support_html.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/toptitle_HRM.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/toptitle_HRM.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +81,8 @@
       <workItem from="1677990626200" duration="8634000" />
       <workItem from="1678077372451" duration="25221000" />
       <workItem from="1678172248620" duration="12523000" />
-      <workItem from="1678280254943" duration="9343000" />
+      <workItem from="1678280254943" duration="9763000" />
+      <workItem from="1678335893835" duration="1791000" />
     </task>
     <servers />
   </component>

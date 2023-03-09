@@ -30,7 +30,6 @@ $table_receipt="receipt";
 $recpt_unique='receipt_no';
 $page="acc_receipt_voucher.php";
 $crud      =new crud($table_journal_master);
-$$unique = $_POST['voucherno'];
 $create_date=date('Y-m-d');
 $jv=next_journal_voucher_id();
 if(prevent_multi_submit()) {
@@ -178,16 +177,24 @@ if (isset($_POST['cancel'])) {
     unset($$unique);
 }
 
-$COUNT_details_data=find_a_field(''.$table_receipt.'','Count(id)',''.$recpt_unique.'='.$_SESSION['initiate_credit_note'].'');
+$COUNT_details_data=find_a_field(''.$table_receipt.'','Count(id)',''.$recpt_unique.'='.$initiate_credit_note.'');
 
 // data query..................................
-$condition=$unique."=".$_SESSION['initiate_credit_note'];
+$condition=$unique."=".$initiate_credit_note;
     $data=db_fetch_object($table_journal_master,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}
-	$inputted_amount=find_a_field('receipt','SUM(dr_amt)','receipt_no="'.$_SESSION['initiate_credit_note'].'"');
+	$inputted_amount=find_a_field('receipt','SUM(dr_amt)','receipt_no="'.$initiate_credit_note.'"');
 	}
-
+$voucher_date = @$voucher_date;
+$date = date('Y-m-d');
+$paid_to = @$paid_to;
+$Cheque_of_bank = @$Cheque_of_bank;
+$Cheque_No = @$Cheque_No;
+$Cheque_Date = @$Cheque_Date;
+$amount = @$amount;
+$party_ledger = @$party_ledger;
+$credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
 
 $sql2="select a.tr_no, a.jvdate as Date,a.jv_no as Voucher_No,SUM(a.dr_amt) as amount
 from  journal a where a.tr_from='Receipt' and a.user_id='".$_SESSION['userid']."' and a.section_id='".$_SESSION['sectionid']."' and a.company_id='".$_SESSION['companyid']."'  group by a.tr_no  order by a.id desc limit 10";
@@ -268,7 +275,7 @@ cost_center c
                         </tr>
                     </table>
 
-                    <?php if($_SESSION['initiate_credit_note']){
+                    <?php if($initiate_credit_note){
                         if($COUNT_details_data>0) {
                             $ml='40';
                             $display='style="margin-left:40%; margin-top: 22px;"';
@@ -285,7 +292,7 @@ cost_center c
 
                         <div class="form-group" <?=$display;?>>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <a  href="voucher_print_preview.php?v_type=Receipt&vo_no=<?=$_SESSION['initiate_credit_note'];?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Receipt Voucher</a>
+                                <a  href="voucher_print_preview.php?v_type=Receipt&vo_no=<?=$initiate_credit_note;?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Receipt Voucher</a>
                             </div></div>
                     <?php   } else {?>
                         <div class="form-group" style="margin-left:40%; margin-top: 15px">
@@ -298,10 +305,10 @@ cost_center c
         </div>
     </div>
 <?=recentvoucherview($sql2,'voucher_view_popup_ismail.php','receipt','213px');?>
-<?php if($_SESSION['initiate_credit_note']):  ?>
+<?php if($initiate_credit_note):  ?>
     <form action="<?=$page;?>" enctype="multipart/form-data" name="addem" id="addem" style="font-size: 11px" class="form-horizontal form-label-left" method="post">
-        <input type="hidden" name="receipt_no" id="receipt_no" value="<?=$_SESSION['initiate_credit_note'];?>">
-        <input type="hidden" name="<?=$unique?>" id="<?=$unique?>"  value="<?=$_SESSION['initiate_credit_note'];?>">
+        <input type="hidden" name="receipt_no" id="receipt_no" value="<?=$initiate_credit_note;?>">
+        <input type="hidden" name="<?=$unique?>" id="<?=$unique?>"  value="<?=$initiate_credit_note;?>">
         <input type="hidden" name="receipt_date" id="receipt_date" value="<?=$voucher_date;?>">
         <input type="hidden" name="amount" id="amount" value="<?=$amount;?>">
         <input type="hidden" name="Cheque_No" id="Cheque_No" value="<?=$Cheque_No;?>">
@@ -337,7 +344,7 @@ cost_center c
                     </select>
                 </td>
                 <td style="width:15%;vertical-align: middle" align="center">
-                    <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['credit_note_last_narration'];?></textarea></td>
+                    <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $credit_note_last_narration;?></textarea></td>
                 <td style="width:10%;vertical-align: middle" align="center">
                     <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
                 <td align="center" style="width:10%; vertical-align: middle">
