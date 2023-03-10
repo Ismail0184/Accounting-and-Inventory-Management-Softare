@@ -279,7 +279,7 @@ function foreign_relation($table,$id,$show,$value,$condition=''){
  else
   $sql="select $id,$show from $table where $condition";
  $res=mysqli_query($conn, $sql);
- while($data=mysqli_fetch_row($res))
+ while($data=@mysqli_fetch_array($res))
  {
   if($value==$data[0])
    echo '<option value="'.$data[0].'" selected>'.$data[1].'</option>';
@@ -883,7 +883,7 @@ function add_to_journal_new($jvdate,$proj_id, $jv, $date, $ledger_id, $narration
 	`year`,
 	`cheq_date`,`cheq_no`,`pc_code`,`do_no`,`po_no`
 	)VALUES ('$jvdate','$proj_id', '$jv', '$date', '$ledger_id', '$narration', '$dr_amt', '$cr_amt', '$tr_from', '$tr_no', '$tr_id','$cc_code','$sub_ledger_id','$relavent_cash_head','".$_SESSION['userid']."','".date('Y-m-d H:s:i')."','".$_SESSION['usergroup']."'
-	,'$ip','$_SESSION[sectionid]','$_SESSION[companyid]','$create_date','$now','$day','$thisday','$thismonth','$thisyear','$c_date','$c_no','$pc_code','$do_no','$po_no')";
+	,'$ip','".$_SESSION['sectionid']."','".$_SESSION['companyid']."','$create_date','$now','$day','$thisday','$thismonth','$thisyear','$c_date','$c_no','$pc_code','$do_no','$po_no')";
  $query_journal=mysqli_query($conn, $journal);
 }
 

@@ -1,9 +1,7 @@
 <?php
 require_once ('support_file.php');
-
-$mushak_challan= find_a_field('sale_do_master','count(do_no)','mushak_challan_status="UNRECORDED" and depot_id='.$_SESSION[warehouse].' and status="COMPLETED"');
-$mushak_challan_IR= find_a_field('purchase_return_master','count(id)','mushak_challan_status="UNRECORDED" and warehouse_id='.$_SESSION[warehouse].' and status="PROCESSING"');
-
+$mushak_challan= find_a_field('sale_do_master','count(do_no)','mushak_challan_status="UNRECORDED" and depot_id='.$_SESSION['warehouse'].' and status="COMPLETED"');
+$mushak_challan_IR= find_a_field('purchase_return_master','count(id)','mushak_challan_status="UNRECORDED" and warehouse_id='.$_SESSION['warehouse'].' and status="PROCESSING"');
 $SD_VAT_TAX=$mushak_challan+$mushak_challan_IR;
 ?>
 

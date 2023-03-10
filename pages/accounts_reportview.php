@@ -4,7 +4,7 @@ require_once 'support_file.php';
 $title='Report';
 $from_date=date('Y-m-d' , strtotime($_POST['f_date']));
 $to_date=date('Y-m-d' , strtotime($_POST['t_date']));
-
+$date = date('Y-m-d');
 $pfrom_date=date('Y-m-d' , strtotime($_POST['pf_date']));
 $pto_date=date('Y-m-d' , strtotime($_POST['pt_date']));
 list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $date);
@@ -15,7 +15,7 @@ $dofdate= '20'.$year1.'-'.$month.'-'.$day;
 
 list($dayt,$montht,$yeart) = preg_split("/[\/\.\-]+/", $_REQUEST['dateto']);
 $dotdate= '20'.$yeart.'-'.$montht.'-'.$dayt;
-$warehouseid=$_POST['warehouse_id'];
+$warehouseid=@$_POST['warehouse_id'];
 $_SESSION['company_name']=getSVALUE('company','company_name','where company_id="'.$_SESSION['companyid'].'"');
 $sectionid=$_SESSION['sectionid'];
 $companyid=$_SESSION['companyid'];
@@ -219,10 +219,6 @@ order by a.jvdate,a.id";
         $pl = mysqli_fetch_row($psql);
         $blance=$pl[0];
         ?>
-
-
-
-
         <tr style="border: solid 1px #999;font-weight:bold; font-size:11px">
             <td align="center" bgcolor="#FFCCFF">#</td>
             <td colspan="2" align="center" bgcolor="#FFCCFF"><?=$from_date;?></td>
@@ -237,14 +233,14 @@ order by a.jvdate,a.id";
         </tr>
         <?php
         $sql=mysqli_query($conn, $p);
+        $pi = 0;
         while($data=mysqli_fetch_row($sql))
         { $pi++; ?>
             <tr style="border: solid 1px #999; font-size:10px; font-weight:normal">
-            <td align="center" style="border: solid 1px #999; padding:2px"><?php echo $pi;?></td>
+            <td align="center" style="border: solid 1px #999; padding:2px"><?=$pi;?></td>
                 <td align="center" style="border: solid 1px #999; padding:2px"><?=$data[0];?></td>
             <td align="center" style="border: solid 1px #999; padding:2px">
                 <?php
-
                 if($data[4]=='Receipt'||$data[4]=='Payment'||$data[4]=='Journal_info'||$data[4]=='Contra')
                 {
                     $link="voucher_print1.php?v_type=".$data[4]."&v_date=".$data[0]."&view=1&vo_no=".$data[8];

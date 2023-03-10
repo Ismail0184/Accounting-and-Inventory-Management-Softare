@@ -417,6 +417,7 @@ ORDER BY zm.sl, zs.sl");
             $str .='</tr></tfoot-->';
             $c=0;
             if (mysqli_num_rows($result)>0){
+                $sl = 0;
                 while($row = mysqli_fetch_array($result)) {
                     $str .='<tr style="cursor:pointer"  onclick="DoNavPOPUP('.$row[0].')"><td style="vertical-align:middle">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++) {
@@ -1649,6 +1650,9 @@ function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data,$page)
             $str .='<th style="width:5%; text-align:center; vertical-align:middle">Action</th></tr></thead><tbody>';
             $c=0;
             if (mysqli_num_rows($result)>0):
+                $sl = 0;
+                $tdramt = 0;
+                $tcramt = 0;
                 while($row = mysqli_fetch_array($result)):
                     $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($sl=$sl+1).'</td>';
                     for($i=1;$i<$cols;$i++):
