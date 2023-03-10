@@ -1398,9 +1398,9 @@ public function MIS_add_new_plant_cmu_warehouse($active,$res,$title,$unique,$c_c
                 $str .='<th>'.ucwords(str_replace('_', ' ',$val->name)).'</th>';
             }
             $str .='</tr></thead><tbody>';
-
             $c=0;
             if (mysqli_num_rows($result)>0){
+                $sl = 0;
                 while($row = mysqli_fetch_array($result)) {
                     $onclick='OpenPopupCenter("'.$link.'?v_type='.$v_type.'&vdate='.$row[1].'&v_no='.$row[2].'&view=Show&in='.$v_type.'", "TEST!?", 1000, 600)';
                     $str .="<tr><td style='text-align: left; cursor: pointer' onclick='".$onclick."'>".($sl=$sl+1)."</td>";

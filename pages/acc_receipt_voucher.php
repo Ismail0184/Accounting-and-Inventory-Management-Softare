@@ -185,10 +185,11 @@ if (isset($_POST['cancel'])) {
     $crud->delete($condition);
     unset($_SESSION['initiate_credit_note']);
     unset($_SESSION['credit_note_last_narration']);
+    unset($initiate_credit_note);
     unset($_POST);
     unset($$unique);
 }
-
+    $initiate_credit_note = @$_SESSION['initiate_credit_note'];
 $COUNT_details_data=find_a_field(''.$table_receipt.'','Count(id)',''.$recpt_unique.'='.$initiate_credit_note.'');
 
 // data query..................................

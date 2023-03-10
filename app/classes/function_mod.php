@@ -852,7 +852,7 @@ function add_to_journal($jvdate,$proj_id, $jv_no, $jv_date, $ledger_id, $narrati
 }
 
 
-function add_to_journal_new($jvdate,$proj_id, $jv, $date, $ledger_id, $narration, $dr_amt, $cr_amt, $tr_from, $tr_no,$tr_id,$cc_code,$sub_ledger_id,$usergroup,$c_no,$c_date,$create_date,$ip,$now,$day,$thisday,$thismonth,$thisyear,$pc_code,$do_no,$po_no)
+function add_to_journal_new($jvdate,$proj_id, $jv, $date, $ledger_id, $narration, $dr_amt, $cr_amt, $tr_from, $tr_no,$tr_id,$cc_code,$sub_ledger_id,$relavent_cash_head,$c_no,$c_date,$create_date,$ip,$now,$day,$thisday,$thismonth,$thisyear,$pc_code,$do_no,$po_no)
 {global $conn;
  $journal="INSERT INTO `journal` (
     `jvdate`,

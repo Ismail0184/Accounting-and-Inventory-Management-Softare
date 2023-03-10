@@ -6,11 +6,7 @@
       <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/classes/function_mod.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/function_mod.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/accounts_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_reportview.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/date.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/date.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/function_mod.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/function_mod.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_VMS.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_VMS.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/voucher_view_popup_ismail.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/voucher_view_popup_ismail.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +86,7 @@
       <workItem from="1678172248620" duration="12523000" />
       <workItem from="1678280254943" duration="9763000" />
       <workItem from="1678335893835" duration="19493000" />
-      <workItem from="1678449934461" duration="5038000" />
+      <workItem from="1678449934461" duration="7068000" />
     </task>
     <servers />
   </component>
