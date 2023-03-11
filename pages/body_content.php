@@ -40,7 +40,7 @@ endif;
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0; <?php  if($module_id==11): ?>text-align: center <?php else: echo 'text-align: center'; endif; ?>">
                     <?php  if($module_id==11)  : ?>
-                        <a href="dashboard.php"><img src="<?=@$_SESSION['userpic'];?>" width="60" height="60" style=" margin-top: 10px;border: 1px solid <?=$_SESSION[logo_color]?>;
+                        <a href="dashboard.php"><img src="<?=@$_SESSION['userpic'];?>" width="60" height="60" style=" margin-top: 10px;border: 1px solid <?=$_SESSION['logo_color']?>;
     border-radius: 25px; background-color:#069" title="Company Logo"></a>
                     <?php else: ?>
                         <a href="dashboard.php"><img src="../assets/images/icon/title.png" width="50" height="50" style=" margin-top: 10px;" title="Company Logo"></a><?php endif; ?>

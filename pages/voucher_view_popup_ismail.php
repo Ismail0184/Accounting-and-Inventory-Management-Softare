@@ -174,416 +174,179 @@ VALUES
 
 )";
 
-        if(mysql_query($sql)){
-
-            $tr_id = mysql_insert_id();
-
+        if(mysqli_query($conn, $sql)){
+            $tr_id = mysqli_insert_id();
             add_to_journal($jvdate,$proj_id, $jv_no, $jv_date, $ledger, $_POST['narration_new2'], $_POST['dr_amt_new2'], $_POST['cr_amt_new2'],$tr_from, $tr_no, '', $tr_id, '',$_POST['cc_new2'],$create_date,$ip,$now,$day,$thisday,$thismonth,$thisyear);}
-
     }
-
 }
-
 if(isset($_REQUEST['v_no']))
-
 {
-
-
-
-
-
 $sql1="select narration,cheq_no,cheq_date,' ',jv_date,cc_code,sub_ledger_id,jvdate from journal where jv_no='$jv_no' and tr_from ='$tr_from' limit 1";
-
-$data1=mysql_fetch_row(mysql_query($sql1));
-
+$data1=mysqli_fetch_row(mysqli_query($conn, $sql1));
 $sql1."<br>";
-
 ?>
-
 <link href="../css/style.css" type="text/css" rel="stylesheet"/>
-
 <link href="../css/menu.css" type="text/css" rel="stylesheet"/>
-
 <link href="../css/table.css" type="text/css" rel="stylesheet"/>
-
 <link href="../css/pagination.css" rel="stylesheet" type="text/css" />
-
 <link href="../css/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css" />
-
 <link href="../css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
-
 <meta name="Developer" content="Md. Mhafuzur Rahman Cell:01815-224424 email:mhafuz@yahoo.com" />
-
 <script type="text/javascript" src="../js/jquery-1.4.2.min.js"></script>
-
 <script type="text/javascript" src="../js/jquery-ui-1.8.2.custom.min.js"></script>
-
 <script type="text/javascript" src="../js/jquery.ui.datepicker.js"></script>
-
 <script type="text/javascript" src="../js/jquery.autocomplete.js"></script>
-
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
-
 <script type="text/javascript" src="../js/paging.js"></script>
-
 <script type="text/javascript" src="../js/ddaccordion.js"></script>
-
 <script type="text/javascript" src="../js/js.js"></script>
-
 <script type="text/javascript">
-
     $(document).ready(function(){
-
-
-
         $(function() {
-
             $("#vdate").datepicker({
-
                 changeMonth: true,
-
                 changeYear: true,
-
                 dateFormat: 'dd-mm-yy'
-
             });
-
         });
-
         $(function() {
-
             $("#cheq_date").datepicker({
-
                 changeMonth: true,
-
                 changeYear: true,
-
                 dateFormat: 'dd-mm-yy'
-
             });
-
         });
-
     });
-
 </script>
-
-
-
 <SCRIPT LANGUAGE="JavaScript">
-
     <!--// Hide script from non-javascript browsers.
-
     // Load Page Into Parent Window
-
     // Version 1.0
-
     // Last Updated: May 18, 2000
-
     // Code maintained at: http://www.moock.org/webdesign/javascript/
-
     // Copy permission granted any use provided this notice is unaltered.
-
     // Written by Colin Moock.
-
-
-
-
-
     function loadinparent(url, closeSelf){
-
         self.opener.location = url;
-
         if(closeSelf) self.close();
-
     }
-
-
-
     //-->
-
 </SCRIPT>
-
-<?
-
-//auto_complete_from_db('accounts_ledger','concat(ledger_name,"#>",ledger_id)','concat(ledger_name,"#>",ledger_id)','1 and  group_for = "'.$_SESSION['user']['group'].'" order by ledger_name','ledger_new1');
-
-//auto_complete_from_db('accounts_ledger','concat(ledger_name,"#>",ledger_id)','concat(ledger_name,"#>",ledger_id)','1 and  group_for = "'.$_SESSION['user']['group'].'" order by ledger_name','ledger_new2');
-
-?>
-
 <style>
-
     body{
-
         font-family:Verdana, Arial, Helvetica, sans-serif;
-
         font-size:12px;}
-
-
-
     .btn_p{
-
         font-family:Verdana, Arial, Helvetica, sans-serif;
-
         font-size:12px;
-
         width:130px;
-
         background-color:0baabf;
-
         border:2px solid #9cd7df;
-
         border-collapse:collapse;
-
         text-align:center;
-
         color:#FFFFFF;
-
         padding:3px;
-
         text-decoration:none;
-
     }
-
     .btn_p a{
-
         background-color:0baabf;
-
         color:#FFFFFF;
-
         text-decoration:none;
-
         padding:3px;
-
     }
-
     .btn_p a:hover{
-
         background-color:0baabf;
-
         color:#000000;
-
         text-decoration:none;
-
         padding:3px;
-
     }
-
     .btn_p1{
-
         font-family:Verdana, Arial, Helvetica, sans-serif;
-
         font-size:12px;
-
         width:160px;
-
         background-color:0baabf;
-
         border:2px solid #9cd7df;
-
         border-collapse:collapse;
-
         text-align:center;
-
         color:#FFFFFF;
-
         padding:2px;
-
         text-decoration:none;
-
     }
-
     .btn_p1 a{
-
         background-color:0baabf;
-
         color:#FFFFFF;
-
         text-decoration:none;
-
         padding:3px;
-
     }
-
     .btn_p1 a:hover{
-
         background-color:0baabf;
-
         color:#000000;
-
         text-decoration:none;
-
         padding:3px;
-
     }
-
-
-
     .report_font{
-
         font-family:Verdana, Arial, Helvetica, sans-serif;
-
         font-size:12px;
-
         background-color:#fefee6;
-
     }
-
     tr {
-
         font-family:Verdana, Arial, Helvetica, sans-serif;
-
         font-size:12px;
-
         color: #4f6b72;
-
         padding:3px;
-
     }
-
     td{
-
         padding:3px;}
-
-
-
     tr.spec {
-
         font-family:Verdana, Arial, Helvetica, sans-serif;
-
         font-size:12px;
-
         background: #e9f4f8;
-
         color: #4f6b72;
-
     }
-
-
-
     tr.spec:hover{
-
         font-family:Verdana, Arial, Helvetica, sans-serif;
-
         font-size:12px;
-
         background: #F4F5F6;
-
         color: #4f6b72;
-
     }
-
 </style>
-
 <form action="" method="post" name="form2" onsubmit="return validate_total()">
-
     <table width="99%" border="1" align="center" style="border-collapse:collapse;" bordercolor="#c1dad7" id="vbig">
-
         <tr>
-
             <td>
-
                 <table width="100%" border="0" align="center" bordercolor="#0099FF" bgcolor="#D9EFFF" cellspacing="0">
-
                     <tr>
-
-
-
                         <td width="15%" align="right"><strong>Voucher  No:</strong></td>
-
                         <td width=20%" align="left"><?php echo $v_no;?>&nbsp;</td>
-
-
-
                         <td height="20" align="right"><strong>Cq No:</strong> </td>
-
                         <td height="20" align="left"><input name="cheq_no" id="cheq_no" type="text" value="<?php echo $data1[1];?>" style="width:100px" /></td>
-
-
-
                         <td width="25%" align="right" valign="top"><strong>Purpose</strong>:</td>
-
                         <td width="20%" align="left" valign="top" colspan="2"><?php echo $data1[0];?>&nbsp;</td>
-
-
-
                     </tr>
-
-
-
-
-
-
-
                     <tr style="height:30px">
-
                         <td align="right"><strong>Voucher Date:</strong></td>
-
                         <td align="left"><input style="width: 150px" name="vdate" id="vdate" type="text" value="<?php echo date('m/d/y' , strtotime($data1[7]));?>" /></td>
-
-
-
                         <td width="20%" align="right" valign="middle"><strong>Cq Date: </strong></td>
-
                         <td width="" align="left" valign="middle" width="15%"><input name="cheq_date" id="cheq_date" type="text" value="<?=($data1[2]>943898400)?(date("d-m-Y",$data1[2])):'';?>" style="width:100px" /></td>
-
-                        <!---td height="" align="right">Cost Center: </td>
-
-                <?php //auto_complete_from_db('cost_center','concat(center_name)','id','1','cost_center');?>
-
-                <td height="" align="left"><input name="cost_center" id="cost_center" type="text" value="<?php echo $data1[5];?>" style="width:80px" /></td--->
-
-
-
                         <td width="25%" height="20" align="right"><strong>From / To:</strong></td>
-
                         <td width="15%" align="left"><input name="PorR" id="PorR" type="text" value="<?php echo $data1[1];?>&nbsp;" /></td>
-
                     </tr>
-
-
-
-
-
                 </table>
-
-
-
             </td>
-
         </tr>
-
-
-
-
-
         <td valign="top"><table width='100%' border="1" bordercolor="#c1dad7" bgcolor="#FFFFFF" style="border-collapse:collapse">
-
                 <tr align="center" style="background-color: bisque">
-
                     <td>S/L</td>
-
                     <td>A/C Ledger</td>
-
                     <td>Narration</td>
-
                     <td>CC</td>
-
                     <td>Debit</td>
-
                     <td>Credit</td>
-
                 </tr>
-
                 <?php
-
                 $pi=0;
-
                 $d_total=0;
-
                 $c_total=0;
-
                 $sql2="select a.dr_amt,a.cr_amt,b.ledger_name,b.ledger_id,a.narration,a.id,a.cc_code from accounts_ledger b, journal a where a.ledger_id=b.ledger_id and a.tr_from = '$tr_from' and a.jv_no='$jv_no' and a.ledger_id>0";
                 $data2=mysqli_query($conn, $sql2);
                 while($info=mysqli_fetch_row($data2)){ $pi++;
@@ -593,529 +356,216 @@ $sql1."<br>";
                     $d_total=$d_total+$info[0];
                     $c_total=$c_total+$info[1];
                     ?>
-
                     <tr align="center" <? if(++$x%2!=0) echo 'class="spec"';?>>
-
                         <td><?=$pi;?></td>
-
                         <td>
-
-
-
                             <select class="select2_single form-control" style="width:99%" tabindex="-1" required="required"  name="ledger_<?=$info[5]?>" id="ledger_<?=$info[5]?>">
-
                                 <option value="<?=$info[2].'#>'.$info[3];?>" selected><?=$info[2].'#>'.$info[3];?></option>
-
                                 <?php
-
-                                $result=mysql_query("SELECT  ledger_name,ledger_id from accounts_ledger  where ledger_id=".$info[5]." order by ledger_id");
-
-                                while($row=mysql_fetch_array($result)){  ?>
-
+                                $result=mysqli_query($conn, "SELECT  ledger_name,ledger_id from accounts_ledger  where ledger_id=".$info[5]." order by ledger_id");
+                                while($row=mysqli_fetch_array($result)){  ?>
                                     <option  value="<?=$row[0].'#>'.$row[1];?>"><?=$row[0].'#>'.$row[1];?></option>
-
                                 <?php } ?>
-
                             </select>
-
-
-
                             <!--input type="text" name="ledger_<?=$info[5]?>" id="ledger_<?=$info[5]?>" style="width:220px;" value="<?=$info[2].'#>'.$info[3];?>"  /---></td>
-
                         <td>
-
                             <input type="text" name="narration_<?=$info[5];?>" id="narration_<?=$info[5];?>" style="width:250px;" value="<?=$info[4];?>" />
-
                             <input type="hidden" name="l_<?=$pi;?>" id="l_<?=$pi;?>" value="<?=$info[3];?>" />		  </td>
-
-
-
-
-
-
-
                         <td><div align="right">
-
                                 <label>
-
                                     <input name="cc_<?=$info[5];?>" type="text" id="cc_<?=$info[5];?>" value="<?=$info[6]?>" style="width:80px;" />
-
                                 </label></div></td>
-
-
-
-
-
-
-
                         <td><div align="right">
-
                                 <label>
-
                                     <input name="dr_amt_<?=$info[5];?>" type="text" id="dr_amt_<?=$info[5];?>" value="<?=$info[0]?>" style="width:80px;" onchange="add_sum()" />
-
                                 </label></div></td>
-
-
-
-
-
                         <td><div align="right">
-
                                 <input name="cr_amt_<?=$info[5];?>" type="text" id="cr_amt_<?=$info[5];?>" value="<?=$info[1]?>" style="width:80px;" onchange="add_sum()" />
-
                             </div></td>
-
                     </tr>
-
-
-
-
-
-                <?php }
-
-
-
-                ?>
-
+                <?php } ?>
                 <tr align="center" <? if(++$x%2!=0) echo 'class="spec"';?>>
-
                     <td align="right"><div align="center">
-
                             <?=++$pi;?>
-
                         </div></td>
-
                     <td>
-
-
-
                         <select class="select2_single form-control" style="width:99%" tabindex="-1"   name="ledger_new1" id="ledger_new1">
-
                             <option></option>
-
                             <?php
-
-                            $result=mysql_query("SELECT  ledger_name,ledger_id from accounts_ledger  where 1 order by ledger_id");
-
-                            while($row=mysql_fetch_array($result)){  ?>
-
+                            $result=mysqli_query($conn, "SELECT  ledger_name,ledger_id from accounts_ledger  where 1 order by ledger_id");
+                            while($row=mysqli_fetch_array($result)){  ?>
                                 <option  value="<?=$row[0].'#>'.$row[1];?>"><?=$row[0].'#>'.$row[1];?></option>
-
                             <?php } ?>
-
                         </select>
-
                         <!--input type="text" name="ledger_new1" id="ledger_new1"  style="width:220px;" value="" /-->
-
-
-
                     </td>
-
                     <td align="center"><input type="text" name="narration_new1" id="narration_new1" style="width:250px;" value="" /></td>
-
-
-
-
-
                     <td align="right"><input name="cc_new1" type="text" id="cc_new1" style="width:80px;"  /></td>
-
                     <td align="right"><input name="dr_amt_new1" type="text" id="dr_amt_new1" style="width:80px;" onchange="add_sum()" /></td>
-
                     <td align="right"><input name="cr_amt_new1" type="text" id="cr_amt_new1" style="width:80px;" onchange="add_sum()" /></td>
-
                 </tr>
-
-
-
                 <tr align="center" <? if(++$x%2!=0) echo 'class="spec"';?>>
-
                     <td align="right"><div align="center">
-
                             <?=++$pi;?>
-
                         </div></td>
-
                     <td>
-
                         <select class="select2_single form-control" style="width:99%" tabindex="-1"   name="ledger_new2" id="ledger_new2">
-
                             <option></option>
-
                             <?php
-
-                            $result=mysql_query("SELECT  ledger_name,ledger_id from accounts_ledger  where 1 order by ledger_id");
-
-                            while($row=mysql_fetch_array($result)){  ?>
-
+                            $result=mysqli_query($conn, "SELECT  ledger_name,ledger_id from accounts_ledger  where 1 order by ledger_id");
+                            while($row=mysqli_fetch_array($result)){  ?>
                                 <option  value="<?=$row[0].'#>'.$row[1];?>"><?=$row[0].'#>'.$row[1];?></option>
-
                             <?php } ?>
-
                         </select></td>
-
                     <td align="center"><input type="text" name="narration_new2" id="narration_new2" style="width:250px;" value="" /></td>
-
                     <td align="right"><input name="cc_new2" type="text" id="cc_new2" style="width:80px;"  /></td>
-
                     <td align="right"><input name="dr_amt_new2" type="text" id="dr_amt_new2" style="width:80px;" onchange="add_sum()" /></td>
-
                     <td align="right"><input name="cr_amt_new2" type="text" id="cr_amt_new2"  style="width:80px;" onchange="add_sum()" /></td>
-
                 </tr>
-
-
-
-
-
-
-
-
-
                 <tr align="center">
-
                     <td colspan="4" align="right">Total Amount :</td>
-
                     <td><div align="right"><input name="dr_amt" type="text" id="dr_amt" value="<?=$d_total?>" style="width:80px;" readonly="readonly"/></div></td>
-
                     <td><div align="right"><input name="cr_amt" type="text" id="cr_amt" value="<?=$c_total?>" style="width:80px;" readonly="readonly" /></div></td>
-
                 </tr>
-
             </table></td>
-
         </tr>
-
     </table>
-
     <br />
-
     <?php
-
     //page select
-
     if($vtype=='receipt'||$vtype=='Receipt') $page="credit_note.php?v_no=$v_no&v_type=$vtype&v_d=$vdate&action=edit";
-
     if($vtype=='payment'||$vtype=='Payment') $page="debit_note.php?v_no=$v_no&v_type=$vtype&v_d=$vdate&action=edit";
-
     if($vtype=='coutra'||$vtype=='Coutra') $page="coutra_note_new.php?v_no=$v_no&v_type=$vtype&v_d=$vdate&action=edit";
-
     if($vtype=='journal_info'||$vtype=='Journal_info') $page="journal_note_new.php?v_no=$v_no&v_type=$vtype&v_d=$vdate&action=edit";
-
-    //end
-
-    ?>
-
+    //end ?>
     <div align="center" style="margin-top:10px;">
-
         <table border="0" cellspacing="0" cellpadding="0" align="center" style="width:400px;">
-
             <tr>
-
                 <td><input class="btn_p1" name="narr" type="submit" value="Update Voucher" onmouseover="this.style.cursor='pointer';"/></td>
-
                 <td><input class="btn_p1" name="change" type="submit" value="Change Date" onmouseover="this.style.cursor='pointer';" /></td>
-
-                <td>
-
-
-
-                    <? if($_SESSION['userid']=='10025' || $_SESSION['userid']=='10019' || $_SESSION['userid']=='10010'){?>
-
+                <td><? if($_SESSION['userid']=='10025' || $_SESSION['userid']=='10019' || $_SESSION['userid']=='10010'){?>
                         <input class="btn_p1" name="delete" type="submit" value="Delete Voucher" onmouseover="this.style.cursor='pointer';" onclick="return confirm('Are you sure to delete this voucher?');" />
-
                     <? }?>
-
-
-
-
-
                 </td>
-
             </tr>
-
             <tr>
-
                 <td><div class="btn_p">
-
                         <div align="center"><a href="voucher_print1.php?v_type=<?php echo $vtype;?>&vo_no=<?php echo $jv_no;?>" target="_blank">Print This Invoice</a></div>
-
                     </div></td>
-
                 <td>&nbsp;</td>
-
                 <td><div class="btn_p">
-
                         <div align="center"><a href="javascript:loadinparent('<?php echo $page;?>', true);this.close();">Re-Entry Voucher</a></div>
-
                     </div></td>
-
             </tr>
-
         </table>
-
     </div>
-
-    <?php
-
-    }
-
-    ?>
-
+    <?php } ?>
     <script type="application/javascript">
-
         function add_sum()
-
         {
-
             var dr_amt_new1 = ((document.getElementById('dr_amt_new1').value)*1)+0;
-
             var dr_amt_new2 = ((document.getElementById('dr_amt_new2').value)*1)+0;
-
             var cr_amt_new1 = ((document.getElementById('cr_amt_new1').value)*1)+0;
-
             var cr_amt_new2 = ((document.getElementById('cr_amt_new2').value)*1)+0;
-
             var dr_total = dr_amt_new1;
-
             var cr_total = cr_amt_new1;
-
-
-
-
-
             if(cr_amt_new2>0){
-
                 cr_total = cr_total + cr_amt_new2;}
-
             if(dr_amt_new2>0){
-
                 dr_total = dr_total + dr_amt_new2;}
-
             <?
-
             for($i=1;$i<=$pi;$i++){
-
                 if($entry[$i]>0){
-
                     echo "cr_total = cr_total+((document.getElementById('cr_amt_".$entry[$i]."').value)*1);";
-
                     echo "dr_total = dr_total+((document.getElementById('dr_amt_".$entry[$i]."').value)*1);";
-
                 }}
-
             ?>
-
-
-
             document.getElementById('cr_amt').value = cr_total.toFixed(2);
-
             document.getElementById('dr_amt').value = dr_total.toFixed(2);
-
         }
-
         function validate_total() {
-
             var dr_amt = ((document.getElementById('dr_amt').value)*1);
-
             var cr_amt = ((document.getElementById('cr_amt').value)*1);
-
             if(dr_amt==cr_amt)
-
                 return true;
-
             else
-
             {
-
                 alert('Debit and Credit have to be equal.Please Re-Check This voucher.');
-
                 return false;
-
             }
-
         }
-
         function loadinparent(url)
-
         {
-
             self.opener.location = url;
-
             self.blur();
-
         }
-
     </script>
-
     <input name="count" id="count" type="hidden" value="<?=$pi;?>" />
-
 </form>
-
 <!-- jQuery -->
-
 <script src="../vendors/jquery/dist/jquery.min.js"></script>
-
 <!-- Bootstrap -->
-
 <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-
 <!-- FastClick -->
-
 <script src="../vendors/fastclick/lib/fastclick.js"></script>
-
 <!-- NProgress -->
-
 <script src="../vendors/nprogress/nprogress.js"></script>
-
 <!-- bootstrap-progressbar -->
-
 <script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-
 <!-- iCheck -->
-
 <script src="../vendors/iCheck/icheck.min.js"></script>
-
 <!-- bootstrap-daterangepicker -->
-
 <script src="../vendors/moment/min/moment.min.js"></script>
-
 <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-
 <!-- bootstrap-wysiwyg -->
-
 <script src="../vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
-
 <script src="../vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
-
 <script src="../vendors/google-code-prettify/src/prettify.js"></script>
-
 <!-- jQuery Tags Input -->
-
 <script src="../vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
-
 <!-- Switchery -->
-
 <script src="../vendors/switchery/dist/switchery.min.js"></script>
-
 <!-- Select2 -->
-
 <script src="../vendors/select2/dist/js/select2.full.min.js"></script>
-
-
-
-
-
 <!-- jQuery autocomplete -->
-
 <script src="../vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
-
 <!-- starrr -->
-
 <script src="../vendors/starrr/dist/starrr.js"></script>
-
-
-
 <!-- Custom Theme Scripts -->
-
 <script src="../build/js/custom.min.js"></script>
-
-
-
-
-
-
-
 <!-- Select2 -->
-
 <script>
-
     $(document).ready(function() {
-
         $(".select2_single").select2({
-
             placeholder: "Select a Choose",
-
             allowClear: true
-
         });
-
         $(".select2_group").select2({});
-
         $(".select2_multiple").select2({
-
             maximumSelectionLength: 4,
-
             placeholder: "With Max Selection limit 4",
-
             allowClear: true
-
         });
-
     });
-
 </script>
-
 <!-- /Select2 -->
-
-
-
-
-
-
-
-
-
-
-
 <script>
-
     $(document).ready(function() {
-
         $('#nam_date').daterangepicker({
-
-
-
             singleDatePicker: true,
-
             calender_style: "picker_4",
-
-
-
         }, function(start, end, label) {
-
             console.log(start.toISOString(), end.toISOString(), label);
-
         });
-
     });
-
 </script>
-
-
-
-
-
 <script>
-
     $(document).ready(function() {
-
         $('#vdate').daterangepicker({
-
-
-
             singleDatePicker: true,
-
             calender_style: "picker_4",
-
-
-
         }, function(start, end, label) {
-
             console.log(start.toISOString(), end.toISOString(), label);
-
         });
-
     });
-
 </script>

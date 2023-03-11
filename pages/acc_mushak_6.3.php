@@ -16,11 +16,12 @@ $table_VAT_details='VAT_mushak_6_3_details';
 $chalan_no=find_a_field('sale_do_chalan','distinct chalan_no','do_no='.$do_no_GET);
 $jv_no=find_a_field('journal','distinct jv_no','tr_from="Sales" and tr_no='.$chalan_no);
 $mushak=find_all_field('VAT_mushak_6_3','','do_no='.$do_no_GET);
+$mushak_fiscal_year = @$mushak->fiscal_year;
+$mushak_issue_date = @$mushak->issue_date;
 $fiscal_year=find_a_field('fiscal_term','fiscal_year','status="1"');
-$fs_year=find_all_field('fiscal_term','','fiscal_year='.$mushak->fiscal_year);
+$fs_year=find_all_field('fiscal_term','','fiscal_year='.$mushak_fiscal_year);
 $VAT_narration='VAT against sale, Do No # '.$do_no_GET.', Challan No # '.$chalan_no.', VAT 6.3 No # ';
 $SD_narration='SD against sale, Do No # '.$do_no_GET.', Challan No # '.$chalan_no.', VAT 6.3 No # ';
-
 
 if(prevent_multi_submit()){
     if(isset($_POST['delete'])){
@@ -131,7 +132,6 @@ if($status>0){
 $result=mysqli_query($conn, $query);
 ?>
 
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <header>
@@ -182,10 +182,10 @@ $result=mysqli_query($conn, $query);
   <input type="hidden" name="responsible_person" value="<?=$warehouse_master->VAT_responsible_person?>">
   <input type="hidden" name="chalan_no" value="<?=$chalan_no?>">
   <input type="hidden" name="jv_no" value="<?=$jv_no?>">
-  <input type="hidden" name="jvdate" value="<?=$mushak->issue_date?>">
+  <input type="hidden" name="jvdate" value="<?=$mushak_issue_date?>">
   <input type="hidden" name="source" value="Sales">
 <table style="width: 100%">
-<td style="width: 30%; text-align: right;"><img src="bd.png" width="50" height="50" style="margin-top: 50px;
+<td style="width: 30%; text-align: right;"><img src="../assets/images/bd.png" width="50" height="50" style="margin-top: 50px;
   padding:0px;"></td>
     <td style="text-align: center">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার জাতীয় রাজস্ব র্বোড</td>
     <td style="width: 30%"><div style="text-align: center;height: 30px; margin-top: 50px; vertical-align:middle; width: 100px; border: 1px solid black; font-size: 13px;"><strong>মূসক-৬.৩</strong></div></td>
@@ -266,6 +266,11 @@ $result=mysqli_query($conn, $query);
 
     <?php
     if($status>0):
+        $total_total_price = 0;
+        $total_unit = 0;
+        $total_amount_of_SD = 0;
+        $total_amount_of_VAT = 0;
+        $total_total_including_all = 0;
     while($data=mysqli_fetch_object($result)):
       $id=$data->item_id;
       $ab=$data->SD_percentage;
@@ -301,10 +306,17 @@ $result=mysqli_query($conn, $query);
         <th style="border: 1px solid #CCC;text-align: right;"><?=number_format($total_total_including_all,2)?></th>
     </tr>
   <?php else:
+  $i = 0;
+  $total_unit         = 0;
+  $total_unit_amounts = 0;
+  $total_VATs         = 0;
+  $actual_VATs        = 0;
+  $total_SD_amount    = 0;
     while($data=mysqli_fetch_object($result)):
-      $id=$data->item_id;
-      $ab=$data->SD_percentage;$ef=$data->VAT_percentage;
-      $cd=$data->total_unit*$data->VAT*$ab;?>
+  $data_amount_of_SD = @$data->amount_of_SD;
+    $id=$data->item_id;
+    $ab=$data->SD_percentage;$ef=$data->VAT_percentage;
+    $cd=$data->total_unit*$data->VAT*$ab;?>
     <tr>
     <td style="border: 1px solid #CCC;text-align: center; margin: 10px"><?=$i=$i+1?></td>
     <td style="border: 1px solid #CCC;text-align: left; margin: 10px"><?=$data->item_name?></td>
@@ -321,7 +333,6 @@ $result=mysqli_query($conn, $query);
               form.total_unit<?=$id?>.focus();
           }</script>
     <input type="number" value="<?=$data->total_unit?>" onkeyup="doAlert<?=$id?>(this.form);" style="font-size:11px; text-align:center;" name="total_unit<?=$id?>" id="total_unit<?=$id?>" class="total_unit<?=$id?>"></td>
-
     <td style="border: 1px solid #CCC;text-align: right;">
       <input type="number" tabindex="-1" readonly value="<?=$data->VAT?>" style="font-size:11px; text-align:right;border: 1px solid #999999;background-color: #F0F0F0;color: #666666;" name="unit_price<?=$id?>" id="unit_price<?=$id?>" class="unit_price<?=$id?>"></td>
 
@@ -343,7 +354,6 @@ $result=mysqli_query($conn, $query);
     <td style="border: 1px solid #CCC;text-align: right;">
               <input type="number" tabindex="-1" readonly value="<?=$actual_VAT=$total_unit_amount+$amount_of_SD+$total_VAT;?>" style="font-size:11px; text-align:right;border: 1px solid #999999;background-color: #F0F0F0;color: #666666;" name="total_including_all<?=$id?>" id="total_including_all<?=$id?>" class="total_including_all<?=$id?>"></td>
     </tr>
-
     <script>
         $(function(){
             $('#total_unit<?=$id;?>').keyup(function(){
@@ -380,26 +390,21 @@ $result=mysqli_query($conn, $query);
     $total_unit=$total_unit+$data->total_unit;
     $total_unit_amounts=$total_unit_amounts+$total_unit_amount;
     $total_VATs=$total_VATs+$total_VAT;
-        $actual_VATs=$actual_VATs+$actual_VAT;
-        $total_SD_amount=$total_SD_amount+$data->amount_of_SD;
+    $actual_VATs=$actual_VATs+$actual_VAT;
+    $total_SD_amount=$total_SD_amount+$data_amount_of_SD;
     endwhile; ?>
     <tr><th>Total</th><td></td><td></td><th style="border: 1px solid #CCC;text-align: center;"><?=$total_unit?></th>
     <td></td>
         <th style="border: 1px solid #CCC;text-align: right;"><?=number_format($total_unit_amounts,2)?></th>
-        <th style="border: 1px solid #CCC;text-align: right;"><?=$a?></th>
-        <th style="border: 1px solid #CCC;text-align: right;"><?=$b?></th>
-        <th style="border: 1px solid #CCC;text-align: right;"><?=$c?></th>
+        <th style="border: 1px solid #CCC;text-align: right;"></th>
+        <th style="border: 1px solid #CCC;text-align: right;"></th>
+        <th style="border: 1px solid #CCC;text-align: right;"></th>
         <th style="border: 1px solid #CCC;text-align: right;"><?=number_format($total_VATs,2)?></th>
         <th style="border: 1px solid #CCC;text-align: right;"><?=number_format($actual_VATs,2)?></th>
     </tr>
-  <?php endif; ?>
+  <?php endif; $total_total_price = @$total_total_price; ?>
     </tbody>
 </table>
-
-
-
-
-
 <div>&nbsp;</div>
 <div>&nbsp;</div>
 <div>প্রতিষ্ঠান কতৃপক্ষের দায়িত্বপ্রাপ্ত ব্যক্তির নাম : <?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$warehouse_master->VAT_responsible_person);?></div>
@@ -417,12 +422,7 @@ $result=mysqli_query($conn, $query);
         <h1 align="center">
             <input type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm to Record & Create?");' name="record" value="Record & Create VAT Challan"></p>
           <?php } ?>
-
-
-
 <br><br>
-
-
           <?php if($do_no_GET>0 && $COUNT_mushak>0 && $COUNT_journal==0): ?>
           <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:none">
               <thead>

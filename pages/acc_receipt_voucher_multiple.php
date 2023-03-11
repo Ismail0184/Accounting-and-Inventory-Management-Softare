@@ -31,8 +31,8 @@ $table_receipt="receipt";
 $recpt_unique='receipt_no';
 $page="acc_receipt_voucher_multiple.php";
 $crud      =new crud($table_journal_master);
-$$unique = $_POST[$unique];
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
+
+
 $create_date=date('Y-m-d');
 $jv=next_journal_voucher_id();
 if (isset($_REQUEST['id'])) {
@@ -175,7 +175,7 @@ cost_center c
             unset($_SESSION['initiate_credit_note']);
             unset($_SESSION['credit_note_last_narration']);
             unset($_POST);
-            unset($$unique);}
+
     } // end unique
 } // end prevent_multi_submit
 
@@ -190,11 +190,11 @@ if (isset($_POST['cancel'])) {
     $crud->delete($condition);
     unset($_SESSION['initiate_credit_note']);
     unset($_SESSION['credit_note_last_narration']);
+    unset($initiate_credit_note);
     unset($_POST);
-    unset($$unique);
 }
-
-$COUNT_details_data=find_a_field(''.$table_receipt.'','Count(id)',''.$recpt_unique.'='.$_SESSION['initiate_credit_note'].'');
+$initiate_credit_note = @$_SESSION['initiate_credit_note'];
+$COUNT_details_data=find_a_field(''.$table_receipt.'','Count(id)',''.$recpt_unique.'='.$initiate_credit_note.'');
 $sql2="select a.tr_no, a.jvdate as Date,a.jv_no as Voucher_No,SUM(a.dr_amt) as amount
 from  journal a where a.tr_from='Receipt' and a.user_id='".$_SESSION['userid']."' and a.section_id='".$_SESSION['sectionid']."' and a.company_id='".$_SESSION['companyid']."'  group by a.tr_no  order by a.id desc limit 10";
 $data2=mysqli_query($conn, $sql2);
@@ -210,17 +210,27 @@ cost_center c
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  entry_status='MANUAL' and 
- j.receipt_no='" . $_SESSION['initiate_credit_note'] . "'
+ j.receipt_no='".$initiate_credit_note."'
  ";
 $re_query=mysqli_query($conn, $rs);
 
 
 // data query..................................
 if(isset($_SESSION['initiate_credit_note']))
-{   $condition=$unique."=".$_SESSION['initiate_credit_note'];
+{   $condition=$unique."=".$initiate_credit_note;
     $data=db_fetch_object($table_journal_master,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
+
+$voucher_date = @$voucher_date;
+$date = date('Y-m-d');
+$paid_to = @$paid_to;
+$Cheque_of_bank = @$Cheque_of_bank;
+$Cheque_No = @$Cheque_No;
+$Cheque_Date = @$Cheque_Date;
+$amount = @$amount;
+$party_ledger = @$party_ledger;
+$credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
 ?>
 
 <?php require_once 'header_content.php'; ?>
