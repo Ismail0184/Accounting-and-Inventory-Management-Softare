@@ -38,6 +38,9 @@ $jv=next_journal_voucher_id();
 if (isset($_REQUEST['id'])) {
     $edit_value=find_all_field(''.$table_receipt.'','','id='.$_REQUEST['id'].'');
 }
+$edit_value_ledger_id = @$edit_value->ledger_id;
+$edit_value_pc_code = @$edit_value->pc_code;
+$edit_value_narration = @$edit_value->narration;
 
 if(prevent_multi_submit()) {
     if(isset($_POST[$unique])){
@@ -87,35 +90,31 @@ if(prevent_multi_submit()) {
             } elseif ($_POST['cr_amt'] > 0) {
                 $type = 'Credit';
             }
-            $dd = $_POST['receipt_date'];
-            $date = date('d-m-y', strtotime($dd));
-            $j = 0;
-            for ($i = 0; $i < strlen($date); $i++) {
-                if (is_numeric($date[$i])) {
-                    $time[$j] = $time[$j] . $date[$i];
-                } else {
-                    $j++;
-                }
-            }
             $date = $_POST['receipt_date'];
-
-            if($_POST['Cheque_Date']) {
-                $c_date = $_POST['Cheque_Date'];
+            $_POST_Cheque_Date = @$_POST['Cheque_Date'];
+            if($_POST_Cheque_Date) {
+                $c_date = $_POST_Cheque_Date;
             } else {
                 $c_date='';
             }
-
             $tdates = date("Y-m-d");
-            $day = date('l', strtotime($idatess));
+            $day = date('l', strtotime($tdates));
             $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
             $timess = $dateTime->format("d-m-y  h:i A");
-
+            $POST_dr_amt = @$_POST['dr_amt'];
+            $POST_cr_amt = @$_POST['cr_amt'];
+            $c_date = 0;
+            $cur_bal = 0;
+            $manual_payment_no = 0;
+            $cc_code = @$_POST['cc_code'];
+            $subledger_id = @$_POST['subledger_id'];
+            $receive_ledger = 0;
             if (($_POST['dr_amt'] && $_POST['cr_amt']) > 0) {
                 echo "<script>alert('Yor are trying to input an invalid transaction!!')</script>";
             } else {
-                if ((($_POST['dr_amt'] || $_POST['cr_amt']) > 0) && ($_SESSION['initiate_credit_note']>0)) {
+                if ((($POST_dr_amt || $POST_cr_amt) > 0) && ($_SESSION['initiate_credit_note']>0)) {
                     add_to_receipt($_SESSION['initiate_credit_note'], $date, $proj_id, $_POST['narration'], $_POST['ledger_id'], $_POST['dr_amt'],
-                        $_POST['cr_amt'], $type, $cur_bal, $_POST['paid_to'], $_POST['Cheque_No'], $c_date, $_POST['Cheque_of_bank'], $manual_payment_no, $_POST['cc_code'], $_POST['subledger_id'],'MANUAL', $ip, $_POST['receipt_date'], $_SESSION['sectionid'], $_SESSION['companyid'], $_SESSION['userid'], $create_date, $now, $day
+                        $POST_cr_amt, $type, $cur_bal, $_POST['paid_to'], $_POST['Cheque_No'], $c_date, $_POST['Cheque_of_bank'], $manual_payment_no, $cc_code, $subledger_id,'MANUAL', $ip, $_POST['receipt_date'], $_SESSION['sectionid'], $_SESSION['companyid'], $_SESSION['userid'], $create_date, $now, $day
                         , $thisday, $thismonth, $thisyear, $receive_ledger);
                     $_SESSION['credit_note_last_narration']=$_POST['narration'];
                 }
@@ -141,6 +140,7 @@ j.cheq_date,
 j.bank,
 j.cc_code,
 j.sub_ledger_id,
+j.day_name,
 a.*,c.center_name as cname 
 from 
 receipt j,
@@ -156,7 +156,7 @@ cost_center c
             $ids=$uncheckrow['jid'];
 
             if (isset($_POST['confirmsave']) && ($uncheckrow['receipt_no']>0)) {
-                add_to_journal_new($uncheckrow['receiptdate'], $proj_id, $jv, $uncheckrow['receipt_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Receipt',$uncheckrow['receipt_no'],$uncheckrow['jid'], $uncheckrow['cc_code'],$uncheckrow['sub_ledger_id'], $_SESSION['usergroup'], $uncheckrow['cheq_no'], $uncheckrow['cheq_date'], $create_date, $ip, $now, $uncheckrow['day_name'], $thisday, $thismonth, $thisyear);
+                add_to_journal_new($uncheckrow['receiptdate'], $proj_id, $jv, $uncheckrow['receipt_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Receipt',$uncheckrow['receipt_no'],$uncheckrow['jid'], $uncheckrow['cc_code'],$uncheckrow['sub_ledger_id'], $_SESSION['usergroup'], $uncheckrow['cheq_no'], $uncheckrow['cheq_date'], $create_date, $ip, $now, $uncheckrow['day_name'], $thisday, $thismonth, $thisyear,'','','');
             } // end of confirm
 
             if(isset($_POST['deletedata'.$ids]))
@@ -169,13 +169,13 @@ cost_center c
             } // end of editdata
         } // end of while
         if (isset($_POST['confirmsave'])) {
-            $up_master=mysqli_query($conn, "UPDATE ".$table_receipt." SET entry_status='UNCHECKED' where ".$recpt_unique."=".$_SESSION['initiate_credit_note']."");
-            $up_master=mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=".$jv);
-            $up_master=mysqli_query($conn, "UPDATE ".$table_journal_master." SET entry_status='UNCHECKED' where ".$unique."=".$_SESSION['initiate_credit_note']."");
+            $up_master = mysqli_query($conn, "UPDATE " . $table_receipt . " SET entry_status='UNCHECKED' where " . $recpt_unique . "=" . $_SESSION['initiate_credit_note'] . "");
+            $up_master = mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=" . $jv);
+            $up_master = mysqli_query($conn, "UPDATE " . $table_journal_master . " SET entry_status='UNCHECKED' where " . $unique . "=" . $_SESSION['initiate_credit_note'] . "");
             unset($_SESSION['initiate_credit_note']);
             unset($_SESSION['credit_note_last_narration']);
             unset($_POST);
-
+        }
     } // end unique
 } // end prevent_multi_submit
 
@@ -267,7 +267,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
                         <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.$acess_date. 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
 
                         <th style="width:15%;">Transaction No<span class="required">*</span></th><th style="width: 2%">:</th>
-                        <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?php if($_SESSION['initiate_credit_note']>0){ echo $_SESSION['initiate_credit_note'];} else { echo
+                        <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?php if($initiate_credit_note>0){ echo $initiate_credit_note;} else { echo
                             automatic_voucher_number_generate($table_receipt,$recpt_unique,1,1); } ?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                     </tr>
 
@@ -289,7 +289,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
                 </table>
 
 
-                <?php if($_SESSION['initiate_credit_note']){
+                <?php if($initiate_credit_note){
                     if($COUNT_details_data>0) {
                         $ml='40';
                         $display='style="margin-left:40%; margin-top: 22px;"';
@@ -318,7 +318,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
             </form></div></div></div>
 
 <?=recentvoucherview($sql2,'voucher_view_popup_ismail.php','receipt','171px');?>
-<?php if($_SESSION['initiate_credit_note']): ?>
+<?php if($initiate_credit_note): ?>
     <form action="<?=$page;?>" enctype="multipart/form-data" name="addem" id="addem" style="font-size: 11px" class="form-horizontal form-label-left" method="post">
         <input type="hidden" name="receipt_no" id="receipt_no" value="<?=$_SESSION['initiate_credit_note'];?>">
         <input type="hidden" name="<?=$unique?>" id="<?=$unique?>"  value="<?=$_SESSION['initiate_credit_note'];?>">
@@ -327,7 +327,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
         <input type="hidden" name="Cheque_No" id="Cheque_No" value="<?=$Cheque_No;?>">
         <input type="hidden" name="paid_to" id="paid_to" value="<?=$paid_to;?>">
         <input type="hidden" name="Cheque_No" id="Cheque_No" value="<?=$Cheque_No;?>">
-        <?php if($_POST['Cheque_Date']){ ?>
+        <?php if(isset($_POST['Cheque_Date'])){ ?>
             <input type="hidden" name="Cheque_Date" id="Cheque_Date" value="<?=$Cheque_Date;?>">
         <?php } ?>
         <input type="hidden" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>">
@@ -346,25 +346,21 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
                 <td style="width: 25%; vertical-align: middle" align="center">
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
-                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value->ledger_id, '1'); ?>
+                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value_ledger_id, '1'); ?>
                     </select>
                 </td>
                 <td align="center" style="width: 10%;vertical-align: middle">
                     <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="pc_code">
                         <option></option>
-                        <?php foreign_relation('profit_center', 'id', 'CONCAT(id," : ", center_name)', $edit_value->pc_code, '1'); ?>
+                        <?php foreign_relation('profit_center', 'id', 'CONCAT(id," : ", center_name)', $edit_value_pc_code, '1'); ?>
                     </select>
                 </td>
-
-
                 <td style="width:15%;vertical-align: middle" align="center">
-                    <textarea id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration"   class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['credit_note_last_narration'];?></textarea>
+                    <textarea id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration"   class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value_narration!='')? $edit_value_narration : $credit_note_last_narration;?></textarea>
                 </td>
-
                 <td style="width:10%;vertical-align: middle" align="center">
-                    <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
-
-
+                    <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" >
+                </td>
                 <td align="center" style="width:10%">
                     <?php if (isset($_REQUEST['id'])) { ?>
                         <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  value="<?=$edit_value->dr_amt;?>" <?php if($edit_value->dr_amt>0)  echo ''; else echo 'readonly'; ?>   name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
