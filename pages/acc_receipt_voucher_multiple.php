@@ -333,7 +333,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
         <input type="hidden" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>">
         <table align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">
             <tbody>
-            <tr style="background-color: bisque">
+            <tr style="background-color: #3caae4; color:white">
                 <th style="text-align: center">Cash , Bank & Customer</th>
                 <th style="text-align: center">Profit Center</th>
                 <th style="text-align: center">Narration</th>

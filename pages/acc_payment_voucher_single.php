@@ -82,29 +82,9 @@ if(isset($_POST[$unique]))
         } elseif ($_POST['cr_amt'] > 0) {
             $type = 'Credit';
         }
-        $dd = $_POST['receipt_date'];
-        $date = date('d-m-y', strtotime($dd));
-        $j = 0;
-        for ($i = 0; $i < strlen($date); $i++) {
-            if (is_numeric($date[$i])) {
-                $time[$j] = $time[$j] . $date[$i];
-            } else {
-                $j++;
-            }
-        }
-        $date = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
-        if($_POST['Cheque_Date']) {
-            $c_dd = $_POST['Cheque_Date'];
-            $c_date = date('d-m-y', strtotime($c_dd));
-            $j = 0;
-            for ($i = 0; $i < strlen($c_date); $i++) {
-                if (is_numeric($c_date[$i])) {
-                    $ptime[$j] = $ptime[$j] . $c_date[$i];
-                } else {
-                    $j++;
-                }
-            }
-            $c_date = mktime(0, 0, 0, $ptime[1], $ptime[0], $ptime[2]);
+        $date = @$_POST['voucher_date'];
+        if(isset($_POST['Cheque_Date'])) {
+            $c_date = $_POST['Cheque_Date'];
         } else {
             $c_date='';
         }
@@ -113,15 +93,24 @@ if(isset($_POST[$unique]))
         $day = date('l', strtotime($idatess));
         $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
         $timess = $dateTime->format("d-m-y  h:i A");
-        if (($_POST['dr_amt'] && $_POST['cr_amt']) > 0) {
+        $POST_dr_amt = @$_POST['dr_amt'];
+        $POST_cr_amt = @$_POST['cr_amt'];
+        $c_date = 0;
+        $cur_bal = 0;
+        $manual_payment_no = 0;
+        $cc_code = @$_POST['cc_code'];
+        $subledger_id = @$_POST['subledger_id'];
+        $receive_ledger = 0;
+
+        if (($POST_dr_amt && $POST_cr_amt) > 0) {
             echo "<script>alert('Yor are trying to input an invalid transaction!!'); window.location.href='".$page."';</script>";
         } else {
-        if ((($_POST['dr_amt'] || $_POST['cr_amt']) > 0) && ($_SESSION['initiate_debit_note']>0)) {
+        if ((($POST_dr_amt || $POST_cr_amt) > 0) && ($_SESSION['initiate_debit_note']>0)) {
             add_to_payment($_SESSION['initiate_debit_note'],$date, $proj_id, $_POST['narration'], $_POST['ledger_id'], $_POST['dr_amt'],
-                $_POST['cr_amt'], $type,$cur_bal,$_POST['paid_to'],$_POST['Cheque_No'],$c_date,$_POST['Cheque_of_bank'],$manual_payment_no,$_POST['cc_code'],$_POST['subledger_id'],'MANUAL',$ip,$_POST['receipt_date'],$_SESSION['sectionid'],$_SESSION['companyid'],$_SESSION['userid'],$create_date,$now,$day,$thisday,$thismonth,$thisyear,$receive_ledger);
+                $POST_cr_amt, $type,$cur_bal,$_POST['paid_to'],$_POST['Cheque_No'],$c_date,$_POST['Cheque_of_bank'],$manual_payment_no,$_POST['cc_code'],$subledger_id,'MANUAL',$ip,$_POST['receipt_date'],$_SESSION['sectionid'],$_SESSION['companyid'],$_SESSION['userid'],$create_date,$now,$day,$thisday,$thismonth,$thisyear,$receive_ledger);
 				if ($_POST['rcved_remining']==$_POST['dr_amt']) {
                     add_to_payment($_SESSION['initiate_debit_note'], $date, $proj_id, $_POST['narration'], $_POST['cash_bank_ledger'], 0,
-                        $_POST['amount'], 'Credit', $cur_bal, $_POST['paid_to'], $_POST['Cheque_No'], $c_date, $_POST['Cheque_of_bank'], $manual_payment_no, $_POST['cc_code'], $_POST['subledger_id'], 'MANUAL', $ip, $_POST['receipt_date'], $_SESSION['sectionid'], $_SESSION['companyid'], $_SESSION['userid'], $create_date, $now, $day, $thisday, $thismonth, $thisyear, $_POST['ledger_id']);
+                        $_POST['amount'], 'Credit', $cur_bal, $_POST['paid_to'], $_POST['Cheque_No'], $c_date, $_POST['Cheque_of_bank'], $manual_payment_no, $_POST['cc_code'],$subledger_id,'MANUAL', $ip, $_POST['receipt_date'], $_SESSION['sectionid'], $_SESSION['companyid'], $_SESSION['userid'], $create_date, $now, $day, $thisday, $thismonth, $thisyear, $_POST['ledger_id']);
                 }
 				$_SESSION['debit_note_last_narration']=$_POST['narration'];
         }
@@ -135,7 +124,7 @@ if(isset($_POST[$unique]))
     } // end prevent_multi_submit
 
 
-$initiate_debit_note = $_SESSION['initiate_debit_note'];
+$initiate_debit_note = @$_SESSION['initiate_debit_note'];
 if($initiate_debit_note>0){
 $rs = "Select 
 j.id as jid,
@@ -182,12 +171,17 @@ where
 	if (isset($_GET['id'])) {
 $edit_value=find_all_field(''.$table_payment.'','','id='.$_GET['id'].'');
 }
+    $edit_value_ledger_id = @$edit_value->ledger_id;
+    $edit_value_cc_code = @$edit_value->cc_code;
+    $edit_value_narration = @$edit_value->narration;
+
 	if (isset($_POST['confirmsave'])) {			
        $up_payment="UPDATE ".$table_payment." SET entry_status='UNCHECKED' where ".$payment_unique."=".$initiate_debit_note ."";
         $up_query=mysqli_query($conn, $up_payment);
         $up_master=mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=".$jv);
         $up_master=mysqli_query($conn, "UPDATE ".$table_journal_master." SET entry_status='UNCHECKED' where ".$unique."=".$initiate_debit_note ."");
         unset($_SESSION['initiate_debit_note']);
+        unset($initiate_debit_note);
 		unset($_SESSION['debit_note_last_narration']);
         unset($_POST);
         unset($$unique);
@@ -204,10 +198,12 @@ if (isset($_POST['cancel'])) {
     $condition=$unique."=".$initiate_debit_note;
     $crud->delete($condition);
     unset($_SESSION['initiate_debit_note']);
+    unset($initiate_debit_note);
 	unset($_SESSION['debit_note_last_narration']);
     unset($_POST);
     unset($$unique);
 }
+$initiate_debit_note = @$_SESSION['initiate_debit_note'];
 $COUNT_details_data=find_a_field(''.$table_payment.'','Count(id)',''.$payment_unique.'='.$initiate_debit_note .'');
 
 // data query..................................
@@ -217,6 +213,14 @@ $COUNT_details_data=find_a_field(''.$table_payment.'','Count(id)',''.$payment_un
     { $$key=$value;}
 	$inputted_amount=find_a_field(''.$table_payment.'','SUM(dr_amt)',''.$payment_unique.'="'.$initiate_debit_note .'"');
 	}
+$cash_bank_ledger = @$cash_bank_ledger;
+$voucher_date = @$voucher_date;
+$date = date('Y-m-d');
+$paid_to = @$paid_to;
+$Cheque_of_bank = @$Cheque_of_bank;
+$Cheque_No = @$Cheque_No;
+$Cheque_Date = @$Cheque_Date;
+$amount = @$amount;
 
 $sql2="select a.tr_no,a.jvdate as Date,a.jv_no as Voucher_No,SUM(a.dr_amt) as amount
 from  journal a where a.tr_from='Payment' and a.user_id='".$_SESSION['userid']."' and a.section_id='".$_SESSION['sectionid']."' and a.company_id='".$_SESSION['companyid']."'  group by a.tr_no  order by a.id desc limit 10";
@@ -309,7 +313,6 @@ where
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <button type="submit" name="modify" class="btn btn-primary" onclick='return window.confirm("Are you confirm to Update?");' style="font-size: 11px">Update Payment Voucher</button>
                                         </div></div>
-
                                    <div class="form-group" <?=$display;?>>
                                        <div class="col-md-6 col-sm-6 col-xs-12">
                                            <a  href="voucher_print_preview.php?v_type=payment&vo_no=<?=$initiate_debit_note;?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Payment Voucher</a>
@@ -355,15 +358,15 @@ where
                                             <td style="width: 25%; vertical-align: middle" align="center">
                                                 <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                                                     <option></option>
-                                                <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value->ledger_id, 'ledger_group_id not in ("1002") and status=1'); ?>
+                                                <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value_ledger_id, 'ledger_group_id not in ("1002") and status=1'); ?>
                                                 </select></td>
                                             <td align="center" style="width: 10%;vertical-align: middle">
                                                 <select class="select2_single form-control" style="width:100%" tabindex="-1" required  name="cc_code" id="cc_code">
                                                     <option></option>
-                                                    <?php foreign_relation('cost_center', 'id', 'CONCAT(id,"-", center_name)', $edit_value->cc_code, 'status=1'); ?>
+                                                    <?php foreign_relation('cost_center', 'id', 'CONCAT(id,"-", center_name)', $edit_value_cc_code, 'status=1'); ?>
                                                 </select></td>
                                             <td style="width:15%;vertical-align: middle" align="center">
-                                                <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" value="<?=$_POST['narration'];?>"  class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value->narration!='')? $edit_value->narration : $initiate_debit_note;?></textarea>
+                                                <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value_narration!='')? $edit_value_narration : $initiate_debit_note;?></textarea>
                                             </td>
                                             <td style="width:10%;vertical-align: middle" align="center">
                                                 <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
@@ -390,8 +393,7 @@ where
                 }
                 form.dr_amt.focus();
             }</script>
-                                </form>
-
+</form>
 <?=voucher_delete_edit($rs,$unique,$initiate_debit_note,$COUNT_details_data,$page);?><br><br>
 <?php endif;?>
 <?=$html->footer_content();mysqli_close($conn);?>

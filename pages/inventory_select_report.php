@@ -1,5 +1,4 @@
-<?php require_once 'support_file.php';?>
-<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
+<?php require_once 'support_file.php';
 $title='Warehouse Report';
 $page='inventory_select_report.php';
 $report_id = @$_GET['report_id'];
