@@ -328,7 +328,7 @@ if (isset($_POST['viewreport'])) {
             $cash_discounts=substr($cash_discount,1);
             ?>
             </tbody></table>
-        <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:">
+        <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:none">
             <thead>
             <tr style="background-color: bisque">
                 <th>#</th>

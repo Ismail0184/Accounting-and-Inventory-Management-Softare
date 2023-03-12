@@ -57,64 +57,49 @@ if(prevent_multi_submit()) {
 
 //for single FG Add...........................
         if (isset($_POST['add'])) {
-            if ($_POST[dr_amt] > 0) {
+            if ($_POST['dr_amt'] > 0) {
                 $type = 'Debit';
-            } elseif ($_POST[cr_amt] > 0) {
+            } elseif ($_POST['cr_amt'] > 0) {
                 $type = 'Credit';
             }
-            $dd = $_POST[receipt_date];
-            $date = date('d-m-y', strtotime($dd));
-            $j = 0;
-            for ($i = 0; $i < strlen($date); $i++) {
-                if (is_numeric($date[$i])) {
-                    $time[$j] = $time[$j] . $date[$i];
-                } else {
-                    $j++;
-                }
-            }
-            $date = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
-
-            if($_POST[Cheque_Date]) {
-                $c_dd = $_POST[Cheque_Date];
-                $c_date = date('d-m-y', strtotime($c_dd));
-                $j = 0;
-                for ($i = 0; $i < strlen($c_date); $i++) {
-                    if (is_numeric($c_date[$i])) {
-                        $ptime[$j] = $ptime[$j] . $c_date[$i];
-                    } else {
-                        $j++;
-                    }
-                }
-                $c_date = mktime(0, 0, 0, $ptime[1], $ptime[0], $ptime[2]);
+            $date = $_POST['receipt_date'];
+            $_POST_Cheque_Date = @$_POST['Cheque_Date'];
+            if($_POST_Cheque_Date) {
+                $c_date = $_POST_Cheque_Date;
             } else {
                 $c_date='';
             }
 
             $tdates = date("Y-m-d");
-            $day = date('l', strtotime($idatess));
+            $day = date('l', strtotime($tdates));
             $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
             $timess = $dateTime->format("d-m-y  h:i A");
 
-            if (($_POST[dr_amt] && $_POST[cr_amt]) > 0) {
-                echo "<script>alert('Yor are trying to input an invalid transaction!!')</script>";
-                echo $targeturl;
-            } else {
+            $POST_dr_amt = @$_POST['dr_amt'];
+            $POST_cr_amt = @$_POST['cr_amt'];
+            $c_date = 0;
+            $cur_bal = 0;
+            $manual_payment_no = 0;
+            $cc_code = @$_POST['cc_code'];
+            $subledger_id = @$_POST['subledger_id'];
+            $receive_ledger = 0;
 
-                if ((($_POST[dr_amt] || $_POST[cr_amt]) > 0) && ($_SESSION[initiate_journal_note]>0)) {
-                    add_to_journal_info($_SESSION[initiate_journal_note],$date, $proj_id, $_POST[narration], $_POST[ledger_id], $_POST[dr_amt],
-                        $_POST[cr_amt], $type,$cur_bal,$_POST[paid_to],$_POST[Cheque_No],$c_date,$_POST[Cheque_of_bank],$manual_payment_no,$_POST[cc_code],$_POST[subledger_id],MANUAL,$ip,$_POST[receipt_date],$_SESSION[sectionid],$_SESSION[companyid],$_SESSION[userid],$create_date,$now,$day
+            if (($_POST['dr_amt'] && $_POST['cr_amt']) > 0) {
+                echo "<script>alert('Yor are trying to input an invalid transaction!!')</script>";
+            } else {
+                if ((($POST_dr_amt || $POST_cr_amt) > 0) && ($_SESSION['initiate_journal_note']>0)) {
+                    add_to_journal_info($_SESSION['initiate_journal_note'],$date, $proj_id, $_POST['narration'], $_POST['ledger_id'], $POST_dr_amt,
+                        $POST_cr_amt, $type,$cur_bal,$_POST['paid_to'],$_POST['Cheque_No'],$c_date,$_POST['Cheque_of_bank'],$manual_payment_no,$cc_code,$subledger_id,'MANUAL',$ip,$_POST['receipt_date'],$_SESSION['sectionid'],$_SESSION['companyid'],$_SESSION['userid'],$create_date,$now,$day
                         ,$thisday,$thismonth,$thisyear,$receive_ledger);
-                    $_SESSION[journal_last_narration]=$_POST[narration];
+                    $_SESSION['journal_last_narration']=$_POST['narration'];
                 }
             }}} // end post unique
 } // end prevent_multi_submit
 
+$initiate_journal_note = @$_SESSION['initiate_journal_note'];
+$journal_last_narration = @$_SESSION['journal_last_narration'];
 
-
-
-
-//for single FG Delete..................................
-if($_SESSION['initiate_journal_note']>0){
+if($initiate_journal_note>0){
     $rs="Select 
 j.id as jid,
 j.journal_info_no,
@@ -129,31 +114,28 @@ j.cheq_no,
 j.cheq_date,
 j.bank,
 j.cc_code,
+j.day_name,
 a.*,c.center_name as cname 
-
 from 
 journal_info j,
  accounts_ledger a,cost_center c
-
   where 
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  j.entry_status='MANUAL' and 
- j.journal_info_no='".$_SESSION['initiate_journal_note']."'";
+ j.journal_info_no='".$initiate_journal_note."'";
     $re_query=mysqli_query($conn, $rs);
     while($uncheckrow=mysqli_fetch_array($re_query)){
         $ids=$uncheckrow['jid'];
-
-        if (isset($_POST['confirmsave']) && ($uncheckrow[journal_info_no]>0)) {
-            add_to_journal_new($uncheckrow[j_date],$proj_id, $jv, $uncheckrow[journal_info_date], $uncheckrow[ledger_id], $uncheckrow[narration], $uncheckrow[dr_amt], $uncheckrow[cr_amt],Journal_info, $uncheckrow[journal_info_no],$uncheckrow[jid],$uncheckrow[cc_code],$uncheckrow[sub_ledger_id],$_SESSION[usergroup],$uncheckrow[cheq_no],$uncheckrow[cheq_date],$create_date,$ip,$now,$uncheckrow[day_name],$thisday,$thismonth,$thisyear);
+        if (isset($_POST['confirmsave']) && ($uncheckrow['journal_info_no']>0)) {
+            add_to_journal_new($uncheckrow['j_date'],$proj_id, $jv, $uncheckrow['journal_info_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Journal_info',$uncheckrow['journal_info_no'],$uncheckrow['jid'],$uncheckrow['cc_code'],$uncheckrow['sub_ledger_id'],$_SESSION['usergroup'],$uncheckrow['cheq_no'],$uncheckrow['cheq_date'],$create_date,$ip,$now,$uncheckrow['day_name'],$thisday,$thismonth,$thisyear);
         }
-
         if(isset($_POST['deletedata'.$ids]))
         {  mysqli_query($conn, ("DELETE FROM ".$table_journal_info." WHERE id='".$ids."'"));
             unset($_POST);
         }
         if(isset($_POST['editdata'.$ids]))
-        {  mysqli_query($conn, ("UPDATE ".$table_journal_info." SET ledger_id='".$_POST[ledger_id]."', cc_code='".$_POST[cc_code]."',narration='".$_POST[narration]."',dr_amt='".$_POST[dr_amt]."',cr_amt='".$_POST[cr_amt]."' WHERE id=".$ids));
+        {  mysqli_query($conn, ("UPDATE ".$table_journal_info." SET ledger_id='".$_POST['ledger_id']."', cc_code='".$_POST['cc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids));
             unset($_POST);
         }
     }
@@ -170,33 +152,46 @@ journal_info j,
     }
 
 
-    if (isset($_GET[id])) {
-        $edit_value=find_all_field(''.$table_journal_info.'','','id='.$_GET[id].'');
+    if (isset($_GET['id'])) {
+        $edit_value=find_all_field(''.$table_journal_info.'','','id='.$_GET['id'].'');
     }
-    $COUNT_details_data=find_a_field(''.$table_journal_info.'','Count(id)',''.$journal_info_unique.'='.$_SESSION['initiate_journal_note'].'');
+    $edit_value_ledger_id = @$edit_value->ledger_id;
+    $edit_value_cc_code = @$edit_value->cc_code;
+    $edit_value_narration = @$edit_value->narration;
+    $initiate_journal_note = @$_SESSION['initiate_journal_note'];
+    $COUNT_details_data=find_a_field(''.$table_journal_info.'','Count(id)',''.$journal_info_unique.'='.$initiate_journal_note.'');
 
 //for Delete..................................
     if (isset($_POST['cancel'])) {
         $crud = new crud($table_journal_info);
-        $condition =$journal_info_unique."=".$_SESSION['initiate_journal_note'];
+        $condition =$journal_info_unique."=".$initiate_journal_note;
         $crud->delete_all($condition);
         $crud = new crud($table_journal_master);
-        $condition=$unique."=".$_SESSION['initiate_journal_note'];
+        $condition=$unique."=".$initiate_journal_note;
         $crud->delete($condition);
+        unset($initiate_journal_note);
         unset($_SESSION['initiate_journal_note']);
         unset($_SESSION['journal_last_narration']);
         unset($_POST);
         unset($$unique);
     }
-
+    $initiate_journal_note = @$_SESSION['initiate_journal_note'];
 // data query..................................
-    $condition=$unique."=".$_SESSION['initiate_journal_note'];
+    $condition=$unique."=".$initiate_journal_note;
     $data=db_fetch_object($table_journal_master,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
 
+$voucher_date = @$voucher_date;
+$date = date('Y-m-d');
+$paid_to = @$paid_to;
+$Cheque_of_bank = @$Cheque_of_bank;
+$Cheque_No = @$Cheque_No;
+$Cheque_Date = @$Cheque_Date;
+$amount = @$amount;
+
 $sql2="select a.tr_no, a.jvdate as Date,a.jv_no as Voucher_No,SUM(a.dr_amt) as amount
-from  journal a where a.tr_from='journal_info' and a.user_id=".$_SESSION[userid]." and a.section_id=".$_SESSION[sectionid]." and a.company_id=".$_SESSION[companyid]."  group by a.tr_no  order by a.id desc limit 10";
+from  journal a where a.tr_from='journal_info' and a.user_id=".$_SESSION['userid']." and a.section_id=".$_SESSION['sectionid']." and a.company_id=".$_SESSION['companyid']."  group by a.tr_no  order by a.id desc limit 10";
 $rs="Select 
 j.id as jid,
 concat(a.ledger_id, ' : ' ,a.ledger_name) as Account_Head,c.center_name,j.narration,j.dr_amt,j.cr_amt
@@ -207,7 +202,7 @@ journal_info j,
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  j.entry_status='MANUAL' and 
- j.journal_info_no='".$_SESSION['initiate_journal_note']."' group by j.id
+ j.journal_info_no='".$initiate_journal_note."' group by j.id
  ";
 ?>
 
@@ -239,7 +234,7 @@ journal_info j,
                             <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
 
                             <th style="width:15%;">Transaction No<span class="required">*</span></th><th style="width: 2%">:</th>
-                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($_SESSION['initiate_journal_note']!='')? $_SESSION['initiate_journal_note'] : automatic_voucher_number_generate($table_journal_info,$journal_info_unique,1,3); ?>" class="form-control col-md-7 col-xs-12"  style="width: 90%; font-size: 11px;"></td>
+                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($initiate_journal_note!='')? $initiate_journal_note : automatic_voucher_number_generate($table_journal_info,$journal_info_unique,1,3); ?>" class="form-control col-md-7 col-xs-12"  style="width: 90%; font-size: 11px;"></td>
                         </tr>
 
                         <tr>
@@ -259,11 +254,10 @@ journal_info j,
                         </tr>
                     </table>
 
-                    <?php if($_SESSION[initiate_journal_note]){
+                    <?php if($initiate_journal_note){
                         if($COUNT_details_data>0) {
                             $ml='40';
                             $display='style="margin-left:40%; margin-top: 22px;"';
-
                         } else {
                             $ml='40';
                             $display='style="margin-left:40%; margin-top: 15px; display: none"';
@@ -276,7 +270,7 @@ journal_info j,
 
                         <div class="form-group" <?=$display;?>>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <a  href="voucher_print_preview.php?v_type=journal_info&vo_no=<?=$_SESSION[initiate_journal_note];?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Journal Voucher</a>
+                                <a  href="voucher_print_preview.php?v_type=journal_info&vo_no=<?=$initiate_journal_note;?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Journal Voucher</a>
                             </div></div>
                     <?php   } else {?>
                         <div class="form-group" style="margin-left:40%; margin-top: 15px">
@@ -288,11 +282,11 @@ journal_info j,
                 </form></div></div></div>
 
 <?=recentvoucherview($sql2,'voucher_view_popup_ismail.php','journal_info','166px');?>
-<?php if($_SESSION[initiate_journal_note]):  ?>
+<?php if($initiate_journal_note):  ?>
     <form action="<?=$page;?>" enctype="multipart/form-data" name="addem" id="addem" style="font-size: 11px" class="form-horizontal form-label-left" method="post">
-        <input type="hidden" name="payment_no" id="payment_no" value="<?=$_SESSION[initiate_journal_note];?>">
+        <input type="hidden" name="payment_no" id="payment_no" value="<?=$initiate_journal_note;?>">
         <input type="hidden" name="receipt_date" id="receipt_date" value="<?=$voucher_date;?>">
-        <input type="hidden" name="<?=$unique?>" id="<?=$unique?>"  value="<?=$_SESSION['initiate_credit_note'];?>">
+        <input type="hidden" name="<?=$unique?>" id="<?=$unique?>"  value="<?=$initiate_journal_note;?>">
         <input type="hidden" name="Cheque_No" id="Cheque_No" value="<?=$Cheque_No;?>">
         <input type="hidden" name="paid_to" id="paid_to" value="<?=$paid_to;?>">
         <?php if($Cheque_Date>0){ ?>
@@ -314,36 +308,31 @@ journal_info j,
                 <td style="width: 25%; vertical-align: middle" align="center">
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
-                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)',  $edit_value->ledger_id, 'status=1'); ?>
+                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)',  $edit_value_ledger_id, 'status=1'); ?>
                     </select></td>
                 <td align="center" style="width: 10%;vertical-align: middle">
                     <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="cc_code" id="cc_code">
                         <option></option>
-                        <?php foreign_relation('cost_center', 'id', 'CONCAT(id," : ", center_name)', $edit_value->cc_code, 'status=1'); ?>
+                        <?php foreign_relation('cost_center', 'id', 'CONCAT(id," : ", center_name)', $edit_value_cc_code, 'status=1'); ?>
                     </select></td>
                 <td style="width:15%;vertical-align: middle" align="center">
-
-                    <textarea id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" class="form-control col-md-7 col-xs-12" autocomplete="off"><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['journal_last_narration'];?></textarea>
-
+                    <textarea id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" class="form-control col-md-7 col-xs-12" autocomplete="off"><?=($edit_value_narration!='')? $edit_value_narration : $journal_last_narration;?></textarea>
+                </td>
                 <td style="width:10%;vertical-align: middle" align="center">
                     <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
-                <td align="center" style="width:10%"><?php if (isset($_GET[id])) { ?>
+                <td align="center" style="width:10%"><?php if (isset($_GET['id'])) { ?>
                         <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  value="<?=$edit_value->dr_amt;?>" <?php if($edit_value->dr_amt>0)  echo ''; else echo 'readonly'; ?>  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                         <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px"  value="<?=$edit_value->cr_amt;?>" <?php if($edit_value->cr_amt>0)  echo ''; else echo 'readonly'; ?>  name="cr_amt" placeholder="Credit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" /><?php } else {  ?>
                         <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                         <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px" name="cr_amt" placeholder="Credit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                     <?php } ?></td>
 
-                <td align="center" style="width:5%; vertical-align: middle "><?php if (isset($_GET[id])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_GET[id];?>" id="editdata<?=$_GET[id];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
+                <td align="center" style="width:5%; vertical-align: middle "><?php if (isset($_GET['id'])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_GET['id'];?>" id="editdata<?=$_GET['id'];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
                     <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td></tr>
             </tbody>
         </table>
         <input name="count" id="count" type="hidden" value="" />
     </form>
-
-
-    <!-----------------------Data Save Confirm ------------------------------------------------------------------------->
-
-    <?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_journal_note'],$COUNT_details_data,$page);?><br><br>
+<?=voucher_delete_edit($rs,$unique,$_SESSION['initiate_journal_note'],$COUNT_details_data,$page);?><br><br>
 <?php endif;?>
 <?=$html->footer_content();mysqli_close($conn);?>
