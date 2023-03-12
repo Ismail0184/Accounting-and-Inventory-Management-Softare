@@ -8,7 +8,7 @@ $table="dealer_credit_limit_request";
 $page="dealer_credit_limit_request.php";
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
-$dealer_master = find_all_field('dealer_info','account_code','dealer_code='.$_GET[dealer_code]);
+$dealer_master = find_all_field('dealer_info','account_code','dealer_code='.$_GET['dealer_code']);
 
 
 if(prevent_multi_submit()){
@@ -45,7 +45,7 @@ dealer_credit_limit_request r
 <script type="text/javascript">
 function reload(form){
 var val=form.dealer_code.options[form.dealer_code.options.selectedIndex].value;
-self.location='<?=$page;?>?<?php if($_GET[id]>0){?>id=<?=$_GET[id]?>&<?php } ?>dealer_code=' + val ;}</script>
+self.location='<?=$page;?>?<?php if($_GET['id']>0){?>id=<?=$_GET['id']?>&<?php } ?>dealer_code=' + val ;}</script>
 <?php require_once 'body_content_nva_sm.php'; ?>
 
 
@@ -75,7 +75,7 @@ self.location='<?=$page;?>?<?php if($_GET[id]>0){?>id=<?=$_GET[id]?>&<?php } ?>d
                                 <option value="For one time DO">Single</option>
                             </select>
                         </td>
-                        <td style="width:5%"><?php if($_GET[dealer_code]>0){?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 12px">Add Request</button><?php } else {} ?> </td>
+                        <td style="width:5%"><?php if($_GET['dealer_code']>0){?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 12px">Add Request</button><?php } else {} ?> </td>
                     </tr>
                 </table>
             </form></div></div></div>

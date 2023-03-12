@@ -61,7 +61,7 @@ function reload1(form)
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="form-control" style="width:100%; font-size: 12px" tabindex="-1"  name="do_type" >
                                 <option></option>
-                                <?php foreign_relation('sale_do_master', 'distinct do_type', 'do_type',1, '1'); ?>
+                                <?php foreign_relation('sale_do_master', 'distinct do_type', 'do_type','', '1'); ?>
                             </select>
                         </div>
                     </div>
@@ -70,7 +70,7 @@ function reload1(form)
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="select2_single form-control" style="width:100%; font-size: 12px" tabindex="-1"  name="dealer_code" >
                                 <option></option>
-                                <?=foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)',1, '1'); ?>
+                                <?=foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)',0, '1'); ?>
                             </select>
                         </div>
                     </div>

@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_cheque_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_cheque_payment_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_journal_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/dealer_credit_limit_request.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/dealer_credit_limit_request.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/dealer_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/dealer_info.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/inventory_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/inventory_select_report.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,6 +88,7 @@
       <workItem from="1678449934461" duration="7316000" />
       <workItem from="1678509782769" duration="18690000" />
       <workItem from="1678596069154" duration="12159000" />
+      <workItem from="1678611710439" duration="7679000" />
     </task>
     <servers />
   </component>
