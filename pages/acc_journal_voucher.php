@@ -8,8 +8,8 @@ $table_journal_info="journal_info";
 $journal_info_unique='journal_info_no';
 $page="acc_journal_voucher.php";
 $crud      =new crud($table_journal_master);
-$$unique = $_POST['voucherno'];
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
+
+
 $create_date=date('Y-m-d');
 $jv=next_journal_voucher_id();
 
@@ -39,13 +39,13 @@ if(prevent_multi_submit()) {
 
 //for modify PS information ...........................
         if (isset($_POST['modify'])) {
-            $d = $_POST[voucher_date];
-            $_POST[voucher_date] = date('Y-m-d', strtotime($d));
-            if($_POST[Cheque_Date]>0){
-                $ckd = $_POST[Cheque_Date];
-                $_POST[Cheque_Date] = date('Y-m-d', strtotime($ckd));
+            $d = $_POST['voucher_date'];
+            $_POST['voucher_date'] = date('Y-m-d', strtotime($d));
+            if($_POST['Cheque_Date']>0){
+                $ckd = $_POST['Cheque_Date'];
+                $_POST['Cheque_Date'] = date('Y-m-d', strtotime($ckd));
             } else {
-                $_POST[Cheque_Date]='';
+                $_POST['Cheque_Date']='';
             }
             $_POST['edit_at'] = time();
             $_POST['edit_by'] = $_SESSION['userid'];

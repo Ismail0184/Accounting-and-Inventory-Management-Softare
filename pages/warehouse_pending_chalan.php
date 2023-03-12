@@ -1,5 +1,4 @@
-<?php require_once 'support_file.php'; ?>
-<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
+<?php require_once 'support_file.php';
 $GET_no = @$_GET['do_no'];
 $title='Delivery Challan | DO No: '.$GET_no;
 $now=time();
@@ -33,7 +32,7 @@ $find_chalan_no=next_chalan_no($_SESSION['warehouse'],date('Y-m-d'));
 
 //for Delete..................................
 if(isset($_POST['cancel']))
-{   
+{
     mysqli_query($conn, 'DELETE FROM '.$journal_item.' where tr_from="Sales" and '.$unique.'='.$_GET['do_no']);
     mysqli_query($conn, 'UPDATE '.$table.' SET status="RETURNED",returned_by="'.$_SESSION['userid'].'",returned_remarks="'.$_POST['returned_remarks'].'" where '.$unique.'='.$_GET['do_no']);
     unset($_SESSION['wpc_DO']);
@@ -187,7 +186,7 @@ $cd_data_total_amt = @$cd_data->total_amt;
 
 $cash_discount_on_Raymond=mysqli_query($conn, "select SUM(sdd.total_amt) as total_amt from sale_do_details sdd,item_info i where sdd.gift_on_item=i.item_id and i.brand_id='2' and sdd.item_id='1096000100010312' and sdd.do_no='".$unique_GET."' group by sdd.do_no");
 $cd_data_RMND=mysqli_fetch_object($cash_discount_on_Raymond);
-
+$cd_data_RMND_total_amt = @$cd_data_RMND->total_amt;
 
 $narration=$do_type_get." to ".$dealer_master_dealer_name_e.', Do No # '.$unique_GET.', Challan No # '.$find_chalan_no;
 if (isset($_POST['viewreport'])) {
@@ -214,18 +213,18 @@ if (isset($_POST['viewreport'])) {
 							  order by m.do_no";
 } ?>
 <?php require_once 'header_content.php'; ?>
-    <script type="text/javascript">
-        function DoNavPOPUP(lk)
-        {myWindow = window.open("<?=$page?>?<?=$unique?>="+lk, "myWindow", "toolbar=no, location=0, directories=no, status=0, menubar=0, scrollbars=no, resizable=no, copyhistory=no,directories=0,toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=950,height=700,left = 230,top = -1");}
-    </script>
-    <style>
-        #customers {}
-        #customers td {}
-        #customers tr:ntd-child(even)
-        {background-color: #white;}
-        #customers tr:hover {background-color: #F0F0F0;}
-        td{}
-    </style>
+<script type="text/javascript">
+    function DoNavPOPUP(lk)
+    {myWindow = window.open("<?=$page?>?<?=$unique?>="+lk, "myWindow", "toolbar=no, location=0, directories=no, status=0, menubar=0, scrollbars=no, resizable=no, copyhistory=no,directories=0,toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=950,height=700,left = 230,top = -1");}
+</script>
+<style>
+    #customers {}
+    #customers td {}
+    #customers tr:ntd-child(even)
+    {background-color: #white;}
+    #customers tr:hover {background-color: #F0F0F0;}
+    td{}
+</style>
 <?php if(isset($_GET[$unique])){
     require_once 'body_content_without_menu.php';
 } else {
@@ -317,19 +316,19 @@ if (isset($_POST['viewreport'])) {
                         <?php } else { echo '<font style="font-weight: bold">Done</font>';} ?>
                     </td>
                 </tr>
-                <?php  
-                       $total_sales_amount=$total_sales_amount+$row->total_amt;
-                       $COGS_amount=find_a_field('journal_item','SUM(total_amt)','Remarks in ("buy") and do_no='.$_GET['do_no'].' and gift_type in ("none")');
-                       $free_own_product=find_a_field('journal_item','SUM(total_amt)','Remarks in ("get") and do_no='.$_GET['do_no'].' and gift_type in ("free_own_products")');
-                       $free_other_SKU=find_a_field('journal_item','SUM(total_amt)','Remarks in ("get") and do_no='.$_GET['do_no'].' and gift_type in ("free_other_SKU")');;
-                       $free_other_product=find_a_field('journal_item','SUM(total_amt)','Remarks in ("get") and do_no='.$_GET['do_no'].' and gift_type in ("free_other_products")');;
-                       $revenue_amount=find_a_field('sale_do_details','SUM(revenue_amount)','do_no='.$_GET['do_no'].' and revenue_persentage>0');
+                <?php
+                $total_sales_amount=$total_sales_amount+$row->total_amt;
+                $COGS_amount=find_a_field('journal_item','SUM(total_amt)','Remarks in ("buy") and do_no='.$_GET['do_no'].' and gift_type in ("none")');
+                $free_own_product=find_a_field('journal_item','SUM(total_amt)','Remarks in ("get") and do_no='.$_GET['do_no'].' and gift_type in ("free_own_products")');
+                $free_other_SKU=find_a_field('journal_item','SUM(total_amt)','Remarks in ("get") and do_no='.$_GET['do_no'].' and gift_type in ("free_other_SKU")');;
+                $free_other_product=find_a_field('journal_item','SUM(total_amt)','Remarks in ("get") and do_no='.$_GET['do_no'].' and gift_type in ("free_other_products")');;
+                $revenue_amount=find_a_field('sale_do_details','SUM(revenue_amount)','do_no='.$_GET['do_no'].' and revenue_persentage>0');
             }
             //$total_sales_amount=$total_sales_amounts+find_a_field('sale_do_details','SUM(total_amt)','do_no='.$_SESSION['wpc_DO'].' and gift_type in ("Cash")');
             $cash_discounts=substr($cash_discount,1);
             ?>
             </tbody></table>
-        <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:none">
+        <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:">
             <thead>
             <tr style="background-color: bisque">
                 <th>#</th>
@@ -407,8 +406,8 @@ if (isset($_POST['viewreport'])) {
             <?php endif; ?>
             <?php if($free_own_product>0):?>
                 <tr>
-                    <th rowspan="4" style="text-align: center; vertical-align: middle">4</th>
-                    <th rowspan="4" style="text-align: center; vertical-align: middle">Free Inventory Journal</th>
+                    <th rowspan="2" style="text-align: center; vertical-align: middle">4</th>
+                    <th rowspan="2" style="text-align: center; vertical-align: middle">Free Inventory Journal</th>
                     <th style="text-align: center; vertical-align: middle">Own Products</th>
                     <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_7" id="ledger_7">
                             <option  value="<?=$config_group_class->free_own_product?>"><?=$config_group_class->free_own_product?> : <?=find_a_field('accounts_ledger','ledger_name','ledger_id='.$config_group_class->free_own_product); ?></option>
@@ -451,58 +450,58 @@ if (isset($_POST['viewreport'])) {
                 </tr>
             <?php endif; ?>
 
-                <tr>
-                    <th rowspan="3" style="text-align: center; vertical-align: middle">5</th>
-                    <th rowspan="3" style="text-align: center; vertical-align: middle">Cash Discount</th>
-                    <th rowspan="2" style="text-align: center; vertical-align: middle">Discount Ledger</th>
-                    <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_11" id="ledger_11">
-                            <option  value="4013000500010000">4013000500010000: <?=find_a_field('accounts_ledger','ledger_name','ledger_id="4013000500010000"'); ?></option>
-                        </select></td>
-                    <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_11"  value="<?='Cash discount offer on Style Forever products, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
-                    <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_11" readonly value="<?=substr($cd_data_total_amt,1)?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
-                    <td style="text-align: right; vertical-align: middle"></td>
-                </tr>
-                <tr>
-                    <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_12" id="ledger_12">
-                            <option  value="4013000500020000">4013000500020000 : <?=find_a_field('accounts_ledger','ledger_name','ledger_id="4013000500020000"'); ?></option>
-                        </select></td>
-                    <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_12"  value="<?='Cash discount offer on Raymond products, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
-                    <td style="text-align: right; vertical-align: middle"><input type="text"  name="dr_amount_12" readonly value="<?=substr($cd_data_total_amt,1)?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
-                    <td style="text-align: right; vertical-align: middle"></td>
-                </tr>
-                
-                <tr>
-                    <th style="text-align: center; vertical-align: middle">Customer Ledger</th>
-                    <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_13" id="ledger_13">
+            <tr>
+                <th rowspan="3" style="text-align: center; vertical-align: middle">5</th>
+                <th rowspan="3" style="text-align: center; vertical-align: middle">Cash Discount</th>
+                <th rowspan="2" style="text-align: center; vertical-align: middle">Discount Ledger</th>
+                <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_11" id="ledger_11">
+                        <option  value="4013000500010000">4013000500010000: <?=find_a_field('accounts_ledger','ledger_name','ledger_id="4013000500010000"'); ?></option>
+                    </select></td>
+                <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_11"  value="<?='Cash discount offer on Style Forever products, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_11" readonly value="<?=substr($cd_data_total_amt,1)?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                <td style="text-align: right; vertical-align: middle"></td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_12" id="ledger_12">
+                        <option  value="4013000500020000">4013000500020000 : <?=find_a_field('accounts_ledger','ledger_name','ledger_id="4013000500020000"'); ?></option>
+                    </select></td>
+                <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_12"  value="<?='Cash discount offer on Raymond products, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text"  name="dr_amount_12" readonly value="<?=substr($cd_data_RMND_total_amt,1)?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                <td style="text-align: right; vertical-align: middle"></td>
+            </tr>
+
+            <tr>
+                <th style="text-align: center; vertical-align: middle">Customer Ledger</th>
+                <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_13" id="ledger_13">
                         <option  value="<?=$dealer_master->account_code;?>"><?=$dealer_master->account_code; ?>-<?=$customer_name=find_a_field('accounts_ledger','ledger_name','ledger_id='.$dealer_master->account_code.''); ?></option>
+                    </select></td>
+                <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_13"  value="<?='Received cash discount, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
+                <td style="text-align: right; vertical-align: middle"></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text"  name="cr_amount_13" readonly value="<?=substr($cash_discount,1)?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+            </tr>
+
+
+            <?php if($revenue_amount>0):?>
+                <tr>
+                    <th style="text-align: center; vertical-align: middle">Revenue Ledger</th>
+                    <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_14" id="ledger_14">
+                            <option  value="1003001400000000">1003001400000000: <?=find_a_field('accounts_ledger','ledger_name','ledger_id="1003001400000000"'); ?></option>
                         </select></td>
-                    <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_13"  value="<?='Received cash discount, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
-                    <td style="text-align: right; vertical-align: middle"></td>
-                    <td style="text-align: right; vertical-align: middle"><input type="text"  name="cr_amount_13" readonly value="<?=substr($cash_discount,1)?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                    <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_14"  value="<?='Revenue from Sales, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
+                    <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_14" readonly value="<?=$revenue_amount?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                    <td style="text-align: right; vertical-align: middle"><input type="text" name="cr_amount_14" readonly value="" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
                 </tr>
 
-
-    <?php if($revenue_amount>0):?>
-        <tr>
-            <th style="text-align: center; vertical-align: middle">Revenue Ledger</th>
-            <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_14" id="ledger_14">
-                    <option  value="1003001400000000">1003001400000000: <?=find_a_field('accounts_ledger','ledger_name','ledger_id="1003001400000000"'); ?></option>
-                </select></td>
-            <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_14"  value="<?='Revenue from Sales, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
-            <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_14" readonly value="<?=$revenue_amount?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
-            <td style="text-align: right; vertical-align: middle"><input type="text" name="cr_amount_14" readonly value="" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
-        </tr>
-
-        <tr>
-            <th style="text-align: center; vertical-align: middle">Revenue Ledger</th>
-            <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_15" id="ledger_15">
-                    <option  value="3002000700000000">3002000700000000 : <?=find_a_field('accounts_ledger','ledger_name','ledger_id="3002000700000000"'); ?></option>
-                </select></td>
-            <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_15"  value="<?='Revenue from Sales, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
-            <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_15" readonly value="" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
-            <td style="text-align: right; vertical-align: middle"><input type="text" name="cr_amount_15" readonly value="<?=$revenue_amount?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
-        </tr>
-    <?php endif;?>
+                <tr>
+                    <th style="text-align: center; vertical-align: middle">Revenue Ledger</th>
+                    <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_15" id="ledger_15">
+                            <option  value="3002000700000000">3002000700000000 : <?=find_a_field('accounts_ledger','ledger_name','ledger_id="3002000700000000"'); ?></option>
+                        </select></td>
+                    <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_15"  value="<?='Revenue from Sales, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
+                    <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_15" readonly value="" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                    <td style="text-align: right; vertical-align: middle"><input type="text" name="cr_amount_15" readonly value="<?=$revenue_amount?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                </tr>
+            <?php endif;?>
 
             </tbody>
         </table>
@@ -545,6 +544,6 @@ if (isset($_POST['viewreport'])) {
             </tr></table>
     </form>
 
-<?=$crud->report_templates_with_status($res,$title);?>
+    <?=$crud->report_templates_with_status($res,$title);?>
 <?php endif;?>
 <?=$html->footer_content();mysqli_close($conn);?>

@@ -16,7 +16,7 @@ $dofdate= '20'.$year1.'-'.$month.'-'.$day;
 list($dayt,$montht,$yeart) = preg_split("/[\/\.\-]+/", $_REQUEST['dateto']);
 $dotdate= '20'.$yeart.'-'.$montht.'-'.$dayt;
 $warehouseid=@$_POST['warehouse_id'];
-$_SESSION['company_name']=getSVALUE('company','company_name','where company_id="'.$_SESSION['companyid'].'"');
+$_SESSION['company_name']=find_a_field('company','company_name','company_id="'.$_SESSION['companyid'].'"');
 $sectionid=$_SESSION['sectionid'];
 $companyid=$_SESSION['companyid'];
 
@@ -26,14 +26,6 @@ if($sectionid=='400000'){
     $sec_com_connection=" and j.section_id='".$sectionid."' and j.company_id='".$companyid."'";
 }
 ?>
-
-
-
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -45,9 +37,7 @@ if($sectionid=='400000'){
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript">
         function hide()
-        {
-            document.getElementById("pr").style.display = "none";
-        }
+        {document.getElementById("pr").style.display = "none";}
     </script>
     <style>
         #customers {}
@@ -61,8 +51,6 @@ if($sectionid=='400000'){
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 </head>
 <body style="font-family: "Gill Sans", sans-serif;">
-
-
 <div id="pr" style="margin-left:48%">
     <div align="left">
         <form id="form1" name="form1" method="post" action="">
@@ -71,14 +59,9 @@ if($sectionid=='400000'){
     </div>
 </div>
 
-
-
-
 <?php if ($_POST['report_id']=='1002001'):
-    $ledger_name=getSVALUE('accounts_ledger','ledger_name','where ledger_id='.$_REQUEST['ledger_id']);
-    $up=mysqli_query($conn, "Update journal set cc_code='0' where cc_code is null");
-
-    ?>
+    $ledger_name=find_a_field('accounts_ledger','ledger_name','ledger_id='.$_REQUEST['ledger_id']);
+    $up=mysqli_query($conn, "Update journal set cc_code='0' where cc_code is null"); ?>
     <style>
         #customers {
             font-family: "Gill Sans", sans-serif;
@@ -94,7 +77,7 @@ if($sectionid=='400000'){
         <p align="center" style="margin-top:-18px; font-size: 15px">Transaction Statement</p>
         <p align="center" style="margin-top:-10px; font-size: 12px; font-weight: bold"><?=($_REQUEST['ledger_id']>0)? 'Ledger Name: '.$_REQUEST['ledger_id'].' - '.$ledger_name.'' : 'All Transaction' ?></p>
         <?php if($_POST['cc_code']){ ?>
-        <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Cost Center:</strong> <?=getSVALUE('cost_center','center_name','where id='.$_REQUEST['cc_code']);?> (<?=$_REQUEST['cc_code'];?>)</p>
+        <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Cost Center:</strong> <?=find_a_field('cost_center','center_name','id='.$_REQUEST['cc_code']);?> (<?=$_REQUEST['cc_code'];?>)</p>
         <?php } ?>
 
         <?php if($_POST['tr_from']){ ?>
@@ -394,9 +377,9 @@ order by a.jvdate,a.id";}
 <title><?=$ledger_name;?> | Imbalance Voucher</title>
         <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
         <p align="center" style="margin-top:-18px; font-size: 15px">Imbalance Voucher</p>
-        <p align="center" style="margin-top:-10px; font-size: 12px; font-weight: bold">Ledger Name: <?=$_REQUEST['ledger_id'];?> - <?=getSVALUE('accounts_ledger','ledger_name','where ledger_id='.$_REQUEST['ledger_id']);?></p>
+        <p align="center" style="margin-top:-10px; font-size: 12px; font-weight: bold">Ledger Name: <?=$_REQUEST['ledger_id'];?> - <?=find_a_field('accounts_ledger','ledger_name','ledger_id='.$_REQUEST['ledger_id']);?></p>
         <?php if($_POST['cc_code']){ ?>
-        <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Cost Center:</strong> <?=getSVALUE('cost_center','center_name','where id='.$_REQUEST['cc_code']);?> (<?=$_REQUEST['cc_code'];?>)</p>
+        <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Cost Center:</strong> <?=find_a_field('cost_center','center_name','id='.$_REQUEST['cc_code']);?> (<?=$_REQUEST['cc_code'];?>)</p>
         <?php } ?>
         <?php if($_POST['tr_from']){ ?>
         <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Transaction Type:</strong> <?=$_REQUEST['tr_from'];?></p>
@@ -660,9 +643,9 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
 <?php elseif ($_POST['report_id']=='1002004'):?>
 <?php
     if($_SESSION['usergroup']>1){
-        $cash_and_bank_balance=getSVALUE('ledger_group','group_id','where group_sub_class="1020" and group_for="'.$_SESSION['usergroup'].'"');
+        $cash_and_bank_balance=find_a_field('ledger_group','group_id','group_sub_class="1020" and group_for="'.$_SESSION['usergroup'].'"');
 	}else{
-        $cash_and_bank_balance=getSVALUE('ledger_group','group_id','where group_sub_class="1020"');
+        $cash_and_bank_balance=find_a_field('ledger_group','group_id','group_sub_class="1020"');
 	}
     $led=mysqli_query($conn, "select ledger_id,ledger_name from accounts_ledger where group_for=".$_SESSION['usergroup']." and ledger_group_id='$cash_and_bank_balance' order by ledger_name");
     $data = '[';
@@ -697,7 +680,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
 
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
     <h4 align="center" style="margin-top:-15px">Receipt & Payment Statement</h4>
-    <?php if ($_POST['cc_code']>0) { ?><h4 align="center" style="margin-top:-15px">Cost Center :  <?= getSVALUE('cost_center','center_name','WHERE id="'.$_POST['cc_code'].'"');?> </h4><?php } ?>
+    <?php if ($_POST['cc_code']>0) { ?><h4 align="center" style="margin-top:-15px">Cost Center :  <?=find_a_field('cost_center','center_name','id="'.$_POST['cc_code'].'"');?> </h4><?php } ?>
     <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:70%; border: solid 1px #999; border-collapse:collapse;font-size:12px">
         <thead>
@@ -2605,7 +2588,7 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 
 
 <?php elseif ($_POST['report_id']=='1008001'):?>
-<title><?=$warehouse_name= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST['warehouse_id'].'"');?> : Transaction Statement</title>
+<title><?=$warehouse_name= find_a_field('warehouse','warehouse_name','warehouse_id="'.$_POST['warehouse_id'].'"');?> : Transaction Statement</title>
     <style>
         #customers {
             font-family: "Gill Sans", sans-serif;
@@ -2830,7 +2813,7 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 <?php elseif ($_POST['report_id']=='1008002'):?>
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
     <h5 align="center" style="margin-top:-15px">Present Stock (Material)</h5>
-    <h6 align="center" style="margin-top:-15px">Warehouse Name: <?= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST[warehouse_id].'"');?> </h6>
+    <h6 align="center" style="margin-top:-15px">Warehouse Name: <?=find_a_field('warehouse','warehouse_name','warehouse_id="'.$_POST['warehouse_id'].'"');?> </h6>
     <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:80%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
@@ -2891,7 +2874,7 @@ group by j.item_id order by g.group_id DESC,i.serial";
 <?php elseif ($_POST['report_id']=='1008003'):?>
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
     <h5 align="center" style="margin-top:-15px">Present Stock (Finish Goods)</h5>
-    <h6 align="center" style="margin-top:-15px">Warehouse Name: <?= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST[warehouse_id].'"');?> </h6>
+    <h6 align="center" style="margin-top:-15px">Warehouse Name: <?=find_a_field('warehouse','warehouse_name','warehouse_id="'.$_POST['warehouse_id'].'"');?> </h6>
     <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:80%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
@@ -2956,7 +2939,7 @@ group by j.item_id order by g.group_id DESC,i.finish_goods_code";
 <?php elseif ($_POST['report_id']=='1008004'):?>
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
     <h5 align="center" style="margin-top:-15px">Present Stock (Asset)</h5>
-    <h6 align="center" style="margin-top:-15px">Warehouse Name: <?= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST[warehouse_id].'"');?> </h6>
+    <h6 align="center" style="margin-top:-15px">Warehouse Name: <?=find_a_field('warehouse','warehouse_name','warehouse_id="'.$_POST['warehouse_id'].'"');?> </h6>
     <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:80%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>

@@ -107,10 +107,10 @@ if(isset($_POST[$unique]))
         } else {
         if ((($POST_dr_amt || $POST_cr_amt) > 0) && ($_SESSION['initiate_debit_note']>0)) {
             add_to_payment($_SESSION['initiate_debit_note'],$date, $proj_id, $_POST['narration'], $_POST['ledger_id'], $_POST['dr_amt'],
-                $POST_cr_amt, $type,$cur_bal,$_POST['paid_to'],$_POST['Cheque_No'],$c_date,$_POST['Cheque_of_bank'],$manual_payment_no,$_POST['cc_code'],$subledger_id,'MANUAL',$ip,$_POST['receipt_date'],$_SESSION['sectionid'],$_SESSION['companyid'],$_SESSION['userid'],$create_date,$now,$day,$thisday,$thismonth,$thisyear,$receive_ledger);
+                $POST_cr_amt, $type,$cur_bal,$_POST['paid_to'],$_POST['Cheque_No'],$c_date,$_POST['Cheque_of_bank'],$manual_payment_no,$cc_code,$subledger_id,'MANUAL',$ip,$_POST['receipt_date'],$_SESSION['sectionid'],$_SESSION['companyid'],$_SESSION['userid'],$create_date,$now,$day,$thisday,$thismonth,$thisyear,$receive_ledger,'');
 				if ($_POST['rcved_remining']==$_POST['dr_amt']) {
                     add_to_payment($_SESSION['initiate_debit_note'], $date, $proj_id, $_POST['narration'], $_POST['cash_bank_ledger'], 0,
-                        $_POST['amount'], 'Credit', $cur_bal, $_POST['paid_to'], $_POST['Cheque_No'], $c_date, $_POST['Cheque_of_bank'], $manual_payment_no, $_POST['cc_code'],$subledger_id,'MANUAL', $ip, $_POST['receipt_date'], $_SESSION['sectionid'], $_SESSION['companyid'], $_SESSION['userid'], $create_date, $now, $day, $thisday, $thismonth, $thisyear, $_POST['ledger_id']);
+                        $_POST['amount'], 'Credit', $cur_bal, $_POST['paid_to'], $_POST['Cheque_No'], $c_date, $_POST['Cheque_of_bank'], $manual_payment_no, $_POST['cc_code'],$subledger_id,'MANUAL', $ip, $_POST['receipt_date'], $_SESSION['sectionid'], $_SESSION['companyid'], $_SESSION['userid'], $create_date, $now, $day, $thisday, $thismonth, $thisyear, $_POST['ledger_id'],'');
                 }
 				$_SESSION['debit_note_last_narration']=$_POST['narration'];
         }

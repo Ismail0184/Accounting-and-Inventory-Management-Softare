@@ -186,7 +186,7 @@ $cd_data_total_amt = @$cd_data->total_amt;
 
 $cash_discount_on_Raymond=mysqli_query($conn, "select SUM(sdd.total_amt) as total_amt from sale_do_details sdd,item_info i where sdd.gift_on_item=i.item_id and i.brand_id='2' and sdd.item_id='1096000100010312' and sdd.do_no='".$unique_GET."' group by sdd.do_no");
 $cd_data_RMND=mysqli_fetch_object($cash_discount_on_Raymond);
-
+$cd_data_RMND_total_amt = @$cd_data_RMND->total_amt;
 
 $narration=$do_type_get." to ".$dealer_master_dealer_name_e.', Do No # '.$unique_GET.', Challan No # '.$find_chalan_no;
 if (isset($_POST['viewreport'])) {
@@ -406,8 +406,8 @@ if (isset($_POST['viewreport'])) {
             <?php endif; ?>
             <?php if($free_own_product>0):?>
                 <tr>
-                    <th rowspan="4" style="text-align: center; vertical-align: middle">4</th>
-                    <th rowspan="4" style="text-align: center; vertical-align: middle">Free Inventory Journal</th>
+                    <th rowspan="2" style="text-align: center; vertical-align: middle">4</th>
+                    <th rowspan="2" style="text-align: center; vertical-align: middle">Free Inventory Journal</th>
                     <th style="text-align: center; vertical-align: middle">Own Products</th>
                     <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_7" id="ledger_7">
                             <option  value="<?=$config_group_class->free_own_product?>"><?=$config_group_class->free_own_product?> : <?=find_a_field('accounts_ledger','ledger_name','ledger_id='.$config_group_class->free_own_product); ?></option>
@@ -466,7 +466,7 @@ if (isset($_POST['viewreport'])) {
                         <option  value="4013000500020000">4013000500020000 : <?=find_a_field('accounts_ledger','ledger_name','ledger_id="4013000500020000"'); ?></option>
                     </select></td>
                 <td style="text-align: center; vertical-align: middle"><input type="text" name="narration_12"  value="<?='Cash discount offer on Raymond products, '.$narration.'';?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center"></td>
-                <td style="text-align: right; vertical-align: middle"><input type="text"  name="dr_amount_12" readonly value="<?=substr($cd_data_total_amt,1)?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text"  name="dr_amount_12" readonly value="<?=substr($cd_data_RMND_total_amt,1)?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
                 <td style="text-align: right; vertical-align: middle"></td>
             </tr>
 

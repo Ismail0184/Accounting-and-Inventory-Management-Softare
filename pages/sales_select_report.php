@@ -3,6 +3,7 @@
 $title='Sales Report';
 $page="sales_select_report.php";
 $report_id = @$_REQUEST['report_id'];
+$link = 'sales_reportview.php';
 ?>
 <?php require_once 'header_content.php'; ?>
 <SCRIPT language=JavaScript>
@@ -60,6 +61,7 @@ $report_id = @$_REQUEST['report_id'];
                             <select class="select2_single form-control" style="width:100%; font-size: 12px" tabindex="-1" name="warehouse_id" >
                                 <option></option>
                                 <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$_SESSION['warehouse']);?>
+                            </select>
                         </div>
                     </div>
 
@@ -452,7 +454,7 @@ $report_id = @$_REQUEST['report_id'];
                 <?php  else:  ?>
                     <p style="text-align: center">Please select a report from left</p>
                 <?php endif; ?>
-                <?php if ($report_id>0): ?>
+                <?php if(isset($report_id)): ?>
                     <div class="ln_solid"></div>
                     <div class="form-group">
                         <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">

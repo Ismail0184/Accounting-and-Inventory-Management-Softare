@@ -334,7 +334,7 @@ where
                     </select>
                 </td>
                 <td align="center" style="width: 10%;vertical-align: middle">
-                    <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="cc_code" id="cc_code">
+                    <select class="select2_single form-control" style="width:100%" tabindex="-1" required="required" name="cc_code" id="cc_code">
                         <option></option>
                         <?php foreign_relation('cost_center', 'id', 'CONCAT(id,"-", center_name)', $edit_value_cc_code, 'status=1'); ?>
                     </select>
