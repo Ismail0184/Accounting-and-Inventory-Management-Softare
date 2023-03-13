@@ -8,8 +8,8 @@ $table_contra="coutra";
 $coutra_no_unique='coutra_no';
 $page="acc_contra_voucher.php";
 $crud      =new crud($table_journal_master);
-$$unique = $_POST[$unique];
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
+
+
 $create_date=date('Y-m-d');
 $jv=next_journal_voucher_id();
 if(prevent_multi_submit()) {
@@ -19,15 +19,15 @@ if(prevent_multi_submit()) {
             $_POST['section_id'] = $_SESSION['sectionid'];
             $_POST['company_id'] = $_SESSION['companyid'];
             $_POST['ip'] = $ip;
-            if(isset($_POST[Cheque_Date])){
-                $ckd = $_POST[Cheque_Date];
-                $_POST[Cheque_Date] = $_POST[Cheque_Date];
+            if(isset($_POST['Cheque_Date'])){
+                $ckd = $_POST['Cheque_Date'];
+                $_POST['Cheque_Date'] = $_POST['Cheque_Date'];
             } else {
-                $_POST[Cheque_Date]='';
+                $_POST['Cheque_Date']='';
             }
             $_POST['entry_by'] = $_SESSION['userid'];
             $_POST['entry_at'] = date('Y-m-d H:s:i');
-            $_SESSION[initiate_contra_note] = $_POST[$unique];
+            $_SESSION['initiate_contra_note'] = $_POST[$unique];
             $_POST['journal_type'] = 'Contra';
             $_POST['entry_status'] = 'MANUAL';
             $crud->insert();
@@ -36,13 +36,13 @@ if(prevent_multi_submit()) {
 
 //for modify PS information ...........................
         if (isset($_POST['modify'])) {
-            $d = $_POST[voucher_date];
-            $_POST[voucher_date] = date('Y-m-d', strtotime($d));
-            if(isset($_POST[Cheque_Date])){
-                $ckd = $_POST[Cheque_Date];
-                $_POST[Cheque_Date] = $_POST[Cheque_Date];
+            $d = $_POST['voucher_date'];
+            $_POST['voucher_date'] = date('Y-m-d', strtotime($d));
+            if(isset($_POST['Cheque_Date'])){
+                $ckd = $_POST['Cheque_Date'];
+                $_POST['Cheque_Date'] = $_POST['Cheque_Date'];
             } else {
-                $_POST[Cheque_Date]='';
+                $_POST['Cheque_Date']='';
             }
             $_POST['edit_at'] = time();
             $_POST['edit_by'] = $_SESSION['userid'];
@@ -54,53 +54,30 @@ if(prevent_multi_submit()) {
 
 //for single FG Add...........................
         if (isset($_POST['add'])) {
-            if ($_POST[dr_amt] > 0) {
+            if ($_POST['dr_amt'] > 0) {
                 $type = 'Debit';
-            } elseif ($_POST[cr_amt] > 0) {
+            } elseif ($_POST['cr_amt'] > 0) {
                 $type = 'Credit';
             }
-            $dd = $_POST[voucher_date];
-            $date = date('d-m-y', strtotime($dd));
-            $j = 0;
-            for ($i = 0; $i < strlen($date); $i++) {
-                if (is_numeric($date[$i])) {
-                    $time[$j] = $time[$j] . $date[$i];
-                } else {
-                    $j++;
-                }
-            }
-            $date = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
-
-            if($_POST[Cheque_Date]) {
-                $c_dd = $_POST[Cheque_Date];
-                $c_date = date('d-m-y', strtotime($c_dd));
-                $j = 0;
-                for ($i = 0; $i < strlen($c_date); $i++) {
-                    if (is_numeric($c_date[$i])) {
-                        $ptime[$j] = $ptime[$j] . $c_date[$i];
-                    } else {
-                        $j++;
-                    }
-                }
-                $c_date = mktime(0, 0, 0, $ptime[1], $ptime[0], $ptime[2]);
+            $date = $_POST['voucher_date'];
+            if(isset($_POST['Cheque_Date'])) {
+                $c_dd = $_POST['Cheque_Date'];
+                $c_date = $_POST['Cheque_Date'];
             } else {
                 $c_date='';
             }
-
             $tdates = date("Y-m-d");
-            $day = date('l', strtotime($idatess));
+            $day = date('l', strtotime($tdates));
             $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
             $timess = $dateTime->format("d-m-y  h:i A");
-            if (($_POST[dr_amt] && $_POST[cr_amt]) > 0) {
+            if (($_POST['dr_amt'] && $_POST['cr_amt']) > 0) {
                 echo "<script>alert('Yor are trying to input an invalid transaction!!')</script>";
-                echo $targeturl;
             } else {
-
-                if ((($_POST[dr_amt] || $_POST[cr_amt]) > 0) && ($_SESSION[initiate_contra_note]>0)) {
-                    add_to_coutra($_SESSION[initiate_contra_note],$date, $proj_id, $_POST[narration], $_POST[ledger_id], $_POST[dr_amt],
-                        $_POST[cr_amt], $type,$cur_bal,$paid_to,$_POST[Cheque_No],$c_date,$_POST[Cheque_of_bank],$manual_payment_no,$_POST[cc_code],$_POST[subledger_id],MANUAL,$ip,$_POST[voucher_date],$_SESSION[sectionid],$_SESSION[companyid],$_SESSION[userid],$create_date,$now,$day
+                if ((($_POST['dr_amt'] || $_POST['cr_amt']) > 0) && ($_SESSION['initiate_contra_note']>0)) {
+                    add_to_coutra($_SESSION['initiate_contra_note'],$date, $proj_id, $_POST['narration'], $_POST['ledger_id'], $_POST['dr_amt'],
+                        $_POST['cr_amt'], $type,$cur_bal,$paid_to,$_POST['Cheque_No'],$c_date,$_POST['Cheque_of_bank'],$manual_payment_no,$_POST['cc_code'],$_POST['subledger_id'],'MANUAL',$ip,$_POST['voucher_date'],$_SESSION['sectionid'],$_SESSION[companyid],$_SESSION[userid],$create_date,$now,$day
                         ,$thisday,$thismonth,$thisyear,$receive_ledger);
-                    $_SESSION[contra_note_last_narration]=$_POST[narration];
+                    $_SESSION['contra_note_last_narration']=$_POST['narration'];
                 }
             }} } // end post unique
 } // prevent multi submit

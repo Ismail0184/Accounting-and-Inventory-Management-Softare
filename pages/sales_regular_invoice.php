@@ -10,8 +10,10 @@ $title='Sales Invoice';
 if(isset($_POST['select_dealer_do'])) {
     $_SESSION['select_dealer_do_regular']=$_POST['dealer_code'];
 }
+$select_dealer_do_regular = @$_SESSION['select_dealer_do_regular'];
 if(isset($_POST['dealer_cancel'])) {
 	unset($_SESSION['select_dealer_do_regular']);
+	unset($select_dealer_do_regular);
 }
 if(prevent_multi_submit()){
     if(isset($_POST['new']))
@@ -116,22 +118,24 @@ if(prevent_multi_submit()){
 
 }
 
+$unique_master_for_regular = @$_SESSION['unique_master_for_regular'];
 
 if (isset($_REQUEST['id'])) {
 $edit_value=find_all_field(''.$table_detail.'','','id='.$_REQUEST['id'].'');
 }
-
+$edit_value_item_id = @$edit_value->item_id;
 if(isset($_POST['cancel']))
 {
     $crud   = new crud($table_master);
-    $condition=$unique_master."=".$_SESSION['unique_master_for_regular'];
+    $condition=$unique_master."=".$unique_master_for_regular;
     $crud->delete($condition);
     $crud   = new crud($table_detail);
     $crud->delete_all($condition);
-    $crud   = new crud($table_chalan);
-    $crud->delete_all($condition);
+
     unset($$unique_master);
     unset($_POST[$unique_master]);
+    unset($unique_master_for_regular);
+    unset($select_dealer_do_regular);
     unset($_SESSION['select_dealer_do_regular']);
     unset($_SESSION['unique_master_for_regular']);
     $type=1;
@@ -142,7 +146,7 @@ if(isset($_POST['confirm'])){
     $commission_amount=$_POST['commission_amount'];
     unset($_POST);
     $_POST['commission_amount']=$commission_amount;
-    $_POST[$unique_master]=$_SESSION['unique_master_for_regular'];
+    $_POST[$unique_master]=$unique_master_for_regular;
     $_POST['entry_at']=date('Y-m-d H:i:s');
     $_POST['status']='PROCESSING';
 
@@ -152,35 +156,39 @@ if(isset($_POST['confirm'])){
     $crud->update($unique_master);
     unset($$unique_master);
     unset($_POST[$unique_master]);
+    unset($select_dealer_do_regular);
     unset($_SESSION['select_dealer_do_regular']);
     unset($_SESSION['unique_master_for_regular']);
     $type=1;
     $msg='Successfully Instructed to Depot.';}
 
 // fatch unique master data
-if($_SESSION['unique_master_for_regular']>0)
-{   $condition=$unique_master."=".$_SESSION['unique_master_for_regular'];
+if($unique_master_for_regular>0)
+{   $condition=$unique_master."=".$unique_master_for_regular;
     $data=db_fetch_object($table_master,$condition);
     while (list($key, $value)=@each($data))
     { $$key=$value;}}
 
-$dealer = find_all_field('dealer_info','','dealer_code='.$_SESSION['select_dealer_do_regular']);
-$item_all= find_all_field('item_info','','item_id="'.$_GET['item_id'].'"');
-if($_REQUEST['id']>0){
+$depot_id = @$depot_id;
+
+$select_dealer_do_regular = @$_SESSION['select_dealer_do_regular'];
+$dealer = find_all_field('dealer_info','','dealer_code='.$select_dealer_do_regular);
+$_GET_item_id = @$_GET['item_id'];
+$item_all= find_all_field('item_info','','item_id="'.$_GET_item_id.'"');
+$GET_id = @$_REQUEST['id'];
+if($GET_id>0){
   $present_stock_sql=mysqli_query($conn, "Select i.item_id,i.finish_goods_code,i.item_name,i.unit_name,i.pack_size,
   REPLACE(FORMAT(SUM(j.item_in-j.item_ex), 0), ',', '') as Available_stock_balance
   from
   item_info i,
   journal_item j,
   lc_lc_received_batch_split bsp
-  
   where
-  
   j.item_id=i.item_id and
   j.warehouse_id='".$depot_id."' and
   bsp.batch=j.batch and 
   bsp.status='PROCESSING' and 
-  j.item_id='".$edit_value->item_id."'
+  j.item_id='".$edit_value_item_id."'
   group by j.item_id order by i.item_id");
   $ps_data=mysqli_fetch_object($present_stock_sql);
   $in_stock_pcs = $ps_data->Available_stock_balance;
@@ -199,17 +207,17 @@ if($_REQUEST['id']>0){
     j.warehouse_id='".$depot_id."' and
     bsp.batch=j.batch and 
     bsp.status='PROCESSING' and 
-    j.item_id='".$_REQUEST['item_id']."'
+    j.item_id='".$_GET_item_id."'
     group by j.item_id order by i.item_id");
     $ps_data=mysqli_fetch_object($present_stock_sql);
-  $inventory_stock = $ps_data->Available_stock_balance;
-  $ordered_qty = find_a_field('sale_do_details','sum(total_unit)','item_id="'.$_GET['item_id'].'" and depot_id="'.$depot_id.'" and status in ("UNCHECKED","PROCESSING","MANUAL")');
+  $inventory_stock = @$ps_data->Available_stock_balance;
+  $ordered_qty = find_a_field('sale_do_details','sum(total_unit)','item_id="'.$_GET_item_id.'" and depot_id="'.$depot_id.'" and status in ("UNCHECKED","PROCESSING","MANUAL")');
   $in_stock_pcs= $inventory_stock-$ordered_qty;
 }
-$del_qty = find_a_field('sale_do_chalan','sum(total_unit)','item_id="'.$_REQUEST['item_id'].'" and depot_id="'.$depot_id.'" and status in ("UNCHECKED","CHECKED","PROCESSING")');
+$del_qty = find_a_field('sale_do_chalan','sum(total_unit)','item_id="'.$_GET_item_id.'" and depot_id="'.$depot_id.'" and status in ("UNCHECKED","CHECKED","PROCESSING")');
 $res='select a.id,a.gift_on_order as gift_id,concat(b.item_id," # ",b.finish_goods_code," # ",b.item_name) as item_description,b.unit_name as unit,b.pack_size,round(a.d_price, 2) as d_price,round(a.unit_price, 2) as unit_price,a.total_unit, a.total_amt
 from
-sale_do_details a,item_info b where b.item_id=a.item_id and a.do_no='.$_SESSION['unique_master_for_regular'].' order by a.id';
+sale_do_details a,item_info b where b.item_id=a.item_id and a.do_no='.$unique_master_for_regular.' order by a.id';
 $query=mysqli_query($conn, $res);
 while($data=mysqli_fetch_object($query)){
   if(isset($_POST['deletedata'.$data->id]))
@@ -221,13 +229,13 @@ while($data=mysqli_fetch_object($query)){
       unset($_POST);
     }}
 
-$COUNT_details_data=find_a_field(''.$table_detail.'','Count(id)',''.$unique_master.'='.$_SESSION['unique_master_for_regular'].'');?>
+$COUNT_details_data=find_a_field(''.$table_detail.'','Count(id)',''.$unique_master.'='.$unique_master_for_regular.'');?>
 <?php require_once 'header_content.php'; ?>
 <script type="text/javascript">
 function DoNavPOPUP(lk){myWindow = window.open("<?=$page?>?<?=$unique?>="+lk, "myWindow", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no,directories=0,toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=850,height=500,left = 230,top = -1");}
 function reload(form){
 var val=form.item_id.options[form.item_id.options.selectedIndex].value;
-self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>&<?php } ?>item_id=' + val ;}</script>
+self.location='<?=$page;?>?<?php if($GET_id>0){?>id=<?=$GET_id?>&<?php } ?>item_id=' + val ;}</script>
 <style>
         #customers {}
         #customers td {}
@@ -244,14 +252,13 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js "></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <?php require_once 'body_content_nva_sm.php'; ?>
-
     <form action="<?=$page?>" name="addem" id="addem" class="form-horizontal form-label-left" method="post" >
         <table align="center" style="width: 60%;; font-size: 11px">
             <tr><td>Dealer / Customer / Outlet</td>
                 <td style="width:10px; text-align:center;vertical-align: middle"> -</td>
                 <td style="vertical-align: middle"><select class="select2_single form-control" style="width:300px; font-size: 11px" tabindex="-1" required="required"  name="dealer_code" id="dealer_code">
                         <option></option>
-                        <?php if(isset($_SESSION['select_dealer_do_regular'])>0): ?>
+                        <?php if(isset($select_dealer_do_regular)>0): ?>
                         <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $_SESSION['select_dealer_do_regular'], 'dealer_code='.$_SESSION['select_dealer_do_regular']); ?>
                         <?php else: ?>
                         <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $_SESSION['select_dealer_do_regular'], 'canceled="YES"'); ?>
@@ -259,12 +266,14 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
                     </select>
                 </td>
                 <td style="padding:10px;vertical-align: middle">
-                    <?php if(isset($_SESSION['select_dealer_do_regular'])>0){ ?>
+                    <?php if(isset($select_dealer_do_regular)>0){
+                        $status = find_a_field(''.$table_master.'','status','do_no='.$select_dealer_do_regular)
+                        ?>
                         <button type="submit" style="font-size: 11px; height: 30px" name="dealer_cancel" id="dealer_cancel"  class="btn btn-danger">Cancel the dealer</button>
                         <?php if($status!=='COMPLETED'){ ?>
-                        <a align="center" href="do_challan_view.php?v_no=<?=$_SESSION['select_dealer_do_regular'];?>" target="_new"><img src="../../assets/images/print.png" width="25" height="25" /></a>
+                        <a align="center" href="do_challan_view.php?v_no=<?=$select_dealer_do_regular;?>" target="_new"><img src="../../assets/images/print.png" width="25" height="25" /></a>
                             <?php } else { ?>
-                            <a target="_blank" href="chalan_view.php?v_no=<?=$_SESSION['select_dealer_do_regular'];?>"><img src="../../assets/images/print.png" width="25" height="25" /></a>
+                            <a target="_blank" href="chalan_view.php?v_no=<?=$select_dealer_do_regular;?>"><img src="../../assets/images/print.png" width="25" height="25" /></a>
                         <?php } ?>
                     <?php } else { ?>
                         <button type="submit" style="font-size: 11px;" name="select_dealer_do"  class="btn btn-primary">Select and Proceed to Next</button>
@@ -273,13 +282,13 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
             </tr></table>
     </form>
 
-<?php if(isset($_SESSION['select_dealer_do_regular'])>0): ?>
+<?php if(isset($select_dealer_do_regular)>0): ?>
  <div class="col-md-12 col-xs-12">
   <div class="x_panel">
    <div class="x_content">
     <form action="<?=$page?>" name="addem" id="addem" class="form-horizontal form-label-left" method="post">
         <? require_once 'support_html.php';?>
-        <input type="hidden" name="dealer_code" id="dealer_code" value="<?=$_SESSION['select_dealer_do_regular'];?>">
+        <input type="hidden" name="dealer_code" id="dealer_code" value="<?=$select_dealer_do_regular;?>">
         <input type="hidden" name="dealer_type" id="dealer_type" value="<?=$dealer->dealer_type;?>">
         <input type="hidden" name="town" id="town" value="<?=$dealer->town_code;?>">
         <input type="hidden" name="area_code" id="area_code" value="<?=$dealer->area_code;?>">
@@ -287,46 +296,66 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
         <input type="hidden" name="region" id="region" value="<?=$dealer->region;?>">
                     <table style="width:100%; font-size: 11px">
                         <tr>
-                            <th style="">DO No</th><th style="text-align: center; width: 2%">:</th><td><input type="text" style="width: 80%; background-color:  #EBEBE4 !important;  border: 1px solid darkgray" name="do_no" readonly value="<? if($_SESSION['unique_master_for_regular']>0) echo $_SESSION['unique_master_for_regular']; else echo (find_a_field($table_master,'max('.$unique_master.')','1')+1);?>"></td>
-                            <th style="width: 15%">DO Date</th><th style="text-align: center; width: 2%">:</th><td><input type="date" style="width: 80%" name="do_date" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>"  max="<?=date('Y-m-d');?>" value="<?=($do_date!='')? $do_date : date('Y-m-d');?>"></td>
-                            <th style="width: 15%">Do Type</th><th style="text-align: center; width: 2%">:</th>
-                            <td><select style="width:80%; height:25px; font-size: 11px" name="do_type" id="do_type"  required>
-                                        <option value="sales">Sales</option>
-                                        <?php if(isset($_SESSION['unique_master_for_regular'])>0): ?>
+                            <th style="width: 10%">DO No</th><th style="text-align: center; width: 2%">:</th>
+                            <td style="width: 21.5%"><input type="text" style="width: 90%;" name="do_no" readonly value="<? if($_SESSION['unique_master_for_regular']>0) echo $_SESSION['unique_master_for_regular']; else echo (find_a_field($table_master,'max('.$unique_master.')','1')+1);?>" class="form-control col-md-7 col-xs-12"></td>
+
+                            <th style="width: 10%">DO Date</th><th style="text-align: center; width: 2%">:</th>
+                            <td style="width: 21.5%"><input type="date" style="width: 90%; font-size: 11px" name="do_date" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>"  max="<?=date('Y-m-d');?>" value="<?=($do_date!='')? $do_date : date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"></td>
+
+                            <th style="width: 10%">Do Type</th><th style="text-align: center; width: 2%">:</th>
+                            <td style="width: 21%">
+                                <select style="width:90%; font-size: 11px" name="do_type" id="do_type"  required class="form-control col-md-7 col-xs-12">
+                                    <option value="sales">Sales</option>
+                                    <?php if(isset($_SESSION['unique_master_for_regular'])>0): ?>
                                         <?=foreign_relation('sales_type', 'do_type', 'type_name', $do_type, 'do_type="'.$do_type.'"'); ?>
-                                        <?php else: ?>
+                                    <?php else: ?>
                                         <?php foreign_relation('sales_type', 'do_type', 'do_type',$do_type, '1'); ?>
-                                        <?php endif; ?>
+                                    <?php endif; ?>
                                 </select>
-                                </td>
+                            </td>
                         </tr>
                         <tr><td style="height: 5px"></td></tr>
                         <tr><input type="hidden" style="width: 80%; background-color:  #EBEBE4 !important;  border: 1px solid darkgray" name="exim_status"  value="<?=$dealer->dealer_category;?>">
-                            <th style="">Available Amt</th><th style="text-align: center; width: 2%">:</th><td><input type="text" style="width: 80%;background-color:  #EBEBE4 !important;  border: 1px solid darkgray" name="received_amt" readonly value="<?=$av_amt=(find_a_field_sql('select sum(cr_amt-dr_amt) from journal where ledger_id='.$dealer->account_code));?>"></td>
-                            <th style="width: 15%">Credit Limit</th><th style="text-align: center; width: 2%">:</th><td><input type="text" style="width: 80%; background-color:  #EBEBE4 !important;  border: 1px solid darkgray" readonly value="<?=$dealer->credit_limit;?>"></td>
-                            <th style="width: 15%">Commission </th><th style="text-align: center; width: 2%">:</th><td><input style="width: 80%; background-color:  #EBEBE4 !important;  border: 1px solid darkgray" name="commission" readonly type="text" value="<?=$dealer->commission;?>"></td>
+                            <th>Available Amt</th><th style="text-align: center; width: 2%">:</th>
+                            <td>
+                                <input type="text" style="width: 90%;" name="received_amt" readonly value="<?=$av_amt=(find_a_field_sql('select sum(cr_amt-dr_amt) from journal where ledger_id='.$dealer->account_code));?>" class="form-control col-md-7 col-xs-12"></td>
+                            <th>Credit Limit</th><th style="text-align: center; width: 2%">:</th>
+                            <td>
+                                <input type="text" style="width: 90%;" readonly value="<?=$dealer->credit_limit;?>" class="form-control col-md-7 col-xs-12">
+                            </td>
+                            <th>Commission </th><th style="text-align: center; width: 2%">:</th>
+                            <td>
+                                <input style="width: 90%;" name="commission" readonly type="text" value="<?=$dealer->commission;?>" class="form-control col-md-7 col-xs-12">
+                            </td>
                         </tr>
                         <tr><td style="height: 5px"></td></tr>
                         <tr>
-                            <th style="">Delivery Address</th><th style="text-align: center; width: 2%">:</th><td><input type="text" name="delivery_address" style="width: 80%; text-align:left; background-color:  #EBEBE4 !important;  border: 1px solid darkgray" value="<?=$dealer->address_e;?>" /></td>
-                            <th style="width: 15%">Remarks</th><th style="text-align: center; width: 2%">:</th><td><input type="text" name="remarks" style="width: 80%" value="<?=$remarks;?>"></td>
-                            <th style="width: 15%">Warehouse</th><th style="text-align: center; width: 2%">:</th><td><select style="width:80%; height:25px; font-size: 11px" tabindex="-1" required="required"  name="depot_id" id="depot_id">
-                        <option></option>
-                        <?php if(isset($_SESSION['unique_master_for_regular'])>0): ?>
-                          <option value="<?=$depot_id?>" selected><?=find_a_field('warehouse','warehouse_name','warehouse_id='.$depot_id)?></option>
-                        <?php else: ?>
-                        <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$depot_id);?>
-                      <?php endif; ?>
-                    </select></td>
+                            <th style="">Delivery Address</th><th style="text-align: center; width: 2%">:</th>
+                            <td>
+                                <input type="text" name="delivery_address" style="width: 90%; text-align:left;" readonly value="<?=$dealer->address_e;?>" class="form-control col-md-7 col-xs-12" /></td>
+                            <th>Remarks</th><th style="text-align: center; width: 2%">:</th>
+                            <td>
+                                <input type="text" name="remarks" style="width: 90%" value="<?=$remarks;?>" class="form-control col-md-7 col-xs-12" /></td>
+                            <th>Warehouse</th><th style="text-align: center; width: 2%">:</th>
+                            <td>
+                                <select style="width:90%;  font-size: 11px" tabindex="-1" required="required"  name="depot_id" id="depot_id" class="form-control col-md-7 col-xs-12">
+                                    <option></option>
+                                    <?php if(isset($_SESSION['unique_master_for_regular'])>0): ?>
+                                        <option value="<?=$depot_id?>" selected><?=find_a_field('warehouse','warehouse_name','warehouse_id='.$depot_id)?></option>
+                                    <?php else: ?>
+                                        <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$depot_id);?>
+                                    <?php endif; ?>
+                                </select>
+                            </td>
                         </tr>
                         </table>
                     <p align="center" style="margin-top:10px">
                     <?
                     if($_SESSION['unique_master_for_regular']>0) {?>
-                        <button type="submit" name="new" class="btn btn-primary" style="font-size: 11px">Modify Invoice Info</button>
+                        <button type="submit" name="new" class="btn btn-primary" style="font-size: 12px">Modify Invoice Info</button>
                         <input name="flag" id="flag" type="hidden" value="1" />
                     <? }else{?>
-                        <button type="submit" name="new" class="btn btn-primary" style="font-size: 11px">Initiate Invoice</button>
+                        <button type="submit" name="new" class="btn btn-primary" style="font-size: 12px">Initiate Invoice</button>
                         <input name="flag" id="flag" type="hidden" value="0" />
                     <? } ?></p></form>
 
@@ -337,7 +366,7 @@ self.location='<?=$page;?>?<?php if($_REQUEST['id']>0){?>id=<?=$_REQUEST['id']?>
  <? require_once 'support_html.php';?>
      <input type="hidden" name="do_no" id="do_no" value="<?=$_SESSION['unique_master_for_regular'];?>">
       <input type="hidden" name="do_date" id="do_date" value="<?=$do_date;?>">
-     <input type="hidden" name="dealer_code" id="dealer_code" value="<?=$_SESSION['select_dealer_do_regular'];?>">
+     <input type="hidden" name="dealer_code" id="dealer_code" value="<?=$select_dealer_do_regular;?>">
      <input type="hidden" name="dealer_type" id="dealer_type" value="<?=$dealer->dealer_type;?>">
      <input type="hidden" name="<?=$unique_master;?>" id="<?=$unique_master;?>" value="<?=$_SESSION['unique_master_for_regular'];?>">
      <input type="hidden" name="town" id="town" value="<?=$dealer->town_code;?>">
