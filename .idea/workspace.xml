@@ -3,11 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_contra_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_contra_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/classes/create_id.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/create_id.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher_single.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/sales_regular_invoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_regular_invoice.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Accounts.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Accounts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_MIS.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_MIS.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/support_html.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/support_html.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/warehouse_payment_voucher_single.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_payment_voucher_single.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +93,8 @@
       <workItem from="1678596069154" duration="12159000" />
       <workItem from="1678611710439" duration="8299000" />
       <workItem from="1678684454029" duration="4353000" />
-      <workItem from="1678697377056" duration="7432000" />
+      <workItem from="1678697377056" duration="8083000" />
+      <workItem from="1678767091423" duration="6595000" />
     </task>
     <servers />
   </component>

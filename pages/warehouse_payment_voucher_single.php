@@ -29,7 +29,7 @@ $unique_field='voucher_date';
 $table_journal_master="journal_voucher_master";
 $table_payment="payment";
 $payment_unique='payment_no';
-$page="acc_payment_voucher_single.php";
+$page="acc_payment_voucher_multiple.php";
 $crud      =new crud($table_journal_master);
 $$unique = $_POST[$unique];
 $targeturl="<meta http-equiv='refresh' content='0;$page'>";

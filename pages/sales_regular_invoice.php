@@ -29,7 +29,7 @@ if(prevent_multi_submit()){
             $_POST['do_no'] = find_a_field($table_master,'max(do_no)','1')+1;
             $crud->insert();
             $_SESSION['unique_master_for_regular']=$_POST[$unique_master];
-            unset($$unique);
+
             $type=1;
             $msg='Work Order Initialized. (Demand Order No-'.$_SESSION['unique_master_for_regular'].')';
         }else {
@@ -219,7 +219,7 @@ $res='select a.id,a.gift_on_order as gift_id,concat(b.item_id," # ",b.finish_goo
 from
 sale_do_details a,item_info b where b.item_id=a.item_id and a.do_no='.$unique_master_for_regular.' order by a.id';
 $query=mysqli_query($conn, $res);
-while($data=mysqli_fetch_object($query)){
+while($data=@mysqli_fetch_object($query)){
   if(isset($_POST['deletedata'.$data->id]))
   {   $resd1 = mysqli_query($conn, ("DELETE FROM ".$table_detail." WHERE id=".$data->id));
       $resd2 = mysqli_query($conn, ("DELETE FROM ".$table_detail." WHERE gift_on_order=".$data->id));
@@ -259,9 +259,9 @@ self.location='<?=$page;?>?<?php if($GET_id>0){?>id=<?=$GET_id?>&<?php } ?>item_
                 <td style="vertical-align: middle"><select class="select2_single form-control" style="width:300px; font-size: 11px" tabindex="-1" required="required"  name="dealer_code" id="dealer_code">
                         <option></option>
                         <?php if(isset($select_dealer_do_regular)>0): ?>
-                        <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $_SESSION['select_dealer_do_regular'], 'dealer_code='.$_SESSION['select_dealer_do_regular']); ?>
+                        <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $select_dealer_do_regular, 'dealer_code='.$_SESSION['select_dealer_do_regular']); ?>
                         <?php else: ?>
-                        <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $_SESSION['select_dealer_do_regular'], 'canceled="YES"'); ?>
+                        <?php foreign_relation('dealer_info', 'dealer_code', 'CONCAT(dealer_code," : ", dealer_name_e)', $select_dealer_do_regular, 'canceled="YES"'); ?>
                         <?php endif; ?>
                     </select>
                 </td>
@@ -282,7 +282,12 @@ self.location='<?=$page;?>?<?php if($GET_id>0){?>id=<?=$GET_id?>&<?php } ?>item_
             </tr></table>
     </form>
 
-<?php if(isset($select_dealer_do_regular)>0): ?>
+<?php if(isset($select_dealer_do_regular)>0):
+    $date = date('Y-m-d');
+    $do_date = @$do_date;
+    $do_type = @$do_type;
+    $remarks = @$remarks;
+?>
  <div class="col-md-12 col-xs-12">
   <div class="x_panel">
    <div class="x_content">
@@ -297,7 +302,7 @@ self.location='<?=$page;?>?<?php if($GET_id>0){?>id=<?=$GET_id?>&<?php } ?>item_
                     <table style="width:100%; font-size: 11px">
                         <tr>
                             <th style="width: 10%">DO No</th><th style="text-align: center; width: 2%">:</th>
-                            <td style="width: 21.5%"><input type="text" style="width: 90%;" name="do_no" readonly value="<? if($_SESSION['unique_master_for_regular']>0) echo $_SESSION['unique_master_for_regular']; else echo (find_a_field($table_master,'max('.$unique_master.')','1')+1);?>" class="form-control col-md-7 col-xs-12"></td>
+                            <td style="width: 21.5%"><input type="text" style="width: 90%;" name="do_no" readonly value="<? if($unique_master_for_regular>0) echo $unique_master_for_regular; else echo (find_a_field($table_master,'max('.$unique_master.')','1')+1);?>" class="form-control col-md-7 col-xs-12"></td>
 
                             <th style="width: 10%">DO Date</th><th style="text-align: center; width: 2%">:</th>
                             <td style="width: 21.5%"><input type="date" style="width: 90%; font-size: 11px" name="do_date" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>"  max="<?=date('Y-m-d');?>" value="<?=($do_date!='')? $do_date : date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"></td>
@@ -306,7 +311,7 @@ self.location='<?=$page;?>?<?php if($GET_id>0){?>id=<?=$GET_id?>&<?php } ?>item_
                             <td style="width: 21%">
                                 <select style="width:90%; font-size: 11px" name="do_type" id="do_type"  required class="form-control col-md-7 col-xs-12">
                                     <option value="sales">Sales</option>
-                                    <?php if(isset($_SESSION['unique_master_for_regular'])>0): ?>
+                                    <?php if(isset($unique_master_for_regular)>0): ?>
                                         <?=foreign_relation('sales_type', 'do_type', 'type_name', $do_type, 'do_type="'.$do_type.'"'); ?>
                                     <?php else: ?>
                                         <?php foreign_relation('sales_type', 'do_type', 'do_type',$do_type, '1'); ?>
@@ -351,7 +356,7 @@ self.location='<?=$page;?>?<?php if($GET_id>0){?>id=<?=$GET_id?>&<?php } ?>item_
                         </table>
                     <p align="center" style="margin-top:10px">
                     <?
-                    if($_SESSION['unique_master_for_regular']>0) {?>
+                    if($unique_master_for_regular>0) {?>
                         <button type="submit" name="new" class="btn btn-primary" style="font-size: 12px">Modify Invoice Info</button>
                         <input name="flag" id="flag" type="hidden" value="1" />
                     <? }else{?>
@@ -361,7 +366,9 @@ self.location='<?=$page;?>?<?php if($GET_id>0){?>id=<?=$GET_id?>&<?php } ?>item_
 
                 </div></div></div>
 
-<?php if(isset($_SESSION['unique_master_for_regular'])>0): ?>
+<?php if(isset($_SESSION['unique_master_for_regular'])>0):
+
+    ?>
 <form action="<?=$page;?>" name="addem" id="addem" class="form-horizontal form-label-left" method="post">
  <? require_once 'support_html.php';?>
      <input type="hidden" name="do_no" id="do_no" value="<?=$_SESSION['unique_master_for_regular'];?>">
@@ -408,7 +415,7 @@ self.location='<?=$page;?>?<?php if($GET_id>0){?>id=<?=$GET_id?>&<?php } ?>item_
                      <td style="width:10%; vertical-align: middle" align="center">
                      <input type="number" id="unit_price" style="width:99%; height:37px; font-size:11px;text-align:center" min="1" step="any" required="required" value="<?=($_REQUEST['item_id']>0)? $item_all->d_price : $edit_value->unit_price?>" readonly name="unit_price"  class="form-control col-md-7 col-xs-12" autocomplete="off" class="unit_price" ></td>
                      <td style="width:10%; vertical-align: middle" align="center">
-                        <!--input placeholder="Crt"  name="pkt_unit" type="text" id="pkt_unit" style="width:45%; height:37px" onkeyup="avail_amount(),count()" required="required" class="form-control col-md-7 col-xs-12"  tabindex="4"/ -->
+                        <input placeholder="Crt"  name="pkt_unit" type="hidden" id="pkt_unit" style="width:45%; height:37px" onkeyup="avail_amount(),count()" required="required" class="form-control col-md-7 col-xs-12"  tabindex="4"/ -->
                      <input  class="form-control col-md-7 col-xs-12" name="dist_unit" type="number" onkeyup="doAlert(this.form);" min="1" id="dist_unit" style="width:99%; height:37px; text-align:center; font-size:11px" value="<?=$edit_value->dist_unit?>" required="required" class="dist_unit" />
                      <input name="pkt_size" type="hidden" class="input3" id="pkt_size"  style="width:55px;"  value="<?=$item_all->pack_size?>" readonly/></td>
                      <td align="center" style="width:10%; vertical-align: middle">
