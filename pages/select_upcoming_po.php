@@ -45,7 +45,7 @@ $vendorcon='and a.vendor_id="'.$_POST['vendor_id'].'"' ;
                                from  
                                purchase_master a,
                                warehouse b,
-                               user_activity_management c, 
+                               users c, 
                                vendor v 
                                where   
                                a.warehouse_id=b.warehouse_id and 
@@ -64,7 +64,7 @@ $vendorcon='and a.vendor_id="'.$_POST['vendor_id'].'"' ;
 								from 
 								purchase_master a,
 								warehouse b,
-								user_activity_management c, 
+								users c, 
 								vendor v 
 								where  
 								a.warehouse_id=b.warehouse_id and 

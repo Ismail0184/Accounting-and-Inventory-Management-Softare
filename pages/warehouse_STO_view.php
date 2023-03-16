@@ -51,7 +51,7 @@ if(isset($_POST[viewreport])){
 from 
 ".$table." m,
 warehouse w,
-user_activity_management u,
+users u,
 warehouse w2
 
  where

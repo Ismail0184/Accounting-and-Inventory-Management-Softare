@@ -17,7 +17,7 @@ u.fname as Received_by,r.entry_at,j.checked as status
 from 
 '.$table.' r,
 vendor v,
-user_activity_management u,
+users u,
 secondary_journal j
 where 
 j.tr_no = r.pr_no AND
@@ -365,7 +365,7 @@ $MAN_by=find_all_field('MAN_details','','po_no='.$po_no.'','group by po_no');
                                                         <tr>
 
 
-                                                            <td>By: <?php echo find_a_field('user_activity_management','fname','user_id='.$entry_by);?>/ At: <?php echo $entry_at;?></td>
+                                                            <td>By: <?php echo find_a_field('users','fname','user_id='.$entry_by);?>/ At: <?php echo $entry_at;?></td>
 
 
                                                         </tr>
@@ -854,13 +854,13 @@ $MAN_by=find_all_field('MAN_details','','po_no='.$po_no.'','group by po_no');
              <table style="font-size:11px; margin-top:50px" width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td align="center" style="width:25%">
-				<?=find_a_field('user_activity_management','fname','user_id='.$MAN_by->entry_by);?><br />(<?=$MAN_by->entry_at?>)</em><br />
+				<?=find_a_field('users','fname','user_id='.$MAN_by->entry_by);?><br />(<?=$MAN_by->entry_at?>)</em><br />
 </td>
                 <td align="center" style="width:25%">
-				<?=find_a_field('user_activity_management','fname','user_id='.$entry_by);?><br />(<?=$entry_at;?>)</em><br />
+				<?=find_a_field('users','fname','user_id='.$entry_by);?><br />(<?=$entry_at;?>)</em><br />
 </td>
 				<td align="center" style="width:25%">
-				<?=find_a_field('user_activity_management','fname','user_id='.$qc_by);?><br />(<?=$qc_at?>)</em><br />
+				<?=find_a_field('users','fname','user_id='.$qc_by);?><br />(<?=$qc_at?>)</em><br />
 </td><td align="center" style="width:25%"></td></tr>             
               <tr>
                 <td align="center" style="text-decoration:overline"><strong>MAN By</strong></td>

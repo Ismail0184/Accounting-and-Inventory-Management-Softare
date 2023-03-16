@@ -2,7 +2,7 @@
 
  require_once 'support_file.php';
  $title='Change Password';
- $table='user_activity_management';
+ $table='users';
 
 
 
@@ -17,7 +17,7 @@
 
 if ($valid){
  unset($_SESSION["PASSCODE"]);
- $insert=mysqli_query($conn, "UPDATE  user_activity_management SET password='$_POST[new_password]' where user_id='".$_SESSION["userid"]."' ");
+ $insert=mysqli_query($conn, "UPDATE  users SET password='$_POST[new_password]' where user_id='".$_SESSION["userid"]."' ");
   $_SESSION["PASSCODE"]	=$_POST[new_password];
 }}?>
 

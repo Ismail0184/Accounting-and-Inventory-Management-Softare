@@ -193,7 +193,7 @@ if (isset($_POST['viewreport'])) {
     $res = "SELECT  m.do_no,m.do_no,m.do_date,m.do_type,d.dealer_name_e as customer_name,m.remarks,concat(uam.fname,'<br>at: ',m.entry_at) as entry_by,m.sent_to_warehuse_at as sent_at,m.status FROM
 							 sale_do_master m,
 							dealer_info d,
-							user_activity_management uam
+							users uam
 							 where
 							 m.dealer_code=d.dealer_code and
 							 m.do_date between '".$_POST['f_date']."' and '".$_POST['t_date']."' and
@@ -204,7 +204,7 @@ if (isset($_POST['viewreport'])) {
     $res = "SELECT  m.do_no,m.do_no,m.do_date,m.do_type,d.dealer_name_e as customer_name,m.remarks,m.delivery_address,uam.fname as entry_by,m.entry_at,m.sent_to_warehuse_at as sent_at,m.status FROM
 							 sale_do_master m,
 							dealer_info d,
-							user_activity_management uam
+							users uam
 							 where
 							 m.dealer_code=d.dealer_code and
 							 m.depot_id=".$_SESSION['warehouse']." and

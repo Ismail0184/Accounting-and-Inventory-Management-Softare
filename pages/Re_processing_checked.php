@@ -606,7 +606,7 @@ if(isset($_POST[warehouse_from])){
 	$warehouse_conn="";
 }
 $warehouse_CONN=
-$res="Select m.pi_no,m.pi_no,m.custom_pi_no,m.pi_date as date,w.warehouse_name as warehouse_from, (select warehouse_name from warehouse where warehouse_id=m.warehouse_to) as warehouse_to,m.remarks,u.fname as entry_by from re_processing_master m,warehouse w, user_activity_management u where m.entry_by=u.user_id  and m.warehouse_from=w.warehouse_id and  m.ISSUE_TYPE='STO' and m.verifi_status='UNCHECKED' ".$warehouse_conn." order by m.pi_no DESC";	}?>
+$res="Select m.pi_no,m.pi_no,m.custom_pi_no,m.pi_date as date,w.warehouse_name as warehouse_from, (select warehouse_name from warehouse where warehouse_id=m.warehouse_to) as warehouse_to,m.remarks,u.fname as entry_by from re_processing_master m,warehouse w, users u where m.entry_by=u.user_id  and m.warehouse_from=w.warehouse_id and  m.ISSUE_TYPE='STO' and m.verifi_status='UNCHECKED' ".$warehouse_conn." order by m.pi_no DESC";	}?>
 
 <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" >
         <table align="center" style="width: 50%;">

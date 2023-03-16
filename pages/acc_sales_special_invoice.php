@@ -38,10 +38,10 @@ $ress="SELECT d.id,i.item_id,i.finish_goods_code,i.item_name,i.unit_name,i.pack_
 
 
   if(isset($_POST[viewreport])){
-    $res="SELECT m.do_no,m.do_no,m.do_date,m.remarks,d.dealer_name_e as dealer_name,w.warehouse_name,concat(u.fname,'<br>','at: ',m.entry_at) as entry_by,m.status from ".$table_master." m, dealer_info d,user_activity_management u, warehouse w
+    $res="SELECT m.do_no,m.do_no,m.do_date,m.remarks,d.dealer_name_e as dealer_name,w.warehouse_name,concat(u.fname,'<br>','at: ',m.entry_at) as entry_by,m.status from ".$table_master." m, dealer_info d,users u, warehouse w
     where m.entry_by=u.user_id and m.dealer_code=d.dealer_code and do_section='Special_invoice' and m.depot_id=w.warehouse_id and m.do_date between '".$_POST[f_date]."' and '".$_POST[t_date]."'";
   } else {
-      $res="SELECT m.do_no,m.do_no,m.do_date,m.remarks,d.dealer_name_e as dealer_name,w.warehouse_name,concat(u.fname,'<br>','at: ',m.entry_at) as entry_by,m.status from ".$table_master." m, dealer_info d,user_activity_management u,warehouse w
+      $res="SELECT m.do_no,m.do_no,m.do_date,m.remarks,d.dealer_name_e as dealer_name,w.warehouse_name,concat(u.fname,'<br>','at: ',m.entry_at) as entry_by,m.status from ".$table_master." m, dealer_info d,users u,warehouse w
       where m.entry_by=u.user_id and m.dealer_code=d.dealer_code and m.status='UNCHECKED' and do_section='Special_invoice' and m.depot_id=w.warehouse_id";}
 ?>
 

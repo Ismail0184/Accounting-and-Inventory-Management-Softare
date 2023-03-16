@@ -229,7 +229,7 @@ if(isset($_POST[deleteandback])){
 $resultss=mysql_query("Select d.*,w.*,u.*
 from 
 warehouse_damage_receive d,
-user_activity_management u,
+users u,
 warehouse w
 
 where d.status='UNCHECKED' AND 

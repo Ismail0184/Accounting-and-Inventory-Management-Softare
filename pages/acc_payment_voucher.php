@@ -18,9 +18,7 @@ function image_upload_on_id($path,$file,$id='')
     else
         move_uploaded_file($file['tmp_name'],$root);
     return $root;
-}
-
-}
+}}
 //Image Attachment Function
 
 $unique='voucherno';
@@ -99,7 +97,11 @@ if(prevent_multi_submit()) {
             $c_date = 0;
             $cur_bal = 0;
             $manual_payment_no = 0;
-            $cc_code = @$_POST['cc_code'];
+            if ($_POST['dr_amt'] > 0) {
+                $cc_code = @$_POST['cc_code'];
+            } elseif ($_POST['cr_amt'] > 0) {
+                $cc_code = '0';
+            }
             $subledger_id = @$_POST['subledger_id'];
             $receive_ledger = 0;
 
@@ -157,9 +159,8 @@ where
     while ($uncheckrow = mysqli_fetch_array($re_query)) {
         $ids=$uncheckrow['jid'];
         if (isset($_POST['confirmsave']) && ($uncheckrow['payment_no']>0)) {
-            add_to_journal_new($uncheckrow['paymentdate'], $proj_id, $jv, $uncheckrow['payment_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Payment', $uncheckrow['payment_no'], $uncheckrow['jid'], $uncheckrow['cc_code'], $uncheckrow['sub_ledger_id'], $_SESSION['usergroup'], $uncheckrow['cheq_no'], $uncheckrow['cheq_date'], $create_date, $ip, $now, $uncheckrow['day_name'], $thisday, $thismonth, $thisyear);} // end of confirm
-
-
+            add_to_journal_new($uncheckrow['paymentdate'], $proj_id, $jv, $uncheckrow['payment_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Payment', $uncheckrow['payment_no'], $uncheckrow['jid'], $uncheckrow['cc_code'], $uncheckrow['sub_ledger_id'], $_SESSION['usergroup'], $uncheckrow['cheq_no'], $uncheckrow['cheq_date'], $create_date, $ip, $now, $uncheckrow['day_name'], $thisday, $thismonth, $thisyear);
+        } // end of confirm
         if(isset($_POST['deletedata'.$ids]))
         {  $res=mysqli_query($conn, ("DELETE FROM ".$table_payment." WHERE id=".$ids));
             unset($_POST);
@@ -255,7 +256,6 @@ where
         }
     </script>
 <?php require_once 'body_content_nva_sm.php'; ?>
-
     <div class="col-md-8 col-xs-12">
         <div class="x_panel">
             <div class="x_title">

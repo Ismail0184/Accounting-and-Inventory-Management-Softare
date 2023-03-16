@@ -139,7 +139,7 @@ $unique='jv_no';
 				  accounts_ledger l,
 				  purchase_receive r,
 				  warehouse w,
-				  user_activity_management u,
+				  users u,
 				  vendor v
 
 				WHERE 
@@ -181,7 +181,7 @@ $unique='jv_no';
 				  accounts_ledger l,
 				  purchase_receive r,
 				  warehouse w,
-				  user_activity_management u,
+				  users u,
 				  vendor v
 
 				WHERE 

@@ -81,7 +81,7 @@ from
 production_issue_master pim,
 warehouse w,
 warehouse w2,
-user_activity_management u
+users u
 where 
 pim.entry_by=u.user_id and 
 pim.warehouse_from=w.warehouse_id and 
@@ -93,7 +93,7 @@ w.use_type  in ('PL')  order by pim.pi_no desc";
 production_issue_master pim,
 warehouse w,
 warehouse w2,
-user_activity_management u
+users u
 where 
 pim.entry_by=u.user_id and 
 pim.warehouse_from=w.warehouse_id and 

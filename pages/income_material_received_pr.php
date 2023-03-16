@@ -157,7 +157,7 @@ FROM
 MAN_master mm,
 MAN_details md,
 warehouse w,
-user_activity_management u
+users u
 
 WHERE 
 

@@ -5,7 +5,7 @@ $title="Add New User";
 $now=time();
 $unique='user_id';
 $unique_field='fname';
-$table="user_activity_management";
+$table="users";
 $page="MIS_add_new_user.php";
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
@@ -140,7 +140,7 @@ $resss='select '.$unique.','.$unique.' as ID,username as user_name,'.$unique_fie
 							department d
 							 where 
 							 p.PBI_JOB_STATUS in ('In Service') and 							 
-							 p.PBI_DEPARTMENT=d.DEPT_ID	and p.PBI_ID not in (select PBI_ID from user_activity_management where 1)				 
+							 p.PBI_DEPARTMENT=d.DEPT_ID	and p.PBI_ID not in (select PBI_ID from users where 1)				 
 							  order by p.PBI_NAME";
                                 advance_foreign_relation($sql_PBI_ID,$_GET[PBI_ID]);?>
                             </select></div></div>

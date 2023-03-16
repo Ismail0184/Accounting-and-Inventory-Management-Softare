@@ -60,7 +60,7 @@ where
 $bankquery="SELECT j.*,a.*,u.*,cb.* FROM 
 ".$table_journal_master." j, 
 accounts_ledger a, 
-user_activity_management u,
+users u,
 Cheque_Book cb
 WHERE j.ledger_id=a.ledger_id and j.status in ('') and cb.id=j.cheque_id  and j.dr_amt>0 and j.user_id=u.user_id";
 ?>

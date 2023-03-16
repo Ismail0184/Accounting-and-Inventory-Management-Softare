@@ -272,7 +272,7 @@ else{?>
         </tr>
         <tr>
           <td colspan="2">Prepared By:
-            <?=find_a_field('user_activity_management','fname','user_id='.$entry_by);?></td>
+            <?=find_a_field('users','fname','user_id='.$entry_by);?></td>
         </tr>
         <tr>
           <td width="50%">&nbsp;</td>

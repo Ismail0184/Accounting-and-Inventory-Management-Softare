@@ -246,7 +246,7 @@ lc.lc_no
 from
 journal a,
 accounts_ledger b,
-user_activity_management u,
+users u,
 lc_lc_master lc
 
 where
@@ -287,7 +287,7 @@ lc.lc_no
 from
 journal a,
 accounts_ledger b,
-user_activity_management u,
+users u,
 lc_lc_master lc
 where
 a.lc_id=lc.id and

@@ -65,7 +65,7 @@ if(isset($_POST['viewreport'])){
     from 
     purchase_master a,
     warehouse b,
-    user_activity_management c,
+    users c,
     vendor v,
     personnel_basic_info p 
     where  

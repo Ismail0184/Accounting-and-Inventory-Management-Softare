@@ -1,7 +1,7 @@
 <?php
  require_once 'support_file.php';
  $title='Change Default Warehouse';
- $table='user_activity_management';
+ $table='users';
  $unique='user_id';
 
  $sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),upp.* FROM

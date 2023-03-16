@@ -29,7 +29,7 @@ u.fname as entry_by,r.entry_at
 from 
 '.$table.' r,
 warehouse w,
-user_activity_management u
+users u
 where 
 w.warehouse_id=r.warehouse_from and 
 r.entry_by=u.user_id and r.pi_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'"

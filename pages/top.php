@@ -3,7 +3,7 @@
         <nav style=" width:100%;">
             <div class="nav toggle" style="width:30%;">
                 <a id="menu_toggle"><i class="fa fa-bars" style="color:<?=$_SESSION['logo_color']?>"></i> <span style="margin-left:10px;margin-buttom:100px;position: relative;
-top: -4px; font-size:15px;font-weight:bold; color:white"><?=strtoupper($_SESSION['company_name'])?></snap></a>
+top: -4px; font-size:15px;font-weight:bold; color:white"><?=strtoupper($_SESSION['com_short_name'])?></snap></a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li class="">

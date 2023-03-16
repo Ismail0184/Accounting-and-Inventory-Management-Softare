@@ -124,7 +124,7 @@ $resultss="Select p.do_no,p.sr_no,p.do_date as 'Date',w.warehouse_name as 'Wareh
 from
 ".$table." p,
 warehouse w,
-user_activity_management u,
+users u,
 dealer_info d
 where
 p.entry_by=u.user_id and
@@ -136,7 +136,7 @@ $resultss="Select p.do_no,p.sr_no,p.do_date as 'Date',w.warehouse_name as 'Wareh
 from
 ".$table." p,
 warehouse w,
-user_activity_management u,
+users u,
 dealer_info d
 where
 p.entry_by=u.user_id and

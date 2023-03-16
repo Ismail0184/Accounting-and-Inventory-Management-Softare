@@ -142,7 +142,7 @@ $vendor_info=find_all_field("vendor","","vendor_id=".$vendor_id."");
 								from 
 								purchase_master a,
 								warehouse b,
-								user_activity_management c, 
+								users c, 
 								vendor v 
 								where  
 								a.warehouse_id=b.warehouse_id and 
@@ -159,7 +159,7 @@ $vendor_info=find_all_field("vendor","","vendor_id=".$vendor_id."");
 								from 
 								purchase_master a,
 								warehouse b,
-								user_activity_management c, 
+								users c, 
 								vendor v 
 								where  
 								a.warehouse_id=b.warehouse_id and 

@@ -36,7 +36,7 @@ if(isset($_POST['cancel']))
 <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
               <div class="x_title">
-              <h2>User Permission Matrix <small><?=find_a_field('user_activity_management','concat(user_id," : ",fname)','user_id='.$_SESSION[MIS_permission_matrix]);?></small></h2>
+              <h2>User Permission Matrix <small><?=find_a_field('users','concat(user_id," : ",fname)','user_id='.$_SESSION[MIS_permission_matrix]);?></small></h2>
               <div class="clearfix"></div>
               </div>
 
@@ -51,7 +51,7 @@ if(isset($_POST['cancel']))
                                 <? $sql_user_id="SELECT  u.user_id,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',d.DEPT_SHORT_NAME,')') FROM 						 
 							personnel_basic_info p,
 							department d,
-							user_activity_management u
+							users u
 							 where p.PBI_JOB_STATUS='In Service' and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
 							 u.PBI_ID=p.PBI_ID		 

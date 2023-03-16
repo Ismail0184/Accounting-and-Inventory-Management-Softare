@@ -86,7 +86,7 @@ if(isset($_POST[viewreport])) {
 from
 " . $table . " m,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 
  where
@@ -100,7 +100,7 @@ vendor v
 from
 " . $table . " m,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 
  where

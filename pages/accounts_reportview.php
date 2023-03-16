@@ -134,7 +134,7 @@ c.center_name
 from
 journal a,
 accounts_ledger b,
-user_activity_management u,
+users u,
 cost_center c
 
 where
@@ -175,7 +175,7 @@ c.center_name
 from
 journal a,
 accounts_ledger b,
-user_activity_management u,
+users u,
 cost_center c
 where
 a.cc_code=c.id and
@@ -329,7 +329,7 @@ from
 
 journal a,
 accounts_ledger b,
-user_activity_management u,
+users u,
 payment c
 
 where
@@ -2687,7 +2687,7 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 				from
 				journal_item a,
 				item_info i,
-				user_activity_management c,
+				users c,
 				item_sub_group s,
 				warehouse w
 

@@ -385,7 +385,7 @@ $link='sto_trasnfer_return.php?custom_pi_no='.$rows[custom_pi_no]; ?>
 
                         <td><a href="<?php echo $link; ?>" ><?=$companyname=getSVALUE("warehouse", "warehouse_name", "where warehouse_id='".$rows['warehouse_to']."'");?></a></td>
 <td style="text-align:left"><a href="<?php echo $link; ?>" ><?=$rows[remarks]?></a></td>
-                        <td><a href="<?php echo $link; ?>" ><?=$fname=getSVALUE("user_activity_management", "fname", "where user_id='".$rows['entry_by']."'");?></a></td>
+                        <td><a href="<?php echo $link; ?>" ><?=$fname=getSVALUE("users", "fname", "where user_id='".$rows['entry_by']."'");?></a></td>
 
                         
 

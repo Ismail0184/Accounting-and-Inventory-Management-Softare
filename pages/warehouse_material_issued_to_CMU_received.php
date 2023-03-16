@@ -150,7 +150,7 @@ from
 production_issue_master p,
 warehouse w,
 warehouse wto,
-user_activity_management u,
+users u,
 vendor v
 where
 p.entry_by=u.user_id and 

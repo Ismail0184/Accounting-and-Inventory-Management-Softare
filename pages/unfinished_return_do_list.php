@@ -135,7 +135,7 @@ from
 
 sale_do_master m,
 dealer_info d,
-user_activity_management u
+users u
 
 where 
 m.do_no='".$_GET[do_no]."' and 

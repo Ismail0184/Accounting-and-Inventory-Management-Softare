@@ -8,7 +8,7 @@ require_once 'support_file.php';
 $pr_no 		= $_REQUEST['v_no'];
 $datas=find_all_field('purchase_receive','s','pr_no='.$pr_no);
 
-$sql1="select b.*,i.*,ar.*,u.fname from purchase_receive b, item_info i, asset_register ar, user_activity_management u
+$sql1="select b.*,i.*,ar.*,u.fname from purchase_receive b, item_info i, asset_register ar, users u
  where b.item_id=i.item_id and b.asset_id=ar.asset_id and b.qc_by=u.user_id  and  b.pr_no = '".$pr_no."'";
 $data1=mysqli_query($conn, $sql1);
 

@@ -235,7 +235,7 @@ $link='production_manual_and_return.php?custom_pr_no='.$rows[custom_pr_no];
                         <td><a href="<?php echo $link; ?>" ><?=$companyname=getSVALUE("warehouse", "warehouse_name", "where warehouse_id='".$rows['warehouse_from']."'");?></a></td>
                         <td><a href="<?php echo $link; ?>" ><?php echo $rows[remarks]; ?></a></td>
                         <td><a href="<?php echo $link; ?>" ><?php if($rows[p_type]=='Re-processing'){ echo $rows[p_type];} else {echo 'Regular';} ?></a></td>
-                        <td><a href="<?php echo $link; ?>" ><?=$fname=getSVALUE("user_activity_management", "fname", "where user_id='".$rows['entry_by']."'");?></a></td>
+                        <td><a href="<?php echo $link; ?>" ><?=$fname=getSVALUE("users", "fname", "where user_id='".$rows['entry_by']."'");?></a></td>
                         <td style="text-align:right"><a href="<?php echo $link; ?>" ><?=$rows[entry_at]?></a></td>
                           <td style="text-align:right"><a href="<?php echo $link; ?>" ><?=$rows[status]?></a></td>
                         </tr>

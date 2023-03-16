@@ -294,7 +294,7 @@ $master=find_all_field("".$table."","","".$unique."=".$_GET[$unique]."");
 <?php
 if(isset($_POST[checked])){
 mysqli_query($conn, "Update ".$table." SET status='PROCESSING',authorized_date='$todayss' where ".$unique."=".$_GET[$unique]."");
-$maild=find_a_field('user_activity_management','email','PBI_ID='.$master->entry_by);
+$maild=find_a_field('users','email','PBI_ID='.$master->entry_by);
 ///////////////////////// to authorise	
 				
                 //$to = $maild;

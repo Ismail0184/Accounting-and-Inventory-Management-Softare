@@ -124,7 +124,7 @@ function reload2(form)
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
-            <form action="" enctype="multipart/form-data" style="font-size:11px" method="post" name="addem" id="addem" >
+            <form action="<?=$page?>" enctype="multipart/form-data" style="font-size:11px" method="post" name="addem" id="addem" >
                 <table style="width:100%; font-size: 11px">
                     <tr>
                         <th style="width:10%;">Territory <span class="required text-danger">*</span></th><th style="width: 2%;">:</th>

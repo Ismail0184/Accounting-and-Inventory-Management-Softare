@@ -327,7 +327,7 @@ th, td {
     
     <th>Entry By</th>
     <th> : </th>
-    <td><input style="width:90%" name="entry_by" type="text" id="entry_by" value="<?=find_a_field('user_activity_management','fname','user_id='.$entry_by.'')?>" readonly /></td>
+    <td><input style="width:90%" name="entry_by" type="text" id="entry_by" value="<?=find_a_field('users','fname','user_id='.$entry_by.'')?>" readonly /></td>
     </tr>
     
     
@@ -379,7 +379,7 @@ th, td {
     <td><input style="width:90%" name="asf" type="twxt"  value="<? if($asf>0) echo $asf;?>" title="ASF" placeholder="ASF (%)" /></td>
     <td><select style=" height:23px; width:90%"  name="qc_by" type="text"  id="qc_by" required="required">
         <option value=""  selected="selected">Select QC By</option>
-        <option value="<?=$menby=find_a_field('MAN_details','distinct entry_by','status="VERIFIED" and MAN_ID="'.$_GET[MAN_ID].'" and po_no='.$_GET[po_no]); ?>" ><?=find_a_field('user_activity_management','fname','user_id='.$menby); ?></option>
+        <option value="<?=$menby=find_a_field('MAN_details','distinct entry_by','status="VERIFIED" and MAN_ID="'.$_GET[MAN_ID].'" and po_no='.$_GET[po_no]); ?>" ><?=find_a_field('users','fname','user_id='.$menby); ?></option>
         <option value="Md. Atiqul Islam ,Production Executive">Atiqul Islam</option>
         <option value="Manas Kumar Sarkar ,Production Supervisor">Manas Kumar Sarkar</option>
         <option value="Delowar Hossain ,Lab Assistant">Delowar Hossain</option>

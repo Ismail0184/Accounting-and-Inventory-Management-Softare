@@ -200,7 +200,7 @@ $rowsmaingroup=mysql_fetch_array($result);
                         
                         <option value="">Choose......</option>
                         <?php
-						$result=mysql_query("Select * from user_activity_management where 1 order by user_id");
+						$result=mysql_query("Select * from users where 1 order by user_id");
 						while($rowmaingroup=mysql_fetch_array($result)){
 						if(($_GET[user_id])==$rowmaingroup[user_id]){
 						

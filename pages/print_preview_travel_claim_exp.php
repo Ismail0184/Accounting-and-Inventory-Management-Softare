@@ -309,7 +309,7 @@ while($data=mysql_fetch_object($query)){
                 </span><br /><font style="font-size:11px; padding-bottom::-50px">(<?=$datas->entry_at;?>)</font></td>
                 
                 <td align="center" ><span class="oe_form_group_cell oe_form_group_cell_label">
-                  <?=find_a_field('user_activity_management','fname','user_id='.$datas->checked_by)?>
+                  <?=find_a_field('users','fname','user_id='.$datas->checked_by)?>
                 </span><br /> <font style="font-size:11px; padding-bottom::-50px">(<?=$datas->checked_at;?>)</font></td>
                 
                 <td align="center" ><span class="oe_form_group_cell oe_form_group_cell_label">

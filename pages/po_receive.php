@@ -336,7 +336,7 @@ td {
     
     <th>Entry By</th>
     <th> : </th>
-    <td><input style="width:90%" name="entry_by" type="text" id="entry_by" value="<?=find_a_field('user_activity_management','fname','user_id='.$entry_by.'')?>" readonly /></td>
+    <td><input style="width:90%" name="entry_by" type="text" id="entry_by" value="<?=find_a_field('users','fname','user_id='.$entry_by.'')?>" readonly /></td>
     </tr>
     
     

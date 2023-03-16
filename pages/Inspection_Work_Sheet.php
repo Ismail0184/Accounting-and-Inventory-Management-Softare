@@ -241,7 +241,7 @@ $data=mysql_fetch_object($mysqlquery);
 
 <tr style="border:none">
 <th style="text-align:left; width:15%">Analyst</th><th style="text-align:center; width:2%">:</th><td style="text-align:left; font-size:18px; color:red"><input type="hidden" name="analyst" value="<?=$_SESSION[userid]?>" class="form-control col-md-7 col-xs-12" style="height:25px; width:170px; margin-top:5px" >
-<input type="text" name="" value="<?=$cmuname= getSVALUE('user_activity_management','fname','where user_id='.$_SESSION[userid]);?>" readonly class="form-control col-md-7 col-xs-12" style="height:25px; width:170px; margin-top:5px" >
+<input type="text" name="" value="<?=$cmuname= getSVALUE('users','fname','where user_id='.$_SESSION[userid]);?>" readonly class="form-control col-md-7 col-xs-12" style="height:25px; width:170px; margin-top:5px" >
 </td>
 
 

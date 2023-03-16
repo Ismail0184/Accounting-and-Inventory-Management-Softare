@@ -12,7 +12,7 @@ if (isset($_POST[viewreport])) {
     w.warehouse_name as warehouse,uam.fname as prepared_by,m.entry_at as prepared_at,m.mushak_challan_status as status FROM
 							".$table." m,
 							vendor v,
-							user_activity_management uam,
+							users uam,
               warehouse w
 							 where
 							 m.vendor_id=v.vendor_id and
@@ -25,7 +25,7 @@ if (isset($_POST[viewreport])) {
     w.warehouse_name as warehouse,uam.fname as prepared_by,m.entry_at as prepared_at,m.mushak_challan_status as status FROM
 							".$table." m,
 							vendor v,
-							user_activity_management uam,
+							users uam,
               warehouse w
 							 where
 							 m.vendor_id=v.vendor_id and

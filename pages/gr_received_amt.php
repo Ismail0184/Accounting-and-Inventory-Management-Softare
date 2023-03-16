@@ -366,7 +366,7 @@ return false;
 
 				  warehouse w,
 
-				  user_activity_management u,
+				  users u,
 				  vendor v
 
 				WHERE 
@@ -406,7 +406,7 @@ return false;
 
       <td align="center"><div align="left"><? echo $data[7];?></div>        <div align="left"></div></td>
 	<!---td align="center"><div align="left"><?
-	echo $user = find_a_field('user_activity_management','fname','user_id='.$data[11]);?></div>        <div align="left"></div></td-->
+	echo $user = find_a_field('users','fname','user_id='.$data[11]);?></div>        <div align="left"></div></td-->
       
       
       

@@ -345,8 +345,8 @@ $link='rmpmissuereceived.php?pi_no='.$rows[pi_no].'&'.'custom_pi_no='.$rows[cust
                         <td><a href="<?php echo $link; ?>" target="_blank"><?php echo $rows[pi_date]; ?></a></td>
                         <td><a href="<?php echo $link; ?>" target="_blank"><?=$companyname=getSVALUE("warehouse", "warehouse_name", "where warehouse_id='".$rows['warehouse_from']."'");?></a></td>
                         
-                       <td><a href="<?php echo $link; ?>" target="_blank"><?=$fgname=getSVALUE("user_activity_management", "username", "where user_id='".$rows['entry_by']."'");?></a></td>
-                       <td><a href="<?php echo $link; ?>" target="_blank"><?=$fgname=getSVALUE("user_activity_management", "username", "where user_id='".$rows['verifi_by']."'");?></a></td>
+                       <td><a href="<?php echo $link; ?>" target="_blank"><?=$fgname=getSVALUE("users", "username", "where user_id='".$rows['entry_by']."'");?></a></td>
+                       <td><a href="<?php echo $link; ?>" target="_blank"><?=$fgname=getSVALUE("users", "username", "where user_id='".$rows['verifi_by']."'");?></a></td>
                        </tr>
 <?php } ?></tbody></table><?php } ?>
 

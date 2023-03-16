@@ -106,7 +106,7 @@ p.status
 from 
 production_floor_receive_master p,
 warehouse w,
-user_activity_management u
+users u
 where
 p.entry_by=u.user_id and 
 w.warehouse_id=p.warehouse_from and  
@@ -126,7 +126,7 @@ p.status
 from 
 production_floor_receive_master p,
 warehouse w,
-user_activity_management u
+users u
  where
 p.entry_by=u.user_id and 
 w.warehouse_id=p.warehouse_from and 

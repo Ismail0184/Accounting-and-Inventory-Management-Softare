@@ -89,7 +89,7 @@ function hide()
                           <tr>
                               <th align="left" valign="top"> Entry By</th>
                               <td  align="left" valign="middle" style="width:2%">: </td>
-                              <td><?=find_a_field('user_activity_management','fname','user_id="'.$MAN_QUERY->entry_by.'"')?></td>
+                              <td><?=find_a_field('users','fname','user_id="'.$MAN_QUERY->entry_by.'"')?></td>
                           </tr>
                       
                     </table></td>
@@ -190,13 +190,13 @@ while($data=mysqli_fetch_object($res)){
              <table style="font-size:11px; margin-top:50px" width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td align="center" style="">
-				<?=find_a_field('user_activity_management','fname','user_id='.$MAN_QUERY->entry_by);?><br />(<?=$MAN_QUERY->entry_at?>)</em><br />
+				<?=find_a_field('users','fname','user_id='.$MAN_QUERY->entry_by);?><br />(<?=$MAN_QUERY->entry_at?>)</em><br />
 </td>
                 <td align="center" style="">
-				<?=find_a_field('user_activity_management','fname','user_id='.$MAN_QUERY->cehck_by);?><br />(<?=$MAN_QUERY->cehck_at?>)</em><br />
+				<?=find_a_field('users','fname','user_id='.$MAN_QUERY->cehck_by);?><br />(<?=$MAN_QUERY->cehck_at?>)</em><br />
 </td>
 				<td align="center" style="">
-				<?=find_a_field('user_activity_management','fname','user_id='.$MAN_QUERY->VERIFIED_BY);?><br />(<?=$MAN_QUERY->VERIFIED_at?>)</em><br />
+				<?=find_a_field('users','fname','user_id='.$MAN_QUERY->VERIFIED_BY);?><br />(<?=$MAN_QUERY->VERIFIED_at?>)</em><br />
 </td>
                
               </tr>

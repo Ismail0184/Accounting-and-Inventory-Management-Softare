@@ -102,7 +102,7 @@ function hide()
                         <td  align="left" valign="middle" style="width:2%">: </td>
                         <td><?php $analyst=getSVALUE("QC_Inspection_Work_Sheet_master", "analyst", "where item_id='$_GET[fgid]' and MAN_ID='$_GET[custom_pr_no]'");
 				
-						 echo $analystname=getSVALUE("user_activity_management", "fname", "where  user_id='".$analyst."'");
+						 echo $analystname=getSVALUE("users", "fname", "where  user_id='".$analyst."'");
 						?></td>
                       </tr>
                       

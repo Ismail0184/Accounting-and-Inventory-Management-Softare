@@ -139,7 +139,7 @@ else {
 
 $data1=mysqli_fetch_row(mysqli_query($conn, $sql1));
 
-$user_name = getSVALUE('user_activity_management','fname',"where user_id=".$data1[2]);
+$user_name = getSVALUE('users','fname',"where user_id=".$data1[2]);
 
 $vo_date=$data1[0];
 

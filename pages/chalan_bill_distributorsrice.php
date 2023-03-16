@@ -65,7 +65,7 @@ $transporter_name = $info->transporter_name;
 $to_ctn = find_a_field('sale_do_chalan','sum(pkt_unit)','do_no='.$chalan_no);
 $to_pcs = find_a_field('sale_do_chalan','sum(dist_unit)','do_no='.$chalan_no);
 }
-$entry_sql = 'select u.fname from user_activity_management u, sale_do_master b where u.user_id=b.entry_by and b.do_no='.$do_no;
+$entry_sql = 'select u.fname from users u, sale_do_master b where u.user_id=b.entry_by and b.do_no='.$do_no;
 $entry_by = find_all_field_sql($entry_sql);
 $ssql = 'select a.* from dealer_info a, sale_do_master b where a.dealer_code=b.dealer_code and b.do_no='.$do_no;
 $dealer = find_all_field_sql($ssql);

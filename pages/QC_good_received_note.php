@@ -159,7 +159,7 @@ if(isset($_POST[viewreport])) {
 from 
 " . $table . " g,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 where
 g.entry_by=u.user_id and 
@@ -174,7 +174,7 @@ order by g." . $unique . " DESC ";
 from 
 " . $table . " g,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 where
 g.entry_by=u.user_id and 
@@ -417,7 +417,7 @@ if($srn>0): ?>
                             $resultss="Select prm.*,u.fname,v.vendor_name,(select SUM(amount) from grn_service_receive where custom_grn_no=prm.custom_grn_no) as srn_amount
 from 
 purchase_receive_master prm,
-user_activity_management u,
+users u,
 vendor v
 
  where

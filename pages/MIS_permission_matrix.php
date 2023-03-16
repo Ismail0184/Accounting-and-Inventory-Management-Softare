@@ -14,10 +14,10 @@ $crud      =new crud($table);
 $$unique = $_GET[$unique];
 
 if(isset($_POST['view_report']))
-    {$_SESSION[MIS_permission_matrix]=$_POST[user_id];}
+    {$_SESSION['MIS_permission_matrix']=@$_POST['user_id'];}
 
 if(isset($_POST['cancel']))
-        {unset($_SESSION[MIS_permission_matrix]);}   
+        {unset($_SESSION['MIS_permission_matrix']);}
 ?>
 
 <?php require_once 'header_content.php'; ?>
@@ -36,11 +36,11 @@ if(isset($_POST['cancel']))
 <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
               <div class="x_title">
-              <h2>User Permission Matrix <small><?=find_a_field('users','concat(user_id," : ",fname)','user_id='.$_SESSION[MIS_permission_matrix]);?></small></h2>
+              <h2>User Permission Matrix <small><?=find_a_field('users','concat(user_id," : ",fname)','user_id='.$_SESSION['MIS_permission_matrix']);?></small></h2>
               <div class="clearfix"></div>
               </div>
 
-              <?php if(isset($_SESSION[MIS_permission_matrix])): else:  ?>
+              <?php if(isset($_SESSION['MIS_permission_matrix'])): else:  ?>
               <form id="demo-form2" method="post" data-parsley-validate class="form-horizontal form-label-left" style="font-size: 11px">
                    <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Active User<span class="required">*</span>
@@ -52,9 +52,9 @@ if(isset($_POST['cancel']))
 							users 
 							 where 1		 
 							  order by user_id";
-                                advance_foreign_relation($sql_user_id,$_SESSION[MIS_permission_matrix]);?>
+                                advance_foreign_relation($sql_user_id,$_SESSION['MIS_permission_matrix']);?>
                             </select>
-                       <?php if(isset($_SESSION[MIS_permission_matrix])){ ?>
+                       <?php if(isset($_SESSION['MIS_permission_matrix'])){ ?>
                        <?php } else { ?>
 						<button type="submit" name="view_report" class="btn btn-primary" style="font-size: 12px; margin-left:5%">Proceed to the next</button>
                        <?php } ?>

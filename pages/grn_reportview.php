@@ -97,7 +97,7 @@ if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET.' '.$_POST[sor
 		if($_POST['MAN_RCV_STATUS']!=='All') 		 $MAN_RCV_STATUS=$_POST['MAN_RCV_STATUS'];
         if(isset($MAN_RCV_STATUS))				{$MAN_RCV_STATUS_CON=' and m.MAN_RCV_STATUS in ("'.$MAN_RCV_STATUS.'")';}
 
-        $query=mysqli_query($conn, "SELECT m.*, i.*,u.*,v.vendor_name as vendor from MAN_details m,item_info i, user_activity_management u, vendor v where
+        $query=mysqli_query($conn, "SELECT m.*, i.*,u.*,v.vendor_name as vendor from MAN_details m,item_info i, users u, vendor v where
 		m.item_id=i.item_id and
 		m.entry_by=u.user_id and
 		v.vendor_id=m.vendor_code
@@ -132,7 +132,7 @@ if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET.' '.$_POST[sor
   purchase_invoice po,
   item_info i,
   warehouse w,
-  user_activity_management u,
+  users u,
   personnel_basic_info pbi,
   personnel_basic_info pbi2,
   personnel_basic_info pbi3
@@ -216,7 +216,7 @@ if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET.' '.$_POST[sor
   purchase_invoice po,
   item_info i,
   warehouse w,
-  user_activity_management u,
+  users u,
   personnel_basic_info pbi,
   personnel_basic_info pbi2,
   personnel_basic_info pbi3
@@ -302,7 +302,7 @@ if(isset($order_by_GET))				{$order_by=' order by '.$order_by_GET.' '.$_POST[sor
   purchase_invoice po,
   item_info i,
   warehouse w,
-  user_activity_management u,
+  users u,
   personnel_basic_info pbi,
   personnel_basic_info pbi2,
   personnel_basic_info pbi3
@@ -497,7 +497,7 @@ $title='Material Recived Status';?>
 from
 MAN_master m,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 
  where

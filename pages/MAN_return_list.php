@@ -271,7 +271,7 @@ $VAT_challan='/51816/cmu_mod/page/vc_documents/'.$rows[MAN_ID].'_'.$rows[VAT_cha
                         <td><a href="<?php echo $link; ?>" ><?=$tot=getSVALUE("vendor","vendor_name","where vendor_id='".$rows[vendor_code]."'"); ?></a></td>
                         <td><a href="<?php echo $delivary_challan; ?>.pdf" target="_blank" style="color:#06F"><u><strong><?php echo $rows[delivary_challan]; ?></strong></u></a></td>
                         <td><a href="<?php echo $VAT_challan; ?>.pdf" target="_blank" style="color:#06F"><u><strong><?php echo $rows[VAT_challan]; ?></strong></u></a></td>
-                        <td><a href="<?php echo $link; ?>" ><?=$fname=getSVALUE("user_activity_management", "fname", "where user_id='".$rows['entry_by']."'");?></a></td>
+                        <td><a href="<?php echo $link; ?>" ><?=$fname=getSVALUE("users", "fname", "where user_id='".$rows['entry_by']."'");?></a></td>
                           <td><a href="<?php echo $link; ?>" ><?php echo $rows[status]; ?></a></td>
                        
                         </tr>

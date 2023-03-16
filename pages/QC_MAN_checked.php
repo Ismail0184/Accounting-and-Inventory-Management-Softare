@@ -77,7 +77,7 @@ $resultss = "Select m.*,m.status as man_status,w.*,u.*,v.*
 from 
 " . $table . " m,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 
  where

@@ -57,10 +57,10 @@ order by w.warehouse_id";
 
 if (isset($_POST[viewreport])){
     $res='select m.id,m.id,m.ref_no,m.return_date as rdate,m.remarks,m.ref_no,w.warehouse_name,v.vendor_name,u.fname as entry_by,m.entry_at,m.status
-    from purchase_return_master m,warehouse w,vendor v,user_activity_management u where m.warehouse_id=w.warehouse_id and m.vendor_id=v.vendor_id and m.entry_by=u.user_id and m.section_id='.$_SESSION['sectionid'].' and m.company_id='.$_SESSION['companyid'].' and m.warehouse_id='.$_POST[warehouse_id].' and m.return_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'" group by m.id order by m.id desc';
+    from purchase_return_master m,warehouse w,vendor v,users u where m.warehouse_id=w.warehouse_id and m.vendor_id=v.vendor_id and m.entry_by=u.user_id and m.section_id='.$_SESSION['sectionid'].' and m.company_id='.$_SESSION['companyid'].' and m.warehouse_id='.$_POST[warehouse_id].' and m.return_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'" group by m.id order by m.id desc';
   } else {
     $res='select m.id,m.id,m.ref_no,m.return_date as rdate,m.remarks,m.ref_no,w.warehouse_name,v.vendor_name,u.fname as entry_by,m.entry_at,m.status
-    from purchase_return_master m,warehouse w,vendor v,user_activity_management u where m.warehouse_id=w.warehouse_id and m.vendor_id=v.vendor_id and m.entry_by=u.user_id and m.section_id='.$_SESSION['sectionid'].' and m.company_id='.$_SESSION['companyid'].' and m.status="CHECKED" group by m.id order by m.id desc';}
+    from purchase_return_master m,warehouse w,vendor v,users u where m.warehouse_id=w.warehouse_id and m.vendor_id=v.vendor_id and m.entry_by=u.user_id and m.section_id='.$_SESSION['sectionid'].' and m.company_id='.$_SESSION['companyid'].' and m.status="CHECKED" group by m.id order by m.id desc';}
 ?>
 
 

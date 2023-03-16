@@ -145,7 +145,7 @@ from
 production_floor_receive_detail d,
 production_floor_receive_master m,
 item_info i,
-user_activity_management u
+users u
 where
 i.item_id=d.item_id and 
 m.pr_no=d.pr_no and 

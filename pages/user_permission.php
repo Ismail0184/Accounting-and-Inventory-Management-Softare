@@ -86,7 +86,7 @@ function reload(form)
                                 <? $sql_user_id="SELECT  u.user_id,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',d.DEPT_SHORT_NAME,')') FROM 						 
 							personnel_basic_info p,
 							department d,
-							user_activity_management u
+							users u
 							 where 
 							 1 and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
@@ -161,7 +161,7 @@ function reload(form)
                                 <? $sql_user_id="SELECT  u.user_id,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',d.DEPT_SHORT_NAME,')') FROM 						 
 							personnel_basic_info p,
 							department d,
-							user_activity_management u
+							users u
 							 where 
 							 1 and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
@@ -256,7 +256,7 @@ function reload(form)
 				$result=mysqli_query($conn, "Select p.*,p.status as power_status,z.*,u.*,md.* from 
 				user_permissions p ,
 				zone_main z,
-				user_activity_management u,
+				users u,
 				module_department md
 				where 
 				u.user_id=p.user_id and 
@@ -271,7 +271,7 @@ function reload(form)
                         <td><?=$row->zonename; ?></td>
                         <td><?=$row->modulename; ?></td>
                         <td><?=$row->fname; ?></td>
-                        <td><?=$zonename=getSVALUE("user_activity_management", "fname", "where user_id='".$row->powerby."'");?></td>
+                        <td><?=$zonename=getSVALUE("users", "fname", "where user_id='".$row->powerby."'");?></td>
                         <td><?=$row->powerdate; ?></td>
                         <td><? if($row->power_status>0) echo 'Active'; else echo 'Inactive'; ?></td>
 

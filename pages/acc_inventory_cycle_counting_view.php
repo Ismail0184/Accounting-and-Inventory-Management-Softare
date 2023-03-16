@@ -25,9 +25,9 @@ if(prevent_multi_submit()){
         { $$key=$value;}}
 
 if (isset($_POST[viewreport])) {
-    $res='SELECT m.cc_no,m.cc_no,m.cc_date as date,m.remarks,w.warehouse_name,concat(uam.fname,"<br>","at: ",m.entry_at) as entry_by,IF(m.checked_by_qc>0,concat((SELECT fname from user_activity_management where user_id=m.checked_by_qc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS QC_check_Status,
-    IF(m.checked_by_acc>0,concat((SELECT fname from user_activity_management where user_id=m.checked_by_acc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS Accounts_check_status,m.status
-    from '.$table.' m, warehouse w,user_activity_management uam
+    $res='SELECT m.cc_no,m.cc_no,m.cc_date as date,m.remarks,w.warehouse_name,concat(uam.fname,"<br>","at: ",m.entry_at) as entry_by,IF(m.checked_by_qc>0,concat((SELECT fname from users where user_id=m.checked_by_qc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS QC_check_Status,
+    IF(m.checked_by_acc>0,concat((SELECT fname from users where user_id=m.checked_by_acc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS Accounts_check_status,m.status
+    from '.$table.' m, warehouse w,users uam
     where
     m.warehouse_id=w.warehouse_id and
     m.entry_by=uam.user_id and m.warehouse_id='.$_POST[warehouse_id];

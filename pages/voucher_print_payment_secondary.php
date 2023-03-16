@@ -130,7 +130,7 @@ $sql1="select jv_date,cc_code,user_id from secondary_journal_bank where tr_no=$v
 
 $data1=mysql_fetch_row(mysql_query($sql1));
 
-$user_name = getSVALUE('user_activity_management','fname',"where user_id=".$data1[2]);
+$user_name = getSVALUE('users','fname',"where user_id=".$data1[2]);
 
 $vo_date=$data1[0];
 

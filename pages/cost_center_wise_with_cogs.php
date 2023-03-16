@@ -73,8 +73,8 @@ if($sectionid=='400000'){
 
 	 
  <?php
-				   $led=mysql_query("Select * from accounts_ledger WHERE  ledger_group_id='4001' ");
-	while($ledrow=mysql_fetch_array($led)){
+				   $led=mysqli_query($conn, "Select * from accounts_ledger WHERE  ledger_group_id='4001' ");
+	while($ledrow=mysqli_fetch_array($led)){
 				   
 				    $cogs=getSVALUE('journal','SUM(dr_amt-cr_amt)',"where ledger_id='$ledrow[ledger_id]' and jvdate between '$_GET[f_date]' and '$_GET[t_date]' and  section_id='".$sectionid."' and company_id='".$companyid."'");
         //
@@ -140,19 +140,19 @@ $cogstotal=$cogstotal+$cogs;
 
 	 
  <?php
-$result=mysql_query("Select distinct ledger_id from journal where cc_code='$_GET[cost_center_id]' and jvdate between '$_GET[f_date]' and '$_GET[t_date]' and section_id='".$sectionid."' and company_id='".$companyid."'");
-while($row=mysql_fetch_array($result)){
+$result=mysqli_query($conn, "Select distinct ledger_id from journal where cc_code='$_GET[cost_center_id]' and jvdate between '$_GET[f_date]' and '$_GET[t_date]' and section_id='".$sectionid."' and company_id='".$companyid."'");
+while($row=mysqli_fetch_array($result)){
 	
-	$warehouse_info=mysql_query("select * from accounts_ledger where ledger_id='$row[ledger_id]'");
-	$wrow=mysql_fetch_array($warehouse_info);
+	$warehouse_info=mysqli_query($conn, "select * from accounts_ledger where ledger_id='$row[ledger_id]'");
+	$wrow=mysqli_fetch_array($warehouse_info);
 	
 	$ccode=$_GET[cost_center_id];
     $SandDErowCurrentAmount = getSVALUE('journal','SUM(dr_amt-cr_amt)','where cc_code="'.$ccode.'" and jvdate between "'.$_GET[f_date].'" and "'.$_GET[t_date].'" and section_id="'.$sectionid.'" and company_id="'.$companyid.'" and ledger_id='.$row[ledger_id]);
 
 	 $SandDErowCurrentAmounttotal=$SandDErowCurrentAmounttotal+$SandDErowCurrentAmount;
 	
-	$username=mysql_query("Select * from user_activity_management where user_id='$row[entry_by]'");
-	$userrow=mysql_fetch_array($username);
+	$username=mysqli_query($conn, "Select * from users where user_id='$row[entry_by]'");
+	$userrow=mysqli_fetch_array($username);
 	 $i=$i+1;
  ?>
  

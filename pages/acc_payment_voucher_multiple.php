@@ -92,7 +92,12 @@ if(prevent_multi_submit()) {
             $c_date = 0;
             $cur_bal = 0;
             $manual_payment_no = 0;
-            $cc_code = @$_POST['cc_code'];
+            if ($_POST['dr_amt'] > 0) {
+                $cc_code = @$_POST['cc_code'];
+            } elseif ($_POST['cr_amt'] > 0) {
+                $cc_code = '0';
+            }
+
             $subledger_id = @$_POST['subledger_id'];
             $receive_ledger = 0;
 

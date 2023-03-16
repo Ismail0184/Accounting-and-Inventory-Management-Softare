@@ -144,7 +144,7 @@ $resultss=mysqli_query($conn, "Select * from $table order by $unique ");
                                             <td><a href="<?php echo $link; ?>" target="_new"><?php echo $rows[zonecode]; ?></a></td>
                                             <td onclick="OpenPopupCenter('module_create_main.php?<?php echo 'id='.$rows[zonecode].'&mood=editmood' ?>', 'TEST!?', 900, 600);"><?php echo $rows[zonename]; ?></td>
                                             <td><a href="<?php echo $link; ?>"><?php echo $rows[zonedetails]; ?></a></td>
-                                            <td><?=getSVALUE("user_activity_management", "fname", " where user_id='$rows[power_by]'");?></td>
+                                            <td><?=getSVALUE("users", "fname", " where user_id='$rows[power_by]'");?></td>
                                             <td><?php echo $rows[created_at]; ?></td>
 
                                         </tr>

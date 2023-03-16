@@ -335,7 +335,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
             <tbody>
             <tr style="background-color: #3caae4; color:white">
                 <th style="text-align: center">Cash , Bank & Customer</th>
-                <th style="text-align: center">Profit Center</th>
+                <!--th style="text-align: center">Profit Center</th-->
                 <th style="text-align: center">Narration</th>
                 <th style="text-align: center">Attachment</th>
                 <th style="width:5%; text-align:center">Amount</th>
@@ -349,12 +349,12 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
                         <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value_ledger_id, '1'); ?>
                     </select>
                 </td>
-                <td align="center" style="width: 10%;vertical-align: middle">
+                <!--td align="center" style="width: 10%;vertical-align: middle">
                     <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="pc_code">
                         <option></option>
                         <?php foreign_relation('profit_center', 'id', 'CONCAT(id," : ", center_name)', $edit_value_pc_code, '1'); ?>
                     </select>
-                </td>
+                </td-->
                 <td style="width:15%;vertical-align: middle" align="center">
                     <textarea id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration"   class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value_narration!='')? $edit_value_narration : $credit_note_last_narration;?></textarea>
                 </td>

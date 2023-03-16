@@ -61,10 +61,10 @@ $master=find_all_field("".$table."","","".$unique."=".$_GET[$unique]."");
 
 if(isset($_POST[Approved])){
 mysqli_query($conn, "Update ".$table." SET status='PROCESSING',authorized_date='$todayss' where ".$unique."=".$_GET[$unique]."");
-$maild=find_a_field('user_activity_management','email','user_id='.$master->entry_by);
-$CC_checkby=find_a_field('user_activity_management','email','user_id='.$master->checkby);
-$CC_recommended=find_a_field('user_activity_management','email','user_id='.$master->recommended);
-$CC_authorise=find_a_field('user_activity_management','email','user_id='.$master->authorise);
+$maild=find_a_field('users','email','user_id='.$master->entry_by);
+$CC_checkby=find_a_field('users','email','user_id='.$master->checkby);
+$CC_recommended=find_a_field('users','email','user_id='.$master->recommended);
+$CC_authorise=find_a_field('users','email','user_id='.$master->authorise);
                 $to = $maild;
 				$subject = "Work Order has been Approved!!";
 				$message .= '<table border="0" cellpadding="0" cellspacing="0" width="100%"> 
@@ -100,7 +100,7 @@ $CC_authorise=find_a_field('user_activity_management','email','user_id='.$master
                 </tr>
                 <tr>
                     <th align="center" valign="top">Name</th>
-					<td>'.find_a_field('user_activity_management','fname','user_id='.$master->entry_by).'</td>
+					<td>'.find_a_field('users','fname','user_id='.$master->entry_by).'</td>
 					<td>'.find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$master->checkby).'</td>
 					<td>'.find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$master->recommended).'</td>
 					<td>'.find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$master->authorise).'</td>
@@ -180,7 +180,7 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
 							personnel_basic_info p2,
 							department d,
 							designation de,
-							user_activity_management u 
+							users u 
 							 where 
 							 p2.PBI_ID=u.PBI_ID and
 							 u.user_id=r.entry_by and
@@ -200,7 +200,7 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
 							personnel_basic_info p2,
 							department d,
 							designation de,
-							user_activity_management u 
+							users u 
 							 where 
 							 p2.PBI_ID=u.PBI_ID and
 							 u.user_id=r.entry_by and

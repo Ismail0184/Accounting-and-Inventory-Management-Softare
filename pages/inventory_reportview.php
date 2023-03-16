@@ -293,7 +293,7 @@ $warehouseid=$_POST[warehouse_id];
 				from
 				journal_item a,
 				item_info i,
-				user_activity_management c,				
+				users c,				
 				item_sub_group s
 				 
 				where c.user_id=a.entry_by and s.sub_group_id=i.sub_group_id and

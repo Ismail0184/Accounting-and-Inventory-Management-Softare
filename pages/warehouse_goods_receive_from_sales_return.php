@@ -161,7 +161,7 @@ $res="Select p.do_no,p.sr_no as SR_NO,DATE_FORMAT(p.do_date, '%d %M, %Y') as SR_
 from 
 ".$table." p,
 warehouse w,
-user_activity_management u,
+users u,
 dealer_info d
 
  where
@@ -176,7 +176,7 @@ $res="Select p.do_no,p.sr_no as SR_NO,DATE_FORMAT(p.do_date, '%d %M, %Y') as SR_
 from 
 ".$table." p,
 warehouse w,
-user_activity_management u,
+users u,
 dealer_info d
 
  where

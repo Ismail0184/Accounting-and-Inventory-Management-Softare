@@ -322,7 +322,7 @@ eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,lo
 
         <td class="tabledesign_text">Checked By :
 
-          <? if($jv->checked=='YES') echo find_a_field('user_activity_management','fname','user_id='.$jv->checked_by); else echo 'Not Checked';?></td>
+          <? if($jv->checked=='YES') echo find_a_field('users','fname','user_id='.$jv->checked_by); else echo 'Not Checked';?></td>
 
       </tr>
 

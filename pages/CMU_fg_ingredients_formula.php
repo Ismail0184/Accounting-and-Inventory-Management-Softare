@@ -227,7 +227,7 @@ r.line_id=".$_GET[line_id]." and r.fg_id=".$_GET[fg_id]." order by id";
 								 production_line_fg f,
 								 item_info i, 
 								 warehouse w ,
-								 user_activity_management u    
+								 users u    
 								                              
                                  where 
                                  f.fg_item_id=i.item_id and 

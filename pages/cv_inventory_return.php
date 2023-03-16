@@ -129,8 +129,8 @@ m.checked_by_qc='.$_SESSION['PBI_ID'].' and
 m.status in ("UNCHECKED") and 
 m.id='.$_GET[$unique].' 
 group by d.id';
-                                $data2=mysql_query($res);
-                                while($data=mysql_fetch_object($data2)){ ?>
+                                $data2=mysqli_query($conn, $res);
+                                while($data=mysqli_fetch_object($data2)){ ?>
                                                 <tr>
                                                     <td><?=$data->ref_no;?></td>
                                                     <td><?=$data->po_no;?></td>
@@ -240,16 +240,16 @@ m.checked_by_qc='.$_SESSION['PBI_ID'].' and
 m.status in ("CHECKED") and 
 m.id='.$_GET[id_pro].' 
 group by d.id';
-                         $data2=mysql_query($res);
-                         while($data=mysql_fetch_object($data2)){
+                         $data2=mysqli_query($conn, $res);
+                         while($data=mysqli_fetch_object($data2)){
                             $idget=$data->did;
                             $qty=$_POST['qty'.$idget];
                             $rate=$_POST['rate'.$idget];
                             $amount=$qty*$rate;
 
                             if(isset($_POST[modifypro])){
-                                mysql_query("UPDATE purchase_return_details SET rate='".$rate."',amount='$amount' where m_id='".$_GET[id_pro]."' and id='".$idget."'");
-                                mysql_query("UPDATE purchase_return_master SET status='ROCOMMENDED',recommended_date='$todaysss' where id=".$_GET[id_pro]." ");
+                                mysqli_query($conn, "UPDATE purchase_return_details SET rate='".$rate."',amount='$amount' where m_id='".$_GET[id_pro]."' and id='".$idget."'");
+                                mysqli_query($conn, "UPDATE purchase_return_master SET status='ROCOMMENDED',recommended_date='$todaysss' where id=".$_GET[id_pro]." ");
 
                                 echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                                 echo "<script>window.close(); </script>";
@@ -387,7 +387,7 @@ u.fname as checkedby
 purchase_return_master m,
 warehouse w,
 vendor v,
-user_activity_management u
+users u
 where 
  
 m.warehouse_id=w.warehouse_id and 
@@ -397,8 +397,8 @@ m.status in ("CHECKED") and
 m.checked_by_qc=u.PBI_ID
  
 group by m.id';
-                 $data2=mysql_query($res);
-                                while($datapro=mysql_fetch_object($data2)){ ?>
+                 $data2=mysqli_query($conn, $res);
+                                while($datapro=mysqli_fetch_object($data2)){ ?>
                                     <tr style="text-align: left;cursor: pointer" onclick="OpenPopupCenter('<?=$page?>?<?php echo 'id_pro='.$datapro->id.'&view=Show&in=Contra' ?>', 'TEST!?', 700, 400);">
                                     <td><?=$datapro->ref_no;?></td>
                                                     <td><?=$datapro->po_no;?></td>

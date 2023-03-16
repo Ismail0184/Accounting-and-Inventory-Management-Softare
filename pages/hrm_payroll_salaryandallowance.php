@@ -81,7 +81,7 @@ $sql_user_id="SELECT  p.PBI_ID,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',des.
 							personnel_basic_info p,
 							department d,
 							designation des,
-							user_activity_management u
+							users u
 							 where p.PBI_JOB_STATUS='In Service' and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
 							 u.PBI_ID=p.PBI_ID and

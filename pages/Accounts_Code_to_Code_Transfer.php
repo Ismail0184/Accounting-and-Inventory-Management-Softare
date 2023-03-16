@@ -65,7 +65,7 @@ if(prevent_multi_submit()){
                 </tr>
                 <tr>
                     <th align="center" valign="top">Prepared By</th>
-					<td style="padding-left:5px">'.find_a_field('user_activity_management','fname','user_id='.$_SESSION[userid]).'</td>
+					<td style="padding-left:5px">'.find_a_field('users','fname','user_id='.$_SESSION[userid]).'</td>
                 </tr>
                 <tr>
                     <th align="center" valign="top">Time </th>

@@ -16,7 +16,7 @@ if (isset($_POST[viewreport])) {
     $res = "SELECT  m.do_no,m.do_no,m.do_date,m.do_type,d.dealer_name_e as customer_name,uam.fname as prepared_by,m.entry_at as prepared_at,m.challan_date as delivered_time,m.mushak_challan_status as status FROM
 							 sale_do_master m,
 							dealer_info d,
-							user_activity_management uam
+							users uam
 							 where
 							 m.dealer_code=d.dealer_code and
 							 m.do_date between '".$_POST[f_date]."' and '".$_POST[t_date]."' and
@@ -28,7 +28,7 @@ if (isset($_POST[viewreport])) {
     $res = "SELECT  m.do_no,m.do_no,m.do_date,m.do_type,d.dealer_name_e as customer_name,uam.fname as prepared_by,m.entry_at as prepared_at,m.challan_date as delivered_time,m.mushak_challan_status as status FROM
 							 sale_do_master m,
 							dealer_info d,
-							user_activity_management uam
+							users uam
 							 where
 							 m.dealer_code=d.dealer_code and
 							 m.depot_id=".$_SESSION[warehouse]." and

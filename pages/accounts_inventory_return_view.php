@@ -99,7 +99,7 @@ $sql="Select p.id,p.id,p.ref_no as Referance,p.remarks,p.return_date as date,w.w
 from 
 ".$table." p,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
  where
   p.entry_by=u.user_id and 
@@ -112,7 +112,7 @@ $sql="Select p.id,p.id,p.ref_no as Referance,p.remarks,p.return_date,w.warehouse
 from 
 ".$table." p,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 
  where

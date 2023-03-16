@@ -232,7 +232,7 @@ $resultss=mysql_query("SELECT m.*,d.*,u.*,w.* from
 
 sale_return_master m,
 dealer_info d,
-user_activity_management u,
+users u,
 warehouse w
 
  where 
@@ -248,7 +248,7 @@ $resultss=mysql_query("SELECT m.*,d.*,u.*,w.* from
 
 sale_return_master m,
 dealer_info d,
-user_activity_management u,
+users u,
 warehouse w
 
  where 
@@ -283,7 +283,7 @@ $VAT_challan='/51816/cmu_mod/page/vc_documents/'.$rows[MAN_ID].'_'.$rows[VAT_cha
                         
                         <td><a href="<?php echo $link; ?>" ><?=$rows[fname]?></a></td>
                         
-                        <td><a href="<?php echo $link; ?>" ><?=$fname=getSVALUE("user_activity_management", "fname", "where user_id='".$rows['checked_by']."'");?></a></td>
+                        <td><a href="<?php echo $link; ?>" ><?=$fname=getSVALUE("users", "fname", "where user_id='".$rows['checked_by']."'");?></a></td>
                        
                         </tr>
 <?php } ?></tbody></table><?php } ?>

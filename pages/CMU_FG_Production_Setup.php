@@ -70,7 +70,7 @@ from
 production_line_fg a,
 warehouse w,
 item_info i ,
-user_activity_management u
+users u
 where 
 
 w.warehouse_id=a.line_id and 

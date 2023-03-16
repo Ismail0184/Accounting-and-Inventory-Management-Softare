@@ -89,7 +89,7 @@ function hide()
                           <tr>
                               <th align="left" valign="top"> Entry By</th>
                               <td  align="left" valign="middle" style="width:2%">: </td>
-                              <td><?=find_a_field('user_activity_management','fname','user_id="'.$MAN_QUERY->entry_by.'"')?></td>
+                              <td><?=find_a_field('users','fname','user_id="'.$MAN_QUERY->entry_by.'"')?></td>
                           </tr>
                       
                     </table></td>

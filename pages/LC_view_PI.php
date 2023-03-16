@@ -161,7 +161,7 @@ lc_pi_master m
 							 from 
 							 lc_pi_master a,
 							 lc_buyer c, 
-							 user_activity_management u,
+							 users u,
 							 currency cu
                             where 
                             a.party_id = c.party_id and 
@@ -172,7 +172,7 @@ lc_pi_master m
 							 from 
 							 lc_pi_master a,
 							 lc_buyer c, 
-							 user_activity_management u,
+							 users u,
 							 currency cu
                             where 
                             a.party_id = c.party_id and 

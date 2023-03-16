@@ -200,7 +200,7 @@ $str 	.= '<h2>'.$report.'</h2>';
 if(($item_id>0))
 $str 	.= '<h2>Item Name: '.find_a_field('item_info','item_name','item_id='.$item_id).'</h2>';
 if(($_POST[user_id]>0))
-$str 	.= '<h2>Entry By: '.find_a_field('user_activity_management','fname','user_id='.$_POST[user_id]).'</h2>';
+$str 	.= '<h2>Entry By: '.find_a_field('users','fname','user_id='.$_POST[user_id]).'</h2>';
 if(isset($to_date))
 list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $fr_date);
 list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $to_date);
@@ -385,7 +385,7 @@ while($row=mysql_fetch_object($res))
 
 			<td>&nbsp;<?=find_a_field('warehouse','warehouse_name','warehouse_id='.$row->relevant_warehouse);?></td>
 
-            <td>&nbsp;<?=find_a_field('user_activity_management','fname','user_id='.$row->entry_by)?></td>
+            <td>&nbsp;<?=find_a_field('users','fname','user_id='.$row->entry_by)?></td>
 
             <td>&nbsp;<?=$row->entry_at?></td>
 
@@ -623,7 +623,7 @@ elseif($_REQUEST['report']==4) {
 
             <td><?=find_a_field('warehouse','warehouse_name','warehouse_id='.$row->relevant_warehouse);?></td>
 
-            <td>&nbsp;<?=find_a_field('user_activity_management','fname','user_id='.$row->entry_by)?></td>
+            <td>&nbsp;<?=find_a_field('users','fname','user_id='.$row->entry_by)?></td>
 
             <td>&nbsp;<?=$row->entry_at?></td>
 
@@ -1658,7 +1658,7 @@ group by j.item_id order by g.group_id DESC,i.serial";
 				from
 				journal_item a,
 				item_info i,
-				user_activity_management c,
+				users c,
 				item_sub_group s,
 				warehouse w
 				where c.user_id=a.entry_by and s.sub_group_id=i.sub_group_id and

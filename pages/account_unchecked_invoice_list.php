@@ -324,7 +324,7 @@ from
 
 ".$table." m,
 warehouse w,
-user_activity_management u,
+users u,
 dealer_info d
 
  where

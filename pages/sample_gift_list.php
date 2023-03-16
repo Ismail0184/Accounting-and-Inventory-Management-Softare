@@ -188,10 +188,10 @@ $result=mysql_query("Select * from requisition_sample_gift_master where status='
 	$wrow=mysql_fetch_array($warehouse_info);
 	 $dealername = find_a_field('dealer_info','dealer_name_e','dealer_code='.$row[dealer_code]);
 	 $dealerledgerid = find_a_field('accounts_ledger','ledger_id','ledger_id='.$wrow[account_code]);
-	 $entryby = find_a_field('user_activity_management','fname','user_id='.$row[entry_by]); 
+	 $entryby = find_a_field('users','fname','user_id='.$row[entry_by]); 
 	 $doamount = find_a_field('sale_do_details','SUM(total_amt)','do_no='.$row[do_no]); 
 	 $payablevendor=$dramount-$cramount;
-	$username=mysql_query("Select * from user_activity_management where user_id='$row[entry_by]'");
+	$username=mysql_query("Select * from users where user_id='$row[entry_by]'");
 	$userrow=mysql_fetch_array($username);
 	
  ?>

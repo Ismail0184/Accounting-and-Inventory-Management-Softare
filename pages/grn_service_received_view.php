@@ -17,7 +17,7 @@ u.fname as Received_by,r.entry_at,j.checked as status
 from 
 '.$table.' r,
 vendor v,
-user_activity_management u,
+users u,
 secondary_journal j
 where 
 j.tr_no = r.pr_no AND
@@ -212,7 +212,7 @@ $dealer = find_all_field_sql($ssql);
                                                 <td align="right" valign="middle">GR Posting Time  :</td>
                                                 <td><table width="100%" border="1" cellspacing="0" cellpadding="3">
                                                         <tr>
-                                                            <td>By: <?php echo find_a_field('user_activity_management','fname','user_id='.$dealer->entry_by);?>/ At: <?php echo $dealer->entry_at;?></td>
+                                                            <td>By: <?php echo find_a_field('users','fname','user_id='.$dealer->entry_by);?>/ At: <?php echo $dealer->entry_at;?></td>
 
 
                                                         </tr>
@@ -524,8 +524,8 @@ $dealer = find_all_field_sql($ssql);
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
                                 <!--td width="33%"><div align="center"><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$po_master->entry_by);?><br /><span style="font-size:9px">(<?=$po_master->entry_at;?>)</span></div></td-->
-                                <td width="50%"><div align="center"><?=find_a_field('user_activity_management','fname','user_id='.$datas->entry_by);?><br /><span style="font-size:9px">(<?=$datas->entry_at;?>)</span></div></td>
-                                <td width="50%"><div align="center"><?=find_a_field('user_activity_management','fname','user_id='.$datas->qc_by);?><br /><span style="font-size:9px">(<?=$datas->QC_at;?>)</span></div></td>
+                                <td width="50%"><div align="center"><?=find_a_field('users','fname','user_id='.$datas->entry_by);?><br /><span style="font-size:9px">(<?=$datas->entry_at;?>)</span></div></td>
+                                <td width="50%"><div align="center"><?=find_a_field('users','fname','user_id='.$datas->qc_by);?><br /><span style="font-size:9px">(<?=$datas->QC_at;?>)</span></div></td>
                             </tr>
                             <tr>
                             <!--td width="33%" style="border-top:solid thin 2px"><div align="center" style="text-decoration:overline; font-weight:bold">Prepared By</div></td-->

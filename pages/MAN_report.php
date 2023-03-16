@@ -67,7 +67,7 @@ $sql="Select m.id,m.id as ID,m.MAN_ID as MAN_NO,m.man_date as date,w.warehouse_n
 from 
 ".$table." m,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 
  where
@@ -81,7 +81,7 @@ $sql="Select m.id,m.id as ID,m.MAN_ID as MAN_NO,m.man_date as date,w.warehouse_n
 from 
 ".$table." m,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
 
  where

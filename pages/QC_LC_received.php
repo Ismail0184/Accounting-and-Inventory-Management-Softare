@@ -126,11 +126,11 @@ if(prevent_multi_submit()){
 
 if(isset($_POST[viewreport])){
     $resultss="Select m.lcr_no,m.lcr_no as 'recv. id',llm.lc_no,m.pi_id,m.lc_id,m.rcv_Date as received_date,lb.buyer_name as Party_Name,w.warehouse_name as Warehouse,u.fname as received_by,m.status from 
-".$table." m,lc_buyer lb,lc_lc_master llm,warehouse w,user_activity_management u
+".$table." m,lc_buyer lb,lc_lc_master llm,warehouse w,users u
  where lb.party_id=m.vendor_id and m.rcv_Date between '".$_POST[f_date]."' and '".$_POST[t_date]."' and llm.id=m.lc_id and m.warehouse_id=w.warehouse_id and u.user_id=m.entry_by group by m.lcr_no  order by m.".$unique." DESC ";
 } else {
     $resultss="Select m.lcr_no,m.lcr_no as 'recv. id',llm.lc_no,m.pi_id,m.lc_id,m.rcv_Date as received_date,lb.buyer_name as Party_Name,w.warehouse_name as Warehouse,u.fname as received_by,m.status from 
-".$table." m,lc_buyer lb,lc_lc_master llm,warehouse w,user_activity_management u
+".$table." m,lc_buyer lb,lc_lc_master llm,warehouse w,users u
  where lb.party_id=m.vendor_id and m.status in ('UNCHECKED') and llm.id=m.lc_id and m.warehouse_id=w.warehouse_id and u.user_id=m.entry_by group by m.lcr_no  order by m.".$unique." DESC ";
 
 }

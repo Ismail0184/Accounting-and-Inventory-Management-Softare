@@ -55,7 +55,7 @@ from
 sale_do_master m,
 dealer_info d ,
 sale_do_details dt,
-user_activity_management u,
+users u,
 warehouse w
 where
 m.dealer_code=d.dealer_code and
@@ -72,7 +72,7 @@ from
 sale_do_master m,
 dealer_info d ,
 sale_do_details dt,
-user_activity_management u,
+users u,
 warehouse w
 where
 m.dealer_code=d.dealer_code and

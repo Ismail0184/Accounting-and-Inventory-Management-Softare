@@ -94,7 +94,7 @@ function reload(form)
                                 <? $sql_user_id="SELECT  u.user_id,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',d.DEPT_SHORT_NAME,')') FROM 						 
 							personnel_basic_info p,
 							department d,
-							user_activity_management u
+							users u
 							 where 
 							 1 and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
@@ -151,7 +151,7 @@ function reload(form)
                                <? $sql_user_id="SELECT  u.user_id,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',d.DEPT_SHORT_NAME,')') FROM 						 
 							personnel_basic_info p,
 							department d,
-							user_activity_management u
+							users u
 							 where 
 							 1 and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
@@ -186,7 +186,7 @@ function reload(form)
             <div class="x_content">
                 <? 	$res='select p.'.$unique.',p.'.$unique.' as Code,w.warehouse_name,u.fname as User_name,p.power_date,p.status from 
                 '.$table.' p, 
-                user_activity_management u,
+                users u,
                 warehouse w 
                  where 
                 p.user_id="'.$_GET[user_id].'" and 

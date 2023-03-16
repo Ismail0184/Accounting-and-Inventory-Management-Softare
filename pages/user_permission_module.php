@@ -95,7 +95,7 @@ function reload2(form)
                                 <? $sql_user_id="SELECT  u.user_id,concat(p.PBI_ID_UNIQUE,' : ',p.PBI_NAME,' (',d.DEPT_SHORT_NAME,')') FROM 						 
 							personnel_basic_info p,
 							department d,
-							user_activity_management u
+							users u
 							 where p.PBI_JOB_STATUS='In Service' and 							 
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
 							 u.PBI_ID=p.PBI_ID			 
@@ -143,7 +143,7 @@ function reload2(form)
                 <? 	$res='select p.'.$unique.',p.'.$unique.' as Code,m.module_short_name,m.modulename as module_name,u.fname as User_Name, p.status as Active_status from 
                 '.$table.' p, 
                 module_department m,
-                user_activity_management u 
+                users u 
                  where 
                 p.user_id="'.$_GET[user_id].'" and 
                 p.module_id=m.module_id and 

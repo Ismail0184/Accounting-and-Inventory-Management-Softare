@@ -7,7 +7,7 @@
 		try
 		{	
 		
-			$stmt = $db_con->prepare("SELECT u.*,c.* FROM user_activity_management u,company c WHERE u.username=:username and u.companyid=c.companyid and u.section_id=c.section_id ");
+			$stmt = $db_con->prepare("SELECT u.*,c.* FROM users u,company c WHERE u.username=:username and u.companyid=c.companyid and u.section_id=c.section_id ");
 			$stmt->execute(array(":username"=>$user_email));
 			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			$count = $stmt->rowCount();

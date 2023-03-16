@@ -121,7 +121,7 @@ if (isset($_POST['confirm'])) {
 
 $pi_master = find_all_field('lc_pi_master', 's', 'id=' . $pi_id);
 $pi_details = find_all_field('lc_pi_details', 's', 'pi_id=' . $pi_master->id);
-$from_d = find_all_field('user_activity_management', 'fname', 'user_id=' . $lc_master->prepared_by);
+$from_d = find_all_field('users', 'fname', 'user_id=' . $lc_master->prepared_by);
 $sql1 = "select * from lc_pi_details where pi_id = $pi_master->id";
 $data1 = mysql_query($sql1);
 $pi = 0;

@@ -114,13 +114,13 @@ if(isset($_POST['checked'])){
 if(isset($_POST[viewreport])):
 $sql="Select p.id,p.id,p.ref_no as Referance,p.remarks,p.return_date as date,w.warehouse_name,v.vendor_name,
 concat(u.fname,', At: ',p.entry_at) as prepared_by,
-concat((SELECT fname from user_activity_management where user_id=p.checked_by_qc),', At: ',checked_by_qc_at) as QC_By,
-concat((SELECT fname from user_activity_management where user_id=p.checked_by_pro),', At: ',checked_by_pro_at) as Checked_By,
+concat((SELECT fname from users where user_id=p.checked_by_qc),', At: ',checked_by_qc_at) as QC_By,
+concat((SELECT fname from users where user_id=p.checked_by_pro),', At: ',checked_by_pro_at) as Checked_By,
 FORMAT((select SUM(amount) from purchase_return_details where m_id=p.id),2) as amount,p.status
 from
 ".$table." p,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
  where
   p.entry_by=u.user_id and
@@ -130,13 +130,13 @@ vendor v
 else :
 $sql="Select p.id,p.id,p.ref_no as Referance,p.remarks,p.return_date,w.warehouse_name,v.vendor_name,
 concat(u.fname,', At: ',p.entry_at) as prepared_by,
-concat((SELECT fname from user_activity_management where user_id=p.checked_by_qc),', At: ',checked_by_qc_at) as QC_By,
-concat((SELECT fname from user_activity_management where user_id=p.checked_by_pro),', At: ',checked_by_pro_at) as Checked_By,
+concat((SELECT fname from users where user_id=p.checked_by_qc),', At: ',checked_by_qc_at) as QC_By,
+concat((SELECT fname from users where user_id=p.checked_by_pro),', At: ',checked_by_pro_at) as Checked_By,
 FORMAT((select SUM(amount) from purchase_return_details where m_id=p.id),2) as amount,p.status
 from
 ".$table." p,
 warehouse w,
-user_activity_management u,
+users u,
 vendor v
  where
   p.entry_by=u.user_id and

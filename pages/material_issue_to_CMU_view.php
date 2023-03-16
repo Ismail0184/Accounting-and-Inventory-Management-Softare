@@ -67,7 +67,7 @@ from
 production_issue_master p,
 warehouse w,
 warehouse wto,
-user_activity_management u
+users u
 where
 p.entry_by=u.user_id and 
 w.warehouse_id=p.warehouse_from and  
@@ -90,7 +90,7 @@ from
 production_issue_master p,
 warehouse w,
 warehouse wto,
-user_activity_management u
+users u
 where
 p.entry_by=u.user_id and 
 w.warehouse_id=p.warehouse_from and  

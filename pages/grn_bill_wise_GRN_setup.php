@@ -196,7 +196,7 @@ if(isset($$unique))
 				grn_report_view g ,
 				purchase_receive p,
 				item_info i,
-				user_activity_management u
+				users u
 				
 				where 
 				g.grn_no=p.pr_no and  				

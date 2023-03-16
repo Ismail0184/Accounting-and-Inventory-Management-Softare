@@ -372,9 +372,9 @@ $disc=$disc+$info->discount;
                 <li>Any inefficiency in maintanence must be informed(Officially) before the execution to avoid the compensation. <br />
                   <br />
                   -This Purchase order prepared by <em>
-                  <strong><?php $entry_by=find_a_field('user_activity_management','user_id','PBI_ID='.$data->entry_by);
-				  echo find_a_field('user_activity_management','fname','user_id='.$data->entry_by);?>, Designation: 
-                  <?=find_a_field('user_activity_management','designation','user_id='.$data->entry_by);?>, Mobile:  <?=find_a_field('user_activity_management','mobile','user_id='.$data->entry_by);?>
+                  <strong><?php $entry_by=find_a_field('users','user_id','PBI_ID='.$data->entry_by);
+				  echo find_a_field('users','fname','user_id='.$data->entry_by);?>, Designation: 
+                  <?=find_a_field('users','designation','user_id='.$data->entry_by);?>, Mobile:  <?=find_a_field('users','mobile','user_id='.$data->entry_by);?>
                   </strong>
                   </em>
                   <br />

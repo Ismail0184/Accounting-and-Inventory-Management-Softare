@@ -232,7 +232,7 @@ $rowsmaingroup=mysql_fetch_array($result);
                         <option value="">Choose......</option>
                         
                         <?php
-						$result=mysql_query("Select * from user_activity_management where 1 order by user_id");
+						$result=mysql_query("Select * from users where 1 order by user_id");
 						while($rowmaingroup=mysql_fetch_array($result)){
 						if(($_GET[user_id])==$rowmaingroup[user_id]){
 						
@@ -393,7 +393,7 @@ if($_GET[user_id]){
 				user_permissions3 p ,
 				zone_main m,
 				zone_sub z,
-				user_activity_management u
+				users u
 				where 
 				m.zonecode=p.zonecodemain and 
 				u.user_id=p.user_id and 
@@ -407,7 +407,7 @@ if($_GET[user_id]){
 				user_permissions2 p ,
 				zone_main m,
 				zone_sub z,
-				user_activity_management u
+				users u
 				where 
 				m.zonecode=p.zonecodemain and 
 				u.user_id=p.user_id and				
@@ -427,7 +427,7 @@ if($_GET[user_id]){
                         <td><?=$row->mustermenu; ?></td>
                         <td><?=$row->fname; ?></td>
                         
-                        <td><?=$zonename=getSVALUE("user_activity_management", "fname", "where user_id='".$row->powerby."'");?></td>
+                        <td><?=$zonename=getSVALUE("users", "fname", "where user_id='".$row->powerby."'");?></td>
                         <td><?=$row->powerdate; ?></td>
                                                 
                             

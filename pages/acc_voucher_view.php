@@ -39,7 +39,7 @@ if(isset($_REQUEST['show']))
 	$vou_no=$_REQUEST['vou_no'];
 	$user_id=$_REQUEST['user_id'];
 	if($user_id!='')
-	$user_id = getSVALUE('user_activity_management','user_id',"where username='".$user_id."'");
+	$user_id = getSVALUE('users','user_id',"where username='".$user_id."'");
 
 
 
@@ -57,7 +57,7 @@ if (!empty($_POST[vou_no])){
                   u.fname as entry_by,
                   j.entry_at,j.status
 				FROM
-				  user_activity_management u,
+				  users u,
 				  journal j,
 				  accounts_ledger l
 				WHERE
@@ -81,7 +81,7 @@ if (!empty($_POST[vou_no])){
 
 
 				FROM
-				  user_activity_management u,
+				  users u,
 				  journal j,
 				  accounts_ledger l
 				WHERE

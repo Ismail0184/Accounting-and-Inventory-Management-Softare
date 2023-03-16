@@ -50,7 +50,7 @@ production_line_raw p,
 item_info i,
 item_sub_group s,
 warehouse w,
-user_activity_management u 
+users u 
 where 
 i.item_id=p.item_id and 
 s.sub_group_id=i.sub_group_id and 
