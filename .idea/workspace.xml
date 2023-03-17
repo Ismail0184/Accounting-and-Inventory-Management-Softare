@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="" />
+    <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_chart_of_accounts.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_chart_of_accounts.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/accounts_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_reportview.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -95,7 +99,8 @@
       <workItem from="1678684454029" duration="4353000" />
       <workItem from="1678697377056" duration="8083000" />
       <workItem from="1678767091423" duration="9543000" />
-      <workItem from="1678853055944" duration="11369000" />
+      <workItem from="1678853055944" duration="12587000" />
+      <workItem from="1679024428277" duration="2295000" />
     </task>
     <servers />
   </component>

@@ -2,18 +2,21 @@
 
 require_once 'support_file.php';
 $title='Report';
-$from_date=date('Y-m-d' , strtotime($_POST['f_date']));
-$to_date=date('Y-m-d' , strtotime($_POST['t_date']));
+$f_date = @$_POST['f_date'];
+$t_date = @$_POST['t_date'];
+//$f_date=date('Y-m-d' , strtotime($_POST['f_date']));
+//$t_date=date('Y-m-d' , strtotime($_POST['t_date']));
 $date = date('Y-m-d');
-$pfrom_date=date('Y-m-d' , strtotime($_POST['pf_date']));
-$pto_date=date('Y-m-d' , strtotime($_POST['pt_date']));
+$pfrom_date = @$_POST['pf_date'];
+$pto_date = @$_POST['pt_date'];
 list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $date);
 
-$ledger_id=$_REQUEST["ledger_id"];
-list( $day,$month,$year1) = preg_split("/[\/\.\-]+/", $_REQUEST['datefrom']);
+$ledger_id=@$_REQUEST["ledger_id"];
+$req_datefrom = @$_REQUEST['datefrom'];
+list( $day,$month,$year1) = preg_split("/[\/\.\-]+/", $req_datefrom);
 $dofdate= '20'.$year1.'-'.$month.'-'.$day;
-
-list($dayt,$montht,$yeart) = preg_split("/[\/\.\-]+/", $_REQUEST['dateto']);
+$req_dateto = @$_REQUEST['dateto'];
+list($dayt,$montht,$yeart) = preg_split("/[\/\.\-]+/", $req_dateto);
 $dotdate= '20'.$yeart.'-'.$montht.'-'.$dayt;
 $warehouseid=@$_POST['warehouse_id'];
 $_SESSION['company_name']=find_a_field('company','company_name','company_id="'.$_SESSION['companyid'].'"');
@@ -110,9 +113,9 @@ if($sectionid=='400000'){
         if($tr_from!=''){
             $emp_id.=" and a.tr_from='".$tr_from."'";}
         if($cc_code > 0)
-        {   $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$from_date' AND '$to_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code ";
+        {   $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$f_date' AND '$t_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code ";
             $total=mysqli_fetch_row(mysqli_query($conn, $total_sql));
-            $c="select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate<'$from_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code".$emp_id;
+            $c="select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate<'$f_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code".$emp_id;
             $p="select
 a.jvdate,
 b.ledger_name,
@@ -140,7 +143,7 @@ cost_center c
 where
 a.cc_code=c.id and
 a.ledger_id=b.ledger_id and
-a.jvdate between '$from_date' AND '$to_date' and
+a.jvdate between '$f_date' AND '$t_date' and
 a.ledger_id like '$ledger_id' and
 b.group_for=".$_SESSION['usergroup']." and
 a.user_id=u.user_id AND
@@ -148,12 +151,12 @@ a.cc_code=".$cc_code."
 order by a.jvdate,a.id";
 
         } else  {
-            $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$from_date' AND '$to_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup'].$emp_id;
+            $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$f_date' AND '$t_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup'].$emp_id;
             $total=mysqli_fetch_row(mysqli_query($conn, $total_sql));
             $c="select sum(a.dr_amt)-sum(a.cr_amt) from
             journal a,
             accounts_ledger b
-            where a.ledger_id=b.ledger_id and a.jvdate<'$from_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup'];
+            where a.ledger_id=b.ledger_id and a.jvdate<'$f_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup'];
             $p="select
 a.jvdate,
 b.ledger_name,
@@ -180,7 +183,7 @@ cost_center c
 where
 a.cc_code=c.id and
 a.ledger_id=b.ledger_id and
-a.jvdate between '$from_date' AND '$to_date' and
+a.jvdate between '$f_date' AND '$t_date' and
 a.ledger_id like '$ledger_id' and
 b.group_for=".$_SESSION['usergroup']." and
 a.user_id=u.user_id
@@ -204,7 +207,7 @@ order by a.jvdate,a.id";
         ?>
         <tr style="border: solid 1px #999;font-weight:bold; font-size:11px">
             <td align="center" bgcolor="#FFCCFF">#</td>
-            <td colspan="2" align="center" bgcolor="#FFCCFF"><?=$from_date;?></td>
+            <td colspan="2" align="center" bgcolor="#FFCCFF"><?=$f_date;?></td>
             <td align="center" bgcolor="#FFCCFF">&nbsp;</td>
             <td align="center" bgcolor="#FFCCFF"></td>
             <td align="left" bgcolor="#FFCCFF">Opening Balance </td>
@@ -403,7 +406,7 @@ order by a.jvdate,a.id";}
             </tr></thead>
             <tbody>
         <?php
-        $result=mysqli_query($conn, "Select tr_no,tr_from,jvdate,jv_no,SUM(dr_amt) as dr_amt,SUM(cr_amt) as cr_amt from journal where jvdate between '$from_date' AND '$to_date' and dr_amt!=cr_amt group by jv_no,jvdate order by jv_no");
+        $result=mysqli_query($conn, "Select tr_no,tr_from,jvdate,jv_no,SUM(dr_amt) as dr_amt,SUM(cr_amt) as cr_amt from journal where jvdate between '$f_date' AND '$t_date' and dr_amt!=cr_amt group by jv_no,jvdate order by jv_no");
         while($data=mysqli_fetch_object($result)){
 			$Difference=$data->dr_amt-$data->cr_amt;
 			if($Difference>0 || $Difference<0) {
@@ -453,7 +456,7 @@ order by a.jvdate,a.id";}
 
 
 <?php
-$datecon=' and m.do_date between  "'.$from_date.'" and "'.$to_date.'"';
+$datecon=' and m.do_date between  "'.$f_date.'" and "'.$t_date.'"';
         if($_POST['warehouse_id']>0) 			 $warehouse_id=$_POST['warehouse_id'];
         if(isset($warehouse_id))				{$warehouse_id_CON=' and m.depot_id='.$warehouse_id;}
 		if($_POST['dealer_code']>0) 			 $dealer_code=$_POST['dealer_code'];
@@ -578,6 +581,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         </tr></thead>
         <tbody>
         <?
+        $separator = @$separator;
         $sql='select * from ledger_group order by group_id';
         if($_SESSION['usergroup']>1)
             $sql='select * from ledger_group where group_for="'.$_SESSION['usergroup'].'" order by group_id';
@@ -672,10 +676,10 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
     }else {$ledger_con = 'b.ledger_group_id="'.$cash_and_bank_balance.'"';
     $ledger_conx = '1';}
 
-    $op_b1="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$from_date' and b.group_for=".$_SESSION['usergroup']." GROUP  BY ledger_name";
-    $cl_c="select SUM(dr_amt)-SUM(cr_amt) from journal where group_for=".$_SESSION['usergroup']." and ledger_id ='$cash[0]' and jvdate<'$to_date'";
+    $op_b1="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$f_date' and b.group_for=".$_SESSION['usergroup']." GROUP  BY ledger_name";
+    $cl_c="select SUM(dr_amt)-SUM(cr_amt) from journal where group_for=".$_SESSION['usergroup']." and ledger_id ='$cash[0]' and jvdate<'$t_date'";
     $cl_c=mysqli_fetch_row(mysqli_query($conn, $cl_c));
-    $cl_b="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where b.group_for=".$_SESSION['usergroup']." and ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$to_date' and 1 GROUP  BY ledger_name";
+    $cl_b="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where b.group_for=".$_SESSION['usergroup']." and ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$t_date' and 1 GROUP  BY ledger_name";
  ?>
 
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
@@ -717,9 +721,9 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         <?php
         $cc_code = (int) $_REQUEST['cc_code'];
         if($cc_code > 0)
-        {$p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$from_date' and a.jvdate<='$to_date' and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY group_name";
+        {$p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY group_name";
         } else {
-            $p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$from_date' and a.jvdate<='$to_date' and a.tr_from='Receipt' and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." GROUP BY group_name";
+            $p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.tr_from='Receipt' and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." GROUP BY group_name";
         }
         $pi=0;
         $re_to=0;
@@ -737,9 +741,9 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
             {
-                $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$from_date' and a.jvdate<='$to_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." AND a.cc_code=$cc_code GROUP BY ledger_name";
+                $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." AND a.cc_code=$cc_code GROUP BY ledger_name";
             }   else {
-                $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$from_date' and a.jvdate<='$to_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." GROUP BY ledger_name";
+                $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." GROUP BY ledger_name";
             }   $Li=0;
             $Lsql=mysqli_query($conn, $Lg);
             while($Ldata=mysqli_fetch_row($Lsql)){
@@ -771,9 +775,9 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
             {
-			$p = "select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$from_date' and a.jvdate<='$to_date'  and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Payment' and ".$ledger_conx." and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY group_name";
+			$p = "select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date'  and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Payment' and ".$ledger_conx." and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY group_name";
             } else {
-                $p ="select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$from_date' and a.jvdate<='$to_date' and a.tr_from='Payment' and ".$ledger_conx." and b.group_for=".$_SESSION['usergroup']." GROUP BY group_name";
+                $p ="select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.tr_from='Payment' and ".$ledger_conx." and b.group_for=".$_SESSION['usergroup']." GROUP BY group_name";
             }
             //echo $p;
             $pi=0;
@@ -793,9 +797,9 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
                 $cc_code = (int) $_REQUEST['cc_code'];
                 if($cc_code > 0)
                 {
-                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$from_date' and a.jvdate<='$to_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY ledger_name";
+                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY ledger_name";
                 }   else   {
-                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$from_date' and a.jvdate<='$to_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment' and b.group_for=".$_SESSION['usergroup']." GROUP BY ledger_name";
+                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment' and b.group_for=".$_SESSION['usergroup']." GROUP BY ledger_name";
                 }
                 $Li=0;
                 $Lsql=mysqli_query($conn, $Lg);
@@ -803,7 +807,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
                     $Li++;
                     //$re_to=$re_to+$data[1];
                     ?>
-                <tr onclick="DoNav('<?php echo $from_date;?>','<?php echo $to_date;?>','<?php echo $Ldata[2];?>');">
+                <tr onclick="DoNav('<?php echo $f_date;?>','<?php echo $t_date;?>','<?php echo $Ldata[2];?>');">
                     <td width="19%" align="center" style="border: solid 1px #999; padding:2px">&nbsp;</td>
                     <td width="14%" align="center" style="border: solid 1px #999; padding:2px"><?php echo $pi.'.'.$Li;?></td>
                     <td align="left" style="border: solid 1px #999; padding:2px"><?php echo $Ldata[0];?></td>
@@ -944,8 +948,8 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
             <?php
             $total_sales_amount=$total_sales_amount+$data->total_amt;
         }
-        $toatl_sales_reguler=find_a_field('sale_do_details','SUM(total_amt)','do_type in ("","sales") and do_date between "'.$from_date.'" and "'.$to_date.'" and dealer_type not in ("export") ');
-        $toatl_sales=find_a_field('sale_do_details','SUM(total_amt)','do_type not in ("","sales") and do_date between "'.$from_date.'" and "'.$to_date.'" and dealer_type in ("export")')
+        $toatl_sales_reguler=find_a_field('sale_do_details','SUM(total_amt)','do_type in ("","sales") and do_date between "'.$f_date.'" and "'.$t_date.'" and dealer_type not in ("export") ');
+        $toatl_sales=find_a_field('sale_do_details','SUM(total_amt)','do_type not in ("","sales") and do_date between "'.$f_date.'" and "'.$t_date.'" and dealer_type in ("export")')
         ?>
         <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
             <td style="border: solid 1px #999; padding:2px; text-align: right" colspan="17">Local Sales in Amount  = </td>
@@ -1010,7 +1014,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         if(isset($item_id))				{$item_con=' and sd.item_id='.$item_id;}
         if($_POST['do_type']) 					$do_type=$_POST['do_type'];
         if(isset($_POST['do_type']))				{$do_type_con=' and sd.challan_type="'.$_POST['do_type'].'"';}
-        $datecon=' and sd.do_date between  "'.$from_date.'" and "'.$to_date.'"';
+        $datecon=' and sd.do_date between  "'.$f_date.'" and "'.$t_date.'"';
         $result=mysqli_query($conn, 'Select
 				sd.*,
 				d.dealer_custom_code,
@@ -1125,7 +1129,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
         </tr></thead>
         <tbody>
         <?php
-        $datecon=' and llm.lc_create_date between  "'.$from_date.'" and "'.$to_date.'"';
+        $datecon=' and llm.lc_create_date between  "'.$f_date.'" and "'.$t_date.'"';
         $result='Select
 				llm.id,
 				llm.pi_id,
@@ -1635,7 +1639,7 @@ while($data=mysqli_fetch_object($query2)){ ?>
         $total_cr=0;
         $cc_code = (int) $_REQUEST['cc_code'];
         if($cc_code > 0)
-        { $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id from accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate <= '$to_date' and 1 AND b.cc_code=$cc_code and c.group_for=".$_SESSION['usergroup']." ".$sec_com_connectionT."  group by c.group_name";} else {
+        { $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id from accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate <= '$t_date' and 1 AND b.cc_code=$cc_code and c.group_for=".$_SESSION['usergroup']." ".$sec_com_connectionT."  group by c.group_name";} else {
             $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id
 
 		from accounts_ledger a,
@@ -1644,7 +1648,7 @@ while($data=mysqli_fetch_object($query2)){ ?>
 		where
 		a.ledger_id=b.ledger_id and
 		a.ledger_group_id=c.group_id and
-		b.jvdate <= '$to_date' and
+		b.jvdate <= '$t_date' and
 		c.group_for=".$_SESSION['usergroup']." ".$sec_com_connectionT."
 		group by c.group_id";
         }
@@ -1659,9 +1663,9 @@ while($data=mysqli_fetch_object($query2)){ ?>
             <?php
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
-            { $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate<= '$to_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code ".$sec_com_connectionT."  group by ledger_name order by a.ledger_name";
+            { $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate<= '$t_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code ".$sec_com_connectionT."  group by ledger_name order by a.ledger_name";
             }else {
-                $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate<= '$to_date' and a.ledger_group_id='$g[3]' and 1 ".$sec_com_connectionT."  group by ledger_name order by a.ledger_name";
+                $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate<= '$t_date' and a.ledger_group_id='$g[3]' and 1 ".$sec_com_connectionT."  group by ledger_name order by a.ledger_name";
  }
 
             $pi=0;
@@ -1832,11 +1836,11 @@ while($data=mysqli_fetch_object($query2)){ ?>
                 $cc_code = (int) $_REQUEST['cc_code'];
                 if($cc_code > 0)
                 {
-                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal j where a.ledger_id=j.ledger_id and j.jv_date BETWEEN '$from_date' AND '$to_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code and a.group_for=".$_SESSION['usergroup']."".$sec_com_connection." group by ledger_id order by a.ledger_id";
+                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal j where a.ledger_id=j.ledger_id and j.jv_date BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code and a.group_for=".$_SESSION['usergroup']."".$sec_com_connection." group by ledger_id order by a.ledger_id";
                 }
                 else
                 {
-                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal j where a.ledger_id=j.ledger_id and j.jvdate BETWEEN '$from_date' AND '$to_date' and a.ledger_group_id='$g[3]' and a.group_for=".$_SESSION['usergroup']."".$sec_com_connection." group by ledger_id order by a.ledger_id";
+                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal j where a.ledger_id=j.ledger_id and j.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and a.group_for=".$_SESSION['usergroup']."".$sec_com_connection." group by ledger_id order by a.ledger_id";
 
                 }
 
@@ -1846,7 +1850,7 @@ while($data=mysqli_fetch_object($query2)){ ?>
                 $sql=mysqli_query($conn, $p);
                 while($p=mysqli_fetch_row($sql))
                 {
-                    $query="select SUM(j.dr_amt),SUM(j.cr_amt) from journal j where j.jvdate < '$from_date' and ledger_id='$p[3]'".$sec_com_connection."";
+                    $query="select SUM(j.dr_amt),SUM(j.cr_amt) from journal j where j.jvdate < '$f_date' and ledger_id='$p[3]'".$sec_com_connection."";
                     $ssql=mysqli_query($conn, $query);
                     $open=mysqli_fetch_row($ssql);
                     $opening = $open[0]-$open[1];
@@ -1923,9 +1927,9 @@ while($data=mysqli_fetch_object($query2)){ ?>
            $cc_code = (int) $_POST['cc_code'];
             if($cc_code > 0)
             {
-            $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and c.group_for=".$_SESSION['usergroup']." AND b.cc_code=$cc_code group by c.group_name";
+            $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and c.group_for=".$_SESSION['usergroup']." AND b.cc_code=$cc_code group by c.group_name";
             } else {
-            $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and c.group_for=".$_SESSION['usergroup']." group by c.group_name";
+            $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and c.group_for=".$_SESSION['usergroup']." group by c.group_name";
             }
             $gsql=mysqli_query($conn, $g);
             while($g=mysqli_fetch_row($gsql))
@@ -1940,9 +1944,9 @@ while($data=mysqli_fetch_object($query2)){ ?>
                 $cc_code = (int) $_REQUEST['cc_code'];
                 if($cc_code > 0)
                 {
-                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
+                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
                 } else {
-                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and a.ledger_group_id='$g[3]' and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
+                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
                 }
                 $pi=0;
                 $sql=mysqli_query($conn, $p);
@@ -2028,11 +2032,11 @@ while($data=mysqli_fetch_object($query2)){ ?>
         $pc_code = (int) $_POST['pc_code'];
         if($pc_code > 0)
         {
-            $g="select c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and c.group_for=".$_SESSION['usergroup']." ".$grp_con."  AND b.pc_code=$pc_code group by  c.group_id";
+            $g="select c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and c.group_for=".$_SESSION['usergroup']." ".$grp_con."  AND b.pc_code=$pc_code group by  c.group_id";
         }
         else
         {
-            $g="select c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$from_date' AND '$to_date' ".$grp_con." and c.group_for=".$_SESSION['usergroup']."  group by  c.group_id";
+            $g="select c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$f_date' AND '$t_date' ".$grp_con." and c.group_for=".$_SESSION['usergroup']."  group by  c.group_id";
         }
         $gsql=mysqli_query($conn, $g);
         while($g=mysqli_fetch_row($gsql))
@@ -2047,11 +2051,11 @@ while($data=mysqli_fetch_object($query2)){ ?>
             $pc_code = (int) $_POST['pc_code'];
             if($pc_code > 0)
             {
-                $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and a.ledger_group_id='$g[3]' and 1 AND b.pc_code=$pc_code and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
+                $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and 1 AND b.pc_code=$pc_code and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
             }
             else
             {
-                $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$from_date' AND '$to_date' and a.ledger_group_id='$g[3]' and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
+                $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and a.group_for=".$_SESSION['usergroup']." group by ledger_name order by a.ledger_name";
 
             }
 
@@ -2061,7 +2065,7 @@ while($data=mysqli_fetch_object($query2)){ ?>
             $sql=mysqli_query($conn, $p);
             while($p=mysqli_fetch_row($sql))
             {
-                $query="select SUM(dr_amt),SUM(cr_amt) from journal where jvdate < '$from_date' and ledger_id='$p[3]' and group_for=".$_SESSION['usergroup'];
+                $query="select SUM(dr_amt),SUM(cr_amt) from journal where jvdate < '$f_date' and ledger_id='$p[3]' and group_for=".$_SESSION['usergroup'];
                 $ssql=mysqli_query($conn, $query);
                 $open=mysqli_fetch_row($ssql);
                 $opening = $open[0]-$open[1];
@@ -2648,7 +2652,7 @@ $amount_cc_code_Previous = sum_cc_code($conn,$cc_code,$comparisonF,$comparisonT,
 
         <tbody>
         <?php
-        $datecon=' and a.ji_date between  "'.$from_date.'" and "'.$to_date.'"';
+        $datecon=' and a.ji_date between  "'.$f_date.'" and "'.$t_date.'"';
         if($_POST['warehouse_id']>0) 				$warehouse_id=$_POST['warehouse_id'];
         if(isset($warehouse_id)) 				{$warehouse_con=' and a.warehouse_id='.$warehouse_id;}
         if($_POST['item_id']>0) 					$item_id=$_POST['item_id'];
@@ -2843,7 +2847,7 @@ item_group g
 where
 j.item_id=i.item_id and
 j.warehouse_id='".$_POST['warehouse_id']."' and
-j.ji_date <= '".$to_date."' and
+j.ji_date <= '".$t_date."' and
 i.sub_group_id=s.sub_group_id and
 s.group_id=g.group_id and
 g.group_id not in ('500000000')
@@ -2905,7 +2909,7 @@ item_group g
 where
 j.item_id=i.item_id and
 j.warehouse_id='".$_POST['warehouse_id']."' and
-j.ji_date <= '".$to_date."' and
+j.ji_date <= '".$t_date."' and
 i.sub_group_id=s.sub_group_id and
 s.group_id=g.group_id and
 g.group_id in ('500000000')
@@ -2969,7 +2973,7 @@ item_group g
 where
 j.item_id=i.item_id and
 j.warehouse_id='".$_POST['warehouse_id']."' and
-j.ji_date <= '".$to_date."' and
+j.ji_date <= '".$t_date."' and
 i.sub_group_id=s.sub_group_id and
 s.group_id=g.group_id and
 g.group_id in ('".$_POST['group_id']."')

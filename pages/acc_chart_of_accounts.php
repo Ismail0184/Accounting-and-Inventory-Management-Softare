@@ -18,8 +18,8 @@ $page="acc_chart_of_accounts.php";
             </div>
             <div class="x_content">
 
-
 <?
+$separator =@$separator;
 $sql='select * from ledger_group where status not in ("SUSPENDED") order by group_id';
 $query=mysqli_query($conn, $sql);
 if(mysqli_num_rows($query)>0){
