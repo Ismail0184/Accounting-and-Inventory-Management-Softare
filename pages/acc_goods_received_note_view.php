@@ -4,11 +4,7 @@ $title='GRN Checked';
 $page='purchase_sec_print_view.php';
 $unique='jv_no';
 
-                            if ($_POST['checked'] != '') $checked_con = ' and j.checked="' . $_POST['checked'] . '" ';
-                            if ($_SESSION['usergroup'] > 1) $group_s = 'AND j.group_for=' . $_SESSION['usergroup'];
-                            if ($_POST['vendor_id'] != '') {
-                                $vendor_con = ' and r.vendor_id="' . $_POST['vendor_id'] . '"';}
-if(isset($_POST[viewreport])){
+if(isset($_POST['viewreport'])){
 	$sql = "SELECT DISTINCT 
                   j.jv_no,
 				  r.po_no as PO,
@@ -27,7 +23,7 @@ if(isset($_POST[viewreport])){
 				  accounts_ledger l,
 				  purchase_receive r,
 				  warehouse w,
-				  user_activity_management u,
+				  users u,
 				  vendor v
 
 				WHERE 
@@ -39,7 +35,7 @@ if(isset($_POST[viewreport])){
 				  j.user_id = u.user_id AND
 				  j.jv_date between '" . strtotime($_POST['f_date']) . "' AND  '" . strtotime($_POST['t_date']) . "' AND 
                   v.vendor_id=r.vendor_id AND
-				  j.ledger_id = l.ledger_id " . $group_s . $checked_con . $depot_con . $vendor_con . " group by j.jv_no order by j.tr_no desc";
+				  j.ledger_id = l.ledger_id group by j.jv_no order by j.tr_no desc";
                         } else {
                             $sql = "SELECT DISTINCT 
                   j.jv_no,
@@ -59,7 +55,7 @@ if(isset($_POST[viewreport])){
 				  accounts_ledger l,
 				  purchase_receive r,
 				  warehouse w,
-				  user_activity_management u,
+				  users u,
 				  vendor v
 
 				WHERE 
@@ -71,7 +67,7 @@ if(isset($_POST[viewreport])){
 				  j.user_id = u.user_id AND
 				  j.checked ='PENDING' AND 
                   v.vendor_id=r.vendor_id AND
-				  j.ledger_id = l.ledger_id " . $group_s . $checked_con . $depot_con . $vendor_con . " group by j.jv_no order by j.tr_no desc";
+				  j.ledger_id = l.ledger_id group by j.jv_no order by j.tr_no desc";
                            
                         }
 ?>
@@ -91,21 +87,22 @@ if(isset($_POST[viewreport])){
 
 
 
-                    
-                            <form action="" enctype="multipart/form-data" method="post" name="addem" id="addem" >
-                            <table align="center" style="width: 50%;">
-            <tr><td>
-                <input type="date"  style="width:150px; font-size: 11px; height: 25px" max="<?=date('Y-m-d');?>"  value="<?=($_POST[f_date]!='')? $_POST[f_date] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
+
+    <form action="" enctype="multipart/form-data" method="post" name="addem" id="addem" >
+        <table align="center" style="width: 50%;">
+            <tr><td><input type="date"  style="width:150px; font-size: 11px; height: 25px" max="<?=date('Y-m-d');?>"  value="<?=($_POST['f_date']!='')? $_POST['f_date'] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
                 <td style="width:10px; text-align:center"> -</td>
-                <td><input type="date"  style="width:150px;font-size: 11px; height: 25px"  value="<?=($_POST[t_date]!='')? $_POST[t_date] : date('Y-m-d') ?>" required  max="<?=date('Y-m-d');?>" name="t_date" class="form-control col-md-7 col-xs-12" ></td> 
-                <td style="width:10px; text-align:center"> -</td>             
-                <td><select name="checked" id="checked" class="form-control col-md-7 col-xs-12" style="width:auto; font-size:11px; height:25px">
-                      <option value=""> Status</option>
-                      <option value="PENDING" <?=($_POST['checked']=='PENDING')?'Selected':'';?>>PENDING</option>
-                      <option value="YES" <?=($_POST['checked']=='YES')?'Selected':'';?>>YES</option>
-                    </select></td>
-                    <td style="padding:10px"><button type="submit" style="font-size: 11px; height: 30px" name="viewreport"  class="btn btn-primary">View Goods / Services Received</button></td>
-            </tr></table>                        
+                <td><input type="date"  style="width:150px;font-size: 11px; height: 25px"  value="<?=($_POST['t_date']!='')? $_POST['t_date'] : date('Y-m-d') ?>" required  max="<?=date('Y-m-d');?>" name="t_date" class="form-control col-md-7 col-xs-12" ></td>
+                <td style="width:10px; text-align:center"> -</td>
+                <td>
+                    <select name="checked" id="checked" class="form-control col-md-7 col-xs-12" style="width:auto; font-size:11px; height:25px">
+                        <option value=""> Status</option>
+                        <option value="PENDING" <?=($_POST['checked']=='PENDING')?'Selected':'';?>>PENDING</option>
+                        <option value="YES" <?=($_POST['checked']=='YES')?'Selected':'';?>>YES</option>
+                    </select>
+                </td>
+                <td style="padding:10px"><button type="submit" style="font-size: 11px; height: 30px" name="viewreport"  class="btn btn-primary">View Goods / Services Received</button></td>
+            </tr></table>
                 
 <?=$crud->report_templates_with_status($sql);?>  
 <?php 
@@ -129,18 +126,18 @@ if($srn>0): ?>
                             <th>Challan No</th>
                             <th>VAT Challan</th>
                             <th style="">Entry By</th>
-                            <th style="">Entry At</th-->
+                            <th style="">Entry At</th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php
-                        $from_date=date('Y-m-d' , strtotime($_POST[f_date]));
-                        $to_date=date('Y-m-d' , strtotime($_POST[t_date]));
-
-                            $resultss="Select prm.*,u.fname,v.vendor_name,(select SUM(amount) from grn_service_receive where custom_grn_no=prm.custom_grn_no) as srn_amount
+                        $from_date=date('Y-m-d' , strtotime($_POST['f_date']));
+                        $to_date=date('Y-m-d' , strtotime($_POST['t_date']));
+                        $is = 0;
+                        $resultss="Select prm.*,u.fname,v.vendor_name,(select SUM(amount) from grn_service_receive where custom_grn_no=prm.custom_grn_no) as srn_amount
 from 
 purchase_receive_master prm,
-user_activity_management u,
+users u,
 vendor v
 
  where
@@ -149,22 +146,23 @@ vendor v
  prm.status in ('CHECKED') and prm.grn_inventory_type in ('Service') group by prm.custom_grn_no
   order by prm.custom_grn_no DESC ";
                             $pquery=mysqli_query($conn, $resultss);
-                        while ($rows=mysqli_fetch_array($pquery)){
-                            $is=$is+1;
+                        while ($rows=mysqli_fetch_array($pquery)){$is=$is+1;
                             ?>
                             <tr style="font-size:11px">
-                                <th style="text-align:center; cursor: pointer" onclick="DoNavPOPUPs('<?=$rows[entry_by].$rows[custom_grn_no];?>', 'TEST!?', 600, 700)"><?=$is;?></th>
-                                <td onclick="DoNavPOPUPs('<?=$rows[entry_by].$rows[custom_grn_no];?>', 'TEST!?', 600, 700)" style="cursor: pointer"><?=$rows[custom_grn_no];?></a></td>
-                                <td onclick="DoNavPOPUPs('<?=$rows[entry_by].$rows[custom_grn_no];?>', 'TEST!?', 600, 700)" style="cursor: pointer"><?=$rows[rcv_Date]; ?></td>
-                                <td onclick="DoNavPOPUPs('<?=$rows[entry_by].$rows[custom_grn_no];?>', 'TEST!?', 600, 700)" style="cursor: pointer"><?=$rows[vendor_name];?></td>
-                                <td onclick="DoNavPOPUPs('<?=$rows[entry_by].$rows[custom_grn_no];?>', 'TEST!?', 600, 700)" style="cursor: pointer; text-align:right"><?=number_format($rows[srn_amount],2);?></td>
-                                <td><a href="http://icpbd-erp.com/51816/cmu_mod/page/dc_documents/<?=$rows[man_id];?>_dc.pdf" target="_blank" style="text-decoration: underline; color: blue"><?=$rows[ch_no];?></a></td>
-                                <td><a href="http://icpbd-erp.com/51816/cmu_mod/page/vc_documents/<?=$rows[man_id];?>_vc.pdf" target="_blank" style="text-decoration: underline; color: blue"><?=$rows[VAT_challan];?></a></td>
-                                <td onclick="DoNavPOPUPs('<?=$rows[entry_by].$rows[custom_grn_no];?>', 'TEST!?', 600, 700)" style="cursor: pointer"><?=$rows[fname];?></td>
-                                <td style="text-align:left;cursor: pointer" onclick="DoNavPOPUP('<?=$rows[entry_by].$rows[custom_grn_no];?>', 'TEST!?', 600, 700)"><?=$rows[entry_at];?></td>
+                                <th style="text-align:center; cursor: pointer" onclick="DoNavPOPUPs('<?=$rows['entry_by'].$rows['custom_grn_no'];?>', 'TEST!?', 600, 700)"><?=$is;?></th>
+                                <td onclick="DoNavPOPUPs('<?=$rows['entry_by'].$rows['custom_grn_no'];?>', 'TEST!?', 600, 700)" style="cursor: pointer"><?=$rows['custom_grn_no'];?></a></td>
+                                <td onclick="DoNavPOPUPs('<?=$rows['entry_by'].$rows['custom_grn_no'];?>', 'TEST!?', 600, 700)" style="cursor: pointer"><?=$rows['rcv_Date']; ?></td>
+                                <td onclick="DoNavPOPUPs('<?=$rows['entry_by'].$rows['custom_grn_no'];?>', 'TEST!?', 600, 700)" style="cursor: pointer"><?=$rows['vendor_name'];?></td>
+                                <td onclick="DoNavPOPUPs('<?=$rows['entry_by'].$rows['custom_grn_no'];?>', 'TEST!?', 600, 700)" style="cursor: pointer; text-align:right"><?=number_format($rows['srn_amount'],2);?></td>
+                                <td><a href="http://icpbd-erp.com/51816/cmu_mod/page/dc_documents/<?=$rows['man_id'];?>_dc.pdf" target="_blank" style="text-decoration: underline; color: blue"><?=$rows['ch_no'];?></a></td>
+                                <td><a href="http://icpbd-erp.com/51816/cmu_mod/page/vc_documents/<?=$rows['man_id'];?>_vc.pdf" target="_blank" style="text-decoration: underline; color: blue"><?=$rows['VAT_challan'];?></a></td>
+                                <td onclick="DoNavPOPUPs('<?=$rows['entry_by'].$rows['custom_grn_no'];?>', 'TEST!?', 600, 700)" style="cursor: pointer"><?=$rows['fname'];?></td>
+                                <td style="text-align:left;cursor: pointer" onclick="DoNavPOPUP('<?=$rows['entry_by'].$rows['custom_grn_no'];?>', 'TEST!?', 600, 700)"><?=$rows['entry_at'];?></td>
                             </tr>
                         <?php } ?></tbody></table>
-
-                </div></div></div></form> 
+                </div>
+            </div>
+</div>
+    </form>
 <?php  endif;?>
 <?=$html->footer_content();?>

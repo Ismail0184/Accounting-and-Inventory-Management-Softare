@@ -3,24 +3,17 @@
  require_once 'support_file.php';
  $title='Change Password';
  $table='users';
-
-
-
  $enat=date('Y-m-d h:s:i');
- if(isset($_POST[changePASS])){
+ if(isset($_POST['changePASS'])){
   $valid = true;
- 	if ($_SESSION["PASSCODE"]!==$_POST[old_password])
+ 	if ($_SESSION["PASSCODE"]!==$_POST['old_password'])
   {echo "<script> alert('Invalid Old Password!!') </script>";
          $valid = false;}
-
-
-
 if ($valid){
- unset($_SESSION["PASSCODE"]);
- $insert=mysqli_query($conn, "UPDATE  users SET password='$_POST[new_password]' where user_id='".$_SESSION["userid"]."' ");
-  $_SESSION["PASSCODE"]	=$_POST[new_password];
+ unset($_SESSION['PASSCODE']);
+ $insert=mysqli_query($conn, "UPDATE  users SET password='".$_POST['new_password']."' where user_id='".$_SESSION['userid']."' ");
+  $_SESSION["PASSCODE"]	=$_POST['new_password'];
 }}?>
-
 
 <?php require_once 'header_content.php'; ?>
 <?php require_once 'body_content.php';?>
@@ -31,6 +24,9 @@ if ($valid){
                     <a style="float: right" class="btn btn-sm btn-default"  href="account_settings_warehouse.php">
                         <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Change Default Warehoues</span>
                     </a>
+                      <a style="float: right" class="btn btn-sm btn-default"  href="account_settings_change_default_branch.php">
+                          <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Change Default Branch</span>
+                      </a>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">

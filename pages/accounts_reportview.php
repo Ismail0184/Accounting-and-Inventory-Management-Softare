@@ -6,18 +6,13 @@ $f_date = @$_POST['f_date'];
 $t_date = @$_POST['t_date'];
 //$f_date=date('Y-m-d' , strtotime($_POST['f_date']));
 //$t_date=date('Y-m-d' , strtotime($_POST['t_date']));
-$date = date('Y-m-d');
+
 $pfrom_date = @$_POST['pf_date'];
 $pto_date = @$_POST['pt_date'];
-list( $year1, $month, $day) = preg_split("/[\/\.\-]+/", $date);
 
 $ledger_id=@$_REQUEST["ledger_id"];
 $req_datefrom = @$_REQUEST['datefrom'];
-list( $day,$month,$year1) = preg_split("/[\/\.\-]+/", $req_datefrom);
-$dofdate= '20'.$year1.'-'.$month.'-'.$day;
-$req_dateto = @$_REQUEST['dateto'];
-list($dayt,$montht,$yeart) = preg_split("/[\/\.\-]+/", $req_dateto);
-$dotdate= '20'.$yeart.'-'.$montht.'-'.$dayt;
+
 $warehouseid=@$_POST['warehouse_id'];
 $_SESSION['company_name']=find_a_field('company','company_name','company_id="'.$_SESSION['companyid'].'"');
 $sectionid=$_SESSION['sectionid'];
@@ -106,8 +101,9 @@ if($sectionid=='400000'){
             </tr></thead>
             <tbody>
         <?php
-        $cc_code =$_REQUEST['cc_code'];
-        $tr_from = $_REQUEST['tr_from'];
+        $cc_code =@$_REQUEST['cc_code'];
+        $tr_from = @$_REQUEST['tr_from'];
+        $emp_id = '';
         //if($_REQUEST['emp_id']!=''){
             //$emp_id=" and a.PBI_ID=".$_REQUEST['emp_id'];}
         if($tr_from!=''){
@@ -654,7 +650,7 @@ $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
     $led=mysqli_query($conn, "select ledger_id,ledger_name from accounts_ledger where group_for=".$_SESSION['usergroup']." and ledger_group_id='$cash_and_bank_balance' order by ledger_name");
     $data = '[';
     $data .= '{ name: "All", id: "%" },';
-    while($ledg = mysqli_fetch_row($conn, $led)){
+    while($ledg = @mysqli_fetch_row($conn, $led)){
         $data .= '{ name: "'.$ledg[1].'", id: "'.$ledg[0].'" },';
     }
     $data = substr($data, 0, -1);
@@ -1549,8 +1545,8 @@ if($LC_received>0){
     } else {
         $dealer_type_conn=" and 1";
     }
-
-
+                         $totalactualcollection = 0;
+                         $i                     = 0;
 				$result=mysqli_query($conn, 'Select
 				d.dealer_code,
 				d.account_code,
@@ -1584,11 +1580,7 @@ while($data=mysqli_fetch_object($query2)){ ?>
                         <td style="border: solid 1px #999; text-align:right; padding:2px"><strong><?=number_format($actualcollection=$data->actualcollection,2);?></strong></td>
                         </tr>
                         <?php
-						$totaladjustment=$totaladjustment+$adjustment;
-						$totalcollection=$totalcollection+$collection;
-						$totalactualcollection=$totalactualcollection+$actualcollection;
-
-						 } ?>
+						$totalactualcollection=$totalactualcollection+$actualcollection;} ?>
                       <tr><td colspan="7" style="text-align:right;border: solid 1px #999;">Total</td>
                       <td style="text-align:right;border: solid 1px #999;"><strong><?=number_format($totalactualcollection,2)?></strong></td>
                       </tr>
@@ -1669,21 +1661,20 @@ while($data=mysqli_fetch_object($query2)){ ?>
  }
 
             $pi=0;
+        $t_dr = 0;
+        $t_cr = 0;
             $sql=mysqli_query($conn, $p);
             while($p=mysqli_fetch_row($sql)){
                 $pi++;
                 $dr=$p[1];
                 $cr=$p[2];
                 ?>
-
-
-
                 <tr style="border: solid 1px #999; font-size:11px">
-                    <td style="border: solid 1px #999; padding:2px; text-align: center"><?php echo $pi;?></td>
-                    <td style="border: solid 1px #999; padding:2px 10px 2px 2px; text-align: left"><?php echo $p[3];?> - <?php echo $p[0];?></td>
-                    <td style="border: solid 1px #999; padding:2px; text-align: right"><?php echo number_format($dr,2);?></td>
-                    <td style="border: solid 1px #999; padding:2px; text-align: right"><?php echo number_format($cr,2);?></td>
-                    <td style="border: solid 1px #999; padding:2px; text-align: right"><?php echo number_format($dr-$cr,2);?></td>
+                    <td style="border: solid 1px #999; padding:2px; text-align: center"><?=$pi;?></td>
+                    <td style="border: solid 1px #999; padding:2px 10px 2px 2px; text-align: left"><?=$p[3];?> - <?=$p[0];?></td>
+                    <td style="border: solid 1px #999; padding:2px; text-align: right"><?=number_format($dr,2);?></td>
+                    <td style="border: solid 1px #999; padding:2px; text-align: right"><?=number_format($cr,2);?></td>
+                    <td style="border: solid 1px #999; padding:2px; text-align: right"><?=number_format($dr-$cr,2);?></td>
                 </tr>
                 <?php
                 $total_dr=$total_dr+$dr;
@@ -1692,16 +1683,16 @@ while($data=mysqli_fetch_object($query2)){ ?>
                 $t_cr=$t_cr+$cr;
             }?>
             <tr bgcolor="#FFCCFF" style="font-size: 11px">
-                <th colspan="2"  style="border: solid 1px #999;  text-align: right; ">Total <?php echo $g[0];?>:</th>
-                <th style="border: solid 1px #999; text-align: right;"><?php echo number_format($total_dr,2);?></th>
-                <th style="border: solid 1px #999; text-align: right;"><?php echo number_format($total_cr,2)?></th>
+                <th colspan="2"  style="border: solid 1px #999;  text-align: right; ">Total <?=$g[0];?>:</th>
+                <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_dr,2);?></th>
+                <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_cr,2)?></th>
                 <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_dr-$total_cr,2)?></th>
             </tr>
         <?php }?>
         <tr  style="font-size: 12px">
             <th colspan="2" style="border: solid 1px #999;  text-align: right;"><strong>Total Balance : </strong></th>
-            <th style="border: solid 1px #999; text-align: right;"><strong><?php echo number_format($t_dr,2);?></strong></th>
-            <th style="border: solid 1px #999; text-align: right;"><strong><?php echo number_format($t_cr,2)?></strong></th>
+            <th style="border: solid 1px #999; text-align: right;"><strong><?=number_format($t_dr,2);?></strong></th>
+            <th style="border: solid 1px #999; text-align: right;"><strong><?=number_format($t_cr,2)?></strong></th>
             <th style="border: solid 1px #999; text-align: right;"><strong><?=number_format(($t_dr-$t_cr),2);?></strong></th>
         </tr>
         </tbody>
