@@ -7,6 +7,12 @@ $table='ledger_group';
 $page="acc_ledger_group.php";
 $crud      =new crud($table);
 $unique_GET = @$_GET[$unique];
+$sectionid = @$_SESSION['sectionid'];
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+} else {
+    $sec_com_connection=" and lg.company_id='".$_SESSION['companyid']."' and lg.section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 
 if(prevent_multi_submit()) {
 if(isset($_REQUEST['group_name'])||isset($_POST['group_id']))
@@ -70,14 +76,12 @@ if(isset($unique_GET)>0)
 $group_name = @$group_name;
 $group_class = @$group_class;
 $status = @$status;
-$res='select lg.'.$unique.',lg.'.$unique.' as Code,lg.'.$unique_field.',(select COUNT(ledger_id) from accounts_ledger where ledger_group_id=lg.group_id) as no_of_child,ac.class_name as class,
-
-
-IF(lg.status=1, "Active",IF(lg.status="SUSPENDED", "SUSPENDED","Inactive")) as status  from '.$table.' lg,
-                                acc_class ac
+$res="select lg.".$unique.",lg.".$unique." as Code,lg.".$unique_field.",(select COUNT(ledger_id) from accounts_ledger where ledger_group_id=lg.group_id) as no_of_child,ac.class_name as class,s.section_name as branch,
+IF(lg.status=1, 'Active',IF(lg.status='SUSPENDED', 'SUSPENDED','Inactive')) as status  from ".$table." lg,
+                                acc_class ac, company s
                                 where 
-                                lg.group_class=ac.class_id                                 
-                                 order by lg.'.$unique;
+                                lg.group_class=ac.class_id and 
+                                lg.section_id=s.section_id".$sec_com_connection." order by lg.".$unique;
 
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){

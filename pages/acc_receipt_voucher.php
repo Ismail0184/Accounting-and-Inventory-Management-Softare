@@ -258,9 +258,9 @@ cost_center c
                 <form action="<?=$page;?>" enctype="multipart/form-data" method="post" name="addem" id="addem" style="font-size: 11px" >
                     <table align="center" style="width:100%">
                         <tr>
-                            <th style="width:15%;">Transaction Date</th><th style="width: 2%;">:</th>
+                            <th style="width:15%;">Transaction Date <span class="required text-danger">*</span></th><th style="width: 2%;">:</th>
                             <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
-                            <th style="width:15%;">Transaction No</th><th style="width: 2%">:</th>
+                            <th style="width:15%;">Transaction No <span class="required text-danger">*</span></th><th style="width: 2%">:</th>
                             <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?php if($initiate_credit_note>0){ echo $initiate_credit_note;} else { echo
                                 automatic_voucher_number_generate($table_receipt,$recpt_unique,1,1); } ?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                         </tr>
@@ -276,23 +276,21 @@ cost_center c
                             <th>Cheque Date</th><th>:</th>
                             <td><input type="date" id="Cheque_Date"   value="<?=$Cheque_Date;?>" name="Cheque_Date"  class="form-control col-md-7 col-xs-12"  style="width: 90%; margin-top: 5px; font-size: 11px; vertical-align: middle"></td>
                         </tr>
-
                         <tr>
-                            <th style="">Received From</th><th>:</th>
+                            <th style="">Received From <span class="required text-danger">*</span></th><th>:</th>
                             <td colspan="3" style="padding-top: 5px;"><select class="select2_single form-control" style="width:98%; font-size: 11px" tabindex="-1" required="required"  name="party_ledger" id="party_ledger">
                                     <option></option>
                                     <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $party_ledger, 'ledger_group_id in ("1006") and status=1'); ?>
-                                </select></td>
+                                </select>
+                            </td>
                             <td ><input type="number" id="amount"   value="<?=$amount;?>" name="amount"  class="form-control col-md-7 col-xs-12" placeholder="Rcvd. Amt" required="required" style="width: 90%; margin-top: 5px; height: 38px; font-size: 11px; vertical-align: middle" step="any" min="1" />
                             </td>
                         </tr>
                     </table>
-
                     <?php if($initiate_credit_note){
                         if($COUNT_details_data>0) {
                             $ml='40';
                             $display='style="margin-left:40%; margin-top: 22px;"';
-
                         } else {
                             $ml='40';
                             $display='style="margin-left:40%; margin-top: 15px; display: none"';
@@ -301,17 +299,19 @@ cost_center c
                         <div class="form-group" style="margin-left:<?=$ml;?>%; margin-top: 15px">
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <button type="submit" name="modify" class="btn btn-primary" onclick='return window.confirm("Are you confirm to Update?");' style="font-size: 11px">Update Receipt Voucher</button>
-                            </div></div>
-
+                            </div>
+                        </div>
                         <div class="form-group" <?=$display;?>>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <a  href="voucher_print_preview.php?v_type=Receipt&vo_no=<?=$initiate_credit_note;?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Receipt Voucher</a>
-                            </div></div>
+                            </div>
+                        </div>
                     <?php   } else {?>
                         <div class="form-group" style="margin-left:40%; margin-top: 15px">
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <button type="submit" name="initiate" class="btn btn-primary" style="font-size: 11px">Initiate Receipt Voucher</button>
-                            </div></div>
+                            </div>
+                        </div>
                     <?php } ?>
                 </form>
             </div>

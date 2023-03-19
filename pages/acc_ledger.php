@@ -9,7 +9,12 @@ $unique="ledger_id";
 $unique_field="ledger_name";
 $crud      =new crud($table);
 $separator	= @$_SESSION['separator'];
-
+$sectionid = @$_SESSION['sectionid'];
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+} else {
+    $sec_com_connection=" and al.company_id='".$_SESSION['companyid']."' and al.section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 if(isset($_REQUEST['ledger_name'])||isset($_REQUEST['ledger_id']))
 {	$ledger_id			= @mysqli_real_escape_string($conn, $_REQUEST['ledger_id']);
 	$ledger_name 		= @mysqli_real_escape_string($conn, $_REQUEST['ledger_name']);
@@ -96,9 +101,10 @@ $budget_enable = @$budget_enable;
 $status = @$status;
 $unique_GET = @$_GET[$unique];
 $post_ledger_group_id = @$_POST['ledger_group_id'];
-$res='select al.'.$unique.',al.'.$unique.' as Code,al.'.$unique_field.',lg.group_name,(select COUNT(ledger_id) from journal where ledger_id=al.ledger_id) as has_transaction,
-IF(al.status=1, "Active",IF(al.status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' al,ledger_group lg where 
-al.ledger_group_id=lg.group_id order by al.ledger_group_id,al.'.$unique;
+$res="select al.".$unique.",al.".$unique." as Code,al.".$unique_field.",lg.group_name,(select COUNT(ledger_id) from journal where ledger_id=al.ledger_id) as has_transaction,s.section_name as branch,
+IF(al.status=1, 'Active',IF(al.status='SUSPENDED', 'SUSPENDED','Inactive')) as status from ".$table." al,ledger_group lg,company s where 
+al.ledger_group_id=lg.group_id and 
+al.section_id=s.section_id".$sec_com_connection." order by al.ledger_group_id,al.".$unique;
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
 if(isset($_POST['deletedata'.$row->$unique]))
@@ -140,9 +146,6 @@ if(isset($_POST['deletedata'.$row->$unique]))
         <?php endif; ?>
                     <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post"  style="font-size: 11px">
                         <?php require_once 'support_html.php';?>
-
-
-
                             <?php if(!isset($unique_GET)): ?>
                             <div class="form-group" style="width: 100%">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger Group<span class="required">*</span></label>

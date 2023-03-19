@@ -53,10 +53,11 @@ if(isset($_POST['delete']))
     $type=1;
     $msg='Successfully Deleted.';    
 }}}
-$str=substr($page,0,-4); ?>
-<?=$html->header_content();?>
+ ?>
+
+ <?php require_once 'header_content.php';?>
 <?php require_once 'body_content.php';?>
-<?=$html->$str(1,$res,$title,$$unique,12);?> 
+
 
 
 
@@ -281,88 +282,4 @@ $str=substr($page,0,-4); ?>
       </div>
     </div>
   </div>
-
-  <script src="http://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-    integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-    crossorigin="anonymous"></script>
-  
-
-  <script>
-    $(document).ready(function () {
-      $('.updateBtn').on('click', function(){
-
-        $('#updateModal').modal('show');
-
-        // Get the table row data.
-        $tr = $(this).closest('tr');
-
-        var data = $tr.children("td").map(function() {
-            return $(this).text();
-        }).get();
-
-        console.log(data);
-
-        $('#updateId').val(data[0]);
-        $('#updateFirstname').val(data[1]);
-        $('#updateLastname').val(data[2]);
-        $('#updateAddress').val(data[3]);
-        $('#updateSkills').val(data[4]);
-        $('#updateDesignation').val(data[5]);      
-
-        });
-        
-    });
-  </script>
-
-  <script>
-    $(document).ready(function () {
-      $('.viewBtn').on('click', function(){
-
-        $('#viewModal').modal('show');
-
-        // Get the table row data.
-        $tr = $(this).closest('tr');
-
-        var data = $tr.children("td").map(function() {
-            return $(this).text();
-        }).get();
-
-        console.log(data);
-
-        $('#viewFirstname').text(data[1]);
-        $('#viewLastname').text(data[2]);
-        $('#viewAddress').text(data[3]);
-        $('#viewSkills').text(data[4]);
-        $('#viewDesignation').text(data[5]);      
-
-        });
-    
-    });
-  </script>
-
-  <script>
-    $(document).ready(function () {
-      $('.deleteBtn').on('click', function(){
-
-        $('#deleteModal').modal('show');
-        
-        // Get the table row data.
-        $tr = $(this).closest('tr');
-
-        var data = $tr.children("td").map(function() {
-            return $(this).text();
-        }).get();
-
-        console.log(data);
-
-        $('#deleteId').val(data[0]);
-
-        });
-    
-    });
-  </script>
-
-
-<?=$html->footer_content();?>
+ <?=$html->footer_content();?>

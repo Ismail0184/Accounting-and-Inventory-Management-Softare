@@ -78,8 +78,10 @@ if(prevent_multi_submit()) {
         if (isset($_POST['add'])) {
             if ($_POST['dr_amt'] > 0) {
                 $type = 'Debit';
+                $cc_code = @$_POST['cc_code'];
             } elseif ($_POST['cr_amt'] > 0) {
                 $type = 'Credit';
+                $cc_code = '0';
             }
             $date = @$_POST['voucher_date'];
             if(isset($_POST['Cheque_Date'])) {
@@ -97,11 +99,6 @@ if(prevent_multi_submit()) {
             $c_date = 0;
             $cur_bal = 0;
             $manual_payment_no = 0;
-            if ($_POST['dr_amt'] > 0) {
-                $cc_code = @$_POST['cc_code'];
-            } elseif ($_POST['cr_amt'] > 0) {
-                $cc_code = '0';
-            }
             $subledger_id = @$_POST['subledger_id'];
             $receive_ledger = 0;
 
@@ -113,7 +110,7 @@ if(prevent_multi_submit()) {
                         $POST_cr_amt, $type,$cur_bal,$_POST['paid_to'],$_POST['Cheque_No'],$c_date,$_POST['Cheque_of_bank'],$manual_payment_no,$cc_code,$subledger_id,'MANUAL',$ip,$_POST['receipt_date'],$_SESSION['sectionid'],$_SESSION['companyid'],$_SESSION['userid'],$create_date,$now,$day,$thisday,$thismonth,$thisyear,$receive_ledger,'');
                     if ($_POST['rcved_remining']==$_POST['dr_amt']) {
                         add_to_payment($_SESSION['initiate_debit_note'], $date, $proj_id, $_POST['narration'], $_POST['cash_bank_ledger'], 0,
-                            $_POST['amount'], 'Credit', $cur_bal, $_POST['paid_to'], $_POST['Cheque_No'], $c_date, $_POST['Cheque_of_bank'], $manual_payment_no, $_POST['cc_code'],$subledger_id,'MANUAL', $ip, $_POST['receipt_date'], $_SESSION['sectionid'], $_SESSION['companyid'], $_SESSION['userid'], $create_date, $now, $day, $thisday, $thismonth, $thisyear, $_POST['ledger_id'],'');
+                            $_POST['amount'], 'Credit', $cur_bal, $_POST['paid_to'], $_POST['Cheque_No'], $c_date, $_POST['Cheque_of_bank'], $manual_payment_no,0,$subledger_id,'MANUAL', $ip, $_POST['receipt_date'], $_SESSION['sectionid'], $_SESSION['companyid'], $_SESSION['userid'], $create_date, $now, $day, $thisday, $thismonth, $thisyear, $_POST['ledger_id'],'');
                     }
                     $_SESSION['debit_note_last_narration']=$_POST['narration'];
                 }
@@ -268,10 +265,10 @@ where
                 <form action="" enctype="multipart/form-data" method="post" name="addem" id="addem" style="font-size: 11px" >
                     <table align="center" style="width:100%">
                         <tr>
-                            <th style="width:15%;">Transaction Date<span class="required">*</span></th><th style="width: 2%;">:</th>
+                            <th style="width:15%;">Transaction Date <span class="required text-danger">*</span></th><th style="width: 2%;">:</th>
                             <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
 
-                            <th style="width:15%;">Transaction No<span class="required">*</span></th><th style="width: 2%">:</th>
+                            <th style="width:15%;">Transaction No <span class="required text-danger">*</span></th><th style="width: 2%">:</th>
                             <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($initiate_debit_note!='')? $initiate_debit_note : automatic_voucher_number_generate($table_payment,$payment_unique,1,2);?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                         </tr>
 
@@ -292,7 +289,7 @@ where
                         </tr>
 
                         <tr>
-                            <th style="">Cash or Bank Account</th><th>:</th>
+                            <th style="">Cash or Bank Ledger <span class="required text-danger">*</span></th><th>:</th>
                             <td colspan="3" style="padding-top: 5px;"><select class="select2_single form-control" style="width:98%; font-size: 11px" tabindex="-1" required="required"  name="cash_bank_ledger" id="cash_bank_ledger">
                                     <option></option>
                                     <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $cash_bank_ledger, 'ledger_group_id in ("1002") and status=1'); ?>
@@ -367,7 +364,7 @@ where
                         <?php foreign_relation('cost_center', 'id', 'CONCAT(id,"-", center_name)', $edit_value_cc_code, 'status=1'); ?>
                     </select></td>
                 <td style="width:15%;vertical-align: middle" align="center">
-                    <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value_narration!='')? $edit_value_narration : $initiate_debit_note;?></textarea>
+                    <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value_narration!='')? $edit_value_narration : '';?></textarea>
                 </td>
                 <td style="width:10%;vertical-align: middle" align="center">
                     <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>

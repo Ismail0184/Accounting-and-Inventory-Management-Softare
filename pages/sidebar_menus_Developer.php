@@ -8,7 +8,7 @@
                     <li><a href="#"><i class="fa fa-industry"></i>Company <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="developer_create_company.php">Create Company</a></li>
-                            <li><a href="developer_create_section.php">Create Section</a></li>
+                            <li><a href="developer_create_warehouse.php">Create Warehouse</a></li>
                         </ul>
                     </li>
 

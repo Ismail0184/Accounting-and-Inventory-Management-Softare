@@ -127,7 +127,7 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                      </tr>
                      </thead>
                       <tbody>
-                 <?php  if(isset($_POST[viewreport])){	
+                 <?php  if(isset($_POST['viewreport'])){
 				 $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',po_date,r.status as current_status,r.checkby,r.checkby_date,
 				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
 							 

@@ -1,11 +1,11 @@
 <?php
 require_once 'support_file.php';
 $title='Report';
-$from_date=date('Y-m-d' , strtotime($_POST[f_date]));
-$to_date=date('Y-m-d' , strtotime($_POST[t_date]));
-$pfrom_date=date('Y-m-d' , strtotime($_POST[pf_date]));
-$pto_date=date('Y-m-d' , strtotime($_POST[pt_date]));
-$ledger_id=$_REQUEST["ledger_id"];
+$from_date=date('Y-m-d' , strtotime($_POST['f_date']));
+$to_date=date('Y-m-d' , strtotime($_POST['t_date']));
+$pfrom_date=date('Y-m-d' , strtotime($_POST['pf_date']));
+$pto_date=date('Y-m-d' , strtotime($_POST['pt_date']));
+$ledger_id=@$_REQUEST["ledger_id"];
 list( $day,$month,$year1) = split('[/.-]', $_REQUEST['datefrom']);
 $dofdate= '20'.$year1.'-'.$month.'-'.$day;
 list($dayt,$montht,$yeart) = split('[/.-]', $_REQUEST['dateto']);
@@ -438,7 +438,7 @@ lc.lc_no
 from
 journal a,
 accounts_ledger b,
-user_activity_management u,
+users u,
 lc_lc_master lc
 
 where
@@ -479,7 +479,7 @@ lc.lc_no
 from
 journal a,
 accounts_ledger b,
-user_activity_management u,
+users u,
 lc_lc_master lc
 where
 a.lc_id=lc.id and
@@ -588,7 +588,7 @@ order by a.jvdate,a.id";
     <?php if($_POST['dealer_code']){?>
         <h5 align="center" style="margin-top:-15px">Dealer : <?=find_a_field('dealer_info','dealer_name_e','dealer_code='.$_POST[dealer_code].'')?></h5>
     <?php } ?>
-    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
     <table align="center"  style="width:98%; border: solid 1px #999; border-collapse:collapse;">
         <thead>
         <p style="width:98%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -693,7 +693,7 @@ order by d.id';
     <?php if($_POST['sub_db_code']){?>
     <h5 align="center" style="margin-top:-15px">SUB Dealer : <?=find_a_field('sub_db_info','sub_dealer_name_e','sub_db_code='.$_POST[sub_db_code].'')?></h5>
 <?php } ?>
-    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
     <table align="center"  style="width:98%; border: solid 1px #999; border-collapse:collapse;">
         <thead>
         <p style="width:98%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -784,7 +784,7 @@ order by d.id';
     <?php if($_POST['sub_db_code']){?>
     <h5 align="center" style="margin-top:-15px">SUB Dealer : <?=find_a_field('sub_db_info','sub_dealer_name_e','sub_db_code='.$_POST[sub_db_code].'')?></h5>
 <?php } ?>
-    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
     <table align="center"  style="width:98%; border: solid 1px #999; border-collapse:collapse;">
         <thead>
         <p style="width:98%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -870,7 +870,7 @@ order by d.id';
     ?>
     <h2 align="center" style="margin-top: -8px"><?=$_SESSION[company_name];?></h2>
     <h5 align="center" style="margin-top:-15px">LC Summery</h5>
-    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
+    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
     <table align="center"  style="width:98%; border: solid 1px #999; border-collapse:collapse; font-size: 11px">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -1112,7 +1112,7 @@ group by lld.id
 
 <h4 align="center" style="margin-top:-10px">Profit & Loss Against Rice</h4>
 
-    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+    <h5 align="center" style="margin-top:-10px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
 
 
 
@@ -1457,7 +1457,7 @@ group by lld.id
 
 <?php elseif ($_POST['reporttypes']=='5006'):
     $res="select p.PBI_ID,p.PBI_NAME as NAME,des.DESG_DESC as designation,dep.DEPT_DESC as department,a.working_day,a.month,a.year,a.attendance from hrm_attendance_info a, personnel_basic_info p,designation des,department dep where
-p.PBI_ID=a.PBI_id and working_day between '".$_POST[f_date]."' and '".$_POST[t_date]."' and des.DESG_ID=p.PBI_DESIGNATION and dep.DEPT_ID=p.PBI_DEPARTMENT";
+p.PBI_ID=a.PBI_id and working_day between '".$_POST['f_date']."' and '".$_POST['t_date']."' and des.DESG_ID=p.PBI_DESIGNATION and dep.DEPT_ID=p.PBI_DEPARTMENT";
     echo reportview($res,'Employee Attendance','100'); ?>
 
 
@@ -1673,7 +1673,7 @@ p.PBI_ID=a.PBI_id and working_day between '".$_POST[f_date]."' and '".$_POST[t_d
 <?php elseif ($report_id=='9003002'):?>
 <title>Daily IMS Report</title>
     <?php
-    $datecon=' and d.ims_date between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+    $datecon=' and d.ims_date between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
     if($_POST['tsm']>0) 				$tsm=$_POST['tsm'];
     if(isset($tsm)) 				{$tsm_con=' and d.TSM_PBI_ID='.$tsm;}
     $query='Select d.uid,d.ims_no,d.ims_date,p.PBI_NAME as tsm_name,a.AREA_NAME as territory,(select dealer_name_e from dealer_info where dealer_code=(select super_dealer_code from sub_db_info where sub_db_code=p2.sub_db_code)) as "DB / Super DB",
@@ -1792,7 +1792,7 @@ area a
     <?php elseif ($report_id=='9005001'):?>
         <title>Cash Collection (Country)</title>
         <?php
-        $datecon=' and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+        $datecon=' and j.jvdate between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
         $query='Select d.dealer_code,d.account_code,d.dealer_name_e as dealer_name,t.town_name as town,a.AREA_NAME as territory,b.BRANCH_NAME as region,
 				SUM(j.dr_amt) adjustment,
 				SUM(j.cr_amt) collection,
@@ -1806,7 +1806,7 @@ area a
     <?php elseif ($report_id=='9005002'):?>
         <title>Cash Collection (Region)</title>
         <?php
-        $datecon=' and d.region="'.$_POST[BRANCH_ID].'" and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+        $datecon=' and d.region="'.$_POST[BRANCH_ID].'" and j.jvdate between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
         $query='Select
 				d.dealer_code,
 				d.account_code,
@@ -1835,7 +1835,7 @@ area a
     <?php elseif ($report_id=='9005003'):?>
         <title>Cash Collection (Territory)</title>
         <?php
-        $datecon=' and d.area_code="'.$_POST[AREA_CODE].'" and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+        $datecon=' and d.area_code="'.$_POST[AREA_CODE].'" and j.jvdate between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
         $query='Select
 				d.dealer_code,
 				d.account_code,
@@ -1864,7 +1864,7 @@ area a
 
 <?php elseif ($report_id=='9002005'):?>
             <?php
-            $datecon=' and d.area_code="'.$_POST[AREA_CODE].'" and sdc.do_date between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+            $datecon=' and d.area_code="'.$_POST[AREA_CODE].'" and sdc.do_date between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
             $query='Select
     				d.dealer_code,
     				d.account_code,
@@ -1891,7 +1891,7 @@ area a
     <?php elseif ($report_id=='9005004'):?>
         <title>Cash Collection (Town)</title>
         <?php
-        $datecon=' and d.town_code="'.$_POST[town_code].'" and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+        $datecon=' and d.town_code="'.$_POST[town_code].'" and j.jvdate between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
         $query='Select
 				d.dealer_code,
 				d.account_code,
@@ -1919,7 +1919,7 @@ area a
     <?php elseif ($report_id=='9005005'):?>
         <title>Cash Collection (Dealer)</title>
         <?php
-        $datecon=' and d.dealer_code="'.$_POST[dealer_code].'" and j.jvdate between  "'.$_POST[f_date].'" and "'.$_POST[t_date].'"';
+        $datecon=' and d.dealer_code="'.$_POST[dealer_code].'" and j.jvdate between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
         $query='Select
 				d.dealer_code,
 				d.account_code,
@@ -1955,7 +1955,7 @@ area a
             if(isset($dealer_type_con))				{$dealer_type_con=' and c.dealer_type_con='.$dealer_type_con;}
             $query="SELECT i.brand_id,i.finish_goods_code as FG_code,i.item_name as 'FG Description',i.unit_name,i.pack_size as 'Pcs (Per Ctn)',
             (select SUM(c.total_unit)  from dealer_info d,sale_do_details c
-            where c.item_id=i.item_id and c.total_amt!='0.00' and c.do_type in ('sales','') and status not in ('MANUAL','UNCHECKED') and c.dealer_code=d.dealer_code  and c.do_date between  '".$_POST[f_date]."' and '".$_POST[t_date]."' ".$dealer_type_con.$dealer_con.") as total_unit
+            where c.item_id=i.item_id and c.total_amt!='0.00' and c.do_type in ('sales','') and status not in ('MANUAL','UNCHECKED') and c.dealer_code=d.dealer_code  and c.do_date between  '".$_POST['f_date']."' and '".$_POST['t_date']."' ".$dealer_type_con.$dealer_con.") as total_unit
             					 FROM  item_info i,
             							item_sub_group sg,
             							item_group g WHERE  i.sub_group_id=sg.sub_group_id and sg.group_id=g.group_id and
@@ -1981,7 +1981,7 @@ area a
             d.dealer_code=c.dealer_code and 
             c.item_id=i.item_id and
             i.brand_id=b.brand_id and  
-            m.do_date between '".$_POST[f_date]."' and '".$_POST[t_date]."' and c.total_amt>0 ".$warehouse_id_CON."".$brand_id_con."
+            m.do_date between '".$_POST['f_date']."' and '".$_POST['t_date']."' and c.total_amt>0 ".$warehouse_id_CON."".$brand_id_con."
              order by d.dealer_code,m.do_no,c.item_id"; echo reportview($query,'Invoice wise sales summery','99');?>
 
 
@@ -1990,13 +1990,13 @@ area a
         <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
         <p align="center" style="margin-top:-18px; font-size: 15px">Transaction Statement</p>
         <p align="center" style="margin-top:-10px; font-size: 12px; font-weight: bold"><?=($_REQUEST['ledger_id']>0)? 'Customer: '.$_REQUEST['ledger_id'].' - '.$ledger_name.'' : '' ?></p>
-        <?php if($_POST[cc_code]){ ?>
-        <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Cost Center:</strong> <?=getSVALUE('cost_center','center_name','where id='.$_REQUEST['cc_code']);?> (<?=$_REQUEST['cc_code'];?>)</p>
+        <?php if($_POST['cc_code']){ ?>
+        <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Cost Center:</strong> <?=find_a_field('cost_center','center_name','id='.$_REQUEST['cc_code']);?> (<?=$_REQUEST['cc_code'];?>)</p>
         <?php } ?>
-        <?php if($_POST[tr_from]){ ?>
+        <?php if($_POST['tr_from']){ ?>
         <p align="center" style="margin-top:-10px; font-size: 12px"><strong>Transaction Type:</strong> <?=$_REQUEST['tr_from'];?></p>
         <?php } ?>
-        <p align="center" style="margin-top:-10px; font-size: 11px"><strong>Period From :</strong> <?=$_POST[f_date]?> to <?=$_POST[t_date]?></p>
+        <p align="center" style="margin-top:-10px; font-size: 11px"><strong>Period From :</strong> <?=$_POST['f_date']?> to <?=$_POST['t_date']?></p>
         <table align="center" id="customers"  style="width:95%; border: solid 1px #999; border-collapse:collapse; ">
             <thead>
             <p style="width:95%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -2017,12 +2017,12 @@ area a
 
         if($tr_from!=''){
             $emp_id.=" and a.tr_from='".$tr_from."'";}
-            $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '".$_POST[f_date]."' AND '".$_POST[t_date]."' and a.ledger_id like '".$_POST[ledger_id]."' and b.group_for=".$_SESSION['usergroup'].$emp_id;
+            $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '".$_POST['f_date']."' AND '".$_POST['t_date']."' and a.ledger_id like '".$_POST[ledger_id]."' and b.group_for=".$_SESSION['usergroup'].$emp_id;
             $total=mysqli_fetch_row(mysqli_query($conn, $total_sql));
             $c="select sum(a.dr_amt)-sum(a.cr_amt) from
             journal a,
             accounts_ledger b
-            where a.ledger_id=b.ledger_id and a.jvdate<'$_POST[f_date]' and a.ledger_id like '".$_POST[ledger_id]."' and b.group_for=".$_SESSION['usergroup'];
+            where a.ledger_id=b.ledger_id and a.jvdate<'".$_POST['f_date']."' and a.ledger_id like '".$_POST['ledger_id']."' and b.group_for=".$_SESSION['usergroup'];
             $p="select
 a.jvdate,
 b.ledger_name,
@@ -2044,13 +2044,13 @@ c.center_name
 from
 journal a,
 accounts_ledger b,
-user_activity_management u,
+users u,
 cost_center c
 where
 a.cc_code=c.id and
 a.ledger_id=b.ledger_id and
-a.jvdate between '".$_POST[f_date]."' AND '".$_POST[t_date]."' and
-a.ledger_id like '".$_POST[ledger_id]."' and
+a.jvdate between '".$_POST['f_date']."' AND '".$_POST['t_date']."' and
+a.ledger_id like '".$_POST['ledger_id']."' and
 b.group_for=".$_SESSION['usergroup']." and
 a.user_id=u.user_id
 order by a.jvdate,a.id";
@@ -2067,10 +2067,6 @@ order by a.jvdate,a.id";
         $pl = mysqli_fetch_row($psql);
         $blance=$pl[0];
         ?>
-
-
-
-
         <tr style="border: solid 1px #999;font-weight:bold; font-size:11px">
             <td align="center" bgcolor="#FFCCFF">#</td>
             <td colspan="2" align="center" bgcolor="#FFCCFF"><?=$from_date;?></td>
@@ -2121,7 +2117,7 @@ order by a.jvdate,a.id";
             <?php elseif ($report_id=='9006002'):?>
                 <title>Customer Outstanding Balance</title>
                 <?php
-                $datecon=' and j.jvdate<"'.$_POST[t_date].'"';
+                $datecon=' and j.jvdate<"'.$_POST['t_date'].'"';
                 $query='Select
 				d.dealer_code,
 				d.account_code,
@@ -2150,7 +2146,7 @@ order by a.jvdate,a.id";
                 <title>Collection & Shipment</title>
                 <h2 align="center"><?=$_SESSION[company_name]?></h2>
                 <h4 align="center" style="margin-top:-10px">Cash Collection and Shipment in Value (Total Country)</h4>
-                <h5 align="center" style="margin-top:-10px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h5>
+                <h5 align="center" style="margin-top:-10px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
                 <table align="center"  style="width:90%; border: solid 1px #999; border-collapse:collapse; ">
                     <thead>
                     <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -2194,8 +2190,8 @@ order by a.jvdate,a.id";
 				group by d.dealer_code order by b.sl,a.AREA_NAME,t.town_name';
                     $query2 = mysqli_query($conn, $result);
                     while($data=mysqli_fetch_object($query2)){
-                        $collection = find_a_field('journal','SUM(cr_amt-dr_amt)','jvdate between "'.$_POST[f_date].'" and "'.$_POST[t_date].'" and tr_from not in ("Sales","SalesReturn","Journal_info","Imported") and ledger_id='.$data->account_code);
-                        $shipment=find_a_field('sale_do_details','SUM(total_amt)','do_type in ("sales","") and do_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'"  and dealer_code='.$data->dealer_code);
+                        $collection = find_a_field('journal','SUM(cr_amt-dr_amt)','jvdate between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'" and tr_from not in ("Sales","SalesReturn","Journal_info","Imported") and ledger_id='.$data->account_code);
+                        $shipment=find_a_field('sale_do_details','SUM(total_amt)','do_type in ("sales","") and do_date between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"  and dealer_code='.$data->dealer_code);
                         if($collection>0 || $shipment>0) {
                             $i=$i+1; ?>
                             <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
@@ -2262,7 +2258,7 @@ order by a.jvdate,a.id";
 				a.AREA_NAME as territory,
 				b.BRANCH_NAME as region,
 				SUM(sdd.total_amt) as shipment,
-				(Select SUM(commission_amount)  from sale_do_master  where dealer_code=sdd.dealer_code and do_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'") as commissionGET
+				(Select SUM(commission_amount)  from sale_do_master  where dealer_code=sdd.dealer_code and do_date between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'") as commissionGET
 				from
 				dealer_info d,
 				town t,
@@ -2275,7 +2271,7 @@ order by a.jvdate,a.id";
 				d.town_code=t.town_code and
 				a.AREA_CODE=d.area_code and
 				b.BRANCH_ID=d.region and
-				sdd.do_date between "'.$_POST[f_date].'" and "'.$_POST[t_date].'" and
+				sdd.do_date between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'" and
 				sdd.dealer_code=d.dealer_code and
 				sdd.do_type in ("sales")
 				group by d.account_code ');

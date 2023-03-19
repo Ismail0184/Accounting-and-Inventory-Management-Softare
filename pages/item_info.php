@@ -8,6 +8,12 @@ $page="item_info.php";
 $crud      =new crud($table);
 $unique_GET = @$_GET[$unique];
 
+$sectionid = @$_SESSION['sectionid'];
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+} else {
+    $sec_com_connection=" and i.company_id='".$_SESSION['companyid']."' and i.section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 
 if(isset($_POST[$unique_field]))
 { $unique_GET = @$_POST[$unique];
@@ -98,15 +104,19 @@ $VAT_item_group = @$VAT_item_group;
 $H_S_code = @$H_S_code;
 $serial = @$serial;
 
-$res='select i.'.$unique.',i.'.$unique.' as code,i.finish_goods_code as FG_Code,i.'.$unique_field.',sg.sub_group_name,g.group_name,i.unit_name,ib.brand_name,(select Count(item_id) from journal_item where item_id=i.item_id) as has_entry,i.status from '.$table.' i,
+$res="select i.".$unique.",i.".$unique." as code,i.finish_goods_code as FG_Code,i.".$unique_field.",sg.sub_group_name,g.group_name,i.unit_name,ib.brand_name,(select Count(item_id) from journal_item where item_id=i.item_id) as has_entry,
+s.section_name as branch,
+i.status from ".$table." i,
 item_sub_group sg,
 item_group g,
-item_brand ib
+item_brand ib,
+company s
 WHERE
 i.sub_group_id=sg.sub_group_id and
 sg.group_id=g.group_id and
-ib.id=i.brand_id
-order by g.group_id,sg.sub_group_id,i.'.$unique;
+ib.id=i.brand_id and 
+i.section_id=s.section_id".$sec_com_connection."
+order by g.group_id,sg.sub_group_id,i.".$unique;
 
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){

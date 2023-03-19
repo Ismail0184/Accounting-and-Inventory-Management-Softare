@@ -3,12 +3,6 @@
 $title='Accounts Report';
 $page='acc_select_report.php';
 
-$sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),upp.* FROM
-user_plant_permission upp,
-warehouse w  WHERE  upp.warehouse_id=w.warehouse_id and
-upp.user_id=".$_SESSION['userid']." and upp.status>0
-order by w.warehouse_id";
-
 $sql_item_id="SELECT i.item_id,concat(i.item_id,' : ',i.finish_goods_code,' : ',i.item_name,' (',sg.sub_group_name,')') FROM  item_info i,
 item_sub_group sg,
 item_group g WHERE  i.sub_group_id=sg.sub_group_id and
@@ -119,7 +113,7 @@ function reload1(form)
 
    <?php elseif ($report_id=='1002001'): ?>
        <div class="form-group">
-           <label class="control-label col-md-3 col-sm-3 col-xs-12">Ledger</label>
+           <label class="control-label col-md-3 col-sm-3 col-xs-12">Ledger <span class="required text-danger">*</span></label>
            <div class="col-md-6 col-sm-6 col-xs-12">
                <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required" name="ledger_id" >
                    <option></option>
@@ -147,7 +141,7 @@ function reload1(form)
            </div>
        </div>
        <div class="form-group">
-           <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required">*</span>
+           <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span>
            </label>
            <div class="col-md-6 col-sm-6 col-xs-12">
                <input type="date" style="font-size: 11px; width: 49%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-01');?>" class="form-control col-md-7 col-xs-12" required name="f_date">

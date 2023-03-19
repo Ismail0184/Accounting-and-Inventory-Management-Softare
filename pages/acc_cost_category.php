@@ -1,6 +1,12 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Cost Center Category';
+$sectionid = @$_SESSION['sectionid'];
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+} else {
+    $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 
 $now=time();
 $unique='id';
@@ -8,17 +14,11 @@ $unique_field='category_name';
 $table='cost_category';
 $page="accounts_cost_category.php";
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
+$$unique = @$_GET[$unique];
 
-
-
-
-
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
 if(isset($_POST[$unique_field]))
 
 {
-
     $$unique = $_POST[$unique];
     if(isset($_POST['record']))
     {
@@ -58,7 +58,11 @@ if(isset($$unique))
     while (list($key, $value)=each($data))
     { $$key=$value;}}
 	
-$sql='select '.$unique.','.$unique.' as Code,'.$unique_field.' from '.$table.' order by '.$unique;	
+$sql="select a.".$unique.",a.".$unique." as Code,a.".$unique_field.",s.section_name as branch,
+ IF(a.status=1, 'Active',IF(a.status='SUSPENDED','SUSPENDED','Inactive')) as status
+ from ".$table." a, company s
+ where 
+ a.section_id=s.section_id".$sec_com_connection." order by a.".$unique;
 ?>
 <?php require_once 'header_content.php'; ?>
     <script type="text/javascript">

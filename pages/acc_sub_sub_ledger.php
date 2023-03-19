@@ -80,12 +80,21 @@ $sub_sub_ledger = @$sub_sub_ledger;
 $sub_ledger_id = @$sub_ledger_id;
 $status = @$status;
 $POST_under = @$_POST['under'];
-$res='select  z.sub_sub_ledger_id,z.sub_sub_ledger_id,z.sub_sub_ledger,concat(z.sub_ledger_id, " : " ,a.sub_ledger) as sub_ledger,(select COUNT(ledger_id) from journal where ledger_id=z.sub_sub_ledger_id) as has_transactions,
-        IF(z.status=1, "Active",IF(z.status="SUSPENDED", "SUSPENDED","Inactive")) as status
-                              FROM '.$table.' z,sub_ledger a, accounts_ledger b,ledger_group c where 
+$sectionid = @$_SESSION['sectionid'];
+
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+} else {
+    $sec_com_connection=" and z.company_id='".$_SESSION['companyid']."' and z.section_id in ('400000','".$_SESSION['sectionid']."')";
+}
+
+$res="select  z.sub_sub_ledger_id,z.sub_sub_ledger_id,z.sub_sub_ledger,concat(z.sub_ledger_id, ' : ' ,a.sub_ledger) as sub_ledger,(select COUNT(ledger_id) from journal where ledger_id=z.sub_sub_ledger_id) as has_transactions,s.section_name as branch,
+        IF(z.status=1, 'Active',IF(z.status='SUSPENDED','SUSPENDED','Inactive')) as status
+                              FROM ".$table." z,sub_ledger a, accounts_ledger b,ledger_group c,company s where 
                              a.ledger_id=b.ledger_id and 
                              b.ledger_group_id=c.group_id and 
-                             z.sub_ledger_id=a.sub_ledger_id';
+                             z.section_id=s.section_id and
+                             z.sub_ledger_id=a.sub_ledger_id".$sec_com_connection."";
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
     if(isset($_POST['deletedata'.$row->$unique]))

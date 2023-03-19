@@ -8,8 +8,13 @@ $unique_field='center_name';
 $table="cost_center";
 $page="acc_cost_center.php";
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
+$$unique = @$_GET[$unique];
+$sectionid = @$_SESSION['sectionid'];
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+} else {
+    $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 
 if(prevent_multi_submit()){
 if(isset($_POST[$unique_field]))
@@ -56,7 +61,11 @@ if(isset($$unique))
     while (list($key, $value)=each($data))
     { $$key=$value;}}
 	
-$sql='select '.$unique.','.$unique.' as Code,'.$unique_field.',IF(status=1, "Active", "Inactive") as status  from '.$table.' order by '.$unique;
+$sql="select a.".$unique.",a.".$unique." as Code,a.".$unique_field.",c.category_name,s.section_name as branch,
+IF(a.status=1, 'Active',IF(a.status='SUSPENDED', 'SUSPENDED','Inactive')) as status  from ".$table." a, company s, cost_category c where 
+ a.category_id=c.id and
+ a.section_id=s.section_id".$sec_com_connection."
+ order by ".$unique."";
 ?>
 
 

@@ -51,8 +51,8 @@ if(isset($$unique))
     { $$key=$value;}}
 	
 $master=find_all_field("".$table."","","".$unique."=".$_GET[$unique]."");	
-if(isset($_POST[Recommended])){
-mysql_query("Update ".$table." SET status='recommended',recommended_date='$todayss' where ".$unique."=".$_GET[$unique]."");
+if(isset($_POST['Recommended'])){
+mysqli_query($conn, "Update ".$table." SET status='recommended',recommended_date='$todayss' where ".$unique."=".$_GET[$unique]."");
 $maild=find_a_field('essential_info','ESS_CORPORATE_EMAIL','PBI_ID='.$master->authorise);
 $to = $maild;
 				$subject = "A New Work Order";
@@ -73,11 +73,12 @@ $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 mail($to,$subject,$txt,$headers); 
 echo "<script>self.opener.location = '$page'; self.blur(); </script>";
                        echo "<script>window.close(); </script>";
+                       }
 
 
     if(isset($_POST['viewreport'])){
-        $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',r.po_date,r.status as current_status,r.checkby,r.checkby_date,r.entry_at,r.recommended_date,
-				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
+        $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',po_date,r.status as current_status,r.checkby,r.checkby_date,
+        		 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 			 
 							personnel_basic_info p2,
 							department d,
 							designation de,
@@ -91,12 +92,14 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
 				  vendor v
 				  WHERE r.recommended='.$_SESSION['PBI_ID'].' and 
 				  r.vendor_id=v.vendor_id and 
+				  r.po_type not in ("Asset") and
 				  r.po_date between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"		  
 				   order by r.'.$unique.' DESC');
 
-    } else {
-        $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',r.po_date,r.status as current_status,r.checkby,r.checkby_date,r.entry_at,
+				   } else {
+					    $res=mysqli_query($conn, 'select v.*,r.'.$unique.',r.'.$unique.',r.'.$unique_field.',po_date,r.status as current_status,
 				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
+							 
 							personnel_basic_info p2,
 							department d,
 							designation de,
@@ -110,9 +113,10 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
 				  vendor v
 				  WHERE r.recommended='.$_SESSION['PBI_ID'].' and
 				  r.status="'.$required_status.'" and 
-				  r.vendor_id=v.vendor_id			  
+				  r.vendor_id=v.vendor_id and
+				  r.po_type not in ("Asset")		  
 				   order by r.'.$unique.' DESC');
-    }								}
+ }
 ?>
 
 
@@ -131,9 +135,9 @@ echo "<script>self.opener.location = '$page'; self.blur(); </script>";
  <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" >    
      <table align="center" style="width: 50%;">
             <tr><td>
-                    <input type="date" style="width:150px; font-size: 11px; height: 25px"  value="<?php if(isset($_POST[f_date])) echo $_POST[f_date]; else echo date('Y-m-01');?>" max="<?=date('Y-m-d');?>" required   name="f_date" ></td>
+                    <input type="date" style="width:150px; font-size: 11px; height: 25px"  value="<?php if(isset($_POST['f_date'])) echo $_POST['f_date']; else echo date('Y-m-01');?>" max="<?=date('Y-m-d');?>" required   name="f_date" ></td>
                 <td style="width:10px; text-align:center"> -</td>
-                <td><input type="date" style="width:150px;font-size: 11px; height: 25px"  value="<?php if(isset($_POST[t_date])) { echo $_POST[t_date]; } else { echo date('Y-m-d'); }?>" max="<?=date('Y-m-d')?>" required   name="t_date"></td>
+                <td><input type="date" style="width:150px;font-size: 11px; height: 25px"  value="<?php if(isset($_POST['t_date'])) { echo $_POST['t_date']; } else { echo date('Y-m-d'); }?>" max="<?=date('Y-m-d')?>" required   name="t_date"></td>
                 <td style="padding:10px"><button type="submit" style="font-size: 11px; height: 30px" name="viewreport"  class="btn btn-primary">View Recommended Work Order</button></td>
             </tr></table>
      

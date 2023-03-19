@@ -6,7 +6,13 @@ $unique_field='group_name';
 $table='item_group';
 $page="item_group.php";
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
+$$unique = @$_GET[$unique];
+$sectionid = @$_SESSION['sectionid'];
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+} else {
+    $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 
 if(isset($_POST[$unique_field])) {
     $$unique = $_POST[$unique];
@@ -52,7 +58,8 @@ if(isset($$unique))
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
-$res='select g.'.$unique.',g.'.$unique.' as group_code,g.group_name,(SELECT COUNT(sub_group_id) from item_sub_group where group_id=g.group_id) as has_child,IF(g.status=1, "Active",IF(g.status="SUSPENDED", "SUSPENDED","Inactive")) as status from '.$table.' g order by g.'.$unique;
+$res="select a.".$unique.",a.".$unique." as group_code,a.group_name,(SELECT COUNT(sub_group_id) from item_sub_group where group_id=a.group_id) as has_child,s.section_name as branch,
+IF(a.status=1, 'Active',IF(a.status='SUSPENDED','SUSPENDED','Inactive')) as status from ".$table." a, company s where a.section_id=s.section_id".$sec_com_connection." order by a.".$unique;
 $query=mysqli_query($conn, $res);
 while($data=mysqli_fetch_object($query)){
     if(isset($_POST['deletedata'.$data->$unique]))
