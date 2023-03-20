@@ -210,7 +210,7 @@ $party_ledger = @$party_ledger;
 $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
 
 $sql2="select a.tr_no, a.jvdate as Date,a.jv_no as Voucher_No,SUM(a.dr_amt) as amount
-from  journal a where a.tr_from='Receipt' and a.user_id='".$_SESSION['userid']."' and a.section_id='".$_SESSION['sectionid']."' and a.company_id='".$_SESSION['companyid']."'  group by a.tr_no  order by a.id desc limit 10";
+from  journal a where a.tr_from='Receipt' and a.user_id='".$_SESSION['userid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."') and a.company_id='".$_SESSION['companyid']."'  group by a.tr_no  order by a.id desc limit 10";
 $rs = "Select 
 j.id as jid,
 concat(a.ledger_id, ' : ' ,a.ledger_name) as Account_Head,c.center_name as 'Profit_Center',j.narration,j.dr_amt,j.cr_amt 
@@ -280,7 +280,7 @@ cost_center c
                             <th style="">Received From <span class="required text-danger">*</span></th><th>:</th>
                             <td colspan="3" style="padding-top: 5px;"><select class="select2_single form-control" style="width:98%; font-size: 11px" tabindex="-1" required="required"  name="party_ledger" id="party_ledger">
                                     <option></option>
-                                    <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $party_ledger, 'ledger_group_id in ("1006") and status=1'); ?>
+                                    <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $party_ledger, 'ledger_group_id in ("1006") and status=1 and company_id="'.$_SESSION['companyid'].'" and section_id in ("400000","'.$_SESSION['sectionid'].'")'); ?>
                                 </select>
                             </td>
                             <td ><input type="number" id="amount"   value="<?=$amount;?>" name="amount"  class="form-control col-md-7 col-xs-12" placeholder="Rcvd. Amt" required="required" style="width: 90%; margin-top: 5px; height: 38px; font-size: 11px; vertical-align: middle" step="any" min="1" />

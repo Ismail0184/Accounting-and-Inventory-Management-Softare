@@ -2,29 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/developer_create_warehouse.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/MIS_add_new_plant_cmu_warehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_add_new_plant_cmu_warehouse.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_cost_category.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_cost_category.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_cost_center.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_cost_center.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_ledger_group.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger_group.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_sub_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_sub_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/account_settings_change_default_company.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/account_settings_change_default_branch.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/accounts_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_reportview.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/emp_acess_unchecked_work_order.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/emp_acess_unchecked_work_order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/hrm_unapproved_work_order.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/hrm_unapproved_work_order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/item_group.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/item_group.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/item_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/item_info.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/item_sub_group.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/item_sub_group.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sales_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_reportview.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Developer.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Developer.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +103,9 @@
       <workItem from="1679024428277" duration="4903000" />
       <workItem from="1679050995059" duration="237000" />
       <workItem from="1679109368651" duration="26661000" />
-      <workItem from="1679200308680" duration="13606000" />
+      <workItem from="1679200308680" duration="20766000" />
+      <workItem from="1679284129727" duration="2788000" />
+      <workItem from="1679287122247" duration="1940000" />
     </task>
     <servers />
   </component>

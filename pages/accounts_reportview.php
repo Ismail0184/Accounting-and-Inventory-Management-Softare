@@ -14,14 +14,13 @@ $ledger_id=@$_REQUEST["ledger_id"];
 $req_datefrom = @$_REQUEST['datefrom'];
 
 $warehouseid=@$_POST['warehouse_id'];
-$_SESSION['company_name']=find_a_field('company','company_name','company_id="'.$_SESSION['companyid'].'"');
-$sectionid=$_SESSION['sectionid'];
-$companyid=$_SESSION['companyid'];
 
+$companyid=@$_SESSION['companyid'];
+$sectionid = @$_SESSION['sectionid'];
 if($sectionid=='400000'){
     $sec_com_connection=' and 1';
 } else {
-    $sec_com_connection=" and j.section_id='".$sectionid."' and j.company_id='".$companyid."'";
+    $sec_com_connection=" and j.company_id='".$_SESSION['companyid']."' and j.section_id in ('400000','".$_SESSION['sectionid']."')";
 }
 ?>
 
@@ -59,7 +58,12 @@ if($sectionid=='400000'){
 
 <?php if ($_POST['report_id']=='1002001'):
     $ledger_name=find_a_field('accounts_ledger','ledger_name','ledger_id='.$_REQUEST['ledger_id']);
-    $up=mysqli_query($conn, "Update journal set cc_code='0' where cc_code is null"); ?>
+    $up=mysqli_query($conn, "Update journal set cc_code='0' where cc_code is null");
+    if($sectionid=='400000'){
+        $sec_com_connection=' and 1';
+    } else {
+        $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
+    }?>
     <style>
         #customers {
             font-family: "Gill Sans", sans-serif;
@@ -104,14 +108,12 @@ if($sectionid=='400000'){
         $cc_code =@$_REQUEST['cc_code'];
         $tr_from = @$_REQUEST['tr_from'];
         $emp_id = '';
-        //if($_REQUEST['emp_id']!=''){
-        //$emp_id=" and a.PBI_ID=".$_REQUEST['emp_id'];}
         if($tr_from!=''){
             $emp_id.=" and a.tr_from='".$tr_from."'";}
         if($cc_code > 0)
-        {   $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$f_date' AND '$t_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code ";
+        {   $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$f_date' AND '$t_date' and a.ledger_id like '$ledger_id'".$sec_com_connection." AND a.cc_code=$cc_code ";
             $total=mysqli_fetch_row(mysqli_query($conn, $total_sql));
-            $c="select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate<'$f_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code".$emp_id;
+            $c="select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate<'$f_date' and a.ledger_id like '$ledger_id'".$sec_com_connection." AND a.cc_code=$cc_code".$emp_id;
             $p="select
 a.jvdate,
 b.ledger_name,
@@ -141,18 +143,17 @@ a.cc_code=c.id and
 a.ledger_id=b.ledger_id and
 a.jvdate between '$f_date' AND '$t_date' and
 a.ledger_id like '$ledger_id' and
-b.group_for=".$_SESSION['usergroup']." and
-a.user_id=u.user_id AND
+a.user_id=u.user_id".$sec_com_connection." and
 a.cc_code=".$cc_code."
 order by a.jvdate,a.id";
 
         } else  {
-            $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$f_date' AND '$t_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup'].$emp_id;
+            $total_sql = "select sum(a.dr_amt),sum(a.cr_amt) from journal a,accounts_ledger b where a.ledger_id=b.ledger_id and a.jvdate between '$f_date' AND '$t_date' and a.ledger_id like '$ledger_id'".$sec_com_connection."".$emp_id;
             $total=mysqli_fetch_row(mysqli_query($conn, $total_sql));
             $c="select sum(a.dr_amt)-sum(a.cr_amt) from
             journal a,
             accounts_ledger b
-            where a.ledger_id=b.ledger_id and a.jvdate<'$f_date' and a.ledger_id like '$ledger_id' and b.group_for=".$_SESSION['usergroup'];
+            where a.ledger_id=b.ledger_id and a.jvdate<'$f_date' and a.ledger_id like '$ledger_id'".$sec_com_connection."";
             $p="select
 a.jvdate,
 b.ledger_name,
@@ -181,13 +182,10 @@ a.cc_code=c.id and
 a.ledger_id=b.ledger_id and
 a.jvdate between '$f_date' AND '$t_date' and
 a.ledger_id like '$ledger_id' and
-b.group_for=".$_SESSION['usergroup']." and
-a.user_id=u.user_id
+a.user_id=u.user_id".$sec_com_connection."
 order by a.jvdate,a.id";
 
         }
-
-
         if($total[0]>$total[1])
         {
             $t_type="(Dr)";
@@ -258,19 +256,37 @@ order by a.jvdate,a.id";
     </div>
 
 <?php elseif ($_POST['report_id']=='1001002'):?>
-    <?php $sql="SELECT i.item_id,i.item_id,i.finish_goods_code as custom_code,i.item_name,i.consumable_type,i.product_nature,i.unit_name,i.d_price,i.t_price,i.m_price,FORMAT(i.production_cost,2) as pro_cost,i.material_cost,
-FORMAT(i.SD,3) as SD,i.SD_percentage as 'SD (%)',FORMAT(i.VAT,3) as VAT,i.VAT_percentage as 'VAT (%)',(select group_name from VAT_item_group where i.VAT_item_group=group_id) as VAT_item_group,hs.H_S_code,sg.sub_group_name,g.group_name
+    <?php
+    if($sectionid=='400000'){
+        $sec_com_connection=' 1';
+    } else {
+        $sec_com_connection=" i.company_id='".$_SESSION['companyid']."' and i.section_id in ('400000','".$_SESSION['sectionid']."')";
+    }
+    $sql="SELECT i.item_id,i.item_id,i.finish_goods_code as custom_code,i.item_name,i.consumable_type,i.product_nature,i.unit_name,i.d_price,i.t_price,i.m_price,FORMAT(i.production_cost,2) as pro_cost,i.material_cost,
+FORMAT(i.SD,3) as SD,i.SD_percentage as 'SD (%)',FORMAT(i.VAT,3) as VAT,i.VAT_percentage as 'VAT (%)',(select group_name from VAT_item_group where i.VAT_item_group=group_id) as VAT_item_group,hs.H_S_code,sg.sub_group_name,g.group_name,s.section_name as branch
 from item_info i,
 item_sub_group sg,
 item_group g,
-item_tariff_master hs
- where
- i.H_S_code=hs.id and
+item_tariff_master hs,
+company s
+where
+i.section_id=s.section_id and 
+    i.H_S_code=hs.id and
 i.sub_group_id=sg.sub_group_id and
 sg.group_id=g.group_id and
-i.status in ('".$_POST['status']."') order by i.".$_POST['order_by'].""?>
+i.status in ('".$_POST['status']."') and
+".$sec_com_connection."
+
+order by i.".$_POST['order_by'].""?>
     <?=reportview($sql,'Item Info Master','99'); ?>
-<?php elseif ($_POST['report_id']=='1002003'): $LC_no=find_a_field('lc_lc_master','lc_no','id='.$_POST['lc_id']);?>
+
+<?php elseif ($_POST['report_id']=='1002003'): $LC_no=find_a_field('lc_lc_master','lc_no','id='.$_POST['lc_id']);
+    if($sectionid=='400000'){
+        $sec_com_connection=' and 1';
+    } else {
+        $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
+    }
+?>
     <style>
         #customers {
             font-family: "Gill Sans", sans-serif;
@@ -336,7 +352,7 @@ where
 a.tr_no=c.payment_no and
 a.sub_ledger_id=b.ledger_id and
 a.user_id=u.user_id and
-c.lc_id=".$_POST[lc_id]."".$subledger_id." and
+c.lc_id=".$_POST['lc_id']."".$subledger_id." and
 c.dr_amt>0
 group by c.id
 order by a.jvdate,a.id";}
@@ -562,10 +578,20 @@ order by c.do_no";
 
 
     <?php elseif ($_POST['report_id']=='1001001'):?>
+        <style>
+            #customers {
+                font-family: "Gill Sans", sans-serif;
+            }
+            #customers td {
+            }
+            #customers tr:ntd-child(even)
+            {background-color: #f0f0f0;}
+            #customers tr:hover {background-color: #f5f5f5;}
+        </style>
         <title>Chart of Accounts</title>
         <h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
         <h4 align="center" style="margin-top:-15px">Chart of Accounts</h4>
-        <table align="center"  style="width:90%; border: solid 1px #999; border-collapse:collapse;">
+        <table align="center" id="customers"  style="width:90%; border: solid 1px #999; border-collapse:collapse;">
             <thead>
             <p style="width:80%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
                 echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
@@ -576,17 +602,22 @@ order by c.do_no";
                 <th style="border: solid 1px #999; padding:2px; %">Sub Sub Ledger</th>
             </tr></thead>
             <?
+            if($sectionid=='400000'){
+                $sec_com_connection=' 1';
+            } else {
+                $sec_com_connection=" company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+            }
             $separator = @$separator;
-            $sql="select * from ledger_group where company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."') order by group_id";
+            $sql="select * from ledger_group where ".$sec_com_connection." order by group_id";
             $query=mysqli_query($conn, $sql);
             if(mysqli_num_rows($query)>0){
                 while($grp=mysqli_fetch_object($query)){
                     $grp_id=(string)($grp->group_id*100000000);
                     ?>
-                    <tr style="border: solid 1px #999; font-size:13px; font-weight:normal; background-color: bisque">
+                    <tr style="border: solid 1px #999; font-size:13px; font-weight:normal; background-color: #FFCCFF">
                         <td colspan="4" style="border: solid 1px #999; text-align:left"><?=ledger_sepe($grp_id,$separator)?><?=' '.$grp->group_name;?></td></tr>
                     <?
-                    $sql2="select * from accounts_ledger where ledger_id like '%00000000' and ledger_group_id='".$grp->group_id."' and  company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."') ";
+                    $sql2="select * from accounts_ledger where ledger_id like '%00000000' and ledger_group_id='".$grp->group_id."' and ".$sec_com_connection."";
                     $query2=mysqli_query($conn, $sql2);
                     if(mysqli_num_rows($query2)>0){
                         while($ledger=mysqli_fetch_object($query2)){
@@ -599,7 +630,7 @@ order by c.do_no";
                                 <td style="border: solid 1px #999; text-align:left"></td>
                             </tr>
                             <?
-                            $sql3="select * from sub_ledger where ledger_id=".$ledger->ledger_id." and  company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+                            $sql3="select * from sub_ledger where ledger_id=".$ledger->ledger_id." and ".$sec_com_connection."";
                             $query3=mysqli_query($conn, $sql3);
                             if(mysqli_num_rows($query3)>0){
                                 while($sub_ledger=mysqli_fetch_object($query3)){
@@ -611,7 +642,7 @@ order by c.do_no";
                                         <td style="border: solid 1px #999; text-align:left"></td>
                                     </tr>
                                     <?
-                                    $sql4="select * from sub_sub_ledger where sub_ledger_id=".$sub_ledger->sub_ledger_id." and  company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+                                    $sql4="select * from sub_sub_ledger where sub_ledger_id=".$sub_ledger->sub_ledger_id." and  ".$sec_com_connection."";
                                     $query4=mysqli_query($conn, $sql4);
                                     if(mysqli_num_rows($query4)>0){?>
 
@@ -635,12 +666,15 @@ order by c.do_no";
 
     <?php elseif ($_POST['report_id']=='1002004'):?>
         <?php
-        if($_SESSION['usergroup']>1){
-            $cash_and_bank_balance=find_a_field('ledger_group','group_id','group_sub_class="1020" and group_for="'.$_SESSION['usergroup'].'"');
-        }else{
-            $cash_and_bank_balance=find_a_field('ledger_group','group_id','group_sub_class="1020"');
+        if($sectionid=='400000'){
+            $sec_com_connection=' and 1';
+            $sec_com_connection_wa=' and 1';
+        } else {
+            $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
+            $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
         }
-        $led=mysqli_query($conn, "select ledger_id,ledger_name from accounts_ledger where group_for=".$_SESSION['usergroup']." and ledger_group_id='$cash_and_bank_balance' order by ledger_name");
+            $cash_and_bank_balance=find_a_field("ledger_group","group_id","group_sub_class='1020'".$sec_com_connection_wa."");
+        $led=mysqli_query($conn, "select ledger_id,ledger_name from accounts_ledger where ledger_group_id='$cash_and_bank_balance'".$sec_com_connection_wa." order by ledger_name");
         $data = '[';
         $data .= '{ name: "All", id: "%" },';
         while($ledg = @mysqli_fetch_row($conn, $led)){
@@ -648,7 +682,7 @@ order by c.do_no";
         }
         $data = substr($data, 0, -1);
         $data .= ']';
-        $led1=mysqli_query($conn, "SELECT id, center_name FROM cost_center WHERE 1 ORDER BY center_name");
+        $led1=mysqli_query($conn, "SELECT id, center_name FROM cost_center WHERE 1 ".$sec_com_connection_wa." ORDER BY center_name");
         if(mysqli_num_rows($led1) > 0)
         {
             $data1 = '[';
@@ -665,12 +699,11 @@ order by c.do_no";
         }else {$ledger_con = 'b.ledger_group_id="'.$cash_and_bank_balance.'"';
             $ledger_conx = '1';}
 
-        $op_b1="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$f_date' and b.group_for=".$_SESSION['usergroup']." GROUP  BY ledger_name";
-        $cl_c="select SUM(dr_amt)-SUM(cr_amt) from journal where group_for=".$_SESSION['usergroup']." and ledger_id ='$cash[0]' and jvdate<'$t_date'";
+        $op_b1="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$f_date'".$sec_com_connection." GROUP  BY ledger_name";
+        $cl_c="select SUM(dr_amt)-SUM(cr_amt) from journal where 1 ".$sec_com_connection_wa." and ledger_id ='$cash[0]' and jvdate<'$t_date'";
         $cl_c=mysqli_fetch_row(mysqli_query($conn, $cl_c));
-        $cl_b="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where b.group_for=".$_SESSION['usergroup']." and ".$ledger_con." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$t_date' and 1 GROUP  BY ledger_name";
+        $cl_b="select distinct(b.ledger_name), SUM(dr_amt)-SUM(cr_amt) from journal a, accounts_ledger b where ".$ledger_con."".$sec_com_connection." and a.ledger_id<>'$cash[0]' and a.ledger_id=b.ledger_id and jvdate < '$t_date' and 1 GROUP  BY ledger_name";
         ?>
-
         <h2 align="center"><?=$_SESSION['company_name'];?></h2>
         <h4 align="center" style="margin-top:-15px">Receipt & Payment Statement</h4>
         <?php if ($_POST['cc_code']>0) { ?><h4 align="center" style="margin-top:-15px">Cost Center :  <?=find_a_field('cost_center','center_name','id="'.$_POST['cc_code'].'"');?> </h4><?php } ?>
@@ -710,9 +743,9 @@ order by c.do_no";
             <?php
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
-            {$p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY group_name";
+            {$p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Receipt'".$sec_com_connection." AND a.cc_code=$cc_code GROUP BY group_name";
             } else {
-                $p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.tr_from='Receipt' and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." GROUP BY group_name";
+                $p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.tr_from='Receipt' and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx."".$sec_com_connection." GROUP BY group_name";
             }
             $pi=0;
             $re_to=0;
@@ -730,9 +763,9 @@ order by c.do_no";
                 $cc_code = (int) $_REQUEST['cc_code'];
                 if($cc_code > 0)
                 {
-                    $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." AND a.cc_code=$cc_code GROUP BY ledger_name";
+                    $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt'".$sec_com_connection." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." AND a.cc_code=$cc_code GROUP BY ledger_name";
                 }   else {
-                    $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt' and b.group_for=".$_SESSION['usergroup']." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." GROUP BY ledger_name";
+                    $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt'".$sec_com_connection." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." GROUP BY ledger_name";
                 }   $Li=0;
                 $Lsql=mysqli_query($conn, $Lg);
                 while($Ldata=mysqli_fetch_row($Lsql)){
@@ -764,9 +797,9 @@ order by c.do_no";
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
             {
-                $p = "select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date'  and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Payment' and ".$ledger_conx." and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY group_name";
+                $p = "select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date'  and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Payment' and ".$ledger_conx."".$sec_com_connection." AND a.cc_code=$cc_code GROUP BY group_name";
             } else {
-                $p ="select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.tr_from='Payment' and ".$ledger_conx." and b.group_for=".$_SESSION['usergroup']." GROUP BY group_name";
+                $p ="select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.tr_from='Payment' and ".$ledger_conx."".$sec_com_connection." GROUP BY group_name";
             }
             //echo $p;
             $pi=0;
@@ -786,9 +819,9 @@ order by c.do_no";
                 $cc_code = (int) $_REQUEST['cc_code'];
                 if($cc_code > 0)
                 {
-                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment' and b.group_for=".$_SESSION['usergroup']." AND a.cc_code=$cc_code GROUP BY ledger_name";
+                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment'".$sec_com_connection." AND a.cc_code=$cc_code GROUP BY ledger_name";
                 }   else   {
-                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment' and b.group_for=".$_SESSION['usergroup']." GROUP BY ledger_name";
+                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment'".$sec_com_connection." GROUP BY ledger_name";
                 }
                 $Li=0;
                 $Lsql=mysqli_query($conn, $Lg);
@@ -841,7 +874,6 @@ order by c.do_no";
                         {if($cl_to<0) echo "(".number_format($cl_to*(-1)+$re_to,2).")"; else echo number_format($cl_to+$re_to,2);}?>
                     </strong></th></tr>
         </table>
-
 
 
     <?php elseif ($_POST['report_id']=='1010002'):?>
@@ -1540,7 +1572,7 @@ group by lld.item_id
             }
             $totalactualcollection = 0;
             $i                     = 0;
-            $result=mysqli_query($conn, 'Select
+            $result=mysqli_query($conn, "Select
 				d.dealer_code,
 				d.account_code,
 				d.dealer_name_e as dealername,
@@ -1558,8 +1590,10 @@ group by lld.item_id
 				d.town_code=t.town_code and
 				a.AREA_CODE=d.area_code and
 				 d.region=b.BRANCH_ID and
-				j.ledger_id=d.account_code  '.$datecon.$dealer_type_conn.'
-				group by d.dealer_code order by b.sl,d.dealer_code');
+				j.ledger_id=d.account_code and
+				d.company_id='".$_SESSION['companyid']."' and d.section_id in ('400000','".$_SESSION['sectionid']."')
+				".$datecon.$dealer_type_conn."
+				group by d.dealer_code order by b.sl,d.dealer_code");
             $query2 = $result;
             while($data=mysqli_fetch_object($query2)){ ?>
                 <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
@@ -2436,8 +2470,8 @@ group by lld.item_id
             </tr>
             <tr style="border: solid 1px #999; font-size:11px">
                 <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Bank Balance"; echo $headname; ?></td>
-                <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$fdate,$tdate,'1002000900010000','1002000901000000',$sec_com_connection); $TotalBBCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
-                <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$comparisonF,$comparisonT,'1002000900010000','1002000901000000',$sec_com_connection); $TotalBBPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$fdate,$tdate,'1002000200000000','1002000901000000',$sec_com_connection); $TotalBBCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="border: solid 1px #999; padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$comparisonF,$comparisonT,'1002000200000000','1002000901000000',$sec_com_connection); $TotalBBPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
             </tr>
             <tr style="font-weight:bold; font-size: 13px;">
                 <td style="text-align:right;"><strong>Total Current Assets</strong></td>
