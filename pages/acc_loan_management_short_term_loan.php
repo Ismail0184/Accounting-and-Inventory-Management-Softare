@@ -1,75 +1,24 @@
 <?php require_once 'support_file.php'; ?>
-<?=(($_SESSION["userlevel"])==1)? '' : header('Location: page_403.php');
+<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $now=time();
 $unique='id';
-$unique_field='town_name';
-$table="company";
-$page="developer_create_company.php";
+$unique_field='stl_no';
+$table="acc_short_term_loan";
+$page="acc_loan_management_short_term_loan.php";
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
-$title='Create Company';
+$title='Create Short Term Loan';
 
 if(prevent_multi_submit()){
     if(isset($_POST[$unique_field]))
     {    $$unique = $_POST[$unique];
         if(isset($_POST['record']))
         {
-
-            $target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-
-// Check if image file is a actual image or fake image
-
-  $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-  if($check !== false) {
-    echo "File is an image - " . $check["mime"] . ".";
-    $uploadOk = 1;
-  } else {
-    echo "File is not an image.";
-    $uploadOk = 0;
-  }
-
-
-// Check if file already exists
-if (file_exists($target_file)) {
-  echo "Sorry, file already exists.";
-  $uploadOk = 0;
-}
-
-// Check file size
-if ($_FILES["fileToUpload"]["size"] > 500000) {
-  echo "Sorry, your file is too large.";
-  $uploadOk = 0;
-}
-
-// Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-  echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-  $uploadOk = 0;
-}
-
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-  echo "Sorry, your file was not uploaded.";
-// if everything is ok, try to upload file
-} else {
-  if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
-  } else {
-    echo "Sorry, there was an error uploading your file.";
-  }
-}
-
-
             $_POST['status']=1;
+            $_POST['use_type'] = 'WH';
+            $_POST['warehouse_type'] = 'Both';
             $crud->insert();
-            $type=1;
-            $msg='New Entry Successfully Inserted.';
-            //unset($_POST);
-            unset($$unique);
+            unset($_POST);
         }
 
 //for modify..................................
@@ -101,11 +50,10 @@ if(isset($$unique))
     { $$key=$value;}}
 
 
-$res="SELECT id,section_id,section_name,company_name,com_short_name,address,contact_person,contact_number,logo,logo_color,TIN,BIN,Trade_license_no,telephone,IF(status=1, 'Active','Inactive') as status from ".$table." order by id";
+$res="SELECT a.stl_no,l.ledger_name as bank_name,a.loan_amount,a.interest_rate,a.interest_on_late_payment,a.date,a.maturity_date,a.status from ".$table." a,accounts_ledger l where a.ledger_id=l.ledger_id";
 $result=mysqli_query($conn, $res);
 while($data=mysqli_fetch_object($result)){
     $id=$data->ZONE_CODE;
-
     if(isset($_POST['deletedata'.$id]))
     { $del=mysqli_query($conn, "Delete from ".$table." where ".$unique."=".$id."");}
 }?>
@@ -134,7 +82,6 @@ while($data=mysqli_fetch_object($result)){
         </div>
         <div class="x_content">
             <?php else: ?>
-
             <div class="modal fade" id="addModal">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
@@ -149,27 +96,48 @@ while($data=mysqli_fetch_object($result)){
                             <?php endif; ?>
                             <form  name="addem" id="addem" class="form-horizontal form-label-left" style="font-size: 11px" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Section Id<span class="required">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Bank Name <span class="required text-danger">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                        <input type="text" class="form-control" style="font-size: 11px" name="section_id">
+                                        <select class="select2_single form-control" style="width:98%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
+                                            <option></option>
+                                            <?php foreign_relation('sub_ledger', 'sub_ledger_id', 'sub_ledger', $ledger_id, 'status=1 and ledger_id="1002000900000000"'); ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">section_name<span class="required">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">STL No <span class="required text-danger">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                        <input type="text" class="form-control" style="font-size: 11px" name="section_id">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Town<span class="required">*</span></label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="text" class="form-control" style="font-size: 11px" required name="stl_no" value="<?=$stl_no?>" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Incharge Person<span class="required">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Loan Amount <span class="required text-danger">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                        
+                                        <input type="text" class="form-control" style="font-size: 11px" required name="loan_amount" value="<?=$loan_amount?>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Interest Rate (%)<span class="required text-danger">*</span></label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="number" class="form-control" style="font-size: 11px" required name="interest_rate" value="<?=$interest_rate?>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Interest on Late Payment Rate (%)<span class="required text-danger">*</span></label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="number" class="form-control" style="font-size: 11px" required name="interest_rate" value="<?=$interest_on_late_payment?>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Date<span class="required text-danger">*</span></label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="date" class="form-control" style="font-size: 11px" required name="date" value="<?=$date?>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Maturity Date <span class="required text-danger">*</span></label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="date" class="form-control" style="font-size: 11px" required name="maturity_date" value="<?=$maturity_date?>" />
                                     </div>
                                 </div>
 

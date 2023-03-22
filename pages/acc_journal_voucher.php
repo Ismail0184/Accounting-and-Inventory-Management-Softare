@@ -1,6 +1,15 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Journal Voucher';
+$sectionid = @$_SESSION['sectionid'];
+$sectionid_substr = @(substr($_SESSION['sectionid'],4));
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+    $sec_com_connection_wa=' and 1';
+} else {
+    $sec_com_connection=" and j.company_id='".$_SESSION['companyid']."' and j.section_id in ('400000','".$_SESSION['sectionid']."')";
+    $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 $unique='voucherno';
 $unique_field='voucher_date';
 $table_journal_master="journal_voucher_master";
@@ -9,7 +18,19 @@ $journal_info_unique='journal_info_no';
 $page="acc_journal_voucher.php";
 $crud      =new crud($table_journal_master);
 
-
+//Image Attachment Function
+function image_upload_on_id($path,$file,$id='')
+{    if($file['name']!=''){
+    $path_file = $path.basename($file['name']);
+    $imageFileType = pathinfo($path_file,PATHINFO_EXTENSION);
+    $root=$path.'/'.$id.'.'.$imageFileType;
+    if($imageFileType != "jpg" && $imageFileType != "pdf" )
+    {}
+    else
+        move_uploaded_file($file['tmp_name'],$root);
+    return $root;
+}}
+//Image Attachment Function
 $create_date=date('Y-m-d');
 $jv=next_journal_voucher_id();
 
@@ -93,6 +114,10 @@ if(prevent_multi_submit()) {
                         ,$thisday,$thismonth,$thisyear,$receive_ledger);
                     $_SESSION['journal_last_narration']=$_POST['narration'];
                 }
+                if ($_FILES["attachment"]["tmp_name"] != '') {
+                    $path = '../assets/images/attachment/vouchers/journal/' . $_SESSION['initiate_journal_note'] . '.jpg';
+                    move_uploaded_file($_FILES["attachment"]["tmp_name"], $path);
+                }
             }}} // end post unique
 } // end prevent_multi_submit
 
@@ -123,7 +148,7 @@ journal_info j,
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  j.entry_status='MANUAL' and 
- j.journal_info_no='".$initiate_journal_note."'";
+ j.journal_info_no='".$initiate_journal_note."'".$sec_com_connection." order by j.id asc ";
     $re_query=mysqli_query($conn, $rs);
     while($uncheckrow=mysqli_fetch_array($re_query)){
         $ids=$uncheckrow['jid'];
@@ -131,20 +156,20 @@ journal_info j,
             add_to_journal_new($uncheckrow['j_date'],$proj_id, $jv, $uncheckrow['journal_info_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Journal_info',$uncheckrow['journal_info_no'],$uncheckrow['jid'],$uncheckrow['cc_code'],$uncheckrow['sub_ledger_id'],$_SESSION['usergroup'],$uncheckrow['cheq_no'],$uncheckrow['cheq_date'],$create_date,$ip,$now,$uncheckrow['day_name'],$thisday,$thismonth,$thisyear);
         }
         if(isset($_POST['deletedata'.$ids]))
-        {  mysqli_query($conn, ("DELETE FROM ".$table_journal_info." WHERE id='".$ids."'"));
+        {  mysqli_query($conn, ("DELETE FROM ".$table_journal_info." WHERE id='".$ids."'".$sec_com_connection_wa.""));
             unset($_POST);
         }
         if(isset($_POST['editdata'.$ids]))
-        {  mysqli_query($conn, ("UPDATE ".$table_journal_info." SET ledger_id='".$_POST['ledger_id']."', cc_code='".$_POST['cc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids));
+        {  mysqli_query($conn, ("UPDATE ".$table_journal_info." SET ledger_id='".$_POST['ledger_id']."', cc_code='".$_POST['cc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids."".$sec_com_connection_wa.""));
             unset($_POST);
         }
     }
 
     if (isset($_POST['confirmsave'])) {
-        $up_journal="UPDATE ".$table_journal_info." SET entry_status='UNCHECKED' where ".$journal_info_unique."=".$_SESSION['initiate_journal_note']."";
+        $up_journal="UPDATE ".$table_journal_info." SET entry_status='UNCHECKED' where ".$journal_info_unique."=".$_SESSION['initiate_journal_note']."".$sec_com_connection_wa."";
         $up_query=mysqli_query($conn, $up_journal);
-        $up_master=mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=".$jv);
-        $up_master=mysqli_query($conn, "UPDATE ".$table_journal_master." SET entry_status='UNCHECKED' where ".$unique."=".$_SESSION['initiate_journal_note']."");
+        $up_master=mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=".$jv."".$sec_com_connection_wa."");
+        $up_master=mysqli_query($conn, "UPDATE ".$table_journal_master." SET entry_status='UNCHECKED' where ".$unique."=".$_SESSION['initiate_journal_note']."".$sec_com_connection_wa."");
         unset($_SESSION['initiate_journal_note']);
         unset($_SESSION['journal_last_narration']);
         unset($_POST);
@@ -153,13 +178,13 @@ journal_info j,
 
 
     if (isset($_GET['id'])) {
-        $edit_value=find_all_field(''.$table_journal_info.'','','id='.$_GET['id'].'');
+        $edit_value=find_all_field("".$table_journal_info."","","id=".$_GET['id']."".$sec_com_connection_wa."");
     }
     $edit_value_ledger_id = @$edit_value->ledger_id;
     $edit_value_cc_code = @$edit_value->cc_code;
     $edit_value_narration = @$edit_value->narration;
     $initiate_journal_note = @$_SESSION['initiate_journal_note'];
-    $COUNT_details_data=find_a_field(''.$table_journal_info.'','Count(id)',''.$journal_info_unique.'='.$initiate_journal_note.'');
+    $COUNT_details_data=find_a_field("".$table_journal_info."","Count(id)","".$journal_info_unique."=".$initiate_journal_note."".$sec_com_connection_wa."");
 
 //for Delete..................................
     if (isset($_POST['cancel'])) {
@@ -202,7 +227,7 @@ journal_info j,
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  j.entry_status='MANUAL' and 
- j.journal_info_no='".$initiate_journal_note."' group by j.id
+ j.journal_info_no='".$initiate_journal_note."'".$sec_com_connection." group by j.id
  ";
 ?>
 
@@ -224,17 +249,17 @@ journal_info j,
     <div class="col-md-8 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2><?php echo $title; ?></h2>
+                <h2><?php echo $title; ?> <small class="text-danger">field marked with * are mandatory</small></h2>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
                 <form action="<?=$page;?>" enctype="multipart/form-data" method="post" name="addem" id="addem" style="font-size: 11px" ><table align="center" style="width:100%">
                         <tr>
-                            <th style="width:15%;">Transaction Date<span class="required">*</span></th><th style="width: 2%;">:</th>
+                            <th style="width:15%;">Transaction Date <span class="required text-danger">*</span></th><th style="width: 2%;">:</th>
                             <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
 
-                            <th style="width:15%;">Transaction No<span class="required">*</span></th><th style="width: 2%">:</th>
-                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($initiate_journal_note!='')? $initiate_journal_note : automatic_voucher_number_generate($table_journal_info,$journal_info_unique,1,3); ?>" class="form-control col-md-7 col-xs-12"  style="width: 90%; font-size: 11px;"></td>
+                            <th style="width:15%;">Transaction No <span class="required text-danger">*</span></th><th style="width: 2%">:</th>
+                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($initiate_journal_note!='')? $initiate_journal_note : automatic_voucher_number_generate($table_journal_info,$journal_info_unique,1,'3'.$sectionid_substr); ?>" class="form-control col-md-7 col-xs-12"  style="width: 90%; font-size: 11px;"></td>
                         </tr>
 
                         <tr>
@@ -295,7 +320,7 @@ journal_info j,
         <input type="hidden" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>">
         <table align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">
             <tbody>
-            <tr style="background-color: bisque">
+            <tr style="background-color: #3caae4; color:white">
                 <th style="text-align: center">Accounts Ledger</th>
                 <th style="text-align: center">Cost Center</th>
                 <th style="text-align: center">Narration</th>
@@ -308,12 +333,12 @@ journal_info j,
                 <td style="width: 25%; vertical-align: middle" align="center">
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
-                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)',  $edit_value_ledger_id, 'status=1'); ?>
+                        <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)",  $edit_value_ledger_id, "status=1".$sec_com_connection_wa.""); ?>
                     </select></td>
                 <td align="center" style="width: 10%;vertical-align: middle">
                     <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="cc_code" id="cc_code">
                         <option></option>
-                        <?php foreign_relation('cost_center', 'id', 'CONCAT(id," : ", center_name)', $edit_value_cc_code, 'status=1'); ?>
+                        <?php foreign_relation("cost_center", "id", "CONCAT(id,' : ', center_name)", $edit_value_cc_code, "status=1".$sec_com_connection_wa.""); ?>
                     </select></td>
                 <td style="width:15%;vertical-align: middle" align="center">
                     <textarea id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" class="form-control col-md-7 col-xs-12" autocomplete="off"><?=($edit_value_narration!='')? $edit_value_narration : $journal_last_narration;?></textarea>

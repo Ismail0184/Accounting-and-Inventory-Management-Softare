@@ -1677,7 +1677,7 @@ function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data,$page)
 		if($COUNT_details_data>0):
 		if($tdramt <> $tcramt) {
             $str .= '<font  style="font-size: 13px; color: red; font-weight: bold; float: right; margin-right: 1%">Invalid Voucher. Debit ('.$tdramt.') and Credit ('.$tcramt.') Amount Are Not Equal !!</font>';
-            //$str .= '<button style="float: right; font-size: 11px; margin-right: 1%" type="submit" name="confirmsave" onclick="return window.confirm(\'Are you sure you want to confirm this?\');" class="btn btn-success">Confirm and Finish Voucher </button>';
+            $str .= '<button style="float: right; font-size: 11px; margin-right: 1%" type="submit" name="confirmsave" onclick="return window.confirm(\'Are you sure you want to confirm this?\');" class="btn btn-success">Confirm and Finish Voucher </button>';
         } else {
             $str .= '<button style="float: right; font-size: 11px; margin-right: 1%" type="submit" name="confirmsave" onclick="return window.confirm(\'Are you sure you want to confirm this?\');" class="btn btn-success">Confirm and Finish Voucher </button>';
         };endif;$str .='</form>';

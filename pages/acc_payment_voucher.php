@@ -1,6 +1,18 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Payment Voucher';
+$sectionid = @$_SESSION['sectionid'];
+$sectionid_substr = @(substr($_SESSION['sectionid'],4));
+
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+    $sec_com_connection_wa=' and 1';
+} else {
+    $sec_com_connection=" and j.company_id='".$_SESSION['companyid']."' and j.section_id in ('400000','".$_SESSION['sectionid']."')";
+    $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+}
+
+
 $date = date('Y-m-d');
 //Image Attachment Function
 function image_upload_on_id2($path,$file,$id)
@@ -115,7 +127,7 @@ if(prevent_multi_submit()) {
                     $_SESSION['debit_note_last_narration']=$_POST['narration'];
                 }
                 if ($_FILES["attachment"]["tmp_name"] != '') {
-                    $path = '../page/payment_attch/' . $_SESSION['initiate_debit_note'] . '.jpg';
+                    $path = '../assets/images/attachment/vouchers/payment/' . $_SESSION['initiate_debit_note'] . '.jpg';
                     move_uploaded_file($_FILES["attachment"]["tmp_name"], $path);
                 }
             }}
@@ -150,8 +162,7 @@ where
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  j.entry_status='MANUAL' and 
- j.payment_no='".$initiate_debit_note ."'
- ";
+ j.payment_no='".$initiate_debit_note."'".$sec_com_connection."";
     $re_query = mysqli_query($conn, $rs);
     while ($uncheckrow = mysqli_fetch_array($re_query)) {
         $ids=$uncheckrow['jid'];
@@ -163,7 +174,7 @@ where
             unset($_POST);
         } // end of deletedata
         if(isset($_POST['editdata'.$ids]))
-        {  mysqli_query($conn, ("UPDATE ".$table_payment." SET ledger_id='".$_POST['ledger_id']."', cc_code='".$_POST['cc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids));
+        {  mysqli_query($conn, ("UPDATE ".$table_payment." SET ledger_id='".$_POST['ledger_id']."', cc_code='".$_POST['cc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids."".$sec_com_connection_wa.""));
             unset($_POST);
         } // end of editdata
     }
@@ -175,16 +186,15 @@ where
     $edit_value_narration = @$edit_value->narration;
 
     if (isset($_POST['confirmsave'])) {
-        $up_payment="UPDATE ".$table_payment." SET entry_status='UNCHECKED' where ".$payment_unique."=".$initiate_debit_note ."";
+        $up_payment="UPDATE ".$table_payment." SET entry_status='UNCHECKED' where ".$payment_unique."=".$initiate_debit_note."".$sec_com_connection_wa."";
         $up_query=mysqli_query($conn, $up_payment);
-        $up_master=mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=".$jv);
-        $up_master=mysqli_query($conn, "UPDATE ".$table_journal_master." SET entry_status='UNCHECKED' where ".$unique."=".$initiate_debit_note ."");
+        $up_master=mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=".$jv."".$sec_com_connection_wa."");
+        $up_master=mysqli_query($conn, "UPDATE ".$table_journal_master." SET entry_status='UNCHECKED' where ".$unique."=".$initiate_debit_note."".$sec_com_connection_wa."");
         unset($_SESSION['initiate_debit_note']);
         unset($initiate_debit_note);
         unset($_SESSION['debit_note_last_narration']);
         unset($_POST);
         unset($$unique);
-
     } // if insert confirm
 
 
@@ -203,14 +213,14 @@ where
         unset($$unique);
     }
     $initiate_debit_note = @$_SESSION['initiate_debit_note'];
-    $COUNT_details_data=find_a_field(''.$table_payment.'','Count(id)',''.$payment_unique.'='.$initiate_debit_note .'');
+    $COUNT_details_data=find_a_field("".$table_payment."","Count(id)","".$payment_unique."=".$initiate_debit_note ."".$sec_com_connection_wa."");
 
 // data query..................................
     $condition=$unique."=".$initiate_debit_note ;
     $data=@db_fetch_object($table_journal_master,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}
-    $inputted_amount=find_a_field(''.$table_payment.'','SUM(dr_amt)',''.$payment_unique.'="'.$initiate_debit_note .'"');
+    $inputted_amount=find_a_field("".$table_payment."","SUM(dr_amt)","".$payment_unique."='".$initiate_debit_note ."'".$sec_com_connection_wa."");
 }
 $cash_bank_ledger = @$cash_bank_ledger;
 $voucher_date = @$voucher_date;
@@ -235,7 +245,7 @@ where
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  j.entry_status='MANUAL' and 
- j.payment_no='".$initiate_debit_note."'";
+ j.payment_no='".$initiate_debit_note."'".$sec_com_connection."";
 
 ?>
 
@@ -256,7 +266,7 @@ where
     <div class="col-md-8 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2><?=$title;?> <small>Single Entry</small></h2>
+                <h2><?=$title;?> <small>Single Entry</small> <small class="text-danger">field marked with * are mandatory</small></h2>
                 <a  style="float: right" class="btn btn-sm btn-default"  href="acc_payment_voucher_multiple.php">
                     <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Multiple Entry</span></a>
                 <div class="clearfix"></div>
@@ -269,7 +279,7 @@ where
                             <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
 
                             <th style="width:15%;">Transaction No <span class="required text-danger">*</span></th><th style="width: 2%">:</th>
-                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($initiate_debit_note!='')? $initiate_debit_note : automatic_voucher_number_generate($table_payment,$payment_unique,1,2);?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
+                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($initiate_debit_note!='')? $initiate_debit_note : automatic_voucher_number_generate($table_payment,$payment_unique,1,'2'.$sectionid_substr);?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                         </tr>
 
                         <tr>
@@ -292,7 +302,7 @@ where
                             <th style="">Cash or Bank Ledger <span class="required text-danger">*</span></th><th>:</th>
                             <td colspan="3" style="padding-top: 5px;"><select class="select2_single form-control" style="width:98%; font-size: 11px" tabindex="-1" required="required"  name="cash_bank_ledger" id="cash_bank_ledger">
                                     <option></option>
-                                    <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $cash_bank_ledger, 'ledger_group_id in ("1002") and status=1'); ?>
+                                    <?php foreign_relation("accounts_ledger","ledger_id","CONCAT(ledger_id,' : ', ledger_name)", $cash_bank_ledger,"ledger_group_id in ('1002') and status=1".$sec_com_connection_wa.""); ?>
                                 </select></td>
                             <td ><input type="number" id="amount"   value="<?=$amount;?>" name="amount"  class="form-control col-md-7 col-xs-12" placeholder="Paid Amt" required="required" style="width: 90%; margin-top: 5px; height: 38px; font-size: 11px; vertical-align: middle" step="any" min="1" />
                             </td>

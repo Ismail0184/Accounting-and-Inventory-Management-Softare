@@ -2,13 +2,18 @@
 require_once 'support_file.php';
 $title='Receipt Voucher';
 $acess_date=find_a_field('acc_voucher_config','back_date_limit','1');
+$sectionid = @$_SESSION['sectionid'];
+$sectionid_substr = @(substr($_SESSION['sectionid'],4));
+
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+    $sec_com_connection_wa=' and 1';
+} else {
+    $sec_com_connection=" and j.company_id='".$_SESSION['companyid']."' and j.section_id in ('400000','".$_SESSION['sectionid']."')";
+    $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 
 //Image Attachment Function
-function image_upload_on_id2($path,$file,$id)
-{   $root=$path.'/'.$id.'.jpg';
-    move_uploaded_file($file['tmp_name'],$root);
-    return $root;
-}
 function image_upload_on_id($path,$file,$id='')
 {    if($file['name']!=''){
     $path_file = $path.basename($file['name']);
@@ -119,7 +124,7 @@ if(prevent_multi_submit()) {
                     $_SESSION['credit_note_last_narration']=$_POST['narration'];
                 }
                 if ($_FILES["attachment"]["tmp_name"] != '') {
-                    $path = '../page/receipt_attch/' . $_SESSION['initiate_credit_note'] . '.jpg';
+                    $path = '../assets/images/attachment/vouchers/receipt/' . $_SESSION['initiate_credit_note'] . '.jpg';
                     move_uploaded_file($_FILES["attachment"]["tmp_name"], $path);
                 }
             }}
@@ -150,7 +155,7 @@ cost_center c
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  entry_status='MANUAL' and 
- j.receipt_no='".$_SESSION['initiate_credit_note']."'";
+ j.receipt_no='".$_SESSION['initiate_credit_note']."'".$sec_com_connection."";
         $re_query=mysqli_query($conn, $rs);
         while($uncheckrow=mysqli_fetch_array($re_query)){
             $ids=$uncheckrow['jid'];
@@ -160,18 +165,18 @@ cost_center c
             } // end of confirm
 
             if(isset($_POST['deletedata'.$ids]))
-            {  mysqli_query($conn, ("DELETE FROM ".$table_receipt." WHERE id='$ids'"));
+            {  mysqli_query($conn, ("DELETE FROM ".$table_receipt." WHERE id=".$ids."".$sec_com_connection_wa.""));
                 unset($_POST);
             } // end of deletedata
             if(isset($_POST['editdata'.$ids]))
-            {  mysqli_query($conn, ("UPDATE ".$table_receipt." SET ledger_id='".$_POST['ledger_id']."', pc_code='".$_POST['pc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids));
+            {  mysqli_query($conn, ("UPDATE ".$table_receipt." SET ledger_id='".$_POST['ledger_id']."', pc_code='".$_POST['pc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids."".$sec_com_connection_wa.""));
                 unset($_POST);
             } // end of editdata
         } // end of while
         if (isset($_POST['confirmsave'])) {
-            $up_master = mysqli_query($conn, "UPDATE " . $table_receipt . " SET entry_status='UNCHECKED' where " . $recpt_unique . "=" . $_SESSION['initiate_credit_note'] . "");
-            $up_master = mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=" . $jv);
-            $up_master = mysqli_query($conn, "UPDATE " . $table_journal_master . " SET entry_status='UNCHECKED' where " . $unique . "=" . $_SESSION['initiate_credit_note'] . "");
+            $up_master = mysqli_query($conn, "UPDATE " . $table_receipt . " SET entry_status='UNCHECKED' where " . $recpt_unique . "=".$_SESSION['initiate_credit_note'] . "".$sec_com_connection_wa."");
+            $up_master = mysqli_query($conn, "UPDATE journal SET status='UNCHECKED' where jv_no=".$jv."".$sec_com_connection_wa."");
+            $up_master = mysqli_query($conn, "UPDATE " . $table_journal_master . " SET entry_status='UNCHECKED' where ".$unique."=".$_SESSION['initiate_credit_note']."".$sec_com_connection_wa."");
             unset($_SESSION['initiate_credit_note']);
             unset($_SESSION['credit_note_last_narration']);
             unset($_POST);
@@ -194,7 +199,7 @@ if (isset($_POST['cancel'])) {
     unset($_POST);
 }
 $initiate_credit_note = @$_SESSION['initiate_credit_note'];
-$COUNT_details_data=find_a_field(''.$table_receipt.'','Count(id)',''.$recpt_unique.'='.$initiate_credit_note.'');
+$COUNT_details_data=find_a_field("".$table_receipt."","Count(id)","".$recpt_unique."=".$initiate_credit_note.$sec_com_connection_wa."");
 $sql2="select a.tr_no, a.jvdate as Date,a.jv_no as Voucher_No,SUM(a.dr_amt) as amount
 from  journal a where a.tr_from='Receipt' and a.user_id='".$_SESSION['userid']."' and a.section_id='".$_SESSION['sectionid']."' and a.company_id='".$_SESSION['companyid']."'  group by a.tr_no  order by a.id desc limit 10";
 $data2=mysqli_query($conn, $sql2);
@@ -210,8 +215,7 @@ cost_center c
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  entry_status='MANUAL' and 
- j.receipt_no='".$initiate_credit_note."'
- ";
+ j.receipt_no='".$initiate_credit_note."'".$sec_com_connection."";
 $re_query=mysqli_query($conn, $rs);
 
 
@@ -251,7 +255,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
 <div class="col-md-8 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-            <h2><?=$title;?> <small>Multiple Entry</small></h2>
+            <h2><?=$title;?> <small>Multiple Entry</small> <small class="text-danger">field marked with * are mandatory</small></h2>
             <a  style="float: right" class="btn btn-sm btn-default"  href="acc_receipt_voucher.php">
                 <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Single Entry</span></a>
             <a style="float: right" class="btn btn-sm btn-default"  href="acc_intercompany_journal_voucher.php">
@@ -268,7 +272,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
 
                         <th style="width:15%;">Transaction No <span class="required text-danger">*</span></th><th style="width: 2%">:</th>
                         <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?php if($initiate_credit_note>0){ echo $initiate_credit_note;} else { echo
-                            automatic_voucher_number_generate($table_receipt,$recpt_unique,1,1); } ?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
+                            automatic_voucher_number_generate($table_receipt,$recpt_unique,1,'1'.$sectionid_substr); } ?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                     </tr>
 
                     <tr>
@@ -346,7 +350,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
                 <td style="width: 25%; vertical-align: middle" align="center">
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
-                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value_ledger_id, '1'); ?>
+                        <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)", $edit_value_ledger_id, "status=1".$sec_com_connection_wa."","order by ledger_id"); ?>
                     </select>
                 </td>
                 <!--td align="center" style="width: 10%;vertical-align: middle">

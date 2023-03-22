@@ -1,14 +1,17 @@
 <?php require_once 'support_file.php';?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Cheque Payment';
-
+$sectionid = @$_SESSION['sectionid'];
+$sectionid_substr = @(substr($_SESSION['sectionid'],4));
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+    $sec_com_connection_wa=' and 1';
+} else {
+    $sec_com_connection=" and j.company_id='".$_SESSION['companyid']."' and j.section_id in ('400000','".$_SESSION['sectionid']."')";
+    $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 
 //Image Attachment Function
-function image_upload_on_id2($path,$file,$id)
-{   $root=$path.'/'.$id.'.jpg';
-    move_uploaded_file($file['tmp_name'],$root);
-    return $root;
-}
 function image_upload_on_id($path,$file,$id='')
 {    if($file['name']!=''){
         $path_file = $path.basename($file['name']);
@@ -120,10 +123,10 @@ if(isset($_POST[$unique]))
                 $_SESSION['cheque_payment_last_narration']=$_POST['narration'];
             }
         }
-        if ($_FILES["attachment"]["tmp_name"] != '') {
-            $path = '../page/payment_attch/' . $_SESSION['initiate_bank_debit_note'] . '.jpg';
-            move_uploaded_file($_FILES["attachment"]["tmp_name"], $path);
-        }
+            if ($_FILES["attachment"]["tmp_name"] != '') {
+                $path = '../assets/images/attachment/vouchers/bank_payment/' . $_SESSION['initiate_bank_debit_note'] . '.jpg';
+                move_uploaded_file($_FILES["attachment"]["tmp_name"], $path);
+            }
     }} 
 
     } // end post unique   
@@ -162,14 +165,13 @@ where
  j.ledger_id=a.ledger_id and 
  j.cc_code=c.id and
  j.entry_status='MANUAL' and 
- j.payment_no='".$_SESSION['initiate_bank_debit_note']."'
- ";
+ j.payment_no='".$_SESSION['initiate_bank_debit_note']."'".$sec_com_connection."";
         $re_query = mysqli_query($conn, $rs);
         while ($uncheckrow = mysqli_fetch_array($re_query)) {
 			$ids=$uncheckrow[jid];
 			if (isset($_POST['confirmsave']) && ($uncheckrow['payment_no']>0)) {
                 add_to_journal_bank($uncheckrow['paymentdate'], $proj_id, $jv, $uncheckrow['payment_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Payment', $uncheckrow['payment_no'], $uncheckrow['jid'], $uncheckrow['cc_code'], $uncheckrow['sub_ledger_id'], $_SESSION['usergroup'], $uncheckrow['cheq_no'], $uncheckrow['cheq_date'], $create_date, $ip, $now, $uncheckrow['day_name'], $thisday, $thismonth, $thisyear);
-                $up_cq=mysqli_query($conn, "Update Cheque_Book SET status='USED',cheque_issued_date='$uncheckrow[paymentdate]',maturity_date='$uncheckrow[maturity_date]' where id=".$uncheckrow[cq_id]);
+                $up_cq=mysqli_query($conn, "Update Cheque_Book SET status='USED',cheque_issued_date='".$uncheckrow['paymentdate']."',maturity_date='".$uncheckrow['maturity_date']."' where id=".$uncheckrow['cq_id']."".$sec_com_connection_wa."");
 			} // end of confirm
                    
 	
@@ -192,7 +194,7 @@ $edit_value=find_all_field(''.$table_payment.'','','id='.$_GET['id'].'');
 
 
     if (isset($_POST['confirmsave'])) {
-       $up_payment="UPDATE ".$table_payment." SET entry_status='PREMATURE' where ".$payment_unique."=".$initiate_bank_debit_note."";
+       $up_payment="UPDATE ".$table_payment." SET entry_status='PREMATURE' where ".$payment_unique."=".$initiate_bank_debit_note."".$sec_com_connection_wa."";
         $up_query=mysqli_query($conn, $up_payment);
         unset($initiate_bank_debit_note);
         unset($_SESSION['initiate_bank_debit_note']);
@@ -215,14 +217,14 @@ if (isset($_POST['cancel'])) {
     unset($_POST);
 }
     $initiate_bank_debit_note = @$_SESSION['initiate_bank_debit_note'];
-$COUNT_details_data=find_a_field(''.$table_payment.'','Count(id)',''.$payment_unique.'='.$initiate_bank_debit_note.'');
+$COUNT_details_data=find_a_field("".$table_payment."","Count(id)","".$payment_unique."=".$initiate_bank_debit_note."".$sec_com_connection_wa."");
 
 // data query..................................
  $condition=$unique."=".$initiate_bank_debit_note;
     $data=db_fetch_object($table_journal_master,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}
-	$inputted_amount=find_a_field(''.$table_payment.'','SUM(dr_amt)',''.$payment_unique.'="'.$initiate_bank_debit_note.'"');
+	$inputted_amount=find_a_field("".$table_payment."","SUM(dr_amt)","".$payment_unique."='".$initiate_bank_debit_note."'".$sec_com_connection_wa."");
 	}
 $voucher_date = @$voucher_date;
 $date = date('Y-m-d');
@@ -235,8 +237,8 @@ $edit_value_cheque_id = @$edit_value_cheque_id;
 $cash_bank_ledger = @$cash_bank_ledger;
 $amount = @$amount;
 
-$sql2="select a.payment_no,cb.Cheque_number,a.payment_no,SUM(a.dr_amt) as amount
-from  ".$table_payment." a,Cheque_Book cb where a.entry_by='".$_SESSION['userid']."' and  a.section_id='".$_SESSION['sectionid']."' and a.company_id='".$_SESSION['companyid']."' and cb.id=a.cheque_id and a.entry_status not in ('MANUAL')  group by a.payment_no  order by a.payment_no desc limit 10";
+$sql2="select j.payment_no,cb.Cheque_number,j.payment_no,SUM(j.dr_amt) as amount
+from  ".$table_payment." j,Cheque_Book cb where j.entry_by='".$_SESSION['userid']."' and cb.id=j.cheque_id and j.entry_status not in ('MANUAL')".$sec_com_connection."  group by j.payment_no  order by j.payment_no desc limit 10";
 
 $rs="Select 
 j.id as jid,
@@ -251,7 +253,7 @@ where
  j.cc_code=c.id and
  j.entry_status='MANUAL' and 
  j.cheque_id=cb.id and 
- j.payment_no='".$initiate_bank_debit_note."'";
+ j.payment_no='".$initiate_bank_debit_note."'".$sec_com_connection."";
 
 ?>
 
@@ -272,7 +274,7 @@ where
                     <div class="col-md-8 col-xs-12">
                         <div class="x_panel">
                             <div class="x_title">
-                                <h2><?=$title;?></h2>
+                                <h2><?=$title;?> <small class="text-danger">field marked with * are mandatory</small></h2>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
@@ -282,7 +284,7 @@ where
                             <th style="width:15%;">Transaction Date<span class="required">*</span></th><th style="width: 2%;">:</th>
                             <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
                             <th style="width:15%;">Transaction No<span class="required">*</span></th><th style="width: 2%">:</th>
-                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($initiate_bank_debit_note!='')? $initiate_bank_debit_note : automatic_voucher_number_generate($table_payment,$payment_unique,1,5);?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
+                            <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($initiate_bank_debit_note!='')? $initiate_bank_debit_note : automatic_voucher_number_generate($table_payment,$payment_unique,1,'5'.$sectionid_substr);?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                         </tr>
 
                         <tr>
@@ -297,7 +299,7 @@ where
                             <th style="">Bank Name</th><th>:</th>
                             <td colspan="3" style="padding-top: 5px;"><select class="select2_single form-control" style="width:98%; font-size: 11px" tabindex="-1" required="required"  name="cash_bank_ledger" id="cash_bank_ledger">
                                     <option></option>
-                                    <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $cash_bank_ledger, 'ledger_group_id in ("1002") and status=1'); ?>
+                                    <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)", $cash_bank_ledger, "ledger_group_id in ('1002') and status=1".$sec_com_connection_wa.""); ?>
                                 </select></td>
                             <td ><input type="number" id="amount"   value="<?=$amount;?>" name="amount"  class="form-control col-md-7 col-xs-12" placeholder="Amount" required="required" style="width: 90%; margin-top: 5px; height: 38px; font-size: 11px; vertical-align: middle" step="any" min="1" />
                             </td>
@@ -349,7 +351,7 @@ where
                                     <input type="hidden" name="maturity_date" value="<?=$maturity_date;?>">
                                     <table align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">
                                         <tbody>
-                                        <tr style="background-color: bisque">
+                                        <tr style="background-color: #3caae4; color:white">
                                             <th style="text-align: center">Vendor Name</th>
                                             <th style="text-align: center">Cost Center</th>
                                             <th style="text-align: center">Narration</th>
@@ -362,24 +364,23 @@ where
                                             <td style="width: 25%; vertical-align: middle" align="center">
                                                 <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                                                     <option></option>
-                                                <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value_ledger_id, 'ledger_group_id in ("2002") and status=1'); ?>
+                                                <?php foreign_relation("accounts_ledger","ledger_id","CONCAT(ledger_id,' : ', ledger_name)", $edit_value_ledger_id, "ledger_group_id in ('2002') and status=1".$sec_com_connection_wa.""); ?>
                                                 </select></td>
                                             <td align="center" style="width: 10%;vertical-align: middle">
                                                 <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="cc_code" id="cc_code">
                                                     <option></option>
-                                                    <?php foreign_relation('cost_center', 'id', 'CONCAT(id,"-", center_name)', $edit_value_cc_code, 'status=1'); ?>
-                                                </select></td>
-                                            <td style="width:15%;vertical-align: middle" align="center"><textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration"   class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value_narration!='')? $edit_value_narration : $cheque_payment_last_narration;?></textarea>
-                                                
-                                                </td>
+                                                    <?php foreign_relation("cost_center", "id","CONCAT(id,'-', center_name)", $edit_value_cc_code, "status=1".$sec_com_connection_wa.""); ?>
+                                                </select>
+                                            </td>
+                                            <td style="width:15%;vertical-align: middle" align="center">
+                                                <textarea  id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration"   class="form-control col-md-7 col-xs-12" autocomplete="off" ><?=($edit_value_narration!='')? $edit_value_narration : $cheque_payment_last_narration;?></textarea>
+                                            </td>
                                             <td align="center" style="width:10%; vertical-align: middle">
                                                  <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="cheque_id" id="cheque_id">
                                                      <option></option>
-                                                     <?php foreign_relation('Cheque_Book', 'id', 'CONCAT(id,"-", Cheque_number)', $edit_value_cheque_id, 'status="UNUSED" and bank_id='.$cash_bank_ledger.''); ?>
+                                                     <?php foreign_relation("Cheque_Book","id","CONCAT(id,'-', Cheque_number)", $edit_value_cheque_id,"status='UNUSED' and bank_id=".$cash_bank_ledger."".$sec_com_connection_wa.""); ?>
                                                  </select>
-                                                </td>
-
-
+                                            </td>
                                             <td align="center" style="width:10%; vertical-align: middle">
                                                 <?php if (isset($_GET['id'])) { ?>
                                                     <input type="text" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  value="<?=$edit_value->dr_amt;?>" <?php if($edit_value->dr_amt>0)  echo ''; else echo 'readonly'; ?>  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
