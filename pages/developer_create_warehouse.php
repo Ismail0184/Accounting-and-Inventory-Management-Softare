@@ -50,7 +50,8 @@ if(isset($$unique))
     { $$key=$value;}}
 
 
-$res="SELECT warehouse_id,IF(status=1, 'Active','Inactive') as status from ".$table."";
+$res="SELECT w.warehouse_id,w.warehouse_name,w.nick_name,w.address,IF(w.status=1, 'Active','Inactive') as status,
+       s.section_name as branch  from ".$table." w, company s where w.section_id=s.section_id order by warehouse_id";
 $result=mysqli_query($conn, $res);
 while($data=mysqli_fetch_object($result)){
     $id=$data->ZONE_CODE;

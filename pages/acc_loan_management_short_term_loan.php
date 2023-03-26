@@ -13,36 +13,29 @@ $find_date = date('Y-m-d');
 $maturity_date_get = find_a_field('acc_short_term_loan_details','maturity_date','maturity_date="'.$find_date.'"');
 $Get_STL_ledger = find_a_field('acc_short_term_loan','STL_ledger','id="19"');
 
-$query=mysqli_query($conn, "SELECT d.*,m.* from acc_short_term_loan_details d,acc_short_term_loan m where d.journal_status='pending' and m.status='Disbursement' and d.maturity_date='".$find_date."' and m.id=d.uid");
+$query=mysqli_query($conn, "SELECT d.maturity_date as jv_date,d.*,m.* from acc_short_term_loan_details d,acc_short_term_loan m where d.journal_status='pending' and m.status='Disbursement' and d.maturity_date between '0000-00-00' and '".$find_date."' and m.id=d.uid");
 while($data=mysqli_fetch_object($query)){
     $ledger_balance = find_a_field('journal','(cr_amt-dr_amt)','ledger_id='.$data->STL_ledger);
     $interest_amount = (($ledger_balance/100)*$data->interest_rate)/360*1;
-    echo $ledger_balance.'<br>';
-    echo $interest_amount;
     $jv=next_journal_voucher_id();
-    $narration = $data->interest_rate."% Interest on ".$data->stl_no;
-    //add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $data->expenses_head, $narration, $interest_amount, 0,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
-    //add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $data->interest_ledger, $narration, 0, $interest_amount,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+    $narration = $data->interest_rate."% Interest on loan of ".$data->bank_name." ".$data->stl_no;
+    //add_to_journal_new($data->jv_date, $proj_id, $jv, $date, $data->expenses_head, $narration, $interest_amount, 0,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+    //add_to_journal_new($data->jv_date, $proj_id, $jv, $date, $data->interest_ledger, $narration, 0, $interest_amount,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+    $up = mysqli_query($conn, "Update acc_short_term_loan_details set journal_status='created' where maturity_date between '0000-00-00' and '".$find_date."'");
 
 
 }
-//$up = mysqli_query($conn, "Update acc_short_term_loan_details set journal_status='pending'");
 
-if($find_date==$maturity_date_get)
-{
-    //add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['STL_ledger'], $narration, 0, $_POST['loan_amount'],'Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
-    //add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['ledger_id'], $narration, $_POST['loan_amount'], 0,'Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
 
-} else {
-
-}
 
 if(prevent_multi_submit()){
     if(isset($_POST[$unique_field]))
     {    $$unique = $_POST[$unique];
         if(isset($_POST['record']))
         {
-            $name		= @mysqli_real_escape_string($conn, $_REQUEST['stl_no']);
+            $_POST['section_id'] = $_SESSION['sectionid'];
+            $_POST['company_id'] = $_SESSION['companyid'];
+            $name		= @mysqli_real_escape_string($conn, $_POST['bank_name'].' '.$_REQUEST['stl_no']);
             $name		= str_replace("'","",$name);
             $name		= str_replace("&","",$name);
             $name		= str_replace('"','',$name);
@@ -78,47 +71,51 @@ if(prevent_multi_submit()){
 		$type=0;
 		}}
 
-            $SSL_name		= @mysqli_real_escape_string($conn, 'Interest_on_'.$_REQUEST['stl_no']);
+            $SSL_name		= @mysqli_real_escape_string($conn, $_POST['bank_name'].' Provision for Interest on '.$_REQUEST['stl_no']);
             $SSL_name		= str_replace("'","",$SSL_name);
             $SSL_name		= str_replace("&","",$SSL_name);
             $SSL_name		= str_replace('"','',$SSL_name);
             $under		= @mysqli_real_escape_string($conn, $_REQUEST['interest_ledger']);
-            $check="select sub_ledger_id from sub_ledger where sub_ledger='$SSL_name'";
+
+            $check="select sub_sub_ledger_id from ".$table." where sub_sub_ledger='$SSL_name'";
             if(mysqli_num_rows(mysqli_query($conn, $check))>0)
-            {   $aaa=mysqli_num_rows(mysqli_query($conn, $check));
+            {
+                $aaa=mysqli_num_rows(mysqli_query($conn, $check));
                 $ledger_id=$aaa[0];
                 $type=0;
-                $msg='Given Name('.$SSL_name.') is already exists.';
-            } else {
-                $sql_check="select ledger_group_id, balance_type, budget_enable from accounts_ledger where ledger_id='".$under."' limit 1";
+                echo "<h4 style='color:red'>Given Name('.$SSL_name.') is already exists.</h4>";
+            }
+            else
+            {	$sql_check="select ledger_id,balance_type,budget_enable from accounts_ledger where ledger_id='".$under."' limit 1";
                 $sql_query=mysqli_query($conn, $sql_check);
                 if(mysqli_num_rows($sql_query)>0){
                     $ledger_data=mysqli_fetch_row($sql_query);
                     if(!ledger_excess($SSL_name))
                     {
                         $type=0;
-                        $msg='Given Name('.$SSL_name.') is already exists as Ledger.';
-                    }  else  {
-                        $sub_ledger_id=number_format(next_sub_ledger_id($under), 0, '.', '');
-                        sub_ledger_generate($sub_ledger_id,$SSL_name, $under, $balance, $now, $proj_id);
-                        $ledger_type='sub-ledger';
-                        ledger_generate($sub_ledger_id,$SSL_name,$ledger_data[0],'',$ledger_data[1],'','', time(),$proj_id,$ledger_data[2],$ledger_type);
+                        echo "<h4 style='color:red'>Given Name('.$SSL_name.') is already exists as Ledger.</h4>";
+                    }
+                    else
+                    {
+                        $sub_ledger_id=next_sub_sub_ledger_id($under);
+                        sub_sub_ledger_generate($sub_ledger_id,$SSL_name, $under, $balance, $now, $proj_id);
+                        $sub_sub_type = 'sub-sub-ledger';
+                        ledger_generate($sub_ledger_id,$SSL_name,$ledger_data[0],'',$ledger_data[1],'','', time(),$proj_id,$ledger_data[2],$sub_sub_type);
                         $type=1;
-                        $msg='New Entry Successfully Inserted.';
                         $_SESSION['SSL_name'] = $SSL_name;
-                    } }  else  {
+                    }} else {
                     $type=0;
-                    $msg='Invalid Accounts Ledger!!!';
                 }}
+
             $_POST['status']=1;
             $_POST['maturity_date']=date('Y-m-d', strtotime($_POST['date'] .' '.$_POST['days'].' day'));
             $_POST['STL_ledger']        = find_a_field('accounts_ledger','ledger_id','ledger_name="'.$_SESSION['sub_sub_name'].'"');
             $_POST['interest_ledger']   = find_a_field('accounts_ledger','ledger_id','ledger_name="'.$_SESSION['SSL_name'].'"');
             $crud->insert();
             $jv=next_journal_voucher_id();
-            $narration = 'Loan Disbursement against short term loan, STL No # '.$_SESSION['sub_sub_name'];
+            $narration = 'Loan Disbursement against short term loan of '.$_POST['bank_name'].', STL No # '.$_SESSION['sub_sub_name'];
             $interest_amounts = ((($_POST['loan_amount']/100)*$_POST['interest_rate'])/360*1);
-            $interest_narration = $_POST['interest_rate'].'% Interest on loan, STL No # '.$_SESSION['sub_sub_name'];
+            $interest_narration = $_POST['interest_rate'].'% Interest on loan of '.$_POST['bank_name'].', STL No # '.$_SESSION['sub_sub_name'];
             if (($_POST['ledger_id'] > 0) && ($_POST['loan_amount'])) {
                 add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['ledger_id'], $narration, $_POST['loan_amount'], 0,'Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
                 add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['STL_ledger'], $narration, 0, $_POST['loan_amount'],'Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
@@ -236,7 +233,7 @@ while($data=mysqli_fetch_object($result)){
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="interest_ledger">
                                             <option></option>
-                                            <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $ledger_id, 'status=1 and ledger_id="2007000400000000"'); ?>
+                                            <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $ledger_id, 'status=1 and ledger_id="2007000400020000"'); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -248,6 +245,14 @@ while($data=mysqli_fetch_object($result)){
                                             <option></option>
                                             <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $expenses_head, 'status=1 and ledger_id="4007000200010000"'); ?>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Bank Name <span class="required text-danger">*</span></label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="text" class="form-control" style="font-size: 11px" required name="bank_name" value="<?=$bank_name?>" />
+                                        <input type="hidden" class="form-control" style="font-size: 11px" required name="bank_name_" value="_" />
                                     </div>
                                 </div>
 
