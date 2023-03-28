@@ -48,9 +48,9 @@
                 }
 				$master_result=mysqli_query($conn, $result);
 				while($mainrow=mysqli_fetch_object($master_result)):  ?>
-                    <?php if($mainrow->zonename!="MIS Reports"): ?>
+                    <?php if($mainrow->main_menu_name!="MIS Reports"): ?>
                         <li><a href="<?=$mainrow->main_url?>"><i class="<?=$mainrow->iconmain;?>"></i><?=$mainrow->main_menu_name;?>
-                        <?php if($mainrow->url=='#'){?><span class="fa fa-chevron-down"></span><?php } ?></a>
+                        <?php if($mainrow->main_url=='#'){?><span class="fa fa-chevron-down"></span><?php } ?></a>
                <ul class="nav child_menu">
                 <?php
                 if($_SESSION['language']=='Bangla') {

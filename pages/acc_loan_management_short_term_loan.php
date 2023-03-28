@@ -19,8 +19,8 @@ while($data=mysqli_fetch_object($query)){
     $interest_amount = (($ledger_balance/100)*$data->interest_rate)/360*1;
     $jv=next_journal_voucher_id();
     $narration = $data->interest_rate."% Interest on loan of ".$data->bank_name." ".$data->stl_no;
-    //add_to_journal_new($data->jv_date, $proj_id, $jv, $date, $data->expenses_head, $narration, $interest_amount, 0,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
-    //add_to_journal_new($data->jv_date, $proj_id, $jv, $date, $data->interest_ledger, $narration, 0, $interest_amount,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+    add_to_journal_new($data->jv_date, $proj_id, $jv, $date, $data->expenses_head, $narration, $interest_amount, 0,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+    add_to_journal_new($data->jv_date, $proj_id, $jv, $date, $data->interest_ledger, $narration, 0, $interest_amount,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
     $up = mysqli_query($conn, "Update acc_short_term_loan_details set journal_status='created' where maturity_date between '0000-00-00' and '".$find_date."'");
 
 
@@ -121,6 +121,7 @@ if(prevent_multi_submit()){
                 add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['STL_ledger'], $narration, 0, $_POST['loan_amount'],'Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
                 add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['expenses_head'], $interest_narration, $interest_amounts, 0,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
                 add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['interest_ledger'], $interest_narration, 0, $interest_amounts,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+                $up = mysqli_query($conn, "Update acc_short_term_loan_details set journal_status='created' where maturity_date between '0000-00-00' and '".$_POST['date']."'");
 
             }
 

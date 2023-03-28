@@ -6,26 +6,26 @@ $unique='id';
 $table="user_permissions_module";
 $page='MIS_permission_matrix_module.php';
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
+
     if(isset($_POST['view_report']))
-    {   $_SESSION[MIS_permission_matrix]=$_POST[user_id];
+    {   $_SESSION['MIS_permission_matrix']=$_POST['user_id'];
         }
 //for Delete..................................
     if(isset($_POST['cancel']))
-    {unset($_SESSION[MIS_permission_matrix]);}
+    {unset($_SESSION['MIS_permission_matrix']);}
 if(prevent_multi_submit()) {
 // insert permission..................................
     extract($_POST);
     $module_id = mysqli_real_escape_string($conn, $module_id);
     $status = mysqli_real_escape_string($conn, $status);
 
-    $report_in_database=find_a_field('user_permissions_module','COUNT(module_id)','module_id='.$module_id.' and user_id="'.$_SESSION[MIS_permission_matrix].'"');
+    $report_in_database=find_a_field('user_permissions_module','COUNT(module_id)','module_id='.$module_id.' and user_id="'.$_SESSION['MIS_permission_matrix'].'"');
     if($module_id>0){
     if($report_in_database>0) {
-        $sql = mysqli_query($conn, "UPDATE user_permissions_module SET status='$status',powerby='$_SESSION[userid]',power_date='".$now."',ip='".$ip."' WHERE module_id='" . $module_id . "' and user_id='" . $_SESSION[MIS_permission_matrix] . "'");
+        $sql = mysqli_query($conn, "UPDATE user_permissions_module SET status='$status',powerby='".$_SESSION['userid']."',power_date='".$now."',ip='".$ip."' WHERE module_id='" . $module_id . "' and user_id='" . $_SESSION['MIS_permission_matrix'] . "'");
     } else {
         $sql = mysqli_query($conn, "INSERT INTO user_permissions_module (module_id,user_id,powerby,power_date,status,section_id,company_id,ip) 
-        VALUES ('$module_id','$_SESSION[MIS_permission_matrix]','$_SESSION[userid]','$now','1','$_SESSION[sectionid]','$_SESSION[companyid]','$ip')");
+        VALUES ('$module_id','".$_SESSION['MIS_permission_matrix']."','".$_SESSION['userid']."','$now','1','".$_SESSION['sectionid']."','".$_SESSION['companyid']."','$ip')");
     }}}
 
 ?>
@@ -43,7 +43,7 @@ if(prevent_multi_submit()) {
               <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
               <div class="x_title">
-              <h2><?=$_SESSION[module_name]?> | <?=$title?></h2>
+              <h2><?=$_SESSION['module_name']?> | <?=$title?></h2>
               <div class="clearfix"></div>
               </div>
                <form id="demo-form2" method="post" data-parsley-validate class="form-horizontal form-label-left" style="font-size: 11px">
@@ -61,18 +61,16 @@ if(prevent_multi_submit()) {
 							 p.PBI_DEPARTMENT=d.DEPT_ID and 
 							 u.PBI_ID=p.PBI_ID		 
 							  order by p.PBI_NAME";
-                                advance_foreign_relation($sql_user_id,$_SESSION[MIS_permission_matrix]);?>
+                                advance_foreign_relation($sql_user_id,$_SESSION['MIS_permission_matrix']);?>
                             </select>
-                       <?php if(isset($_SESSION[MIS_permission_matrix])){ ?>
+                       <?php if(isset($_SESSION['MIS_permission_matrix'])){ ?>
                         <button type="submit" name="cancel" class="btn btn-danger"  style="font-size: 12px; margin-left:5%">Cancel</button>
                        <?php } else { ?>
 						<button type="submit" name="view_report" class="btn btn-primary" style="font-size: 12px; margin-left:5%">Proceed to the next</button>
                        <?php } ?>
                    </div></div></form>
               </div></div>
-
-
-<?php if(isset($_SESSION[MIS_permission_matrix])){ ?>
+<?php if(isset($_SESSION['MIS_permission_matrix'])){ ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_content">
@@ -84,7 +82,7 @@ if(prevent_multi_submit()) {
                         <th>Module Short Name</th>
                     </tr>
                     <?php $sql=mysqli_query($conn, "SELECT m.module_id,m.modulename,m.module_short_name,
-       (select p.status from user_permissions_module p where p.module_id=m.module_id and p.user_id='".$_SESSION[MIS_permission_matrix]."') as status
+       (select p.status from user_permissions_module p where p.module_id=m.module_id and p.user_id='".$_SESSION['MIS_permission_matrix']."') as status
        FROM module_department m  WHERE 1 ORDER BY m.module_id");
                     while($data=mysqli_fetch_object($sql)):?>
                         <tr>

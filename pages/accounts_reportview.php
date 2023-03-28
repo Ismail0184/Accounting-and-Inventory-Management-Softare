@@ -2371,7 +2371,11 @@ group by lld.item_id
                             echo number_format($patPrevious,2); } else { echo '('.number_format(substr($patPrevious,1),2).')'; } ?></strong></td>
             </tr>
             <thead></table>
-        <br>
+
+
+
+
+
 
     <?php elseif ($_POST['report_id']=='1005002'):
         $fdate='0000-00-00';
@@ -2610,7 +2614,270 @@ group by lld.item_id
                             echo number_format($TOTALENLPrevious,2); } else { echo '('.number_format(substr($TOTALENLPrevious,1),2).')'; } ?></strong></td>
             </tr>
         </table>
-        <br><br>
+
+
+
+
+
+    <?php elseif ($_POST['report_id']=='1005003'):
+        $fdate='0000-00-00';
+        $tdate=$_POST['t_date'];
+        $comparisonF=date('Y-m-d' , strtotime($t));
+        $comparisonT=date('Y-m-d' , strtotime($_POST['pt_date']));
+        ?>
+        <style>
+            #customers {
+                font-family: "Gill Sans", sans-serif;
+            }
+            #customers td {
+            }
+            #customers tr:ntd-child(even)
+            {background-color: #f0f0f0;}
+            #customers tr:hover {background-color: #ddd;}
+            td{text-align: center; }
+            .double-underline {
+                border-bottom: 4px double;
+            }
+        </style>
+        <title><?=$_SESSION['company_name'];?> | Cash Flow Statement</title>
+        <h2 align="center"><?=$_SESSION['company_name'];?></h2>
+        <h4 align="center" style="margin-top:-13px">Cash Flow Statement</h4>
+        <h6 align="center" style="margin-top:-13px">For the year ended <?=$_POST['t_date']?></h6>
+
+
+        <table align="center" id="customers" style="width:80%; border: solid 1px #999; border-collapse:collapse; ">
+            <thead><p style="width:85%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
+                echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
+
+            <tr bgcolor="#FFCCFF" style="border: solid 1px #999;font-weight:bold; font-size:13px">
+                <th width="2%" style="border: solid 1px #999; padding:2px;"><span class="style1">SL</span></th>
+                <th width="58%" style="border: solid 1px #999; padding:2px;"><span class="style1">PARTICULARS</span></th>
+                <th width="20%" align="center" style="border: solid 1px #999; padding:2px;"><div align="center">Current Period<br>( <?=$_REQUEST['t_date'];?> )</div></th>
+                <th width="20%" align="center" style="border: solid 1px #999; padding:2px;"><div align="center">Previous Period<br>( <?=$_REQUEST['pt_date'];?> )</div></th> </tr></thead>
+
+            <tr style="background:#FFF0F5; font-weight:bold; color:#FFF; font-size:14px;">
+            <tr style="font-weight:bold; color:#000; font-size:13px;"><td>1</td><td colspan="4" style="padding:2px; text-align: left;">CASH FLOW FROM OPERATING ACTIVITIES:</td></tr>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px">A.</td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Net Profit After Tax"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $amount = sum_com_P_L($conn,$fdate,$tdate,$sec_com_connection); $patCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&income=3000&show=Show&expenses=4000" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $amount = sum_com_P_L($conn,$comparisonF,$comparisonT,$sec_com_connection); $patPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <? $com_id = 15; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalADCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 15; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $ADSearchRowPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 22; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalDEPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 22; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalDEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px">B.</td>
+                <td style="padding:2px; text-align: left; padding-left:20px">Add: <?$headname="Adjustment for non-cash Items"; echo '<u><strong>'.$headname.'</strong></u>'; ?></td>
+                <td style="padding:2px; text-align: right;"><strong><?=$B_totalCurrent=number_format($TotalADCurrent+$TotalDEPCurrent)?></strong></td>
+                <td style="padding:2px; text-align: right;"><strong><?=$B_totalPrevious=number_format($ADSearchRowPrevious+$TotalDEPrevious)?></strong></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:40px">i)</td>
+                <td style="padding:2px; text-align: left; padding-left:40px"><?$headname="Depreciation of Fixed Assets for"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 15; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalADCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 15; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $ADSearchRowPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:40px">ii)</td>
+                <td style="padding:2px; text-align: left; padding-left:40px"><?$headname="Adjustment of Deferred Expenses"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 22; $amount = sum_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalDEPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 22; $amount = sum_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalDEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px">C.</td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Movement in Working Capital"; echo '<u><strong>'.$headname.'</strong></u>'; ?></td>
+                <td style="padding:2px; text-align: right;"></td>
+                <td style="padding:2px; text-align: right;"></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:40px">(a)</td>
+                <td style="padding:2px; text-align: left; padding-left:40px"><?$headname="(increase) /Decrease in Inventory"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 16; $amount = sum_cash_flow_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalInventoryCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 16; $amount = sum_cash_flow_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalInventoryPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:40px">(b)</td>
+                <td style="padding:2px; text-align: left; padding-left:40px"><?$headname="(Increase) /Decrease in Adv., Dep. & Pre-Payments"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 19; $amount = sum_cash_flow_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalADPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 19; $amount = sum_cash_flow_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalADPPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:40px">(c)</td>
+                <td style="padding:2px; text-align: left; padding-left:40px"><?$headname="(Increase) /Decrease in Sundry Debtors"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 17; $amount = sum_cash_flow_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalARCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 17; $amount = sum_cash_flow_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalARPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <? $com_id = 29; $amount = sum_cash_flow_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalSTLOANSMCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 29; $amount = sum_cash_flow_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalSTLOANPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount;?>
+            <? $com_id = 32; $amount = sum_cash_flow_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalPFECurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 32; $amount = sum_cash_flow_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalPFEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 28; $amount = sum_cash_flow_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalAPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 28; $amount = sum_cash_flow_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalAPPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 30; $amount = sum_cash_flow_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalSPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 30; $amount = sum_cash_flow_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalSPPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 18; $amount = sum_cash_flow_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalIPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 18; $amount = sum_cash_flow_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalIPPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 34; $amount = sum_cash_flow_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalSMDCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 34; $amount = sum_cash_flow_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalSMDPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 31; $amount = sum_cash_flow_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalLEBCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 31; $amount = sum_cash_flow_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalLEBPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:40px">(d)</td>
+                <td style="padding:2px; text-align: left; padding-left:40px"><?$headname="(Increase) /Decrease in Current Liabilities"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right; text-decoration: double"><?php $totalCLIABILITIESCurrent=$TotalSTLOANSMCurrent+$TotalPFECurrent+$TotalAPCurrent+$TotalSPCurrent+$TotalIPCurrent+$TotalSMDCurrent+$TotalLEBCurrent; echo number_format($totalCLIABILITIESCurrent,2);?></td>
+                <td style="padding:2px; text-align: right;"><?php $totalCLIABILITIESPrevious=$TotalSTLOANPrevious+$TotalPFEPrevious+$TotalAPPrevious+$TotalSPPrevious+$TotalIPPrevious+$TotalSMDPrevious+$TotalLEBPrevious; echo number_format($totalCLIABILITIESPrevious,2)?></td>
+            </tr>
+            <?php
+            $C_totalCurrent = $TotalInventoryCurrent+$TotalADPCurrent+$TotalARCurrent+$totalCLIABILITIESCurrent;
+            $C_totalPrevious =$TotalInventoryPrevious+$TotalADPPrevious+$TotalARPrevious+$totalCLIABILITIESPrevious;
+            $D_totalCurrent = $B_totalCurrent + $C_totalCurrent;
+            $D_totalPrevious = $B_totalPrevious + $C_totalPrevious;
+            $One_totalCurrent = $patCurrent+$D_totalCurrent;
+            $One_totalPrevious = $patPrevious+$D_totalPrevious;
+            ?>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"></td>
+                <td style="padding:2px; text-align: right;text-decoration: underline"><strong><?=number_format($C_totalCurrent,2)?></strong></td>
+                <td style="padding:2px; text-align: right;text-decoration: underline"><strong><?=number_format($C_totalPrevious,2)?></strong></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px">D.</td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Net Cash After Adjustment (B + C)"; echo '<strong>'.$headname.'</strong>'; ?></td>
+                <td style="padding:2px; text-align: right;text-decoration: underline"><strong><?=number_format($D_totalCurrent,2)?></strong></td>
+                <td style="padding:2px; text-align: right;text-decoration: underline"><strong><?=number_format($D_totalPrevious,2)?></strong></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"></td>
+                <td style="padding:2px; text-align: right;"></td>
+                <td style="padding:2px; text-align: right;"></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px">E.</td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Net Cash generated /(used) from Operating Activities"; echo '<strong>'.$headname.'</strong>'; ?></td>
+                <td style="padding:2px; text-align: right;text-decoration: underline"><strong><?=number_format($One_totalCurrent,2)?></strong></td>
+                <td style="padding:2px; text-align: right;text-decoration: underline"><strong><?=number_format($One_totalPrevious,2)?></strong></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"></td>
+                <td style="padding:2px; text-align: right;"></td>
+                <td style="padding:2px; text-align: right;"></td>
+            </tr>
+            <tr style="font-weight:bold; color:#000; font-size:13px;"><td>2</td><td colspan="4" style="padding:2px; text-align: left;">CASH FLOW FROM INVESTING ACTIVITIES:</td></tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Purchase / Sales of Fixed Assets"; echo $headname; ?></td>
+                <td  style="padding:2px; text-align: right;"><? $com_id = 14; $amount = sum_cash_flow_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalPPE = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td  style="padding:2px; text-align: right;"><? $com_id = 14; $amount = sum_cash_flow_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalPPEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Other Investment"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 23; $amount = sum_cash_flow_com($conn, $com_id,$fdate,$tdate,$sec_com_connection); $TotalLTICurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 23; $amount = sum_cash_flow_com($conn, $com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalLTIPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <?php
+            $Two_TotalCurrent = $TotalPPE + $TotalLTICurrent;
+            $Two_TotalPrevious = $TotalPPEPrevious + $TotalLTIPrevious;
+            ?>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Net Cash generated /(used) from Investing Activities"; echo '<strong>'.$headname.'</strong>'; ?></td>
+                <td style="padding:2px; text-align: right;"><strong><?=number_format($Two_TotalCurrent,2)?></strong></td>
+                <td style="padding:2px; text-align: right;"><strong><?=number_format($Two_TotalPrevious,2)?></strong></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"></td>
+                <td style="padding:2px; text-align: right;"></td>
+                <td style="padding:2px; text-align: right;"></td>
+            </tr>
+            <tr style="font-weight:bold; color:#000; font-size:13px;"><td>3</td><td colspan="4" style="padding:2px; text-align: left;">CASH FLOW FROM FINANCING ACTIVITIES :</td></tr>
+
+            <? $com_id = 27; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalBLHPSMCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 27; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalBLHPSMPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 33; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalUNLCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+            <? $com_id = 33; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalUNLPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; ?>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Long Term Loan Received"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $TotalBLHPSMCurrent+$TotalUNLCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $TotalBLHPSMPrevious+$TotalUNLPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Share Deposit A/c"; echo $headname; ?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 34; $amount = sum_com_liabilities($conn,$com_id,$fdate,$tdate,$sec_com_connection); $TotalSMDCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 34; $amount = sum_com_liabilities($conn,$com_id,$comparisonF,$comparisonT,$sec_com_connection); $TotalSMDPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <?php
+            $three_totalCurrent = $TotalBLHPSMCurrent+$TotalUNLCurrent+$TotalSMDCurrent;
+            $three_totalPrevious = $TotalBLHPSMCurrent+$TotalUNLCurrent+$TotalSMDPrevious;
+            ?>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"></td>
+                <td style="padding:2px; text-align: right;text-decoration: underline"><strong><?=number_format($three_totalCurrent,2)?></strong></td>
+                <td style="padding:2px; text-align: right;text-decoration: underline"><strong><?=number_format($three_totalPrevious,2)?></strong></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Net cash & equivalents increased/(decreased) [1+2+3]"; echo '<strong>'.$headname.'</strong>'; ?></td>
+                <td style="padding:2px; text-align: right;"><strong><?php $net_cashCurrent=$One_totalCurrent+$Two_TotalCurrent+$three_totalCurrent; echo number_format($net_cashCurrent,2);?></strong></td>
+                <td style="padding:2px; text-align: right;"><strong><? $net_cashPrevious=$One_totalPrevious+$Two_TotalPrevious+$three_totalPrevious; echo number_format($net_cashPrevious,2); ?></strong></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"></td>
+                <td style="padding:2px; text-align: right;"></td>
+                <td style="padding:2px; text-align: right;"></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Net cash & equivalents - Opening"; echo '<strong>'.$headname.'</strong>'; ?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$fdate,$tdate,'1002000100000000','1002000101000000',$sec_com_connection); $TotalCCECurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+                <td style="padding:2px; text-align: right;"><? $com_id = 24; $amount = sum_com_sub($conn, $com_id,$comparisonF,$comparisonT,'1002000100000000','1002000101000000',$sec_com_connection); $TotalCCEPrevious = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$comparisonF.'&tdate='.$comparisonT.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"></td>
+                <td style="padding:2px; text-align: right;"></td>
+                <td style="padding:2px; text-align: right;"></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"><?$headname="Net cash & equivalents - Closing"; echo '<strong>'.$headname.'</strong>'; ?></td>
+                <td style="padding:2px; text-align: right;"><strong class="double-underline"><?php $cash_closingCurrent=$net_cashCurrent+$TotalCCECurrent; echo number_format($cash_closingCurrent,2)?></strong></td>
+                <td style="padding:2px; text-align: right;"><strong class="double-underline"><?php $cash_closingPrevious=$net_cashPrevious+$TotalCCEPrevious; echo number_format($cash_closingPrevious,2) ?></strong></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td style="padding:2px; text-align: center; padding-left:20px"></td>
+                <td style="padding:2px; text-align: left; padding-left:20px"></td>
+                <td style="padding:2px; text-align: right;"></td>
+                <td style="padding:2px; text-align: right;"></td>
+            </tr>
+        </table>
+
 
 
     <?php elseif ($_POST['report_id']=='1008001'):?>

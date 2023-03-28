@@ -3,8 +3,22 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/classes/module.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/module.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix_dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix_dashboard.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix_main_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix_main_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix_master_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix_master_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix_module.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix_module.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix_reports.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix_reports.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix_sub_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix_sub_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_permission_matrix_warehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_permission_matrix_warehouse.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_loan_management_short_term_loan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_loan_management_short_term_loan.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/developer_create_warehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/developer_create_warehouse.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/accounts_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_reportview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/dealer_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/dealer_info.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_MIS.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_MIS.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,6 +124,10 @@
       <workItem from="1679460579068" duration="23384000" />
       <workItem from="1679543714217" duration="14784000" />
       <workItem from="1679629586785" duration="1544000" />
+      <workItem from="1679800475374" duration="16928000" />
+      <workItem from="1679824314277" duration="6059000" />
+      <workItem from="1679893285727" duration="1880000" />
+      <workItem from="1679973862445" duration="4291000" />
     </task>
     <servers />
   </component>

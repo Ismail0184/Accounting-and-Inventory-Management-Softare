@@ -11,13 +11,12 @@ $page_sub_menu='MIS_permission_matrix_sub_menu.php';
 $page_warehouse='MIS_permission_matrix_warehouse.php';
 $page_reports='MIS_permission_matrix_reports.php';
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
 
 if(isset($_POST['view_report']))
     {$_SESSION['MIS_permission_matrix']=@$_POST['user_id'];}
-
 if(isset($_POST['cancel']))
         {unset($_SESSION['MIS_permission_matrix']);}
+$MIS_permission_matrix = @$_SESSION['MIS_permission_matrix'];
 ?>
 
 <?php require_once 'header_content.php'; ?>
@@ -36,11 +35,11 @@ if(isset($_POST['cancel']))
 <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
               <div class="x_title">
-              <h2>User Permission Matrix <small><?=find_a_field('users','concat(user_id," : ",fname)','user_id='.$_SESSION['MIS_permission_matrix']);?></small></h2>
+              <h2>User Permission Matrix <small><?=find_a_field('users','concat(user_id," : ",fname)','user_id='.$MIS_permission_matrix);?></small></h2>
               <div class="clearfix"></div>
               </div>
 
-              <?php if(isset($_SESSION['MIS_permission_matrix'])): else:  ?>
+              <?php if(isset($MIS_permission_matrix)): else:  ?>
               <form id="demo-form2" method="post" data-parsley-validate class="form-horizontal form-label-left" style="font-size: 11px">
                    <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Active User<span class="required">*</span>
@@ -52,18 +51,16 @@ if(isset($_POST['cancel']))
 							users 
 							 where 1		 
 							  order by user_id";
-                                advance_foreign_relation($sql_user_id,$_SESSION['MIS_permission_matrix']);?>
+                                advance_foreign_relation($sql_user_id,$MIS_permission_matrix);?>
                             </select>
-                       <?php if(isset($_SESSION['MIS_permission_matrix'])){ ?>
+                       <?php if(isset($MIS_permission_matrix)){ ?>
                        <?php } else { ?>
 						<button type="submit" name="view_report" class="btn btn-primary" style="font-size: 12px; margin-left:5%">Proceed to the next</button>
                        <?php } ?>
                    </div></div></form><?php endif; ?>
 
 
-
-                   
-                <?php if(isset($_SESSION[MIS_permission_matrix])): ?>
+                <?php if(isset($MIS_permission_matrix)): ?>
                   <div class="x_content">
                     <div id="wizard" class="form_wizard wizard_horizontal">
                       <ul class="wizard_steps">
@@ -131,8 +128,8 @@ if(isset($_POST['cancel']))
                         <th>Module Short Name</th>
                     </tr>
                     <?php $sql=mysqli_query($conn, "SELECT m.module_id,m.modulename,m.module_short_name,dpm.module_id,
-       (select p.status from user_permissions_module p where p.module_id=m.module_id and p.user_id='".$_SESSION[MIS_permission_matrix]."') as status
-       FROM module_department m, dev_permission_module dpm  WHERE m.module_id=dpm.module_id and dpm.status>0 and dpm.user_id=".$_SESSION[userid]." ORDER BY m.module_id");
+       (select p.status from user_permissions_module p where p.module_id=m.module_id and p.user_id='".$MIS_permission_matrix."') as status
+       FROM module_department m, dev_permission_module dpm  WHERE m.module_id=dpm.module_id and dpm.status>0 and dpm.user_id=".$_SESSION['userid']." ORDER BY m.module_id");
                     while($data=mysqli_fetch_object($sql)):?>
                         <tr>
                             <td style="text-align: center"><input type="checkbox" data="<?=$data->module_id?>" class="status_checks_module btn <?php echo ($data->status)? 'btn-success' : 'btn-danger'?>"  <?php echo ($data->status=='1')? 'checked' : ''?>></td>
@@ -172,8 +169,8 @@ if(isset($_POST['cancel']))
                         <th>Dashboard of the Modules</th>
                     </tr>
                     <?php $sql=mysqli_query($conn, "SELECT m.module_id,m.modulename,m.module_short_name,upm.module_id,
-       (select p.status from user_permissions_dashboard p where p.module_id=m.module_id and p.user_id='".$_SESSION[MIS_permission_matrix]."') as status
-       FROM module_department m, user_permissions_module upm  WHERE m.module_id=upm.module_id and upm.status>0 and upm.user_id=".$_SESSION[MIS_permission_matrix]." ORDER BY m.module_id");
+       (select p.status from user_permissions_dashboard p where p.module_id=m.module_id and p.user_id='".$MIS_permission_matrix."') as status
+       FROM module_department m, user_permissions_module upm  WHERE m.module_id=upm.module_id and upm.status>0 and upm.user_id=".$MIS_permission_matrix." ORDER BY m.module_id");
                     while($data=mysqli_fetch_object($sql)):?>
                         <tr>
                             <td style="text-align: center"><input type="checkbox" data="<?=$data->module_id?>" class="status_checks btn <?php echo ($data->status)? 'btn-success' : 'btn-danger'?>"  <?php echo ($data->status=='1')? 'checked' : ''?>></td>
@@ -215,12 +212,12 @@ if(isset($_POST['cancel']))
                         <th>Menu Status</th>
                     </tr>
                     <?php $sql=mysqli_query($conn, "SELECT dmm.main_menu_id,dmm.main_menu_name,dmm.main_menu_details,dmm.url,dmm.faicon,md.module_short_name,dpm.module_id,dpm.status,
-       (select pmm.status from user_permission_matrix_main_menu pmm where pmm.main_menu_id=dmm.main_menu_id and pmm.user_id='".$_SESSION[MIS_permission_matrix]."') as status,md.status as master_menu_status
+       (select pmm.status from user_permission_matrix_main_menu pmm where pmm.main_menu_id=dmm.main_menu_id and pmm.user_id='".$MIS_permission_matrix."') as status,md.status as master_menu_status
        FROM dev_main_menu dmm, module_department md,user_permissions_module dpm  WHERE 
        dmm.module_id=md.module_id and 
        md.module_id=dpm.module_id and 
        dpm.status>0 and 
-       dpm.user_id='".$_SESSION[MIS_permission_matrix]."' 
+       dpm.user_id='".$MIS_permission_matrix."' 
        ORDER BY md.module_id,dmm.main_menu_id");
                     while($data=mysqli_fetch_object($sql)):?>
                         <tr>
@@ -271,12 +268,12 @@ if(isset($_POST['cancel']))
                     <?php $sql=mysqli_query($conn, "SELECT dsm.sub_menu_id,dsm.sub_menu_name,dsm.sub_url,
                     dmm.main_menu_id,dmm.main_menu_name,dpm.status as mobule_permission_status,
                     md.module_short_name,
-       (select psm.status from user_permission_matrix_sub_menu psm where psm.sub_menu_id=dsm.sub_menu_id and psm.user_id='".$_SESSION[MIS_permission_matrix]."') as status,dsm.status as sub_menu_status
+       (select psm.status from user_permission_matrix_sub_menu psm where psm.sub_menu_id=dsm.sub_menu_id and psm.user_id='".$MIS_permission_matrix."') as status,dsm.status as sub_menu_status
        FROM dev_main_menu dmm, module_department md,dev_sub_menu dsm,user_permissions_module dpm  
        
        WHERE 
        dpm.module_id=md.module_id and 
-       dpm.user_id='".$_SESSION[MIS_permission_matrix]."' and
+       dpm.user_id='".$MIS_permission_matrix."' and
        dpm.status>0 and 
        dsm.main_menu_id=dmm.main_menu_id and
        dmm.module_id=md.module_id and
@@ -327,7 +324,7 @@ if(isset($_POST['cancel']))
                         <th>Contact No</th>
                     </tr>
                     <?php $sql=mysqli_query($conn, "SELECT w.warehouse_id,w.warehouse_name,w.address,w.ledger_id,w.ap_name,w.ap_designation,w.contact_no,
-       (select p.status from user_permission_matrix_warehouse p where p.warehouse_id=w.warehouse_id and p.user_id='".$_SESSION[MIS_permission_matrix]."') as status
+       (select p.status from user_permission_matrix_warehouse p where p.warehouse_id=w.warehouse_id and p.user_id='".$MIS_permission_matrix."') as status
        FROM warehouse w   WHERE 1 ORDER BY w.warehouse_id");
                     while($data=mysqli_fetch_object($sql)):?>
                         <tr>
@@ -369,8 +366,8 @@ if(isset($_POST['cancel']))
                         <th>Report Group</th>
                         <th>Module</th>
                     </tr>
-                    <?php $sql=mysqli_query($conn, "SELECT g.optgroup_label_name,r.report_name as subzonename,r.report_id,m.module_id,m.modulename,dpm.module_id,
-       (select status from user_permission_matrix_reportview where report_id=r.report_id and user_id=".$_SESSION[MIS_permission_matrix].") as status       
+                    <?php $i=0; $sql=mysqli_query($conn, "SELECT g.optgroup_label_name,r.report_name as subzonename,r.report_id,m.module_id,m.modulename,dpm.module_id,
+       (select status from user_permission_matrix_reportview where report_id=r.report_id and user_id=".$MIS_permission_matrix.") as status       
        FROM 
        module_reportview_optgroup_label g, 
        module_reportview_report r,
@@ -378,7 +375,7 @@ if(isset($_POST['cancel']))
        user_permissions_module dpm
        WHERE
        dpm.module_id=g.module_id and 
-       dpm.user_id='".$_SESSION[MIS_permission_matrix]."' and
+       dpm.user_id='".$MIS_permission_matrix."' and
        dpm.status>0 and 
        g.optgroup_label_id = r.optgroup_label_id  and g.module_id=m.module_id
 ORDER BY m.module_id,g.sl, r.sl");
@@ -416,7 +413,7 @@ ORDER BY m.module_id,g.sl, r.sl");
                       
                     </div>
                     <form id="demo-form2" method="post" data-parsley-validate class="form-horizontal form-label-left" style="font-size: 11px">
-                    <?php if(isset($_SESSION[MIS_permission_matrix])){ ?>
+                    <?php if(isset($MIS_permission_matrix)){ ?>
                         <button type="submit" name="cancel" class="btn btn-danger"  style="font-size: 12px; margin-left:5%">Cancel</button>
                        <?php } ?>
                     </form>
@@ -453,7 +450,6 @@ ORDER BY m.module_id,g.sl, r.sl");
     <script src="../assets/build/js/custom.min.js"></script>
     <!-- Select2 -->
     <script src="../assets/vendors/select2/dist/js/select2.full.min.js"></script>
-
     <!-- Select2 -->
     <script>
       $(document).ready(function() {

@@ -9,6 +9,14 @@ function sum_com($conn, $com,$fdate,$tdate,$sec_com_connection)
 	return $amount;
 }
 
+function sum_cash_flow_com($conn, $com,$fdate,$tdate,$sec_com_connection)
+{   global $conn;
+	$sql = mysqli_query($conn,'select sum(j.cr_amt-j.dr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.group_for='.$_SESSION['usergroup'].' and j.jvdate between "'.$fdate.'" and "'.$tdate.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ('.$com.')'.$sec_com_connection);
+	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
+	$amount = $a['amt'];
+	return $amount;
+}
+
 function sum_cc_code($conn,$cc_code,$fdate,$tdate,$sec_com_connection)
 {   
 global $conn;
@@ -34,7 +42,15 @@ function sum_com_sub($conn, $com,$fdate,$tdate,$subgroup,$last_subgroup,$sec_com
 
 function sum_com_liabilities($conn,$com,$fdate,$tdate,$sec_com_connection)
 {   global $conn;
-$sql = mysqli_query($conn, 'select sum(j.cr_amt-j.dr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.group_for='.$_SESSION['usergroup'].' and j.jvdate between "'.$fdate.'" and "'.$tdate.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ("'.$com.'")'.$sec_com_connection);
+$sql = mysqli_query($conn, 'select sum(j.cr_amt-j.dr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.jvdate between "'.$fdate.'" and "'.$tdate.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ("'.$com.'")'.$sec_com_connection);
+	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
+	$amount = $a['amt'];
+	return $amount;
+}
+
+function sum_cash_flow_liabilities($conn,$com,$fdate,$tdate,$sec_com_connection)
+{   global $conn;
+	$sql = mysqli_query($conn, 'select sum(j.dr_amt-j.cr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.jvdate between "'.$fdate.'" and "'.$tdate.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ("'.$com.'")'.$sec_com_connection);
 	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
 	$amount = $a['amt'];
 	return $amount;

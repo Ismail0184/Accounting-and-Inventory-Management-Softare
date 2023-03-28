@@ -7,11 +7,11 @@ $unique='dealer_code';			// Primary Key of this Database table
 $shown='dealer_name_e';
 $dealer_custom_codess='dealer_custom_code';				// For a New or Edit Data a must have data field
 $crud      =new crud($table);
-$$unique = $_GET[$unique];
+$$unique = @$_GET[$unique];
 
 
 if(isset($_POST[$shown])) {
-$$unique = $_POST[$unique];
+$$unique = @$_POST[$unique];
 if(isset($_POST['insert']))
 {
 $proj_id			= $_SESSION['proj_id'];
@@ -53,10 +53,31 @@ while (list($key, $value)=each($data))
 { $$key=$value;}
 }
 if(!isset($$unique)) $$unique=db_last_insert_id($table,$unique);
-
+$serial = @$serial;
+$dealer_custom_code = @$dealer_custom_code;
+$area_codeGET = @$area_codeGET;
+$dealer_code = @$dealer_code;
+$dealer_name_e = @$dealer_name_e;
+$propritor_name_e = @$propritor_name_e;
+$town_code = @$town_code;
+$mobile_no = @$mobile_no;
+$contact_person = @$contact_person;
+$depot = @$depot;
+$contact_number = @$contact_number;
+$dealer_type = @$dealer_type;
+$contact_person_desig = @$contact_person_desig;
+$address_e = @$address_e;
+$commission = @$commission;
+$national_id = @$national_id;
+$canceled = @$canceled;
+$TIN_BIN = @$TIN_BIN;
+$bank_account = @$bank_account;
+$account_code = @$account_code;
+$select_dealer_do_regular = @$select_dealer_do_regular;
+$region = @$region;
+$customer_type = @$customer_type;
+$tsm = @$tsm;
 ?>
-
-
 <?php if(isset($_POST['update']))
 {
     mysqli_query($conn, "Update sale_do_master set region='".$_POST['region']."',territory='".$_POST['territory']."',area_code='".$_POST['area_code']."',town='".$_POST['town_code']."',dealer_type='".$_POST['customer_type']."' where dealer_code='".$_GET['dealer_code']."'");
@@ -68,16 +89,16 @@ if(!isset($$unique)) $$unique=db_last_insert_id($table,$unique);
 }
 
 $sql_area = 'select a.AREA_CODE,concat(AREA_CODE," : ",a.AREA_NAME) from area a  where Territory_CODE>0 order by a.AREA_NAME';
-if($_GET['area_codeGET']>0){
+if(@$_GET['area_codeGET']>0){
 	$area_code=$_GET['area_codeGET'];
 } else {
-	$area_code=$area_code;
+	$area_code=@$area_code;
 	}
 $res='select d.'.$unique.',d.'.$dealer_custom_codess.' as Code,d.account_code,d.'.$shown.' as dealer_name,d.dealer_category as Category,d.dealer_type as Screm_Type,d.customer_type as DB_Type,d.credit_limit as Credit_Limit,d.commission,(select account_name from bank_account_name where id=d.bank_account) as bank_account,d.canceled as status from '.$table.' d where
  1 order by '.$unique;
 $sql_TOWN="Select town_code,concat(town_code,' : ',town_name) from town order by town_name";
 $res_daeler_type="Select typeshorname,typedetails from distributor_type order by id";
-
+$dealer_code_GET = @$_GET['dealer_code'];
 ?>
 
 <?php require_once 'header_content.php'; ?>
@@ -89,7 +110,7 @@ $res_daeler_type="Select typeshorname,typedetails from distributor_type order by
 function reload(form)
 {
 	var val=form.area_code.options[form.area_code.options.selectedIndex].value;
-	self.location='dealer_info.php?dealer_code=<?=$_GET['dealer_code']?>&area_codeGET=' + val ;
+	self.location='dealer_info.php?dealer_code=<?=$dealer_code_GET?>&area_codeGET=' + val ;
 }
 
 function reload2(form)
@@ -144,7 +165,7 @@ function reload2(form)
                                 <?
                                 //$countryquery =mysql_query('select * from apps_countries order by country_name');
                                 //echo '<option></option>';
-                                while($Cnrow = mysqli_fetch_array($countryquery)){
+                                while($Cnrow = @mysqli_fetch_array($countryquery)){
                                     if($country==$Cnrow['BRANCH_ID']){ ?>
                                         <option value="<?=$Cnrow['id'];?>" selected><?=$Cnrow['country_name'];?></option>
                                     <?php } else { ?>
@@ -162,13 +183,13 @@ function reload2(form)
                     <tr>
                         <th style="">Region</th><th>:</th>
                         <td>
-                            <?php if($_GET['area_codeGET']){ ?>
-                                <input name="region" type="hidden" id="region" tabindex="2" value="<?=$region= find_a_field('area','Region_code','AREA_CODE='.$_GET[area_codeGET]);?>">
+                            <?php if(@$_GET['area_codeGET']){ ?>
+                                <input name="region" type="hidden" id="region" tabindex="2" value="<?=$region= find_a_field('area','Region_code','AREA_CODE='.$_GET['area_codeGET']);?>">
                             <?php } else { ?>
                                 <input name="region" type="hidden" id="region" tabindex="2" value="<?=$region?>">
                             <?php } ?>
                             <input type="text" id="regionName"  value="<?php
-                            if($_GET['area_codeGET'])
+                            if(@$_GET['area_codeGET'])
                                 echo $rg = find_a_field('branch','BRANCH_NAME','BRANCH_ID='.$region);
                             else  echo $rg = find_a_field('branch','BRANCH_NAME','BRANCH_ID='.$region);
                             ?>" name="regionName" class="form-control col-md-7 col-xs-12" style="width: 90%" readonly >
@@ -204,12 +225,12 @@ function reload2(form)
                     <tr>
                         <th style="">In Charge person</th><th>:</th>
                         <td>
-                            <?php if($_GET['area_codeGET']){ ?>
+                            <?php if(@$_GET['area_codeGET']){ ?>
                                 <input name="tsm" type="hidden" id="tsm" class="form-control col-md-7 col-xs-12" tabindex="2" value="<?=$PID= find_a_field('area','PBI_ID','AREA_CODE='.$_GET['area_codeGET']);?>" style="width: 90%" />
                                 <?php } else { ?>
                                 <input name="tsm" type="hidden" id="tsm" class="form-control col-md-7 col-xs-12" tabindex="2" value="<?=$tsm?>" style="width: 90%" />
                             <?php } ?>
-                            <?php if($_GET['area_codeGET']){ ?>
+                            <?php if(@$_GET['area_codeGET']){ ?>
                                 <input name="tsmNAME" type="text" class="form-control col-md-7 col-xs-12" id="tsmNAME" tabindex="2" value="<?=$PBI_ID_GET = find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$PID);?>" readonly="readonly" style="width: 90%" />
                             <?php } else { ?>
                                 <input name="tsmNAME" type="text" class="form-control col-md-7 col-xs-12" id="tsmNAME" tabindex="2" value="<?=$PBI_ID_GET = find_a_field('personnel_basic_info','PBI_NAME','PBI_ID='.$tsm);?>" readonly="readonly" style="width: 90%" />
@@ -289,16 +310,16 @@ function reload2(form)
                         </td>
                         <th style="">Accounts Code</th><th>:</th>
                         <td>
-                        <?php if($_SESSION['userid']=='10019'): ?>
+                        <?php if(@$_SESSION['userid']=='10019'): ?>
                             <input type="text" id="account_code"  value="<?=$account_code?>" name="account_code" class="form-control col-md-7 col-xs-12" style="width: 90%" />
                         <?php endif; ?>
                         </td>
                     </tr>
                 </table>
                 <hr>
-                <?php if($_GET[$unique]){  ?>
-                    <button type="submit" name="update" id="update" style="float: right; font-size: 11px" class="btn btn-primary" onclick='return window.confirm("Are you confirm to Update?");'>Update Dealer Inforamtion</button>
-                    <?php if($_SESSION['userid']=='10019'){ ?>
+                <?php if(@$_GET[$unique]){  ?>
+                    <button type="submit" name="update" id="update" style="float: right; font-size: 11px" class="btn btn-primary" onclick='return window.confirm("Are you confirm to Update?");'>Update Dealer Information</button>
+                    <?php if(@$_SESSION['userid']=='10019'){ ?>
                     <?php } ?>
                 <?php } else {?>
                     <button type="submit" name="insert" id="insert" style="float: right; font-size: 12px" class="btn btn-primary">Create New Dealer</button>
