@@ -116,7 +116,7 @@ i.sub_group_id=sg.sub_group_id and
 sg.group_id=g.group_id and
 ib.id=i.brand_id and 
 i.section_id=s.section_id".$sec_com_connection."
-order by g.group_id,sg.sub_group_id,i.".$unique;
+order by i.serial";
 
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
@@ -173,10 +173,18 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                     <? require_once 'support_html.php';?>
 
                                     <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Serial:<span class="required text-danger">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                            <input type="text" id="serial" style="width:100%; font-size: 12px" name="serial" value="<?=$serial;?>" class="form-control col-md-7 col-xs-12" >
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Custom Code<span class="required text-danger">*</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <input type="text" name="finish_goods_code" id="finish_goods_code" value="<?=$finish_goods_code?>" style="width:100%; font-size: 12px" class="form-control col-md-7 col-xs-12" required />
-                                        </div></div>
+                                        </div>
+                                    </div>
 
 
                                     <div class="form-group">
@@ -395,12 +403,7 @@ $sql_brand_category="Select category_name,category_name from brand_category";
                                         </div>
                                     </div>
 
-                                    <!--div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Serial:<span class="required text-danger">*</span></label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                            <input type="text" id="serial" style="width:100%; font-size: 12px" name="serial" value="<?=$serial;?>" class="form-control col-md-7 col-xs-12" >
-                                        <!--/div>
-                                    </div-->
+
 
 <hr/>
 <?php if($unique_GET>0):  ?>

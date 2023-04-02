@@ -2,6 +2,15 @@
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title="Chart of Accounts";
 $page="acc_chart_of_accounts.php";
+
+$sectionid = @$_SESSION['sectionid'];
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+    $sec_com_connection_wa=' and 1';
+} else {
+    $sec_com_connection=" and j.company_id='".$_SESSION['companyid']."' and j.section_id in ('400000','".$_SESSION['sectionid']."')";
+    $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+}
 ?>
 
 <?php require_once 'header_content.php'; ?>
@@ -20,7 +29,7 @@ $page="acc_chart_of_accounts.php";
 
 <?
 $separator =@$separator;
-$sql='select * from ledger_group where status not in ("SUSPENDED") order by group_id';
+$sql="select * from ledger_group where status not in ('SUSPENDED')".$sec_com_connection_wa." order by group_id";
 $query=mysqli_query($conn, $sql);
 if(mysqli_num_rows($query)>0){
 while($grp=mysqli_fetch_object($query)){ $grp_id=(string)($grp->group_id*100000000);?>
@@ -35,11 +44,11 @@ while($grp=mysqli_fetch_object($query)){ $grp_id=(string)($grp->group_id*1000000
             </div>
             <div id="collapseThree<?=$grp->group_id;?>" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                 <div class="card-body">
-                    <?
-                                     $sql2='select * from accounts_ledger where ledger_id like "%00000000" and ledger_group_id='.$grp->group_id;
-                                     $query2=mysqli_query($conn, $sql2);
-                                     if(mysqli_num_rows($query2)>0){
-                                         while($ledger=mysqli_fetch_object($query2)){?>
+    <?php
+    $sql2="select * from accounts_ledger where ledger_id like '%00000000' and ledger_group_id=".$grp->group_id."".$sec_com_connection_wa."";
+    $query2=mysqli_query($conn, $sql2);
+    if(mysqli_num_rows($query2)>0){
+        while($ledger=mysqli_fetch_object($query2)){?>
                     <div id="accordion" style="margin-left: 30px" <!------------------- ledger--------->
                         <div class="card">
                             <div class="card-header" id="headingThree">
@@ -52,10 +61,8 @@ while($grp=mysqli_fetch_object($query)){ $grp_id=(string)($grp->group_id*1000000
                             <div id="collapseThree<?=$ledger->ledger_id;?>" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                                 <div class="card-body">
 
-
-
                                              <?
-                                             $sql3='select * from sub_ledger where ledger_id='.$ledger->ledger_id;
+                                             $sql3="select * from sub_ledger where ledger_id=".$ledger->ledger_id."".$sec_com_connection_wa."";
                                              $query3=mysqli_query($conn, $sql3);
                                              if(mysqli_num_rows($query3)>0){
                                                  while($sub_ledger=mysqli_fetch_object($query3)){
@@ -71,10 +78,8 @@ while($grp=mysqli_fetch_object($query)){ $grp_id=(string)($grp->group_id*1000000
                                             </div>
                                             <div id="collapseThree<?=$sub_ledger->sub_ledger_id;?>" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                                                 <div class="card-body">
-
-
                                                      <?
-                                                     $sql4='select * from sub_sub_ledger where sub_ledger_id='.$sub_ledger->sub_ledger_id;
+                                                     $sql4="select * from sub_sub_ledger where sub_ledger_id=".$sub_ledger->sub_ledger_id."".$sec_com_connection_wa."";
                                                      $query4=mysqli_query($conn, $sql4);
                                                      if(mysqli_num_rows($query4)>0){?>
                                                                  <? while($sub_sub_ledger=mysqli_fetch_object($query4)){?>
@@ -89,26 +94,12 @@ while($grp=mysqli_fetch_object($query)){ $grp_id=(string)($grp->group_id*1000000
                                                             </div>
                                                         </div>
                                                     </div>
-                                                             <?php }} ?>
-
-
-
-
-
+                                                <?php }} ?>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                                     <?php } }?>
-
-
-
-
-
-
-
-
-
+                <?php } }?>
                                 </div>
                             </div>
                         </div>

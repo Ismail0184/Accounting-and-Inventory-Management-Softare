@@ -100,7 +100,7 @@ if(isset($$unique))
                      </tr>
                      </thead>
                       <tbody>
-                 <? 	$res=mysql_query('select r.'.$unique.',r.'.$unique.' as Req_No,r.'.$unique_field.',
+                 <? 	$res=mysqli_query($conn, 'select r.'.$unique.',r.'.$unique.' as Req_No,r.'.$unique_field.',
 				 (SELECT concat(p2.PBI_NAME," # ","(",de.DESG_SHORT_NAME,")") FROM 
 							 
 							personnel_basic_info p2,
@@ -114,12 +114,8 @@ if(isset($$unique))
 				  WHERE 
 				  r.authorised_person='.$_SESSION['PBI_ID'].' and
 				  status="'.$required_status.'"
-				  
-				 
-				  	  
 				   order by r.'.$unique.' DESC');
-				   while($req=mysql_fetch_object($res)){
-				   
+				   while($req=mysqli_fetch_object($res)){
 				   ?>
                    <tr style="cursor: pointer" onclick="DoNavPOPUP('<?=$req->$unique;?>', 'TEST!?', 600, 700)">
                                 <td><?=$i=$i+1;?></td>
@@ -172,21 +168,21 @@ if(isset($$unique))
                      </thead>
                       <tbody>
                       <?php 
-if($_GET[deleteid]){
+if($_GET['deleteid']){
 	
-	mysql_query("Delete From ".$table_details." where ".$unique."=".$$unique." and id='$_GET[id]'"); ?>
+	mysqli_query($conn, "Delete From ".$table_details." where ".$unique."=".$$unique." and id='$_GET[id]'"); ?>
 <meta http-equiv="refresh" content="0;<?=$page;?>?<?=$unique;?>=<?php echo $_GET[$unique]; ?>">	
 <?php } ?>
-                 <? 	$res=mysql_query('Select td.*,i.* from '.$table_details.' td,
+                 <? 	$res=mysqli_query($conn, 'Select td.*,i.* from '.$table_details.' td,
                  item_info i
 				  where 
 				  td.item_id=i.item_id and			  
 				  td.'.$unique.'='.$_GET[$unique].'');
-				   while($req_data=mysql_fetch_object($res)){
+				   while($req_data=mysqli_fetch_object($res)){
                        $request_qty=$_POST['request_qty_'.$req_data->id];
 
-                       if(isset($_POST[recommend])){
-mysql_query("Update ".$table_details." SET request_qty='".$request_qty."'
+                       if(isset($_POST['recommend'])){
+mysqli_query($conn, "Update ".$table_details." SET request_qty='".$request_qty."'
  where ".$unique."=".$_GET[$unique]." and id=".$req_data->id."");
 
 					   }
@@ -213,7 +209,7 @@ mysql_query("Update ".$table_details." SET request_qty='".$request_qty."'
                                 
                                 <?php
                                 if(isset($_POST[recommend])){
-								mysql_query("Update ".$table." SET status='Processing',authorized_date='$todayss' where ".$unique."=".$_GET[$unique]."");
+								mysqli_query($conn, "Update ".$table." SET status='Processing',authorized_date='$todayss' where ".$unique."=".$_GET[$unique]."");
 					   
 					   /// fint authorised person name
 $chid=find_a_field(''.$table.'','authorised_person',''.$unique.'='.$_GET[$unique]);
@@ -283,6 +279,6 @@ mail($to,$subject,$txt,$headers);
 <?php } ?>
 
 
-                
-        
-<?php require_once 'footer_content.php' ?>
+
+
+ <?=$html->footer_content();?>
