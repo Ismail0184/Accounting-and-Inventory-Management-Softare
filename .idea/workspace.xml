@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_chart_of_accounts.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_chart_of_accounts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_loan_management_short_term_loan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_loan_management_short_term_loan.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/hrm_unapproved_requisition_sample_gift.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/hrm_unapproved_requisition_sample_gift.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/hrm_unauthorised_requisition_sample_gift.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/hrm_unauthorised_requisition_sample_gift.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/item_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/item_info.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -123,7 +117,8 @@
       <workItem from="1680150454567" duration="2610000" />
       <workItem from="1680319199833" duration="17404000" />
       <workItem from="1680344570186" duration="725000" />
-      <workItem from="1680409460881" duration="6390000" />
+      <workItem from="1680409460881" duration="6601000" />
+      <workItem from="1680495294134" duration="15227000" />
     </task>
     <servers />
   </component>
