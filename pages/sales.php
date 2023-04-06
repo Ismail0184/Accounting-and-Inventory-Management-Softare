@@ -9,20 +9,17 @@ $sale_do_details='sale_do_details';
 $sales_table_master='sale_do_chalan';
 $journal_item='journal_item';
 $journal='journal';
-
-
 $crud      =new crud($table_master);
 
 if(prevent_multi_submit()){
 if(isset($_POST["Import"])){
-    echo $filename=$_FILES["file"]["tmp_name"];
+    $filename=$_FILES["file"]["tmp_name"];
     if($_FILES["file"]["size"] > 0)
-    {
-        $file = fopen($filename, "r");
+    { $file = fopen($filename, "r");
         while (($eData = fgetcsv($file, 10000, ",")) !== FALSE)
         { if(!empty($eData[6]) && $eData[7]>0) {
-                if($eData[4]=='Gulshan')
-                {   $sectionid = '400001';
+                if($eData[4]=='Gulshan') {
+                    $sectionid = '400001';
                 } elseif ($eData[4]=='Moghbazar') {
                     $sectionid = '400002';
                 } elseif ($eData[4]=='Mirpur-1') {
@@ -78,8 +75,9 @@ if(isset($_POST["Import"])){
                 } elseif ($eData[4]=='Dhamrai') {
                     $sectionid = '400029';
                 }
-
                 $entry_at = date('Y-m-d H:i:s');
+                //$entry_status = find_a_field("sales_data_from_prism_software","COUNT(id)","date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+                //if($entry_status==0){
                 $sql = "INSERT INTO `sales_data_from_prism_software` 
     (`route`,`section`,`A200010001`,`A200010002`,`A200010003`,`A200010004`,
 `A200010005`,`A200010007`,`A200010008`,`A200010009`,`A200010011`,`A200010010`,`A200010012`,`A200010013`,`A200010014`,`A200010015`,
@@ -89,7 +87,7 @@ if(isset($_POST["Import"])){
 `A200010040`,`A200010047`,`A200010048`,`A200010049`,`A200010050`,`A200010051`,`A200010052`,`A200010053`,`A200010054`,`A200010055`,
 `A200010056`,`A200010057`,`A200010058`,`A200010059`,`A200010060`,`A200010061`,`A200010062`,`A200010063`,`A200010065`,`A200010064`,                                              
 `A200010066`,`A200010067`,`A200010068`,`A200010069`,`A200010070`,`A200010071`,`A200010072`,`A200010073`,`A200010074`,`A200010075`,
-`A200010076`,`A200010077`,`total`,`date`,`entry_by`,`entry_at`,`status`,`section_id`,`company_id`) 
+`A200010076`,`A200010077`,`total`,`date`,`entry_by`,`entry_at`,`status`,`section_id`,`company_id`,`point`) 
 	         VALUES('$eData[5]','$eData[6]','$eData[7]','$eData[8]','$eData[9]','$eData[10]',
 '$eData[11]','$eData[12]','$eData[13]','$eData[14]','$eData[15]','$eData[16]','$eData[17]','$eData[18]','$eData[19]','$eData[20]',
 '$eData[21]','$eData[22]','$eData[23]','$eData[24]','$eData[25]','$eData[26]','$eData[27]','$eData[28]','$eData[29]','$eData[30]',
@@ -98,9 +96,10 @@ if(isset($_POST["Import"])){
 '$eData[51]','$eData[52]','$eData[53]','$eData[54]','$eData[55]','$eData[56]','$eData[57]','$eData[58]','$eData[59]','$eData[60]',
 '$eData[61]','$eData[62]','$eData[63]','$eData[64]','$eData[65]','$eData[66]','$eData[67]','$eData[68]','$eData[69]','$eData[70]',
 '$eData[71]','$eData[72]','$eData[73]','$eData[74]','$eData[75]','$eData[76]','$eData[77]','$eData[78]','$eData[79]','$eData[80]',
-'$eData[81]','$eData[82]','$eData[83]','".$_POST['sales_date']."','".$_SESSION['userid']."','".$entry_at."','MANUAL','".$sectionid."','".$_SESSION['companyid']."'
-)"; $_SESSION['sales_date'] = $_POST['sales_date'];
-            }
+'$eData[81]','$eData[82]','$eData[83]','".$_POST['sales_date']."','".$_SESSION['userid']."','".$entry_at."','MANUAL','".$sectionid."','".$_SESSION['companyid']."','$eData[4]')";
+                $_SESSION['sales_date'] = @$_POST['sales_date'];
+
+        }
             $result = mysqli_query( $conn, $sql);
             if(! $result )
             {
@@ -119,15 +118,21 @@ if(isset($_POST["Import"])){
 
     header("Location: ".$page."");
 }}
-$sales_date = $_SESSION['sales_date'];
-$COUNT_details_data=find_a_field("".$table."","Count(id)","date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
-
 
 if(isset($_POST['cancelAll']))
 {
     mysqli_query($conn, "DELETE from sales_data_from_prism_software where date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
     unset($_SESSION['sales_date']);
 }
+if(isset($_POST['search_data']))
+{
+    unset($_SESSION['sales_date']);
+    $_SESSION['sales_date'] = @$_POST['sales_date'];
+    unset($_POST);
+}
+$sales_date = @$_SESSION['sales_date'];
+$COUNT_details_data=find_a_field("".$table."","Count(id)","date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+
 if(isset($_POST['confirm_and_create_invoice']))
 {
     $sql_route = "SELECT distinct route from sales_data_from_prism_software where date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'";
@@ -139,15 +144,12 @@ if(isset($_POST['confirm_and_create_invoice']))
     $_POST['do_section']="regular_invoice";
     $_POST['entry_at']=date('Y-m-d H:s:i');
     $_POST['entry_by']=$_SESSION['userid'];
-
     $_POST['do_no'] = find_a_field($table_master,'max(do_no)','1')+1;
     $crud->insert();
     $_SESSION['unique_master_for_regular']=$_POST[$unique_master];
     $msg='Work Order Initialized. (Demand Order No-'.$_SESSION['unique_master_for_regular'].')';
 }
-
                     ?>
-
 <?php require_once 'header_content.php'; ?>
     <style>
         input[type=text]{
@@ -165,6 +167,7 @@ if(isset($_POST['confirm_and_create_invoice']))
                 <tr style="background-color: bisque">
                     <th style="text-align: center">Sales Date</th>
                     <th style="text-align: center">Attachment ( .csv file)</th>
+                    <th style="text-align: center">Option</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -174,29 +177,34 @@ if(isset($_POST['confirm_and_create_invoice']))
                     </td>
                     <td align="center">
                         <input style="font-size:11px" type="file" id="file" name="file" required class="form-control col-md-7 col-xs-12" >
-                    </td></tr>
-                <tr>
-                    <td align="center" style="width:5%; vertical-align:middle" colspan="2">
+                    </td>
+                    <td align="center" style="width:5%; vertical-align:middle">
                         <button type="submit" name="Import" onclick='return window.confirm("Are you confirm to Upload?");' class="btn btn-primary" style="font-size: 11px">Upload the File</button>
                     </td>
                 </tr>
                 </tbody>
             </table>
     </form>
-
+    <div class="col-md-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_content"><br>
+            <form method="post">
+                <table align="center" style="width:98%; font-size: 11px; margin-top: -15px">
+                    <tr>
+                        <th>Sales Date <span class="required text-danger">*</span></th>
+                        <td><input type="date" style="font-size: 11px;" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date=date('Y-m-d') .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" value="<?=($sales_date!='')? $sales_date : date('Y-m-d') ?>" class="form-control col-md-7 col-xs-12" required name="sales_date"></td>
+                        <td align="center"><button type="submit" name="search_data" class="btn btn-primary" style="font-size: 11px">Search Uploaded Data</button></td>
+                        <?php if($COUNT_details_data>0){?>
+                        <td align="center"><button type="submit" name="cancelAll" onclick='return window.confirm("Are you confirm to Clear Data?");' class="btn btn-danger" style="font-size: 11px">Clear All Data</button></td>
+                        <?php } ?>
+                    </tr>
+                </table>
+            </form>
+            </div>
+        </div>
+    </div>
 <?php if($COUNT_details_data>0){?>
-<form method="post">
-    <table align="center" style="width:98%; font-size: 11px; margin-top: -15px">
-        <tr>
-            <td align="center">
-                <button type="submit" name="cancelAll" onclick='return window.confirm("Are you confirm to Clear Data?");' class="btn btn-danger" style="font-size: 11px">Clear All Data</button>
-            </td>
-        </tr>
-    </table>
-</form>
-<?php } ?>
-
-<form id="ismail" name="ismail"  method="post"  class="form-horizontal form-label-left">
+    <form id="ismail" name="ismail"  method="post"  class="form-horizontal form-label-left">
         <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
             <thead>
             <th>#</th>
@@ -205,13 +213,11 @@ if(isset($_POST['confirm_and_create_invoice']))
             <th>Route - Section</th>
             <th>Item Description</th>
             <th>Qty</th>
-
-
             <?php
             $i = 0;
-            $sql = mysqli_query($conn, "SELECT distinct s.route,s.section,s.date as sales_date,c.section_name from sales_data_from_prism_software s, company c where s.status='manual' and s.section_id='".$_SESSION['sectionid']."' and s.company_id='".$_SESSION['companyid']."' and s.section_id=c.section_id order by s.id");
+            $sql = mysqli_query($conn, "SELECT distinct route,section,date as sales_date,id,point from sales_data_from_prism_software where date='".$_SESSION['sales_date']."' and status='manual' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' order by id");
             while($data=mysqli_fetch_object($sql)){ ?>
-                <tr style="background-color: #00ADEE; color: white"><td colspan="5">Route : <?=$data->route;?> , Section : <?=$data->section;?></td></tr>
+                <tr style="background-color: #00ADEE; color: white"><td colspan="6">Route : <?=$data->route;?> , Section : <?=$data->section;?></td></tr>
                 <?php $sql2 = mysqli_query($conn, "SELECT * from item_info where 1 order by serial");
                 while($data2=mysqli_fetch_object($sql2)){
                     $item_id = $data2->item_id;
@@ -229,7 +235,7 @@ if(isset($_POST['confirm_and_create_invoice']))
                     $_POST['status'] = 'UNCHECKED';
                     $_POST['section_id'] = @$_SESSION['sectionid'];
                     $_POST['company_id'] = @$_SESSION['companyid'];
-                    $_POST['date'] = $_SESSION['sales_date'];
+                    $_POST['date'] = @$_SESSION['sales_date'];
                     if (isset($_POST['insert_into_database'])) {
                         $crud->insert();
                         $up = "UPDATE sales_data_from_prism_software SET status='checked' where date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'";
@@ -242,7 +248,7 @@ if(isset($_POST['confirm_and_create_invoice']))
                             <input type="hidden" name="section<?=$data2->item_id;?>" value="<?=$data->section;?>">
                             <input type="hidden" name="item_id_<?=$data2->item_id;?>" value="<?=$data2->item_id;?>"></td>
                         <td><?=$data->sales_date;?></td>
-                        <td><?=$data->section_name;?></td>
+                        <td><?=$data->point;?></td>
                         <td><?=$data->route;?> - <?=$data->section;?></td>
                         <td><?=$data2->item_id;?> : <?=$data2->item_name;?></td>
                         <td><?=$Get_qty?><input type="text" name="qty_<?=$a.$item_id?>" style="display: none" value="<?=$Get_qty?>"></td>
@@ -255,4 +261,5 @@ if(isset($_POST['confirm_and_create_invoice']))
             </div>
             </div>
             </div>
+    <?php } ?>
 <?=$html->footer_content();?>

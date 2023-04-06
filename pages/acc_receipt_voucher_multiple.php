@@ -169,7 +169,7 @@ cost_center c
                 unset($_POST);
             } // end of deletedata
             if(isset($_POST['editdata'.$ids]))
-            {  mysqli_query($conn, ("UPDATE ".$table_receipt." SET ledger_id='".$_POST['ledger_id']."', pc_code='".$_POST['pc_code']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids."".$sec_com_connection_wa.""));
+            {  mysqli_query($conn, ("UPDATE ".$table_receipt." SET ledger_id='".$_POST['ledger_id']."',narration='".$_POST['narration']."',dr_amt='".$_POST['dr_amt']."',cr_amt='".$_POST['cr_amt']."' WHERE id=".$ids."".$sec_com_connection_wa.""));
                 unset($_POST);
             } // end of editdata
         } // end of while

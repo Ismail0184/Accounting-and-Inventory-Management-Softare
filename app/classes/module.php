@@ -9,6 +9,14 @@ function sum_com($conn, $com,$fdate,$tdate,$sec_com_connection)
 	return $amount;
 }
 
+function sum_RA_com($conn, $com,$year,$sec_com_connection)
+{   global $conn;
+	$sql = mysqli_query($conn,'select sum(j.dr_amt-j.cr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.year="'.$year.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ('.$com.')'.$sec_com_connection);
+	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
+	$amount = $a['amt'];
+	return $amount;
+}
+
 function sum_cash_flow_com($conn, $com,$fdate,$tdate,$sec_com_connection)
 {   global $conn;
 	$sql = mysqli_query($conn,'select sum(j.cr_amt-j.dr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.group_for='.$_SESSION['usergroup'].' and j.jvdate between "'.$fdate.'" and "'.$tdate.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ('.$com.')'.$sec_com_connection);
@@ -21,6 +29,13 @@ function sum_cc_code($conn,$cc_code,$fdate,$tdate,$sec_com_connection)
 {   
 global $conn;
 $sql = mysqli_query($conn,'select sum(j.dr_amt-j.cr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.jvdate between "'.$fdate.'" and "'.$tdate.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and j.cc_code in ('.$cc_code.')'.$sec_com_connection);
+	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
+	$amount = $a['amt'];
+	return $amount;
+}
+function sum_cc_code_RA($conn,$cc_code,$year,$sec_com_connection)
+{	global $conn;
+	$sql = mysqli_query($conn,'select sum(j.dr_amt-j.cr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.yeaer="'.$year.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and j.cc_code in ('.$cc_code.')'.$sec_com_connection);
 	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
 	$amount = $a['amt'];
 	return $amount;
@@ -43,6 +58,14 @@ function sum_com_sub($conn, $com,$fdate,$tdate,$subgroup,$last_subgroup,$sec_com
 function sum_com_liabilities($conn,$com,$fdate,$tdate,$sec_com_connection)
 {   global $conn;
 $sql = mysqli_query($conn, 'select sum(j.cr_amt-j.dr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.jvdate between "'.$fdate.'" and "'.$tdate.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ("'.$com.'")'.$sec_com_connection);
+	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
+	$amount = $a['amt'];
+	return $amount;
+}
+
+function sum_com_liabilities_RA($conn,$com,$year,$sec_com_connection)
+{   global $conn;
+	$sql = mysqli_query($conn, 'select sum(j.cr_amt-j.dr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.year="'.$year.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ('.$com.')'.$sec_com_connection);
 	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
 	$amount = $a['amt'];
 	return $amount;
@@ -73,6 +96,20 @@ function sum_com_sub_PL_cr($conn, $com,$fdate,$tdate,$sec_com_connection)
     $sectionid=$_SESSION['sectionid'];
 	$companyid=$_SESSION['companyid'];
 	$sql = mysqli_query($conn, 'select sum(j.cr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.group_for='.$_SESSION['usergroup'].' and j.jvdate between "'.$fdate.'" and "'.$tdate.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ('.$com.')'.$sec_com_connection);
+	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
+	$amount = $a['amt'];
+	return $amount;
+}
+function sum_com_sub_RA_cr($conn, $com,$year,$sec_com_connection)
+{   global $conn;
+	$sql = mysqli_query($conn, 'select sum(j.cr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.year="'.$year.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ('.$com.')'.$sec_com_connection);
+	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
+	$amount = $a['amt'];
+	return $amount;
+}
+function sum_com_sub_RA_dr($conn, $com,$year,$sec_com_connection)
+{   global $conn;
+	$sql = mysqli_query($conn, 'select sum(j.dr_amt) as amt from journal j,accounts_ledger l, ledger_group g where j.year="'.$year.'" and j.ledger_id=l.ledger_id and l.ledger_group_id=g.group_id and g.com_id in ('.$com.')'.$sec_com_connection);
 	$a = mysqli_fetch_array($sql,  MYSQLI_ASSOC);
 	$amount = $a['amt'];
 	return $amount;

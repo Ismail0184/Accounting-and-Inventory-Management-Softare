@@ -81,7 +81,7 @@
 require_once 'support_file.php';
 require_once 'class.numbertoword.php';
 $title='Voucher View';
-$proj_id=$_SESSION['proj_id'];
+$proj_id=@$_SESSION['proj_id'];
 $vtype= strtolower($_REQUEST['v_type']);
 if($vtype=='receipt'){$voucher_name='RECEIPT VOUCHER';$vtypes='receipt';}
 elseif($vtype=='purchase'){$voucher_name='PURCHASE VOUCHER';$vtypes='secondary_journal';}
@@ -89,7 +89,7 @@ elseif($vtype=='payment'){$voucher_name='PAYMENT VOUCHER';$vtypes='payment';}
 elseif($vtype=='payment_bank'){$voucher_name='CHEQUE PAYMENT';$vtypes='secondary_payment';}
 elseif($vtype=='journal_info'){$voucher_name='JOURNAL VOUCHER';$vtypes='journal_info';}
 elseif($vtype=='contra'){$voucher_name='CONTRA VOUCHER';$vtype='coutra';$vtypes='contra';}
-else{$vtype=='$_REQUEST[v_type]';$voucher_name=$_REQUEST[v_type];$vtypes=$_REQUEST[v_type];}
+else{$vtype==$_REQUEST['v_type'];$voucher_name=$_REQUEST['v_type'];$vtypes=$_REQUEST['v_type'];}
 
 
 
@@ -118,7 +118,7 @@ $cr_amt=0;
 $dr_amt=0;
 if($_SESSION['usergroup']==3)
 $sql2="SELECT a.ledger_name,a.ledger_group_id,b.* FROM accounts_ledger a, journal b where
-b.jv_no='$_GET[vo_no]' and tr_from='$_GET[v_type]' and a.ledger_id=b.ledger_id order by b.id";
+b.jv_no='".$_GET['vo_no']."' and tr_from='".$_GET['v_type']."' and a.ledger_id=b.ledger_id order by b.id";
 else
 if ($vtype=='payment_bank') {
     $sql2 = "SELECT a.ledger_name,a.ledger_group_id,b.* FROM accounts_ledger a, secondary_payment b where b.payment_no='$_GET[vo_no]' and a.ledger_id=b.ledger_id order by b.dr_amt desc,b.id";
@@ -131,31 +131,18 @@ else {
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
-
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-
 <title>.: Voucher :.</title>
-
 <link href="../css/voucher_print.css" type="text/css" rel="stylesheet"/>
-
 <script type="text/javascript">
-
 function hide()
-
 {
-
     document.getElementById("pr").style.display="none";
-
 }
-
 </script></head>
-
 <body style="height: auto">
-
 <table width="820" border="0" cellspacing="0" cellpadding="0" align="center">
   <tr>
     <td><div class="header">
@@ -231,10 +218,6 @@ if(is_file($attachment)){?>
 
     </table></td>
   </tr>
-
-
-
-
   <tr>
     <td><table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#000000" class="tabledesign">
       <tr bgcolor="#F5F5F5">
@@ -347,7 +330,6 @@ $data2=mysqli_query($conn, $sql2);
         <td><div align="center">Checked by </div></td>
         <td><div align="center">HO A/C</div></td>
           <td><div align="center">HOO</div></td>
-
           <?php if($cr_amt>999999): ?>
         <td><div align="center">COO</div></td>
           <?php endif; ?>

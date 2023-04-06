@@ -139,6 +139,7 @@ j.cheq_no,
 j.cheq_date,
 j.bank,
 j.cc_code,
+j.sub_ledger_id,
 j.day_name,
 a.*,c.center_name as cname 
 from 
@@ -153,7 +154,7 @@ journal_info j,
     while($uncheckrow=mysqli_fetch_array($re_query)){
         $ids=$uncheckrow['jid'];
         if (isset($_POST['confirmsave']) && ($uncheckrow['journal_info_no']>0)) {
-            add_to_journal_new($uncheckrow['j_date'],$proj_id, $jv, $uncheckrow['journal_info_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Journal_info',$uncheckrow['journal_info_no'],$uncheckrow['jid'],$uncheckrow['cc_code'],$uncheckrow['sub_ledger_id'],$_SESSION['usergroup'],$uncheckrow['cheq_no'],$uncheckrow['cheq_date'],$create_date,$ip,$now,$uncheckrow['day_name'],$thisday,$thismonth,$thisyear);
+            add_to_journal_new($uncheckrow['j_date'],$proj_id, $jv, $uncheckrow['journal_info_date'], $uncheckrow['ledger_id'], $uncheckrow['narration'], $uncheckrow['dr_amt'], $uncheckrow['cr_amt'],'Journal_info',$uncheckrow['journal_info_no'],$uncheckrow['jid'],$uncheckrow['cc_code'],$uncheckrow['sub_ledger_id'],$_SESSION['usergroup'],$uncheckrow['cheq_no'],$uncheckrow['cheq_date'],$create_date,$ip,$now,$uncheckrow['day_name'],$thisday,$thismonth,$thisyear,'','','');
         }
         if(isset($_POST['deletedata'.$ids]))
         {  mysqli_query($conn, ("DELETE FROM ".$table_journal_info." WHERE id='".$ids."'".$sec_com_connection_wa.""));

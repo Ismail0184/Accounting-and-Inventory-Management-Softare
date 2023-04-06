@@ -50,7 +50,7 @@ d.item_id=i.item_id';
 
 if(prevent_multi_submit()){
     if (isset($_POST['returned'])) {
-        $_POST['checked_by_acc']=$_SESSION[userid];
+        $_POST['checked_by_acc']=$_SESSION['userid'];
         $_POST['checked_by_acc_at']=$todaysss;
         $_POST['status']="RETURNED";
         $crud->update($unique);
@@ -68,37 +68,37 @@ if(isset($_POST['checked'])){
                                 $_POST['company_id'] = $_SESSION['companyid'];
 
                                 $idget=$data->id;
-                                $_POST[ji_date]=$data->cc_date;
-                                $_POST[item_id]=$data->item_id;
-                                $_POST[warehouse_id]=$data->warehouse_id;
+                                $_POST['ji_date']=$data->cc_date;
+                                $_POST['item_id']=$data->item_id;
+                                $_POST['warehouse_id']=$data->warehouse_id;
                                 if($data->cc_type=='-'){
-                                  $_POST[item_in]=0;
-                                  $_POST[item_ex]=$data->qty;
+                                  $_POST['item_in']=0;
+                                  $_POST['item_ex']=$data->qty;
                                 } elseif ($data->cc_type=='+') {
-                                  $_POST[item_in]=$data->qty;
-                                  $_POST[item_ex]=0;
+                                  $_POST['item_in']=$data->qty;
+                                  $_POST['item_ex']=0;
                                 }
-                                $_POST[item_price]=$data->item_price;
-                                $_POST[total_amt]=$data->total_amt;
-                                $_POST[tr_from]='Cycle_Counting';
-                                $_POST[tr_no]=$$unique;
-                                $_POST[sr_no]=$data->id;
+                                $_POST['item_price']=$data->item_price;
+                                $_POST['total_amt']=$data->total_amt;
+                                $_POST['tr_from']='Cycle_Counting';
+                                $_POST['tr_no']=$$unique;
+                                $_POST['sr_no']=$data->id;
 
                                 if($data->cc_type=='-'){
-                                    $_POST[batch]=$data->batch;
-                                    $_POST[lot_number]=0;
+                                    $_POST['batch']=$data->batch;
+                                    $_POST['lot_number']=0;
                                 }
                                 if ($data->cc_type=='+') {
                                     $new_batch = automatic_number_generate(20,$lc_lc_received_batch_split,'batch',$condition,'000');
-                                    $_POST[batch]=$new_batch;
-                                    $_POST[lot_number]=$data->batch;
+                                    $_POST['batch']=$new_batch;
+                                    $_POST['lot_number']=$data->batch;
 
                                     $_POST['po_no'] = $_GET[$unique];
                                 $_POST['create_date'] = date('Y-m-d');
                                 $_POST['lc_id'] = $_GET[$unique];
                                 $_POST['batch_no'] = $data->batch;
-                                $_POST[item_id]=$data->item_id;
-                                $_POST[warehouse_id]=$data->warehouse_id;
+                                $_POST['item_id']=$data->item_id;
+                                $_POST['warehouse_id']=$data->warehouse_id;
                                 $_POST['qty'] = $data->qty;
                                 $_POST['rate'] = $data->item_price;
                                 $_POST['batch'] = $new_batch;
@@ -110,26 +110,24 @@ if(isset($_POST['checked'])){
                                 $crud->insert();
 
                                 }
-
-                                $_POST[expiry_date] = $data->mfg;
-                                $_POST[section_id]=$_SESSION[sectionid];
-                                $_POST[company_id]=$_SESSION[companyid];
+                                $_POST['expiry_date'] = $data->mfg;
+                                $_POST['section_id']=$_SESSION['sectionid'];
+                                $_POST['company_id']=$_SESSION['companyid'];
                                 $crud      =new crud($journal_item);
                                 $crud->insert();
-                                
 
                               }
-          if (($_POST[dr_amount_1] > 0) && ($_POST[cr_amount_2] > 0)) {
-            add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST[ledger_1], $_POST[narration_1], $_POST[dr_amount_1],0, Cycle_Counting, $$unique, $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear);
-            add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST[ledger_2], $_POST[narration_1],0, $_POST[cr_amount_2], Cycle_Counting, $$unique, $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear);
+          if (($_POST['dr_amount_1'] > 0) && ($_POST['cr_amount_2'] > 0)) {
+            add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST['ledger_1'], $_POST['narration_1'], $_POST['dr_amount_1'],0, 'Cycle_Counting', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+            add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST['ledger_2'], $_POST['narration_1'],0, $_POST['cr_amount_2'], 'Cycle_Counting', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
           }
 
-            if (($_POST[dr_amount_1] > 0) && ($_POST[cr_amount_2] > 0)) {
-              add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST[ledger_3], $_POST[narration_3], $_POST[dr_amount_3],0, Cycle_Counting, $$unique, $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear);
-              add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST[ledger_4], $_POST[narration_3],0, $_POST[cr_amount_4], Cycle_Counting, $$unique, $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear);
+            if (($_POST['dr_amount_1'] > 0) && ($_POST['cr_amount_2'] > 0)) {
+              add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST['ledger_3'], $_POST['narration_3'], $_POST['dr_amount_3'],0, 'Cycle_Counting', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+              add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST['ledger_4'], $_POST['narration_3'],0, $_POST['cr_amount_4'], 'Cycle_Counting', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
               }
 
-        $up_master=mysqli_query($conn,"UPDATE ".$table." SET status='COMPLETED',checked_by_acc='".$_SESSION[userid]."',checked_by_acc_at='".$todaysss."' where ".$unique."=".$_GET[$unique]."");
+        $up_master=mysqli_query($conn,"UPDATE ".$table." SET status='COMPLETED',checked_by_acc='".$_SESSION['userid']."',checked_by_acc_at='".$todaysss."' where ".$unique."=".$_GET[$unique]."");
         $up_details=mysqli_query($conn,"UPDATE ".$table_details." SET status='COMPLETED' where ".$unique_details."=".$_GET[$unique]."");
         $type=1;
         unset($_POST);
@@ -140,16 +138,16 @@ if(isset($_POST['checked'])){
 } // prevent_multi_submit
 
 
-if (isset($_POST[viewreport])) {
-    $sql='SELECT m.cc_no,m.cc_no,m.cc_date as date,m.remarks,w.warehouse_name,concat(uam.fname,"<br>","at: ",m.entry_at) as entry_by,IF(m.checked_by_qc>0,concat((SELECT fname from user_activity_management where user_id=m.checked_by_qc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS QC_check_Status,
-    IF(m.checked_by_acc>0,concat((SELECT fname from user_activity_management where user_id=m.checked_by_acc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS Accounts_check_status,m.status
-    from '.$table.' m, warehouse w,user_activity_management uam
+if (isset($_POST['viewreport'])) {
+    $sql='SELECT m.cc_no,m.cc_no,m.cc_date as date,m.remarks,w.warehouse_name,concat(uam.fname,"<br>","at: ",m.entry_at) as entry_by,IF(m.checked_by_qc>0,concat((SELECT fname from users where user_id=m.checked_by_qc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS QC_check_Status,
+    IF(m.checked_by_acc>0,concat((SELECT fname from users where user_id=m.checked_by_acc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS Accounts_check_status,m.status
+    from '.$table.' m, warehouse w,users uam
     where
     m.warehouse_id=w.warehouse_id and
-    m.entry_by=uam.user_id and m.warehouse_id='.$_POST[warehouse_id].' order by m.cc_no';
+    m.entry_by=uam.user_id and m.warehouse_id='.$_POST['warehouse_id'].' order by m.cc_no';
   } else {
-    $sql='SELECT m.cc_no,m.cc_no,m.cc_date as date,m.remarks,w.warehouse_name,concat(uam.fname,"<br>","at: ",m.entry_at) as entry_by,IF(m.checked_by_qc>0,concat((SELECT fname from user_activity_management where user_id=m.checked_by_qc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS QC_check_Status,m.status
-    from '.$table.' m, warehouse w,user_activity_management uam
+    $sql='SELECT m.cc_no,m.cc_no,m.cc_date as date,m.remarks,w.warehouse_name,concat(uam.fname,"<br>","at: ",m.entry_at) as entry_by,IF(m.checked_by_qc>0,concat((SELECT fname from users where user_id=m.checked_by_qc),"<br>","at: ",m.checked_by_qc_at), "PENDING " ) AS QC_check_Status,m.status
+    from '.$table.' m, warehouse w,users uam
     where
     m.warehouse_id=w.warehouse_id and
     m.entry_by=uam.user_id and
@@ -187,7 +185,9 @@ if (isset($_POST[viewreport])) {
                         </tr>
                         </thead>
                         <tbody>
-                        <?php $query=mysqli_query($conn, $res_details);while($data=mysqli_fetch_object($query)){$ids=$row[id]; ?>
+                        <?php $query=mysqli_query($conn, $res_details);
+                        while($data=mysqli_fetch_object($query)){
+                            $ids=$row['id']; ?>
                             <tr>
                               <td style="vertical-align:middle"><?=$i=$i+1;?></td>
                               <td style="vertical-align:middle"><?=$data->finish_goods_code;?></td>
@@ -202,6 +202,7 @@ if (isset($_POST[viewreport])) {
                             </tr><?php
                           }
 $stock_in=find_a_field(''.$table_details.'','SUM(total_amt)','cc_type="+" and '.$unique.'='.$_GET[$unique]);
+                        echo $stock_in;
 $stock_out=find_a_field(''.$table_details.'','SUM(total_amt)','cc_type="-" and '.$unique.'='.$_GET[$unique]);
 
                           ?>
@@ -299,9 +300,6 @@ $stock_out=find_a_field(''.$table_details.'','SUM(total_amt)','cc_type="-" and '
                         <?php } ?>
                         </tbody>
                     </table>
-
-
-
                     <?php
                     $GET_status=find_a_field(''.$table.'','status',''.$unique.'='.$_GET[$unique]);
                     if($GET_status=='CHECKED'):  ?>
@@ -317,18 +315,17 @@ $stock_out=find_a_field(''.$table_details.'','SUM(total_amt)','cc_type="-" and '
     </div>
 
 <?php endif;  ?>
-
 <?php if(!isset($_GET[$unique])): ?>
     <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" >
         <table align="center" style="width: 50%;">
             <tr><td>
-                <input type="date"  style="width:150px; font-size: 11px;"  value="<?=($_POST[f_date]!='')? $_POST[f_date] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
+                <input type="date"  style="width:150px; font-size: 11px;"  value="<?=($_POST['f_date']!='')? $_POST['f_date'] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
                 <td style="width:10px; text-align:center"> -</td>
-                <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?=($_POST[t_date]!='')? $_POST[t_date] : date('Y-m-d') ?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
+                <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?=($_POST['t_date']!='')? $_POST['t_date'] : date('Y-m-d') ?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
                 <td style="width:10px; text-align:center"> -</td>
                 <td><select class="form-control" style="width:200px; font-size: 11px" tabindex="-1" required="required"  name="warehouse_id" id="warehouse_id">
                     <option selected></option>
-                    <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),$_POST[warehouse_id]);?>
+                    <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$_POST['warehouse_id']);?>
                 </select></td>
                 <td style="width:10px; text-align:center"> -</td>
                 <td style="padding:10px"><button type="submit" style="font-size: 11px; height: 30px" name="viewreport"  class="btn btn-primary">View Inventory Cycle Counting</button></td>

@@ -670,6 +670,22 @@ function reload1(form)
                         </div>
                     </div>
 
+                <?php elseif ($report_id=='1005004'): ?>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Year <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select name="year" class="form-control col-md-7 col-xs-12" style="font-size: 11px">
+                                <?php
+                                $get_starting_year = 2020;
+                                for($i = $get_starting_year ; $i < date('Y'); $i++){?>
+                                    <option><?=$i?></option>
+                                <?php } ?>
+                                <option selected><?=date('Y')?></option>
+
+                            </select>
+                        </div>
+                    </div>
+
                 <?php  else:  ?>
                     <p style="text-align: center">Please select a report from left</p>
                 <?php endif; ?>

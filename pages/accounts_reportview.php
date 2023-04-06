@@ -2880,6 +2880,116 @@ group by lld.item_id
 
 
 
+    <?php elseif ($_POST['report_id']=='1005004'):
+        $year = $_POST['year'];
+        ?>
+        <title>Ratio Analysis</title>
+        <style>
+            #customers {
+                font-family: "Gill Sans", sans-serif;
+            }
+            #customers td {
+            }
+            #customers tr:ntd-child(even)
+            {background-color: #f0f0f0;}
+            #customers tr:hover {background-color: #f5f5f5;}
+            td{text-align: center;}
+            th{text-align: center;border: solid 1px #999; padding:2px;}
+
+        </style>
+        <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
+        <p align="center" style="margin-top:-20px">Ratio Analysis</p>
+        <p align="center" style="margin-top:-12px; font-size: 11px">For the year: <?=$_POST['year']?></p>
+        <table align="center" id="customers" style="width:50%; border: solid 1px #999; border-collapse:collapse; ">
+            <thead>
+            <tr style="border: solid 1px #999;font-weight:bold; font-size:12px; background-color: #FFCCFF" >
+                <th align="center">Particulars</th>
+                <th width="19%" height="20" align="center">Amount</th>
+            </tr></thead>
+            <tbody>
+            <tr style="border: solid 1px #999; font-size:11px">
+                <td style="padding-left:20px; text-align: left;font-size: 11px"><? $headname="Sales"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '1,35'; $amount = sum_com_sub_RA_cr($conn, $com_id,$year,$sec_com_connection)-sum_com_sub_RA_dr($conn, $com_id,$year,$sec_com_connection); $salesNormal = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?rno=1&headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px;font-size: 11px"><? $headname="COGS"; echo $headname; ?></td>
+            <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px">
+                <? $com_id = '4,36'; $amount_cogs = sum_RA_com($conn,$com_id,$year,$sec_com_connection);$cc_code = 18;
+                $amount_cc_code = sum_cc_code_RA($conn,$cc_code,$year,$sec_com_connection);
+                $amount=$amount_cogs+$amount_cc_code;
+                $FactoryCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount;
+                echo '<a href="pl_group_details.php?rno=3&headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code='.$cc_code.'&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+
+            <tr style="border: solid 1px #999; font-size:11px">
+                <td style="padding-left:20px; text-align: left;font-size: 11px"><? $headname="EBIT"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '0'; $amount = sum_com_sub_RA_cr($conn, $com_id,$year,$sec_com_connection); $salesNormal = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?rno=1&headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="border: solid 1px #999; font-size:11px">
+                <td style="padding-left:20px; text-align: left;font-size: 11px"><? $headname="EBITDA"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '0'; $amount = sum_com_sub_RA_cr($conn, $com_id,$year,$sec_com_connection); $salesNormal = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?rno=1&headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td  style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Interest Expense"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '8'; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $totalfinancialcost = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td  style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Net Income"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '8'; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $totalfinancialcost = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td  style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Total Debt"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '8'; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $totalfinancialcost = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td  style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Total Assets"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '8'; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $totalfinancialcost = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            <tr style="font-size:11px">
+                <td  style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Net Fixed Assets"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '8'; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $totalfinancialcost = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td  style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Total Equity"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '8'; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $totalfinancialcost = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td  style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Current Assets"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '8'; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $totalfinancialcost = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="border: solid 1px #999; font-size:11px">
+                <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Current Liabilities"; echo $headname; ?></td>
+                <td style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = "29,32,28,30,18,34,31"; $amount = sum_com_liabilities_RA($conn,$com_id,$year,$sec_com_connection); $TotalSTLOANSMCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="font-size:11px">
+                <td  style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Cash & Cash Equivalents"; echo $headname; ?></td>
+                <td align="right" style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = '24'; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $totalfinancialcost = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="pl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="border: solid 1px #999; font-size:11px">
+                <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Accounts Receivables"; echo $headname; ?></td>
+                <td style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = 17; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $TotalARCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="border: solid 1px #999; font-size:11px">
+                <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Inventories"; echo $headname; ?></td>
+                <td style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = 16; $amount = sum_RA_com($conn, $com_id,$year,$sec_com_connection); $TotalInventoryCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+
+            <tr style="border: solid 1px #999; font-size:11px">
+                <td style="border: solid 1px #999; padding:2px; text-align: left; padding-left:20px"><?$headname="Accounts Payable"; echo $headname; ?></td>
+                <td style="border: solid 1px #999;text-align: right; padding-right:5px;font-size: 11px"><? $com_id = 28; $amount = sum_com_liabilities_RA($conn,$com_id,$year,$sec_com_connection); $TotalAPCurrent = $amount; $total = $total + $amount; $total1 = $total1 + $amount; echo '<a href="bl_group_details.php?headname='.$headname.'&fdate='.$fdate.'&tdate='.$tdate.'&cc_code=&show=Show&com_id='.$com_id.'" style="text-decoration:none" target="_new">'.number_format($amount,2).'</a>';?></td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
     <?php elseif ($_POST['report_id']=='1008001'):?>
         <title><?=$warehouse_name= find_a_field('warehouse','warehouse_name','warehouse_id="'.$_POST['warehouse_id'].'"');?> : Transaction Statement</title>
         <style>

@@ -29,14 +29,14 @@ $sql2="select a.id,a.tr_id from secondary_journal a where  a.jv_no='$jv_no' and 
 $data2=mysqli_query($conn, $sql2);
 while($datas=mysqli_fetch_row($data2)){
 $ledger_old=$_POST['ledger_'.$datas[0]];
-$ledger_new = explode('#>',$ledger_old);
-$ledger = $ledger_new[1];
+$ledger_new = $ledger_old;
+$ledger = $_POST['ledger_'.$datas[0]];
 $c_no=$_POST['c_no'];
 $c_date=$_POST['c_date'];
 $narration=$_POST['narration_'.$datas[0]];
 $dr_amt=$_POST['dr_amt_'.$datas[0]];
 $cr_amt=$_POST['cr_amt_'.$datas[0]];
-$sqldate2 = "UPDATE secondary_journal SET jv_date='$vdate',cheq_no='$cheq_no',cheq_date='$cheq_date',ledger_id='$ledger',narration='$narration',dr_amt='$dr_amt',cr_amt='$cr_amt' WHERE id = ".$datas[0];
+$sqldate2 = "UPDATE secondary_journal SET jv_date='$vdate',cheq_no='$cheq_no',cheq_date='$cheq_date',ledger_id='".$ledger."',narration='$narration',dr_amt='$dr_amt',cr_amt='$cr_amt' WHERE id = ".$datas[0];
 if(isset($sqldate1))@mysqli_query($conn, $sqldate1);
 @mysqli_query($conn, $sqldate2);
 echo '<script type="text/javascript">window.opener.location.reload(true);window.close();</script>';
@@ -98,30 +98,25 @@ if($info[0]==0) $type='Credit';
 			  $d_total=$d_total+$info[0];
 			  $c_total=$c_total+$info[1];
 			  ?>
-              <tr <? if(++$x%2!=0) echo 'class="spec"';?>>
+              <tr>
                 <td><?=$pi;?>&nbsp;</td>
                 <td>
-                    <select class="select2_single form-control" style="width:100%; font-size: 11px;text-align: left" tabindex="-1" required="required"  name="ledger_<?=$info[5]?>">
+                    <select class="select2_single form-control" style="width:100%; font-size: 11px;text-align: left; margin: 10px" tabindex="-1" required="required"  name="ledger_<?=$info[5]?>" id="ledger_<?=$info[5]?>">
                       <option></option>
                       <?=foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $info[3], 'status=1'); ?>
                   </select>
-                <td>
-
-          <input type="text" name="narration_<?=$info[5];?>" id="narration_<?=$info[5];?>" style="" value="<?=$info[4];?>" />
-          <input type="hidden" name="l_<?=$pi;?>" id="l_<?=$pi;?>" value="<?=$info[3];?>" />          </td>
-                <td><div align="right">
-                  <label>
-                  <input name="dr_amt_<?=$info[5];?>" type="text" id="dr_amt_<?=$info[5];?>" value="<?=$info[0]?>" style="width:80px;" />
-                  </label></div></td>
-                <td><div align="right">
-                  <input name="cr_amt_<?=$info[5];?>" type="text" id="cr_amt_<?=$info[5];?>" value="<?=$info[1]?>" style="width:80px;" />
-                  </div></td>
+                </td>
+                <td><input type="text" name="narration_<?=$info[5];?>" id="narration_<?=$info[5];?>" style="" value="<?=$info[4];?>" />
+                <input type="hidden" name="l_<?=$pi;?>" id="l_<?=$pi;?>" value="<?=$info[3];?>" />
+                </td>
+                <td><input name="dr_amt_<?=$info[5];?>" type="text" id="dr_amt_<?=$info[5];?>" value="<?=$info[0]?>" style="width:80px;" /></td>
+                <td><input name="cr_amt_<?=$info[5];?>" type="text" id="cr_amt_<?=$info[5];?>" value="<?=$info[1]?>" style="width:80px;" /></td>
               </tr>
 			   <?php }?>
               <tr>
                 <td colspan="3" align="right">Total Amount :</td>
-                <td><div style="text-align: right"><?=$d_total;?>&nbsp;</div></td>
-                <td><div style="text-align: right"><?=$c_total;?>&nbsp;</div></td>
+                <td><?=$d_total;?>&nbsp;</td>
+                <td><?=$c_total;?>&nbsp;</td>
               </tr>
           </table></td>
         </tr>
@@ -139,7 +134,7 @@ if($vtype=='journal_info'||$vtype=='Journal_info') $page="journal_note_new.php?v
 <div align="center" style="margin-top:10px;">
 <table border="0" cellspacing="10" cellpadding="0" align="center" style="width:400px;">
   <tr>
-    <td><input class="btn_p1" name="narr" type="submit" value="Edit Voucher" onmouseover="this.style.cursor='pointer';" /></td>
+    <td><input name="narr" type="submit" class="btn btn-primary" value="Edit Voucher" onmouseover="this.style.cursor='pointer';" /></td>
     <td>&nbsp;</td>
     <td><div class="btn_p">
         <div align="center"><a href="voucher_print_sec.php?v_type=<?php echo $vtype;?>&amp;vo_no=<?php echo $jv_no;?>" target="_blank">Print This Invoice</a></div>
