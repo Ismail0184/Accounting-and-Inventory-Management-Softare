@@ -14,9 +14,10 @@ $source_id=3;
 
 if(prevent_multi_submit()) {
     if (isset($_POST['initiate'])) {
-        $_SESSION['mis_iiu_group_id'] = $_POST[group_id];
-        $_SESSION['mis_iiu_product_nature'] = $_POST[product_nature];
-        $_SESSION['mis_iiu_consumable_type'] = $_POST[consumable_type];
+        $_SESSION['mis_iiu_sub_group_id'] = $_POST['sub_group_id'];
+        $_SESSION['mis_iiu_product_nature'] = $_POST['product_nature'];
+        $_SESSION['mis_iiu_consumable_type'] = $_POST['consumable_type'];
+        $_SESSION['mis_iiu_unit_name'] = $_POST['unit_name'];
         unset($_POST);
         unset($$unique);
     }} // prevent multi submit
@@ -28,12 +29,12 @@ if(isset($_POST['clearAll']))
     }
 
     if(isset($_POST['confirm']))
-    { $query = "INSERT INTO ".$table." (item_id,finish_goods_code,item_name,unit_name,pack_size,d_price,consumable_type,product_nature,sub_group_id,entry_by,entry_at,H_S_code,section_id,company_id)
+    { $query = "INSERT INTO ".$table." (item_id,finish_goods_code,item_name,unit_name,pack_size,d_price,consumable_type,product_nature,sub_group_id,entry_by,entry_at,brand_id,section_id,company_id)
           SELECT item_id, finish_goods_code,item_name,email,parent,rate,mobile_no,outlet_category,ledger_group_id,entry_by,entry_at,ledger_id,section_id,company_id FROM data_upload_helper
           WHERE source in ('".$source."')";
         $insert=mysqli_query($conn, $query);
         unset($_POST);
-        $del=mysqli_query($conn, "DELETE FROM ".$table_helper." WHERE  entry_by=".$_SESSION[userid]." and ".$source_unique."=".$source_id."");
+        $del=mysqli_query($conn, "DELETE FROM ".$table_helper." WHERE  entry_by=".$_SESSION['userid']." and ".$source_unique."=".$source_id."");
     }
 
 
@@ -45,9 +46,9 @@ if(isset($_POST['clearAll']))
                 while (($emapData = fgetcsv($file, 10000, ",")) !== FALSE)
                 {   //It wiil insert a row to our subject table from our csv file`
 						if(is_numeric($emapData[0])) {
-						$sql = "INSERT INTO `data_upload_helper` (`item_id`,`finish_goods_code`,`item_name`,`email`,`parent`,`rate`,`ledger_id`,`entry_by`,`entry_at`,`ledger_group_id`,`section_id`,`company_id`,`status`,`source`,`source_id`,`outlet_category`,`mobile_no`)
-            VALUES('$emapData[0]','$emapData[1]','$emapData[2]','$emapData[3]','$emapData[4]','$emapData[5]','$emapData[6]','$_SESSION[userid]','$now','$_SESSION[mis_iiu_group_id]','$_SESSION[sectionid]','$_SESSION[companyid]','UNMOVED','$source','$source_id','$_SESSION[mis_iiu_product_nature]','$_SESSION[mis_iiu_consumable_type]')";
-                    }
+                            $sql = "INSERT INTO `data_upload_helper` (`item_id`,`finish_goods_code`,`item_name`,`email`,`parent`,`rate`,`ledger_id`,`entry_by`,`entry_at`,`ledger_group_id`,`section_id`,`company_id`,`status`,`source`,`source_id`,`outlet_category`,`mobile_no`)
+            VALUES('$emapData[0]','$emapData[1]','$emapData[2]','$emapData[3]','$emapData[4]','$emapData[5]','$emapData[6]','".$_SESSION['userid']."','$now','".$_SESSION['mis_iiu_sub_group_id']."','".$_SESSION['sectionid']."','".$_SESSION['companyid']."','UNMOVED','$source','$source_id','".$_SESSION['mis_iiu_product_nature']."','".$_SESSION['mis_iiu_consumable_type']."')";
+                        }
                     $result = mysqli_query( $conn, $sql);
                     if(! $result )
                     {
@@ -64,9 +65,10 @@ if(isset($_POST['clearAll']))
             }header("Location: ".$page."");}
 if(isset($_POST['deleted']))
 {	unset($_POST);
-    unset($_SESSION['mis_iiu_group_id']);
+    unset($_SESSION['mis_iiu_sub_group_id']);
     unset($_SESSION['mis_iiu_product_nature']);
     unset($_SESSION['mis_iiu_consumable_type']);
+    unset($_SESSION['mis_iiu_unit_name']);
 
 }
 
@@ -103,16 +105,18 @@ if(isset($_POST['deleted']))
                     <tr>
                         <td>
                             <div class="form-group" style="width: 100%">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 40%">Customer Type<span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 40%">Sub Group <span class="required text-danger">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select class="select2_single form-control"  required style="width: 99%;" name="group_id" id="group_id">
+                                    <select class="select2_single form-control"  required style="width: 99%;" name="sub_group_id" id="sub_group_id">
                                     <option></option>
-                                    <?php foreign_relation('item_group', 'group_id', 'CONCAT(group_id," : ", group_name)', $_SESSION['mis_iiu_group_id'], '1'); ?>
+                                    <?php foreign_relation('item_sub_group', 'sub_group_id', 'CONCAT(sub_group_id," : ", sub_group_name)', $_SESSION['mis_iiu_sub_group_id'], '1'); ?>
                                     </select>
-                                </div></div></td>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" style="width: 40%">Consumable Type:<span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" style="width: 40%">Consumable Type: <span class="required text-danger">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="select2_single form-control"  required style="width: 99%;" name="consumable_type" id="consumable_type"><option></option>
                                     <option value="Consumable" <?=($_SESSION['mis_iiu_consumable_type']=='Consumable')? 'Selected' : '';?>>Consumable</option>
@@ -123,21 +127,31 @@ if(isset($_POST['deleted']))
                         </td>
                         <td>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" style="width: 40%">Product Nature:<span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" style="width: 40%">Product Nature: <span class="required text-danger">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="select2_single form-control"  required style="width: 99%;" name="product_nature" id="product_nature"><option></option>
                                     <option value="Salable" <?=($_SESSION['mis_iiu_product_nature']=='Salable')? 'Selected' : '';?>>Salable</option>
                                     <option value="Purchasable" <?=($_SESSION['mis_iiu_product_nature']=='Purchasable')? 'Selected' : '';?>>Purchasable</option>
                                     <option value="Both" <?=($_SESSION['mis_iiu_product_nature']=='Both')? 'Selected' : '';?>>Both</option>
-
                                     </select>
                                     </div></div>
+                        </td>
+                        <td>
+                            <div class="form-group" style="width: 100%">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 40%">Unit <span class="required text-danger">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select class="select2_single form-control"  required style="width: 99%;" name="unit_name">
+                                        <option></option>
+                                        <?php foreign_relation('unit_management', 'unit_name', 'unit_name', $_SESSION['mis_iiu_unit_name'], '1'); ?>
+                                    </select>
+                                </div>
+                            </div>
                         </td>
                     </tr> </table>
 
                 <div class="form-group" style="margin-left:40%; margin-top: 15px">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <?php if($_SESSION[mis_iiu_group_id]){  ?>
+                        <?php if($_SESSION['mis_iiu_sub_group_id']){  ?>
                         <?php   } else {?>
                             <button type="submit" name="initiate" onclick='return window.confirm("Are you confirm?");' class="btn btn-primary" style="font-size: 11px">Initiate with Primary Info</button>
                         <?php } ?>
@@ -146,7 +160,7 @@ if(isset($_POST['deleted']))
 
 
 
-<?php if($_SESSION[mis_iiu_group_id]){  ?>
+<?php if($_SESSION['mis_iiu_sub_group_id']){  ?>
         <div class="col-md-12 col-xs-12">
             <div class="x_panel">
                 <div class="x_content">

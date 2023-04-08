@@ -116,6 +116,7 @@ i.sub_group_id=sg.sub_group_id and
 sg.group_id=g.group_id and
 ib.id=i.brand_id and 
 i.section_id=s.section_id".$sec_com_connection."
+
 order by i.serial";
 
 $query=mysqli_query($conn, $res);

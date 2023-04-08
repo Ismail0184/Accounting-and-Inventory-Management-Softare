@@ -3,18 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/classes/module.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/module.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_inventory_cycle_counting.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_inventory_cycle_counting.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_inventory_cycle_counting_check.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_inventory_cycle_counting_check.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_journal_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/accounts_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_reportview.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/module.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/MIS_upload_item_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/MIS_upload_item_info.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/item_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/item_info.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/unchecked_voucher_view_popup_purchase.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/unchecked_voucher_view_popup_purchase.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/voucher_print1.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/voucher_print1.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_select_report.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +123,8 @@
       <workItem from="1680409460881" duration="6601000" />
       <workItem from="1680495294134" duration="24867000" />
       <workItem from="1680669230013" duration="12733000" />
-      <workItem from="1680753628272" duration="3357000" />
+      <workItem from="1680753628272" duration="13598000" />
+      <workItem from="1680925662579" duration="6057000" />
     </task>
     <servers />
   </component>
