@@ -134,33 +134,65 @@ $sales_date = @$_SESSION['sales_date'];
 $COUNT_details_data=find_a_field("".$table."","Count(id)","sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
 
+$count_do = find_a_field("sale_do_master","COUNT(do_no)","sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
-if(isset($_POST['confirm_and_create_invoice']))
-{
-    $sql=mysqli_query($conn, "SELECT distinct route,section,sales_date,id,point from sales_data_from_prism_software where sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' group by route");
+if($count_do>0) {} else {
+    $sql=mysqli_query($conn, "SELECT distinct route,section,sales_date,id,point from sales_data_from_prism_software where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' group by route");
     while($data=mysqli_fetch_object($sql)) {
         $crud = new crud($sale_do_master);
         $_POST['do_no'] = find_a_field($sale_do_master, 'max(do_no)', '1') + 1;
         $_POST['do_date'] = $_SESSION['sales_date'];
-        $_POST['dealer_code'] = find_a_field("dealer_info","dealer_code","dealer_custom_code=".$data->route);
-        $_POST['status'] = "";
-        $_POST['depot_id'] = "";
+        $_POST['dealer_code'] = find_a_field("dealer_info", "dealer_code", "dealer_custom_code=" . $data->route);
+        $_POST['depot_id'] = $_SESSION['warehouse'];
         $_POST['entry_at'] = date('Y-m-d H:i:s');
         $_POST['entry_by'] = $_SESSION['userid'];
+        $_POST['status'] = 'CHECKED';
         $_POST['section_id'] = $_SESSION['sectionid'];
         $_POST['company_id'] = $_SESSION['companyid'];
         $crud->insert();
     }
-    $sql2=mysqli_query($conn, "SELECT do_no,do_date,dealer_code from sale_do_master where do_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
-    while($data_m=mysqli_fetch_object($sql2)){
-        $crud = new crud($sale_do_details);
-        $_POST['do_no'] = $data_m->do_no;
-        $_POST['do_date'] = $data_m->do_date;
-        $_POST['dealer_code'] = $data_m->dealer_code;;
-        $_POST['depot_id'] = "";
-        $crud->insert();
-    }
-} ?>
+
+
+        $sql3=mysqli_query($conn, "SELECT * from sales_data_from_prism_software_filterd where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+        while($data_d=mysqli_fetch_object($sql3)) {
+
+            $sql2=mysqli_query($conn, "SELECT dm.do_no,dm.do_date,dm.dealer_code,d.dealer_custom_code,d.town_code,d.area_code,d.territory,d.region from sale_do_master dm, dealer_info d where dm.dealer_code=d.dealer_code and d.dealer_custom_code='".$data_d->route."' and dm.do_date='".$_SESSION['sales_date']."' and dm.section_id='".$_SESSION['sectionid']."' and dm.company_id='".$_SESSION['companyid']."' group by dm.do_no,d.dealer_custom_code");
+            $data_m=mysqli_fetch_object($sql2);
+                $crud = new crud($sale_do_details);
+                $_POST['do_no'] = $data_m->do_no;
+                $_POST['tr_no'] = $data_m->do_no;
+                $_POST['do_date'] = $data_m->do_date;
+                $_POST['ji_date'] = $data_m->do_date;
+                $_POST['dealer_code'] = $data_m->dealer_code;;
+                $_POST['town'] = $data_m->town_code;;
+                $_POST['area_code'] = $data_m->area_code;;
+                $_POST['territory'] = $data_m->territory;;
+                $_POST['region'] = $data_m->region;;
+                $_POST['depot_id'] = $_SESSION['warehouse'];
+                $_POST['warehouse_id'] = $_SESSION['warehouse'];
+
+            $item_all = find_all_field("item_info","","item_id=".$data_d->item_id);
+            $_POST['item_id'] = $data_d->item_id;
+            $_POST['unit_price'] = $data_d->rate;
+            $_POST['item_price'] = $data_d->rate;
+            $_POST['pkt_size'] = $item_all->pack_size;
+            $_POST['total_unit'] = $item_all->pack_size*$data_d->qty;
+            $_POST['total_amt'] = $data_d->amount;
+            $_POST['cogs_price'] = $item_all->material_cost;
+            $_POST['t_price'] = $item_all->t_price;
+            $_POST['status'] = 'CHECKED';
+            $_POST['do_type'] = 'sales';
+            $_POST['tr_from'] = 'sales';
+            $_POST['item_ex'] = $item_all->pack_size*$data_d->qty;;
+
+            if($data_d->qty>0){
+                $crud->insert();
+
+                $crud = new crud($journal_item);
+                $crud->insert();
+
+            }}}
+?>
 <?php require_once 'header_content.php'; ?>
     <style>
         input[type=text]{
