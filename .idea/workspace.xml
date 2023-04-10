@@ -3,7 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_voucher_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_voucher_view.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_voucher_view_popup.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_voucher_view_popup.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/voucher_print1.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/voucher_print1.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +126,8 @@
       <workItem from="1680669230013" duration="12733000" />
       <workItem from="1680753628272" duration="13598000" />
       <workItem from="1680925662579" duration="15233000" />
-      <workItem from="1681011578073" duration="1559000" />
+      <workItem from="1681011578073" duration="10791000" />
+      <workItem from="1681099788518" duration="656000" />
     </task>
     <servers />
   </component>

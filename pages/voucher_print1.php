@@ -151,7 +151,7 @@ function hide()
 	    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="1%">
-			<? $path='../logo/'.$_SESSION['proj_id'].'.jpg';
+			<? $path='../logo/'.$proj_id.'.jpg';
 			if(is_file($path)) echo '<img src="'.$path.'" height="80" />';?>			</td>
             <td width="83%"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
@@ -238,12 +238,13 @@ $data2=mysqli_query($conn, $sql2);
 			  while($info=mysqli_fetch_object($data2)){ $pi++;
 			  $cr_amt=$cr_amt+$info->cr_amt;
 			  $dr_amt=$dr_amt+$info->dr_amt;
-			  if($info->bank==''&&$info->cheq_no!='')
+              $bankGET = @$info->bank;
+			  if($bankGET==''&&$info->cheq_no!='')
 			  $narration=$info->narration.':: Cheq # '.$info->cheq_no.'; dt= '.date("d.m.Y",$info->cheq_date);
 			  elseif($info->cheq_no=='')
 			  $narration=$info->narration;
 			  else
-			  $narration=$info->narration.':: Cheq # '.$info->cheq_no.'; dt= '.date("d.m.Y",$info->cheq_date).'; Bank # '.$info->bank;?>
+			  $narration=$info->narration.':: Cheq # '.$info->cheq_no.'; dt= '.date("d.m.Y",$info->cheq_date).'; Bank # '.$bankGET;?>
 
       <tr>
         <td align="left"><?=$info->ledger_name?> : <?=$info->ledger_id?></td>

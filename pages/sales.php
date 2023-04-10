@@ -6,7 +6,7 @@ $table_master='sales_data_from_prism_software_filterd';
 $unique_master='id';
 $sale_do_master='sale_do_master';
 $sale_do_details='sale_do_details';
-$sales_table_master='sale_do_chalan';
+$sale_do_chalan='sale_do_chalan';
 $journal_item='journal_item';
 $journal='journal';
 $crud      =new crud($table_master);
@@ -134,11 +134,12 @@ $sales_date = @$_SESSION['sales_date'];
 $COUNT_details_data=find_a_field("".$table."","Count(id)","sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
 
-$count_do = find_a_field("sale_do_master","COUNT(do_no)","sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+$count_do = find_a_field("sale_do_master","COUNT(do_no)","do_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
+if ($_REQUEST['status']=='confirm'):
 if($count_do>0) {} else {
     $sql=mysqli_query($conn, "SELECT distinct route,section,sales_date,id,point from sales_data_from_prism_software where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' group by route");
-    while($data=mysqli_fetch_object($sql)) {
+    while($data=mysqli_fetch_object($sql)):
         $crud = new crud($sale_do_master);
         $_POST['do_no'] = find_a_field($sale_do_master, 'max(do_no)', '1') + 1;
         $_POST['do_date'] = $_SESSION['sales_date'];
@@ -147,10 +148,11 @@ if($count_do>0) {} else {
         $_POST['entry_at'] = date('Y-m-d H:i:s');
         $_POST['entry_by'] = $_SESSION['userid'];
         $_POST['status'] = 'CHECKED';
+        $_POST['do_type'] = 'sales';
         $_POST['section_id'] = $_SESSION['sectionid'];
         $_POST['company_id'] = $_SESSION['companyid'];
         $crud->insert();
-    }
+    endwhile;
 
 
         $sql3=mysqli_query($conn, "SELECT * from sales_data_from_prism_software_filterd where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
@@ -188,10 +190,16 @@ if($count_do>0) {} else {
             if($data_d->qty>0){
                 $crud->insert();
 
+                //$crud = new crud($sale_do_chalan);
+                //$crud->insert();
+
                 $crud = new crud($journal_item);
                 $crud->insert();
 
             }}}
+    $up=mysqli_query($conn, "UPDATE sales_data_from_prism_software SET status='completed' where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+    header("Location: ".$page."");
+endif;
 ?>
 <?php require_once 'header_content.php'; ?>
     <style>
@@ -237,9 +245,15 @@ if($count_do>0) {} else {
                         <th>Sales Date <span class="required text-danger">*</span></th>
                         <td><input type="date" style="font-size: 11px;" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date=date('Y-m-d') .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" value="<?=($sales_date!='')? $sales_date : date('Y-m-d') ?>" class="form-control col-md-7 col-xs-12" required name="sales_date"></td>
                         <td align="center"><button type="submit" name="search_data" class="btn btn-primary" style="font-size: 11px">Search Uploaded Data</button></td>
-                        <?php if($COUNT_details_data>0){?>
+                        <?php
+                        $searchStatus = find_a_field("sales_data_from_prism_software","distinct status","sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+                        if($COUNT_details_data>0){
+                        if ($searchStatus=='manual'):?>
                         <td align="center"><button type="submit" name="cancelAll" onclick='return window.confirm("Are you confirm to Clear Data?");' class="btn btn-danger" style="font-size: 11px">Clear All Data</button></td>
-                        <?php } ?>
+                        <?php endif; if ($searchStatus=='checked'):?>
+                        <td align="center"><a href="<?=$page?>?status=confirm" onclick='return window.confirm("Are you confirm to the uploaded data?");' class="btn btn-success" style="font-size: 11px">Confirm and Finish the Process</a>
+                        </td>
+                        <?php endif; } ?>
                     </tr>
                 </table>
             </form>
@@ -312,9 +326,7 @@ if($count_do>0) {} else {
             </table>
     </form>
 
-    <form id="ismail" name="ismail"  method="post"  class="form-horizontal form-label-left">
-    <button type="submit" name="confirm_and_create_invoice" onclick='return window.confirm("Are you confirm to Upload?");' class="btn btn-primary" style="font-size: 11px">Confirm and Finish the Process</button>
-    </form>
+
 
     </div>
     </div>
