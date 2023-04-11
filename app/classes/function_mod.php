@@ -11,21 +11,35 @@ $thisday=date('d');
 $thisyear=$year1;
 $thismonth=$month;
 
+
+
 function check_plant_permission($userid){
+ $sectionid = @$_SESSION['sectionid'];
+ if($sectionid=='400000'){
+  $sec_com_connection=' and 1';
+ } else {
+  $sec_com_connection=" and w.company_id='".$_SESSION['companyid']."' and w.section_id in ('400000','".$_SESSION['sectionid']."')";
+ }
 $sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),upp.* FROM
 user_permission_matrix_warehouse upp,
 warehouse w  WHERE  upp.warehouse_id=w.warehouse_id and
-upp.user_id=".$userid." and upp.status>0
+upp.user_id=".$userid." and upp.status>0".$sec_com_connection."
 order by w.warehouse_id";
 return $sql_plant;
 }
 
 function find_all_item($product_nature){
+ $sectionid = @$_SESSION['sectionid'];
+ if($sectionid=='400000'){
+  $sec_com_connection=' and 1';
+ } else {
+  $sec_com_connection=" and i.company_id='".$_SESSION['companyid']."' and i.section_id in ('400000','".$_SESSION['sectionid']."')";
+ }
 $sql="SELECT i.item_id,concat(i.item_id,' : ',i.finish_goods_code,' : ',i.item_name,' (',sg.sub_group_name,')') FROM  item_info i,
 							item_sub_group sg,
 							item_group g WHERE  i.sub_group_id=sg.sub_group_id and
 							 sg.group_id=g.group_id and
-							 g.group_id and i.product_nature in (".$product_nature.")
+							 g.group_id and i.product_nature in (".$product_nature.")".$sec_com_connection."
 							  order by i.item_name";
 return $sql;
 }
@@ -1374,7 +1388,7 @@ function group_excess($group_name,$manual_group_code='',$group_id='')
 
 function date_value($date)
 {
- $j=0;
+ $j=0;$time=0;
  for($i=0;$i<strlen($date);$i++)
  {
   if(is_numeric($date[$i]))

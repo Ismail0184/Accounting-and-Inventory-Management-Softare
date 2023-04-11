@@ -1676,11 +1676,11 @@ function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data,$page)
 
 		$str .='<button style="float: left; font-size: 11px; margin-left: 1%" type="submit" name="cancel" onclick="return window.confirm(\'Are you sure you want to delete this?\');" class="btn btn-danger">Delete the Voucher </button>';
 		if($COUNT_details_data>0):
-		if($tdramt <> $tcramt) {
-            $str .= '<font  style="font-size: 13px; color: red; font-weight: bold; float: right; margin-right: 1%">Invalid Voucher. Debit ('.$tdramt.') and Credit ('.$tcramt.') Amount Are Not Equal !!</font>';
+		if(number_format($tdramt,2) === number_format($tcramt,2)) {
             $str .= '<button style="float: right; font-size: 11px; margin-right: 1%" type="submit" name="confirmsave" onclick="return window.confirm(\'Are you sure you want to confirm this?\');" class="btn btn-success">Confirm and Finish Voucher </button>';
         } else {
-            $str .= '<button style="float: right; font-size: 11px; margin-right: 1%" type="submit" name="confirmsave" onclick="return window.confirm(\'Are you sure you want to confirm this?\');" class="btn btn-success">Confirm and Finish Voucher </button>';
+            $str .= '<h6  style="color: red; font-weight: bold; float: right; margin-right: 1%">Invalid Voucher. Debit ('.$tdramt.') and Credit ('.$tcramt.') amount are not equal !!</h6>';
+            //$str .= '<button style="float: right; font-size: 11px; margin-right: 1%" type="submit" name="confirmsave" onclick="return window.confirm(\'Are you sure you want to confirm this?\');" class="btn btn-success">Confirm and Finish Voucher </button>';
         };endif;$str .='</form>';
         return $str;
 		mysqli_close($conn);

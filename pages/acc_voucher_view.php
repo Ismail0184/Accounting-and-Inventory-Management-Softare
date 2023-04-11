@@ -7,11 +7,13 @@ $unique='v_no';
 
 $proj_id 	= @$_SESSION['proj_id'];
 $vtype 		= @$_REQUEST['v_type'];
+$fdate=@$_REQUEST["fdate"];
+$tdate=@$_REQUEST["tdate"];
+$vou_no=@$_REQUEST['vou_no'];
+$tr_from = @$_POST['tr_from'];
 if(isset($_REQUEST['show']))
 {
-   	$fdate=@$_REQUEST["fdate"];
-	$tdate=@$_REQUEST["tdate"];
-	$vou_no=@$_REQUEST['vou_no'];
+
 	$user_id=@$_REQUEST['user_id'];
 	if($user_id!='')
 	$user_id = find_a_field('users','user_id',"username='".$user_id."'");
@@ -92,19 +94,19 @@ if (!empty($_POST['vou_no'])){
                     </tr>
                     <tr>
                         <td style="width: 30%">
-                            <input type="date" id="fdate" style="font-size: 11px; width:49%; float:left"  name="fdate" value="<?=($_POST['fdate']!='')? $_POST['fdate'] : date('Y-m-01') ?>" max="<?=date('Y-m-d');?>"  class="form-control col-md-7 col-xs-12"> -
-                            <input type="date" id="tdate" style="font-size: 11px; width:49%; float:right" value="<?=($_POST['tdate']!='')? $_POST['tdate'] : date('Y-m-d') ?>" name="tdate"  class="form-control col-md-7 col-xs-12">
+                            <input type="date" id="fdate" style="font-size: 11px; width:49%; float:left"  name="fdate" value="<?=($fdate!='')? $fdate : date('Y-m-01') ?>" max="<?=date('Y-m-d');?>"  class="form-control col-md-7 col-xs-12"> -
+                            <input type="date" id="tdate" style="font-size: 11px; width:49%; float:right" value="<?=($tdate!='')? $tdate : date('Y-m-d') ?>" name="tdate"  class="form-control col-md-7 col-xs-12">
                         </td>
                         <td style="width: 1%"></td>
                         <td>
                             <select class="select2_single form-control" style="width:90%; font-size: 12px" tabindex="-1"  id="tr_from" name="tr_from" >
                                 <option></option>
-                                <?=foreign_relation('journal', 'distinct tr_from', 'tr_from',  $_POST['tr_from'], '1','1'); ?>
+                                <?=foreign_relation('journal', 'distinct tr_from', 'tr_from',  $tr_from, '1','1'); ?>
                             </select>
                         </td>
                         <td style="width: 1%"></td>
                         <td>
-                            <input type="text" id="vou_no" style="font-size: 12px"  value="<?=$vou_no?>" name="vou_no"  class="form-control col-md-7 col-xs-12" placeholder="voucher no">
+                            <input type="text" id="vou_no" style="font-size: 12px"  value="<?=$vou_no?>" name="vou_no"  class="form-control col-md-7 col-xs-12">
                         </td>
                         <td style="width: 1%"></td>
                         <td>
