@@ -1872,6 +1872,7 @@ function added_data_delete_edit__special_invoice($sql,$unique,$unique_GET,$COUNT
 function added_data_delete_edit_purchase_order($sql,$unique,$unique_GET,$COUNT_details_data,$page,$colspan,$row_get,$commission,$VAT){
     global $conn;
     if($sql==NULL) return NULL;
+    $str = '';
     $str.='
 		<form action="'.$page.'"  name="addem" id="addem" style="font-size: 11px" class="form-horizontal form-label-left" method="post">';
     if($COUNT_details_data>0):
@@ -1887,6 +1888,7 @@ function added_data_delete_edit_purchase_order($sql,$unique,$unique_GET,$COUNT_d
             endforeach;
             $str .='<th style="width:5%; text-align:center; vertical-align:middle">Action</th></tr></thead><tbody>';
             $c=0;
+            $amount = 0;
             if (mysqli_num_rows($result)>0):
                 while($row = mysqli_fetch_array($result)):
                     $str .='<tr style="vertical-align:middle"><td style="vertical-align:middle; text-align:center">'.($row[0]).'</td>';

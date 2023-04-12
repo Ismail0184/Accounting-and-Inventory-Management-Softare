@@ -1,5 +1,5 @@
 <?php require_once 'support_file.php';require_once 'report.class.php';?>
-<?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
+<?//=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 
 $sekeyword='Agrani#WO#';
 $create_date=('Y-m-d');
@@ -8,7 +8,7 @@ $title='Create Work Order';
 $table_master='purchase_master';
 $table_details='purchase_invoice';
 $unique='po_no';
-$page="po_create_item.php";
+$page="po_create_item_multiple.php";
 $crud = new crud($table_master);
 $$unique = @$_SESSION['initiate_po_no'];
 
@@ -84,17 +84,26 @@ if(prevent_multi_submit()){
     }
 
     if (isset($_POST['add'])) {
-        $_POST['item_id'] = @$_POST['item_id'];
-        $_POST['unit_name'] = find_a_field('item_info', 'unit_name', 'item_id=' . $_POST['item_id']);
         $_POST['entry_by'] = $_SESSION['userid'];
         $_POST['section_id'] = $_SESSION['sectionid'];
         $_POST['company_id'] = $_SESSION['companyid'];
         $_POST['entry_at'] = date('Y-m-d h:s:i');
-        $_POST['edit_by'] = $_SESSION['userid'];
-        $_POST['edit_at'] = date('Y-m-d h:s:i');
-		$_POST['po_date'] = @$_POST['po_date'];
+        $_POST['po_date'] = @$_POST['po_date'];
+        $_POST['po_no'] = @$_POST['po_no'];
+
+        $sql = mysqli_query($conn, "SELECT * from item_info where 1 order by serial");
+        while($data=mysqli_fetch_object($sql)):
+            $item_id = $data->item_id;
+        $_POST['item_id'] = $data->item_id;
+        $_POST['unit_name'] = $data->unit_name;
+        $_POST['rate'] = $_POST['rate'.$item_id];
+        $_POST['qty'] = $_POST['qty'.$item_id];
+        $_POST['amount'] = $_POST['amount'.$item_id];
+        if($_POST['rate']>0 && $_POST['qty']>0 && $_POST['amount']):
         $crud = new crud($table_details);
         $crud->insert();
+        endif;
+        endwhile;
     }}
 
 
@@ -257,7 +266,13 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
         .col-xs-12{
             font-size: 11px;
         }
-		
+
+    #customers {}
+    #customers td {}
+    #customers tr:ntd-child(even)
+    {background-color: #f0f0f0;}
+    #customers tr:hover {background-color: #f5f5f5;}
+    td{}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js "></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
@@ -265,9 +280,9 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
     <div class="col-md-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2><?=$title;?><small>Single Item Add </small> <small class="text-danger">field marked with * are mandatory</small></h2>
-                <a style="float: right" class="btn btn-sm btn-default"  href="po_create_item_multiple.php">
-                    <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Multiple Items Add</span>
+                <h2><?=$title;?><small>Multiple Items Add </small> <small class="text-danger">field marked with * are mandatory</small></h2>
+                <a style="float: right" class="btn btn-sm btn-default"  href="po_create_item.php">
+                    <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Single Item Add</span>
                 </a>
                 <div class="clearfix"></div>
             </div>
@@ -282,7 +297,6 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                             <input type="text" id="pono" style="width:60%"  name="pono" value="<?php if(!isset($pono)) echo automatic_number_generate($sekeyword,"purchase_master","pono","1",""); else echo $pono;?>"  class="form-control col-md-7 col-xs-12" >
                             <input type="hidden" id="po_id"   required="required" name="po_id" value="<?=($po_id!='')? $po_id : automatic_number_generate("","purchase_master","po_id","create_date='".date('Y-m-d')."'",""); ?>" class="form-control col-md-7 col-xs-12"  readonly >
                         </td>
-
                         <th style="width: 10%">Vendor <span class="required text-danger">*</span></th>
                         <th style="width:2%; text-align:center">:</th>
                         <td style="width: 20%">
@@ -292,7 +306,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                             </select>
                         </td>
 
-                        <th style="width: 10%">Final Destination <span class="required text-danger">*</span></th>
+                        <th style="width: 10%">Receive Destination <span class="required text-danger">*</span></th>
                         <th style="width:2%; text-align:center">:</th>
                         <td style="width: 20%">
                             <select class="select2_single form-control" style="width: 80%;" required name="warehouse_id" id="warehouse_id">
@@ -326,7 +340,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
 
                     <tr><td style="height: 5px"></td></tr>
 
-                    <tr>
+                    <!---tr>
                         <th>Commission (%)</th>
                         <th style="text-align:center">:</th>
                         <td>
@@ -343,7 +357,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                             <input type="text" id="labor_bill" name="labor_bill" value="<?=$labor_bill;?>" class="form-control col-md-7 col-xs-12" >
                         </td>
                     </tr>
-                    <tr><td style="height: 5px"></td></tr>
+                    <tr><td style="height: 5px"></td></tr-->
                     <tr>
                         <th>VAT</th>
                         <th style="text-align:center">:</th>
@@ -355,15 +369,23 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <td>
                             <input type="text" id="tax_ait" name="tax_ait" placeholder="%" value="<?=$tax_ait;?>" class="form-control col-md-7 col-xs-12" >
                         </td>
-                        <th>ASF</th>
+
+                        <th>Remarks</th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <input type="text" style="width: 80%;" value="<?=$po_details;?>"  id="po_details" name="po_details"  class="form-control col-md-7 col-xs-12" >
+                        </td>
+
+
+                        <!--th>ASF</th>
                         <th style="text-align:center">:</th>
                         <td>
                             <input type="text" id="asf" name="asf" placeholder="%" value="<?=$asf;?>" class="form-control col-md-7 col-xs-12" >
-                        </td>
+                        </td-->
                     </tr>
                     <tr><td style="height: 5px"></td></tr>
 
-                    <tr>
+                    <!--tr>
                         <th>Remarks</th>
                         <th style="text-align:center">:</th>
                         <td>
@@ -388,7 +410,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <th style="text-align:center">:</th>
                         <td>
                             <select class="select2_single form-control" style="width: 80%;" tabindex="-1" required="required" name="checkby" id="checkby">
-                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="88"');?></option>
+                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="61"');?></option>
                                 <?=advance_foreign_relation($sql_checked_by,$checkby);?>
                             </select>
                         </td>
@@ -396,7 +418,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <th style="text-align:center">:</th>
                         <td>
                             <select class="select2_single form-control" style="width: 80%;" tabindex="-1" required="required" name="recommended" id="recommended">
-                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="88"');?></option>
+                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="61"');?></option>
                                 <option></option>
                                 <?=advance_foreign_relation($sql_checked_by,$recommended);?>
                             </select>
@@ -405,12 +427,12 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <th style="text-align:center">:</th>
                         <td>
                             <select class="select2_single form-control" style="width: 80%;" tabindex="-1" required="required" name="authorise" id="authorise">
-                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="88"');?></option>
+                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="61"');?></option>
                                 <option></option>
                                 <?=advance_foreign_relation($sql_checked_by,$authorise);?>
                             </select>
                         </td>
-                    </tr>
+                    </tr-->
 
                     <tr>
                         <td align="center" colspan="9" style="vertical-align: middle">
@@ -431,6 +453,12 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
 
 <?php if($initiate_po_no>0):?>
         <form action="<?=$page;?>" method="post" name="cloud" id="cloud" class="form-horizontal form-label-left">
+            <input  name="po_no" type="hidden" id="<?=$unique?>" value="<?=$initiate_po_no;?>"/>
+            <input  name="po_id" type="hidden" id="po_id" value="<?=$_SESSION['initiate_po_id'];?>"/>
+            <input  name="warehouse_id" type="hidden" id="warehouse_id" value="<?=$warehouse_id?>"/>
+            <input  name="po_date" type="hidden" value="<?=$po_date?>"/>
+            <input  name="vendor_id" type="hidden" id="vendor_id" value="<?=$vendor_id?>"/>
+            <input  name="pono" type="hidden" id="pono" value="<?=$initiate_pono;?>"/>
             <? require_once 'support_html.php';?>
             <? $group_for = find_a_field('warehouse','group_for','warehouse_id='.$warehouse_id.' ');
             if($vendor->ledger_id==0): ?>
@@ -440,84 +468,73 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                     </tr>
                 </table>
             <? else:?>
-            <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
+            <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered" id="customers">
                 <thead>
                 <tr style="background-color: bisque">
-                    <th style="text-align: center">Item Name</th>
-                    <th style="text-align: center">Item Details</th>
+                    <th style="text-align: center; width: 2%">#</th>
+                    <th style="text-align: center">Item Description</th>
+                    <th style="text-align: center">Unit</th>
                     <th style="text-align: center">Buy Qty</th>
                     <th style="text-align: center">Unit Price</th>
-                    <th style="text-align: center">Amount</th>
-                    <th style="text-align: center">Action</th>
+                    <th style="text-align: center; width: 15%">Amount</th>
                 </tr>
                 </thead>
                 <tbody>
+                <?php
+                $i = 0;
+                $sql = mysqli_query($conn, "SELECT * from item_info where 1 order by serial");
+                while($data=mysqli_fetch_object($sql)):
+                $item_id = $data->item_id; ?>
                 <tr>
-                    <td style="vertical-align:middle"><input  name="<?=$unique?>" type="hidden" id="<?=$unique?>" value="<?=$initiate_po_no;?>"/>
-                        <input  name="po_id" type="hidden" id="po_id" value="<?=$_SESSION['initiate_po_id'];?>"/>
-                        <input  name="warehouse_id" type="hidden" id="warehouse_id" value="<?=$warehouse_id?>"/>
-                        <input  name="po_date" type="hidden" value="<?=$po_date?>"/>
-                        <input  name="vendor_id" type="hidden" id="vendor_id" value="<?=$vendor_id?>"/>
-                        <input  name="pono" type="hidden" id="pono" value="<?=$initiate_pono;?>"/>
-                        <select class="select2_single form-control" style="width: 100%" tabindex="-1" required="required" name="item_id" id="item_id">
-                            <option></option>
-                            <?=advance_foreign_relation($sql_item_id,$edit_value_item_id);?>
-                        </select>
-                    </td>
-
-                    <td style="vertical-align:middle; width: 20%">
-                        <textarea type="text" name="item_details" id="item_details" class="form-control col-md-7 col-xs-12" style="width: 98%; margin-left: 1%; height: 38px; text-align: center; vertical-align: middle; font-size: 11px"  /><?=$edit_value_item_details?></textarea>
-                    </td>
+                    <td style="vertical-align:middle; text-align: center"><?=$i=$i+1;?></td>
+                    <td style="vertical-align:middle"><?=$data->item_id?> - <?=$data->item_name?></td>
+                    <td style="vertical-align:middle"><?=$data->unit_name;?></td>
                     <script>function doMath() {
                         var rate = parseFloat(document.getElementById('rate').value);
                         var qty = parseFloat(document.getElementById('qty').value);
                         var amount = (rate * qty).toFixed(2);
                         document.getElementById('amount').value = amount; }</script>
                     <td style="vertical-align:middle;width: 10%">
-                        <input type="number" name="qty"   id="qty" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:38px; font-weight:bold; font-size: 11px; text-align:center;" value="<?=$edit_value_qty?>" step="any" min="0" class="qty;" />
+                        <input type="number" name="qty<?=$item_id?>"   id="qty<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$edit_value_qty?>" step="any" min="0" class="qty<?=$item_id?>" />
                     </td>
                     <td style="vertical-align:middle;width: 10%">
-                        <input type="number" name="rate"   id="rate" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:38px; font-weight:bold;font-size: 11px; text-align:center;" value="<?=$edit_value_rate?>"  required="required" step="any" min="0" class="rate" />
+                        <input type="number" name="rate<?=$item_id?>"   id="rate<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$data->t_price;?>"  required="required" step="any" min="0" class="rate<?=$item_id?>" />
                         <input type="hidden" name="vat_amount" id="vat_amount" value=""  class="vat_amount" />
                         <input type="hidden" name="commission_amount" id="commission_amount" value="<?=$edit_value_commission_amount?>"  class="commission_amount" />
                     </td>
-
-                    <td align="center" style="vertical-align:middle;width: 12%">
-                        <input type="number" name="amount" readonly id="amount" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:38px; font-size: 11px; font-weight:bold; text-align:center;" value="<?=$edit_value_amount?>" class="amount" step="any" min="1" />
+                    <td style="vertical-align:middle;width: 12%">
+                        <input type="number" name="amount<?=$item_id?>" readonly id="amount<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:98%; margin-left:2%; height:25px;text-align:center;" value="<?=$edit_value_amount?>" class="amount<?=$item_id?>" step="any" min="1" />
                     </td>
-
-                    <td align="center" style="vertical-align:middle;width:7%">
-                        <?php if (isset($_GET['id'])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_GET['id'];?>" id="editdata<?=$_GET['id'];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
-                        <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td>
                 </tr>
+                    <script>
+                        $(function(){
+                            $('#rate<?=$item_id?>,#qty<?=$item_id?>').keyup(function(){
+                                var rate<?=$item_id?> = parseFloat($('#rate<?=$item_id?>').val()) || 0;
+                                var qty<?=$item_id?> = parseFloat($('#qty<?=$item_id?>').val()) || 0;
+                                $('#amount<?=$item_id?>').val((rate<?=$item_id?> * qty<?=$item_id?>));
+                            });
+                        });
+                    </script>
+                    <script>
+                        $(function(){
+                            $('#rate<?=$item_id?>').keyup(function(){
+                                var rate<?=$item_id?> = parseFloat($('#rate<?=$item_id?>').val()) || 0;
+                                var amount<?=$item_id?> = parseFloat($('#amount<?=$item_id?>').val()) || 0;
+                                $('#vat_amount<?=$item_id?>').val(amount<?=$item_id?>+((amount<?=$item_id?>/100)*<?=$tax?>));
+                            });
+                        });
+                    </script>
+                <?php endwhile; ?>
+                <tr><td colspan="6"><button  type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm?");' name="add" class="btn btn-primary" style="float: right; font-size: 12px; margin-right: 1%">Add items and proceed next</button></td></tr>
             </table>
         </form>
     <? endif;?>
         <script>
             $(function(){
-                $('#rate,#qty').keyup(function(){
-                    var rate = parseFloat($('#rate').val()) || 0;
-                    var qty = parseFloat($('#qty').val()) || 0;
-                    $('#amount').val((rate * qty));
-                });
-            });
-        </script>
-        <script>
-            $(function(){
-                $('#rate').keyup(function(){
-                    var rate = parseFloat($('#rate').val()) || 0;
-                    var amount = parseFloat($('#amount').val()) || 0;
-                    $('#vat_amount').val(amount+((amount/100)*<?=$tax?>));
-                });
-            });
-        </script>
-
-        <script>
-            $(function(){
-                $('#rate').keyup(function(){
-                    var rate = parseFloat($('#rate').val()) || 0;
-                    var vat_amount = parseFloat($('#vat_amount').val()) || 0;
-                    $('#commission_amount').val(((vat_amount/100)*<?=$commission?>));
+                $('#rate<?=$item_id?>').keyup(function(){
+                    var rate<?=$item_id?> = parseFloat($('#rate<?=$item_id?>').val()) || 0;
+                    var vat_amount<?=$item_id?> = parseFloat($('#vat_amount<?=$item_id?>').val()) || 0;
+                    $('#commission_amount<?=$item_id?>').val(((vat_amount<?=$item_id?>/100)*<?=$commission?>));
                 });
             });
         </script>
