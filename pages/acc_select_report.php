@@ -125,7 +125,7 @@ function reload1(form)
                             <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required" name="ledger_id" >
                                 <option></option>
                                 <option value="%">All Transactions</option>
-                                <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)",1, "status=1".$sec_com_connection_wa.""); ?>
+                                <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)",1, "show_in_transaction=1 and status=1".$sec_com_connection_wa.""); ?>
                             </select>
                         </div>
                     </div>

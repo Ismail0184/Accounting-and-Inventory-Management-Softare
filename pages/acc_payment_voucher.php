@@ -302,9 +302,9 @@ where
                             <th style="">Cash or Bank Ledger <span class="required text-danger">*</span></th><th>:</th>
                             <td colspan="3" style="padding-top: 5px;"><select class="select2_single form-control" style="width:98%; font-size: 11px" tabindex="-1" required="required"  name="cash_bank_ledger" id="cash_bank_ledger">
                                     <option></option>
-                                    <?php foreign_relation("accounts_ledger","ledger_id","CONCAT(ledger_id,' : ', ledger_name)", $cash_bank_ledger,"ledger_group_id in ('1002') and status=1".$sec_com_connection_wa.""); ?>
+                                    <?php foreign_relation("accounts_ledger","ledger_id","CONCAT(ledger_id,' : ', ledger_name)", $cash_bank_ledger,"ledger_group_id in ('1002') and show_in_transaction=1 and status=1".$sec_com_connection_wa.""); ?>
                                 </select></td>
-                            <td ><input type="number" id="amount"   value="<?=$amount;?>" name="amount"  class="form-control col-md-7 col-xs-12" placeholder="Paid Amt" required="required" style="width: 90%; margin-top: 5px; height: 38px; font-size: 11px; vertical-align: middle" step="any" min="1" />
+                            <td><input type="number" id="amount"   value="<?=$amount;?>" name="amount"  class="form-control col-md-7 col-xs-12" placeholder="Paid Amt" required="required" style="width: 90%; margin-top: 5px; height: 38px; font-size: 11px; vertical-align: middle" step="any" min="1" />
                             </td>
                         </tr>
                     </table>
@@ -366,7 +366,7 @@ where
                 <td style="width: 25%; vertical-align: middle" align="center">
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
-                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value_ledger_id, 'ledger_group_id not in ("1002") and status=1'); ?>
+                        <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $edit_value_ledger_id, 'ledger_group_id not in ("1002") and status=1 and show_in_transaction=1'); ?>
                     </select></td>
                 <td align="center" style="width: 10%;vertical-align: middle">
                     <select class="select2_single form-control" style="width:100%" tabindex="-1" required  name="cc_code" id="cc_code">

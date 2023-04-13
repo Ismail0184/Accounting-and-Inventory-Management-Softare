@@ -132,10 +132,10 @@ from
  j.".$coutra_no_unique."='".$_SESSION['initiate_contra_note']."'".$sec_com_connection."";
 $re_query=mysqli_query($conn, $rs);
 while($uncheckrow=mysqli_fetch_array($re_query)){
-    if (isset($_POST['confirmsave']) && ($uncheckrow[coutra_no]>0)) {
+    if (isset($_POST['confirmsave']) && ($uncheckrow['coutra_no']>0)) {
         add_to_journal_new($uncheckrow[coutradate],$proj_id, $jv, $uncheckrow[coutra_date], $uncheckrow[ledger_id], $uncheckrow[narration], $uncheckrow[dr_amt], $uncheckrow[cr_amt],Contra, $uncheckrow[coutra_no],$uncheckrow[jid],$uncheckrow[cc_code],$uncheckrow[sub_ledger_id],$_SESSION[usergroup],$uncheckrow[cheq_no],$uncheckrow[cheq_date],$create_date,$ip,$now,$uncheckrow[day_name],$thisday,$thismonth,$thisyear);
     }
-    $ids=$uncheckrow[jid];
+    $ids=$uncheckrow['jid'];
     if(isset($_POST['deletedata'.$ids]))
     {  mysqli_query($conn, ("DELETE FROM ".$table_contra." WHERE id=".$ids."".$sec_com_connection_wa.""));
         unset($_POST);
@@ -303,7 +303,7 @@ from
                 <td style="width: 25%; vertical-align: middle" align="center">
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
-                        <?php foreign_relation("accounts_ledger","ledger_id","CONCAT(ledger_id,' : ', ledger_name)",  $edit_value->ledger_id,"ledger_group_id in ('1002') and status=1".$sec_com_connection_wa.""); ?>
+                        <?php foreign_relation("accounts_ledger","ledger_id","CONCAT(ledger_id,' : ', ledger_name)",  $edit_value->ledger_id,"ledger_group_id in ('1002') and show_in_transaction=1 and status=1".$sec_com_connection_wa.""); ?>
                     </select></td>
                 <!--td align="center" style="width: 10%;vertical-align: middle">
                     <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="cc_code" id="cc_code">

@@ -23,8 +23,8 @@ if(prevent_multi_submit()){
 	 if(isset($_POST['confirm'])){ 
 	        $_POST['entry_by'] = $_SESSION['userid'];	
 			$_POST['entry_at'] = date('Y-m-d H:s:i');
-			$_POST[po_no]=$$unique;
-			$_POST[rcv_Date]=$_POST[rec_date];		
+			$_POST['po_no']=$$unique;
+			$_POST['rcv_Date']=$_POST['rec_date'];
 			$rec_no=$_POST['rec_no'];
             $now = date('Y-m-d H:s:i');		
 			$_POST[grn_inventory_type]='';	
@@ -39,30 +39,30 @@ if(prevent_multi_submit()){
 			if($GRN_Qty>0){
 			$_POST['entry_by'] = $_SESSION['userid'];	
 			$_POST['entry_at'] = date('Y-m-d H:s:i');
-			$_POST[item_id]=$row[item_id];	
-			$_POST[rate]=$row[rate];
-			$_POST[qty]=$GRN_Qty;
-			$_POST[amount]=$GRN_Qty*$row[rate];
-			$_POST[order_no]=$row[id];
-			$_POST[rcv_Date]=$_POST[rec_date];
-			$_POST[status]='UNCHECKED';
-			$_POST[mfg]=$_POST['mfg'.$id];
-			$_POST[lot_number]=$_SESSION['POunique_id']; 
-			$_POST[total_cost]=$_POST['transport_bill']+$_POST['labor_bill']+$_POST['others_bill'];			
+			$_POST['item_id']=$row['item_id'];
+			$_POST['rate']=$row['rate'];
+			$_POST['qty']=$GRN_Qty;
+			$_POST['amount']=$GRN_Qty*$row['rate'];
+			$_POST['order_no']=$row['id'];
+			$_POST['rcv_Date']=$_POST['rec_date'];
+			$_POST['status']='UNCHECKED';
+			$_POST['mfg']=$_POST['mfg'.$id];
+			$_POST['lot_number']=$_SESSION['POunique_id'];
+			$_POST['total_cost']=$_POST['transport_bill']+$_POST['labor_bill']+$_POST['others_bill'];
 			$crud      =new crud($table_details);
             $crud->insert();	// GRN received
 //////////////////////////////////////////////////////////			
             $_POST['ji_date'] = $_POST['rec_date'];			
-            $_POST['item_id'] = $row[item_id];
-            $_POST['warehouse_id'] = $row[warehouse_id];
+            $_POST['item_id'] = $row['item_id'];
+            $_POST['warehouse_id'] = $row['warehouse_id'];
             $_POST['item_in'] = $GRN_Qty;
-            $_POST['item_price'] = $row[rate];
-            $_POST['total_amt'] = $GRN_Qty*$row[rate];;
+            $_POST['item_price'] = $row['rate'];
+            $_POST['total_amt'] = $GRN_Qty*$row['rate'];
             $_POST['tr_from'] = 'Purchase';
             $_POST['tr_no'] = $_GET[$unique];
-            $_POST['sr_no'] = $_POST[pr_no];
-            $total_amt=$GRN_Qty*$row[rate];
-            $_POST[ip]=$ip;
+            $_POST['sr_no'] = $_POST['pr_no'];
+            $total_amt=$GRN_Qty*$row['rate'];
+            $_POST['ip']=$ip;
             $crud      =new crud($journal_item);
             //$crud->insert();   // inventory received
                 $total_amount=$total_amount+$total_amt;
@@ -70,7 +70,7 @@ if(prevent_multi_submit()){
 
 
          // MAN status update
-         $mup=mysqli_query($conn, "Update MAN_details SET MAN_RCV_STATUS='Done' where m_id='$_GET[m_id]' and po_no='$_GET[po_no]'");
+         $mup=mysqli_query($conn, "Update MAN_details SET MAN_RCV_STATUS='Done' where m_id='".$_GET['m_id']."' and po_no='".$_GET['po_no']."'");
 
 
 
@@ -85,7 +85,7 @@ if(prevent_multi_submit()){
         if($get_ASFS>0){
             $get_ASF=$get_ASFS;
         } else {
-            $get_ASF=$_POST[asf];
+            $get_ASF=$_POST['asf'];
         }
         if($get_ASF>0){
             $asf_amt=($pr_amt*$get_ASF)/100;
@@ -99,28 +99,28 @@ if(prevent_multi_submit()){
 
 ////////////////////// ledger GET//////////////
 
-        if($_POST[legderid]>0){
-            $purchase_ledger=$_POST[legderid]; } else {
+        if($_POST['legderid']>0){
+            $purchase_ledger=$_POST['legderid']; } else {
             $purchase_ledger = $config_group_class->purchase_ledger;
         }
-        if($_POST[tax_ait]>0){
-            $tax_ait=($sub_tot_amount*$_POST[tax_ait])/100;
+        if($_POST['tax_ait']>0){
+            $tax_ait=($sub_tot_amount*$_POST['tax_ait'])/100;
             $tax_ait_ledger="2004000500000000";
         }
 
-        if($_POST[tax]<15){
+        if($_POST['tax']<15){
             $tax_ledgercr =   '2004000200000000';
-            $tax_amtcr = (($sub_tot_amount*$_POST[tax])/100);
+            $tax_amtcr = (($sub_tot_amount*$_POST['tax'])/100);
         }else{
             $tax_ledger =   '1005000400000000';
-            $tax_amt = (($sub_tot_amount*$_POST[tax])/100);
+            $tax_amt = (($sub_tot_amount*$_POST['tax'])/100);
         }
-        if($_POST[other_cost_accounts_head]>0){
+        if($_POST['other_cost_accounts_head']>0){
             $others_costsss=$_POST['others_costsss'];
             $other_cost_accounts_head=$_POST['other_cost_accounts_head'];
         }
 		$vendor_ledger=$vendor_master->ledger_id;		
-		$dd = $_POST[rec_date];
+		$dd = $_POST['rec_date'];
         $date = date('d-m-y', strtotime($dd));
         $j = 0;
         for ($i = 0; $i < strlen($date); $i++) {
@@ -131,7 +131,7 @@ if(prevent_multi_submit()){
             }
         }
         $date = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
-		$nerration='GR#'.$_POST[pr_no].'/(PO#'.$$unique.'), Chalan No # '.$_POST[ch_no].',Remarks # '. $_POST[remarks].', ';
+		$nerration='GR#'.$_POST['pr_no'].'/(PO#'.$$unique.'), Chalan No # '.$_POST['ch_no'].',Remarks # '. $_POST['remarks'].', ';
 		
 	
 	/////////////// purchase amount calculations
@@ -157,31 +157,31 @@ if(prevent_multi_submit()){
     } else {$vendoramount=$pr_amt;}
 		
 		if($purchaseamt>0){
-		insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $purchase_ledger, $nerration, $purchaseamt, 0, Purchase, $_POST[pr_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,Regular);
+		insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $purchase_ledger, $nerration, $purchaseamt, 0, 'Purchase', $_POST['pr_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'Regular');
 		if($tax_ait>0){
 		$nerration_tax=$nerration.', Tax # '.$get_tax_ait.' %';	
-		insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $tax_ait_ledger, $nerration_tax, $tax_ait, 0, Purchase, $_POST[pr_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,Regular);			
+		insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $tax_ait_ledger, $nerration_tax, $tax_ait, 0, 'Purchase', $_POST['pr_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'Regular');
 		}
 		if($tax_amt>0){
-		$nerration_VAT=$nerration.', VAT # '.$_POST[tax].'%, VAT Date # '.$_POST[VAT_challan_Date];
-		insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $tax_ledger, $nerration_VAT, $tax_amt, 0, Purchase, $_POST[pr_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,Regular);			
+		$nerration_VAT=$nerration.', VAT # '.$_POST['tax'].'%, VAT Date # '.$_POST['VAT_challan_Date'];
+		insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $tax_ledger, $nerration_VAT, $tax_amt, 0, 'Purchase', $_POST['pr_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'Regular');
 		}
 		if($tax_amtcr>0){
-			$nerration_VAT=$nerration.', VAT # '.$_POST[tax].'%, VAT Date # '.$_POSR[VAT_challan_Date];
-		 insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $tax_ledgercr, $nerration_VAT, 0, $tax_amtcr, Purchase, $_POST[pr_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,Regular);	
+			$nerration_VAT=$nerration.', VAT # '.$_POST['tax'].'%, VAT Date # '.$_POSR['VAT_challan_Date'];
+		 insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $tax_ledgercr, $nerration_VAT, 0, $tax_amtcr, 'Purchase', $_POST['pr_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'Regular');
 		}
-        insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $vendor_ledger, $nerration, 0, $vendoramount, Purchase, $_POST[pr_no], $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,Regular);
+        insert_into_secondary_journal($_POST['rec_date'], $proj_id, $jv, $date, $vendor_ledger, $nerration, 0, $vendoramount, 'Purchase', $_POST['pr_no'], $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'Regular');
 		}
 		
     header("Location: ".$page."?jv_no=".$jv."");
     }
 	
 	 if (isset($_POST['final_confirm'])) {
-		 $res=mysqli_query($conn, "SELECT sj.* from secondary_journal sj where jv_no=".$_GET[jv_no]."");
+		 $res=mysqli_query($conn, "SELECT sj.* from secondary_journal sj where jv_no=".$_GET['jv_no']."");
 						while($data=mysqli_fetch_object($res)){
 							$update_ledger_id=$_POST['ledger_id'.$data->id];
 							$update_narration=$_POST['narration'.$data->id];
-        mysqli_query($conn, "UPDATE secondary_journal SET ledger_id='".$update_ledger_id."',narration='".$update_narration."' where jv_no=".$_GET[jv_no]." and id=".$data->id."");
+        mysqli_query($conn, "UPDATE secondary_journal SET ledger_id='".$update_ledger_id."',narration='".$update_narration."' where jv_no=".$_GET['jv_no']." and id=".$data->id."");
 						}
         unset($_POST);
         $type = 1;
@@ -209,8 +209,8 @@ if($delivery_within>0)
 }
 
 $sql='select a.id,a.item_id,b.item_name,a.item_details,b.unit_name,a.qty,a.rate from purchase_invoice a,item_info b where b.item_id=a.item_id and a.po_no='.$$unique;
-$MAN_master=find_all_field('MAN_details','','status="VERIFIED" and m_id="'.$_GET[m_id].'" and po_no='.$_GET[po_no]);
-$MAN=find_all_field('MAN_master','','id="'.$_GET[m_id].'"'); ?>
+$MAN_master=find_all_field('MAN_details','','status="VERIFIED" and m_id="'.$_GET['m_id'].'" and po_no='.$_GET['po_no']);
+$MAN=find_all_field('MAN_master','','id="'.$_GET['m_id'].'"'); ?>
 
 
 
@@ -219,7 +219,7 @@ $MAN=find_all_field('MAN_master','','id="'.$_GET[m_id].'"'); ?>
 function reload(form)
 {
 	var val=form.m_id.options[form.m_id.options.selectedIndex].value;
-	self.location='<?=$page;?>?po_no=<?=$_GET[po_no]?>&m_id=' + val ;
+	self.location='<?=$page;?>?po_no=<?=$_GET['po_no']?>&m_id=' + val ;
 }
 
 
@@ -242,13 +242,13 @@ td {
 }
     </style>
 
-<?php if(isset($_GET[$unique]) || ($_GET[jv_no])){ 
+<?php if(isset($_GET[$unique]) || ($_GET['jv_no'])){
  require_once 'body_content_without_menu.php'; } else {  
  require_once 'body_content.php'; } ?>
 
 
 <form action="" method="post" name="codz" id="codz" onSubmit="if(!confirm('Are You Sure Execute this?')){return false;}" class="form-horizontal form-label-left">
-<?php if($_GET[jv_no]) { ?> 
+<?php if($_GET['jv_no']) { ?>
 
 <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
@@ -371,7 +371,7 @@ td {
     <th style="width:1%"> : </th>
     <td><select style=" height:23px; width:90%" name="m_id" id="m_id" onchange="javascript:reload(this.form)">
                 <option></option>
-                <? foreign_relation('MAN_details','distinct m_id','concat(m_id,":", MAN_ID)',''.$_GET[m_id].'','po_no='.$_GET[po_no].' and MAN_RCV_STATUS!="Done" and  status="VERIFIED"');?>
+                <? foreign_relation('MAN_details','distinct m_id','concat(m_id,":", MAN_ID)',''.$_GET['m_id'].'','po_no='.$_GET[po_no].' and MAN_RCV_STATUS!="Done" and  status="VERIFIED"');?>
                </select>
         <input type="hidden" name="rec_no" id="rec_no" value="<?=$MAN_master->MAN_ID;?>">
         <input type="hidden" name="MAN_ID" id="MAN_ID" value="<?=$MAN_master->MAN_ID;?>">
@@ -430,7 +430,7 @@ td {
 
 
           <? while($row=mysqli_fetch_object($res)){
-			 $MAN_details = find_all_field('MAN_details','','status="VERIFIED" and po_no="'.$_GET[po_no].'" and m_id="'.$_GET[m_id].'" and item_id="'.$row->item_id.'"');
+			 $MAN_details = find_all_field('MAN_details','','status="VERIFIED" and po_no="'.$_GET['po_no'].'" and m_id="'.$_GET[m_id].'" and item_id="'.$row->item_id.'"');
 			  $bg++?>
           <tr>
             <td><?=++$ss;?></td>

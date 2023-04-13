@@ -112,7 +112,7 @@ if(prevent_multi_submit()){
         $_POST[$unique] = $_SESSION['initiate_po_no'];
         $_POST['entry_by'] = $_SESSION['userid'];
         $_POST['entry_at'] = date('Y-m-d h:s:i');
-        $_POST['status'] = 'UNCHECKED';
+        $_POST['status'] = 'PROCESSING';
         $crud = new crud($table_master);
         $crud->update($unique);
         $chid = find_a_field('purchase_master', 'checkby', 'po_no=' . $_SESSION['initiate_po_no']);
@@ -249,8 +249,8 @@ $return_comments = @$return_comments;
 
 $vendor=find_all_field('vendor','','vendor_id='.$vendor_id.'');
 $vendor_commission = @$vendor->commission;
-if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work Order'; ?>
-
+if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work Order';
+?>
 <?php require_once 'header_content.php'; ?>
 <style>
     input[type=text],input[type=file] {
@@ -294,7 +294,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <th style="width:2%; text-align:center">:</th>
                         <td style="width: 20%">
                             <input type="text" id="po_no" style="width:20%" name="po_no" value="<?=$initiate_po_no;?>" readonly class="form-control col-md-7 col-xs-12" >
-                            <input type="text" id="pono" style="width:60%"  name="pono" value="<?php if(!isset($pono)) echo automatic_number_generate($sekeyword,"purchase_master","pono","1",""); else echo $pono;?>"  class="form-control col-md-7 col-xs-12" >
+                            <input type="text" id="pono" style="width:60%"  name="pono" value="<?php if(!isset($pono)) echo automatic_number_generate($sekeyword,"purchase_master","pono","create_date='".date('Y-m-d')."'","000"); else echo $pono;?>"  class="form-control col-md-7 col-xs-12" >
                             <input type="hidden" id="po_id"   required="required" name="po_id" value="<?=($po_id!='')? $po_id : automatic_number_generate("","purchase_master","po_id","create_date='".date('Y-m-d')."'",""); ?>" class="form-control col-md-7 col-xs-12"  readonly >
                         </td>
                         <th style="width: 10%">Vendor <span class="required text-danger">*</span></th>
@@ -453,13 +453,12 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
 
 <?php if($initiate_po_no>0):?>
         <form action="<?=$page;?>" method="post" name="cloud" id="cloud" class="form-horizontal form-label-left">
-            <input  name="po_no" type="hidden" id="<?=$unique?>" value="<?=$initiate_po_no;?>"/>
+            <input  name="po_no" type="hidden" id="<?=$unique?>" value="<?=$_SESSION['initiate_po_no'];?>"/>
             <input  name="po_id" type="hidden" id="po_id" value="<?=$_SESSION['initiate_po_id'];?>"/>
             <input  name="warehouse_id" type="hidden" id="warehouse_id" value="<?=$warehouse_id?>"/>
             <input  name="po_date" type="hidden" value="<?=$po_date?>"/>
             <input  name="vendor_id" type="hidden" id="vendor_id" value="<?=$vendor_id?>"/>
             <input  name="pono" type="hidden" id="pono" value="<?=$initiate_pono;?>"/>
-            <? require_once 'support_html.php';?>
             <? $group_for = find_a_field('warehouse','group_for','warehouse_id='.$warehouse_id.' ');
             if($vendor->ledger_id==0): ?>
                 <table width="80%" border="0" align="center" cellpadding="5" cellspacing="0">
@@ -468,6 +467,59 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                     </tr>
                 </table>
             <? else:?>
+            <?php if($_GET['id']>0): ?>
+            <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
+                <thead>
+                <tr style="background-color: bisque">
+                    <th style="text-align: center">Item Name</th>
+                    <th style="text-align: center">Item Details</th>
+                    <th style="text-align: center">Buy Qty</th>
+                    <th style="text-align: center">Unit Price</th>
+                    <th style="text-align: center">Amount</th>
+                    <th style="text-align: center">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="vertical-align:middle"><input  name="<?=$unique?>" type="hidden" id="<?=$unique?>" value="<?=$initiate_po_no;?>"/>
+                        <input  name="po_id" type="hidden" id="po_id" value="<?=$_SESSION['initiate_po_id'];?>"/>
+                        <input  name="warehouse_id" type="hidden" id="warehouse_id" value="<?=$warehouse_id?>"/>
+                        <input  name="po_date" type="hidden" value="<?=$po_date?>"/>
+                        <input  name="vendor_id" type="hidden" id="vendor_id" value="<?=$vendor_id?>"/>
+                        <input  name="pono" type="hidden" id="pono" value="<?=$initiate_pono;?>"/>
+                        <select class="select2_single form-control" style="width: 100%" tabindex="-1" required="required" name="item_id" id="item_id">
+                            <option></option>
+                            <?=advance_foreign_relation($sql_item_id,$edit_value_item_id);?>
+                        </select>
+                    </td>
+
+                    <td style="vertical-align:middle; width: 20%">
+                        <textarea type="text" name="item_details" id="item_details" class="form-control col-md-7 col-xs-12" style="width: 98%; margin-left: 1%; height: 38px; text-align: center; vertical-align: middle; font-size: 11px"  /><?=$edit_value_item_details?></textarea>
+                    </td>
+                    <script>function doMath() {
+                            var rate = parseFloat(document.getElementById('rate').value);
+                            var qty = parseFloat(document.getElementById('qty').value);
+                            var amount = (rate * qty).toFixed(2);
+                            document.getElementById('amount').value = amount; }</script>
+                    <td style="vertical-align:middle;width: 10%">
+                        <input type="number" name="qty"   id="qty" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:38px; font-weight:bold; font-size: 11px; text-align:center;" value="<?=$edit_value_qty?>" step="any" min="0" class="qty;" />
+                    </td>
+                    <td style="vertical-align:middle;width: 10%">
+                        <input type="number" name="rate"   id="rate" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:38px; font-weight:bold;font-size: 11px; text-align:center;" value="<?=$edit_value_rate?>"  required="required" step="any" min="0" class="rate" />
+                        <input type="hidden" name="vat_amount" id="vat_amount" value=""  class="vat_amount" />
+                        <input type="hidden" name="commission_amount" id="commission_amount" value="<?=$edit_value_commission_amount?>"  class="commission_amount" />
+                    </td>
+
+                    <td align="center" style="vertical-align:middle;width: 12%">
+                        <input type="number" name="amount" readonly id="amount" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:38px; font-size: 11px; font-weight:bold; text-align:center;" value="<?=$edit_value_amount?>" class="amount" step="any" min="1" />
+                    </td>
+
+                    <td align="center" style="vertical-align:middle;width:7%">
+                        <?php if (isset($_GET['id'])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_GET['id'];?>" id="editdata<?=$_GET['id'];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
+                        <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td>
+                </tr>
+            </table>
+            <?php else:  ?>
             <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered" id="customers">
                 <thead>
                 <tr style="background-color: bisque">
@@ -484,7 +536,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                 $i = 0;
                 $sql = mysqli_query($conn, "SELECT * from item_info where 1 order by serial");
                 while($data=mysqli_fetch_object($sql)):
-                $item_id = $data->item_id; ?>
+                $item_id = @$data->item_id; ?>
                 <tr>
                     <td style="vertical-align:middle; text-align: center"><?=$i=$i+1;?></td>
                     <td style="vertical-align:middle"><?=$data->item_id?> - <?=$data->item_name?></td>
@@ -524,20 +576,49 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                             });
                         });
                     </script>
+                    <script>
+                        $(function(){
+                            $('#rate<?=$item_id?>').keyup(function(){
+                                var rate<?=$item_id?> = parseFloat($('#rate<?=$item_id?>').val()) || 0;
+                                var vat_amount<?=$item_id?> = parseFloat($('#vat_amount<?=$item_id?>').val()) || 0;
+                                $('#commission_amount<?=$item_id?>').val(((vat_amount<?=$item_id?>/100)*<?=$commission?>));
+                            });
+                        });
+                    </script>
                 <?php endwhile; ?>
                 <tr><td colspan="6"><button  type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm?");' name="add" class="btn btn-primary" style="float: right; font-size: 12px; margin-right: 1%">Add items and proceed next</button></td></tr>
             </table>
+            <?php endif; ?>
         </form>
     <? endif;?>
-        <script>
-            $(function(){
-                $('#rate<?=$item_id?>').keyup(function(){
-                    var rate<?=$item_id?> = parseFloat($('#rate<?=$item_id?>').val()) || 0;
-                    var vat_amount<?=$item_id?> = parseFloat($('#vat_amount<?=$item_id?>').val()) || 0;
-                    $('#commission_amount<?=$item_id?>').val(((vat_amount<?=$item_id?>/100)*<?=$commission?>));
-                });
+    <script>
+        $(function(){
+            $('#rate,#qty').keyup(function(){
+                var rate = parseFloat($('#rate').val()) || 0;
+                var qty = parseFloat($('#qty').val()) || 0;
+                $('#amount').val((rate * qty));
             });
-        </script>
+        });
+    </script>
+    <script>
+        $(function(){
+            $('#rate').keyup(function(){
+                var rate = parseFloat($('#rate').val()) || 0;
+                var amount = parseFloat($('#amount').val()) || 0;
+                $('#vat_amount').val(amount+((amount/100)*<?=$tax?>));
+            });
+        });
+    </script>
+
+    <script>
+        $(function(){
+            $('#rate').keyup(function(){
+                var rate = parseFloat($('#rate').val()) || 0;
+                var vat_amount = parseFloat($('#vat_amount').val()) || 0;
+                $('#commission_amount').val(((vat_amount/100)*<?=$commission?>));
+            });
+        });
+    </script>
 <?php $commission_amount=find_a_field('purchase_invoice','SUM(commission_amount)','po_no='.$initiate_po_no); ?>
 <?=added_data_delete_edit_purchase_order($res,$unique,$initiate_po_no,$COUNT_details_data,$page,5,5,$commission_amount,$tax);?>
 <?php endif;?>

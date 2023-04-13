@@ -99,9 +99,11 @@ $ledger_name = @$ledger_name;
 $depreciation_rate = @$depreciation_rate;
 $budget_enable = @$budget_enable;
 $status = @$status;
+$show_in_transaction = @$show_in_transaction;
 $unique_GET = @$_GET[$unique];
 $post_ledger_group_id = @$_POST['ledger_group_id'];
 $res="select al.".$unique.",al.".$unique." as Code,al.".$unique_field.",lg.group_name,(select COUNT(ledger_id) from journal where ledger_id=al.ledger_id) as has_transaction,s.section_name as branch,
+IF(al.show_in_transaction=1, 'Yes','No') as show_in_transaction,
 IF(al.status=1, 'Active',IF(al.status='SUSPENDED', 'SUSPENDED','Inactive')) as status from ".$table." al,ledger_group lg,company s where 
 al.ledger_group_id=lg.group_id and 
 al.section_id=s.section_id".$sec_com_connection." order by al.ledger_group_id,al.".$unique;
@@ -188,7 +190,18 @@ if(isset($_POST['deletedata'.$row->$unique]))
                                     <option value="0"<?=($status=='0')? ' Selected' : '' ?>>Inactive</option>
                                     <option value="SUSPENDED"<?=($status=='SUSPENDED')? ' Selected' : '' ?>>SUSPENDED</option>
                                 </select>
-                            </div></div>
+                            </div>
+                            </div>
+
+                                <div class="form-group" style="width: 100%">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Show in Transaction</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select class="select2_single form-control" style="width:100%; font-size:11px" name="show_in_transaction" id="show_in_transaction">
+                                            <option value="1"<?=($show_in_transaction=='1')? ' Selected' : '' ?>>Yes</option>
+                                            <option value="0"<?=($show_in_transaction=='0')? ' Selected' : '' ?>>No</option>
+\                                        </select>
+                                    </div>
+                                </div>
                             
                                     <div class="form-group" style="margin-left:30%">
                                         <div class="col-md-6 col-sm-6 col-xs-12">

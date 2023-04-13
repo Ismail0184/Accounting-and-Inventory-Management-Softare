@@ -1225,18 +1225,7 @@ $str .= '</div>
 <!-- /Select2 -->';
 if ($_GET) {
 
-    $str .= '
-<script>
-    $(function() {
-        $(\'body\').removeClass(\'nav-md\').addClass(\'nav-sm\');
-        $(\'.left_col\').removeClass(\'scroll-view\').removeAttr(\'style\');
-        $(\'#sidebar-menu li\').removeClass(\'active\');
-        $(\'#sidebar-menu li ul\').slideUp();
-        });
-        $(document).ready(function(){
-            menuToggle();
-            });
-</script>';
+    $str .= '';
 } else {
     $str .= '
 <script>

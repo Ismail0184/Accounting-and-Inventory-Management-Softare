@@ -350,7 +350,7 @@ $credit_note_last_narration = @$_SESSION['credit_note_last_narration'];
                 <td style="width: 25%; vertical-align: middle" align="center">
                     <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                         <option></option>
-                        <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)", $edit_value_ledger_id, "status=1".$sec_com_connection_wa."","order by ledger_id"); ?>
+                        <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)", $edit_value_ledger_id, "show_in_transaction=1 and status=1".$sec_com_connection_wa."","order by ledger_id"); ?>
                     </select>
                 </td>
                 <!--td align="center" style="width: 10%;vertical-align: middle">
