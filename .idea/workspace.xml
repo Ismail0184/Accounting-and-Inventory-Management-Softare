@@ -3,18 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_cheque_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_cheque_payment_voucher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_contra_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_contra_voucher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_journal_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/date.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/date.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/po_create_item_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_create_item_multiple.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/po_receive.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_receive.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +134,8 @@
       <workItem from="1681099788518" duration="7530000" />
       <workItem from="1681186227900" duration="14577000" />
       <workItem from="1681272789176" duration="11440000" />
-      <workItem from="1681366494798" duration="2107000" />
+      <workItem from="1681366494798" duration="2921000" />
+      <workItem from="1681532078762" duration="8200000" />
     </task>
     <servers />
   </component>

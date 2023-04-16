@@ -305,7 +305,6 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                                 <?=foreign_relation("vendor","vendor_id","concat(vendor_id,' : ',vendor_name)",$vendor_id, "status='ACTIVE'".$sec_com_connection_wa."");?>
                             </select>
                         </td>
-
                         <th style="width: 10%">Receive Destination <span class="required text-danger">*</span></th>
                         <th style="width:2%; text-align:center">:</th>
                         <td style="width: 20%">
@@ -319,9 +318,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                             </select>
                         </td>
                     </tr>
-
                     <tr><td style="height: 5px"></td></tr>
-
                     <tr>
                         <th>WO Date <span class="required text-danger">*</span></th>
                         <th style="text-align:center">:</th>
@@ -337,9 +334,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <td><input type="date" name="delivery_within" MIN=<?=date('Y-m-d');?> value="<?=$delivery_within;?>" style="width: 80%;font-size:11px" class="form-control col-md-7 col-xs-12" >
                         </td>
                     </tr>
-
                     <tr><td style="height: 5px"></td></tr>
-
                     <!---tr>
                         <th>Commission (%)</th>
                         <th style="text-align:center">:</th>
@@ -369,14 +364,11 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <td>
                             <input type="text" id="tax_ait" name="tax_ait" placeholder="%" value="<?=$tax_ait;?>" class="form-control col-md-7 col-xs-12" >
                         </td>
-
                         <th>Remarks</th>
                         <th style="text-align:center">:</th>
                         <td>
                             <input type="text" style="width: 80%;" value="<?=$po_details;?>"  id="po_details" name="po_details"  class="form-control col-md-7 col-xs-12" >
                         </td>
-
-
                         <!--th>ASF</th>
                         <th style="text-align:center">:</th>
                         <td>

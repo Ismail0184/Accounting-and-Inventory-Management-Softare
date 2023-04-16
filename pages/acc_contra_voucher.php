@@ -222,26 +222,24 @@ from
             <form action="<?=$page;?>" enctype="multipart/form-data" method="post" name="addem" id="addem" style="font-size: 11px" ><table align="center" style="width:100%">
                     <tr>
                         <th style="width:15%;">Transaction Date <span class="required text-danger">*</span></th><th style="width: 2%;">:</th>
-                        <td><input type="date" id="voucher_date"  required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
-
+                        <td><input type="date" id="voucher_date" tabindex="1" required="required" name="voucher_date" value="<?=($voucher_date!='')? $voucher_date : date('Y-m-d') ?>" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" class="form-control col-md-7 col-xs-12" style="width: 90%; font-size: 11px;vertical-align:middle" ></td>
                         <th style="width:15%;">Transaction No <span class="required text-danger">*</span></th><th style="width: 2%">:</th>
-                        <td><input type="text" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($_SESSION['initiate_contra_note']!='')? $_SESSION['initiate_contra_note'] : automatic_voucher_number_generate($table_contra,$coutra_no_unique,1,'4'.$sectionid_substr); ?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
+                        <td><input type="text" tabindex="2" required="required" name="<?=$unique?>" id="<?=$unique?>"  value="<?=($_SESSION['initiate_contra_note']!='')? $_SESSION['initiate_contra_note'] : automatic_voucher_number_generate($table_contra,$coutra_no_unique,1,'4'.$sectionid_substr); ?>" class="form-control col-md-7 col-xs-12" readonly style="width: 90%; font-size: 11px;"></td>
                     </tr>
 
                     <tr>
                         <th style="">Person</th><th>:</th>
-                        <td><input type="text" id="paid_to"  value="<?=$paid_to;?>" name="paid_to" class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;" ></td>
-
+                        <td><input type="text" id="paid_to" tabindex="3" value="<?=$paid_to;?>" name="paid_to" class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;" ></td>
                         <th>Of Bank</th><th>:</th>
-                        <td><input type="text" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>" class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;"></td>
+                        <td><input type="text" tabindex="4" name="Cheque_of_bank" id="Cheque_of_bank" value="<?=$Cheque_of_bank;?>" class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;"></td>
                     </tr>
 
                     <tr>
                         <th style="">Cheque No</th><th>:</th>
-                        <td><input type="text" id="Cheque_No"  value="<?=$Cheque_No;?>" name="Cheque_No"  class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;" ></td>
+                        <td><input type="text" id="Cheque_No" tabindex="5" value="<?=$Cheque_No;?>" name="Cheque_No"  class="form-control col-md-7 col-xs-12" style="width: 90%; margin-top: 5px; font-size: 11px;" ></td>
 
                         <th>Cheque Date</th><th>:</th>
-                        <td><input type="date" id="Cheque_Date"   value="<?=$Cheque_Date;?>" name="Cheque_Date"  class="form-control col-md-7 col-xs-12"  style="width: 90%; margin-top: 5px; font-size: 11px; vertical-align: middle"></td>
+                        <td><input type="date" id="Cheque_Date" tabindex="6" value="<?=$Cheque_Date;?>" name="Cheque_Date"  class="form-control col-md-7 col-xs-12"  style="width: 90%; margin-top: 5px; font-size: 11px; vertical-align: middle"></td>
                     </tr>
                 </table>
 
@@ -258,17 +256,17 @@ from
                     ?>
                     <div class="form-group" style="margin-left:<?=$ml;?>%; margin-top: 15px">
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <button type="submit" name="modify" class="btn btn-primary" onclick='return window.confirm("Are you confirm to Update?");' style="font-size: 11px">Update Contra Voucher</button>
+                            <button type="submit" name="modify" class="btn btn-primary" onclick='return window.confirm("Are you confirm to Update?");' style="font-size: 11px" tabindex="7">Update Contra Voucher</button>
                         </div></div>
 
                     <div class="form-group" <?=$display;?>>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <a  href="voucher_print_preview.php?v_type=contra&vo_no=<?=$_SESSION['initiate_contra_note'];?>&v_date=<?=$voucher_date;?>" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Contra Voucher</a>
+                            <a  href="voucher_print_preview.php?v_type=contra&vo_no=<?=$_SESSION['initiate_contra_note'];?>&v_date=<?=$voucher_date;?>" tabindex="8" target="_blank" style="color: blue; text-decoration: underline; font-size: 11px; font-weight: bold; vertical-align: middle">View Contra Voucher</a>
                         </div></div>
                 <?php   } else {?>
                     <div class="form-group" style="margin-left:40%; margin-top: 15px">
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <button type="submit" name="initiate" class="btn btn-primary" style="font-size: 11px">Initiate Contra Voucher</button>
+                            <button type="submit" name="initiate" class="btn btn-primary" style="font-size: 11px" tabindex="7">Initiate Contra Voucher</button>
                         </div></div>
                 <?php } ?>
             </form>
@@ -301,7 +299,7 @@ from
             <tbody>
             <tr>
                 <td style="width: 25%; vertical-align: middle" align="center">
-                    <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
+                    <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="9" required="required"  name="ledger_id">
                         <option></option>
                         <?php foreign_relation("accounts_ledger","ledger_id","CONCAT(ledger_id,' : ', ledger_name)",  $edit_value->ledger_id,"ledger_group_id in ('1002') and show_in_transaction=1 and status=1".$sec_com_connection_wa.""); ?>
                     </select></td>
@@ -312,18 +310,19 @@ from
                     </select>
                     </td-->
                 <td style="width:15%;vertical-align: middle" align="center">
-                    <textarea id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center"  name="narration" class="form-control col-md-7 col-xs-12" autocomplete="off"><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['contra_note_last_narration'];?></textarea>
+                    <textarea id="narration" style="width:100%; height:37px; font-size: 11px; text-align:center" tabindex="10" name="narration" class="form-control col-md-7 col-xs-12" autocomplete="off"><?=($edit_value->narration!='')? $edit_value->narration : $_SESSION['contra_note_last_narration'];?></textarea>
                 <td style="width:10%;vertical-align: middle" align="center">
-                    <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center"    name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
+                    <input type="file" id="attachment" style="width:100%; height:37px; font-size: 11px; text-align:center" tabindex="11" name="attachment" class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
                 <td align="center" style="width:10%"><?php if (isset($_GET['id'])) { ?>
-                        <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  value="<?=$edit_value->dr_amt;?>" <?php if($edit_value->dr_amt>0)  echo ''; else echo 'readonly'; ?>  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
-                        <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px"  value="<?=$edit_value->cr_amt;?>" <?php if($edit_value->cr_amt>0)  echo ''; else echo 'readonly'; ?>  name="cr_amt" placeholder="Credit"class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" /><?php } else {  ?>
-                        <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center"  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
-                        <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px" name="cr_amt" placeholder="Credit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
+                        <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center" tabindex="12" value="<?=$edit_value->dr_amt;?>" <?php if($edit_value->dr_amt>0)  echo ''; else echo 'readonly'; ?>  name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
+                        <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px" tabindex="13" value="<?=$edit_value->cr_amt;?>" <?php if($edit_value->cr_amt>0)  echo ''; else echo 'readonly'; ?>  name="cr_amt" placeholder="Credit"class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
+                    <?php } else {  ?>
+                        <input type="number" id="dr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center" tabindex="12" name="dr_amt" placeholder="Debit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
+                        <input type="number" id="cr_amt" style="width:98%; height:25px; font-size: 11px; text-align:center; margin-top: 5px" tabindex="13" name="cr_amt" placeholder="Credit" class="form-control col-md-7 col-xs-12" autocomplete="off" step="any" min="1" />
                     <?php } ?></td>
 
-                <td align="center" style="width:5%; vertical-align: middle "><?php if (isset($_GET['id'])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_GET[id];?>" id="editdata<?=$_GET[id];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
-                    <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td></tr>
+                <td align="center" style="width:5%; vertical-align: middle "><?php if (isset($_GET['id'])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_GET['id'];?>" id="editdata<?=$_GET['id'];?>" tabindex="15" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" tabindex="16" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
+                    <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px" tabindex="14">Add</button> <?php endif; ?></td></tr>
             </tbody>
         </table>
         <input name="count" id="count" type="hidden" value="" />
