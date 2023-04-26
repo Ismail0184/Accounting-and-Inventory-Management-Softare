@@ -1678,6 +1678,7 @@ function voucher_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data,$page)
 
 function added_data_delete_edit($sql,$unique,$unique_GET,$COUNT_details_data,$page,$total_amount,$colspan){
     global $conn;
+    $str = '';
     if($sql==NULL) return NULL;
     $str.='
 		<form action="'.$page.'"  name="addem" id="addem" style="font-size: 11px" class="form-horizontal form-label-left" method="post">';

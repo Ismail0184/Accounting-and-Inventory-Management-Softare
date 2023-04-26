@@ -9,6 +9,17 @@ $page="po_status.php";
 $print_page="po_print_view.php";
 $crud      =new crud($table);
 $$unique=$_GET[$unique];
+
+$sectionid = @$_SESSION['sectionid'];
+if($sectionid=='400000'){
+    $sec_com_connection=' and 1';
+    $sec_com_connection_wa=' and 1';
+} else {
+    $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
+    $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+}
+
+
 if (isset($_POST['reprocess'])) {
 
         $_POST['status'] = 'MANUAL';
@@ -22,7 +33,7 @@ $po_master=find_all_field(''.$table.'','',''.$unique.'='.$$unique.'');
 $GET_status=find_a_field(''.$table.'','status',''.$unique.'='.$_GET[$unique]);
 
 if(isset($_POST['viewreport'])){
-    $res='select  
+    $res="select  
     a.po_no,
     a.vendor_id, 
     a.po_no, 
@@ -32,24 +43,21 @@ if(isset($_POST['viewreport'])){
     b.warehouse_name as final_Destination,
     a.work_order_for_department as Created_By_Department,
     c.fname,
-    p.PBI_NAME as Check_By,
     a.delivery_within,
     a.status 
     from 
     purchase_master a,
     warehouse b,
     users c,
-    vendor v,
-    personnel_basic_info p 
+    vendor v
     where  
     a.warehouse_id=b.warehouse_id and 
     a.entry_by=c.user_id and 
-    a.checkby=p.PBI_ID and 
     a.vendor_id=v.vendor_id and
-    a.po_date between "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"
-    order by a.po_no desc';
+    a.po_date between '".$_POST['f_date']."' and '".$_POST['t_date']."'".$sec_com_connection."
+    order by a.po_no desc";
     } else { 
-    $res='select  
+    $res="select  
     a.po_no,
     a.vendor_id, 
     a.po_no, 
@@ -60,21 +68,18 @@ if(isset($_POST['viewreport'])){
     b.warehouse_name as final_Destination,
     a.work_order_for_department as Created_By_Department,
     c.fname,
-    p.PBI_NAME as Check_By,
     a.delivery_within,a.status 
     from 
     purchase_master a,
     warehouse b,
     users c,
-    vendor v,
-    personnel_basic_info p 
+    vendor v
     where  
     a.warehouse_id=b.warehouse_id and 
     a.entry_by=c.user_id and 
-    a.checkby=p.PBI_ID and 
     a.vendor_id=v.vendor_id and
-    a.status in ("MANUAL","CANCELED","UNCHECKED") 
-    order by a.po_no desc';
+    a.status in ('MANUAL','CANCELED','UNCHECKED')".$sec_com_connection."
+    order by a.po_no desc";
     }
 	?>
 

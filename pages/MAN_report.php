@@ -74,8 +74,7 @@ vendor v
   m.entry_by=u.user_id and 
  w.warehouse_id=m.warehouse_id and  
  v.vendor_id=m.vendor_code and 
- m.man_date between '".$_POST[f_date]."' and '".$_POST[t_date]."' ".$vendor_code_CON.$warehouse_id_CON." order by m.".$unique." DESC ";
-
+ m.man_date between '".$_POST['f_date']."' and '".$_POST['t_date']."' ".$vendor_code_CON.$warehouse_id_CON." order by m.".$unique." DESC ";
 } else {
 $sql="Select m.id,m.id as ID,m.MAN_ID as MAN_NO,m.man_date as date,w.warehouse_name as warehouse,v.vendor_name,m.remarks,m.return_resone,m.delivary_challan,m.VAT_challan,concat(u.fname,' - ',m.entry_at) as entry_by,m.status
 from 
@@ -94,7 +93,7 @@ vendor v
 $sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),upp.* FROM  
                             user_plant_permission upp,
 							warehouse w  WHERE  upp.warehouse_id=w.warehouse_id and 
-							 upp.user_id=".$_SESSION[userid]." and upp.status>0					 
+							 upp.user_id=".$_SESSION['userid']." and upp.status>0					 
 							  order by w.warehouse_id";
 ?>
 
@@ -115,7 +114,7 @@ $sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),
                     <? require_once 'support_html.php';?>
 					<?=dataview($results,$unique,$unique_GET,$COUNT_details_data,$page);?>
                     <?php if($GET_status=='UNCHECKED' || $GET_status=='MANUAL' || $GET_status=='RETURNED'):
-					if($masterDATA->entry_by==$_SESSION[userid]): ?>
+					if($masterDATA->entry_by==$_SESSION['userid']): ?>
                         <p>
                             <button type="submit" style="float: left; margin-left: 1%; font-size: 12px" name="reprocess" id="reprocess" class="btn btn-primary" onclick='return window.confirm("Are you confirm to Re-process?");'>Re-processing the MAN</button>
                             <button type="submit" style="float: right; margin-right: 1%; font-size: 12px" onclick='return window.confirm("Are you confirm to Deleted?");' name="Deleted" id="Deleted" class="btn btn-danger">Cancel & Deleted All Data</button>
@@ -131,18 +130,11 @@ $sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),
     <form action="" enctype="multipart/form-data" method="post" name="addem" id="addem" >
         <table align="center" style="width: 50%;">
             <tr>
-                <td><input type="date"  style="width:150px; font-size: 11px; height: 25px"  value="<?=($_POST[f_date]!='')? $_POST[f_date] : date('Y-m-01') ?>" required name="f_date" class="form-control col-md-7 col-xs-12" >
+                <td><input type="date"  style="width:150px; font-size: 11px; height: 25px"  value="<?=($_POST['f_date']!='')? $_POST['f_date'] : date('Y-m-01') ?>" required name="f_date" class="form-control col-md-7 col-xs-12" >
                 <td style="width:10px; text-align:center"> -</td>
-                <td><input type="date"  style="width:150px;font-size: 11px;height: 25px" value="<?=($_POST[t_date]!='')? $_POST[t_date] : date('Y-m-d') ?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
+                <td><input type="date"  style="width:150px;font-size: 11px;height: 25px" value="<?=($_POST['t_date']!='')? $_POST['t_date'] : date('Y-m-d') ?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
                 <td style="width:10px; text-align:center"> -</td>
-                <td><select class="select2_single form-control" style="width:150px; font-size: 11px ;height: 25px" tabindex="-1"   name="warehouse_id" id="warehouse_id">     <option selected></option>
-                         <?=advance_foreign_relation($sql_plant,$_POST[warehouse_id]);?>
-                    </select></td>
-                <td style="width:10px; text-align:center"> -</td>
-                <td><select class="select2_single form-control" style="width:200px; font-size: 11px ;height: 25px" tabindex="-1"   name="vendor_code" id="vendor_code">
-                        <option selected></option>
-                        <?php foreign_relation('vendor', 'vendor_id', 'CONCAT(vendor_name)', $_POST[vendor_code], '1 order by vendor_name');  ?>
-                    </select></td>
+                
                 <td style="padding:10px"><button type="submit" style="font-size: 11px; height: 30px" name="viewreport"  class="btn btn-primary">View MAN</button></td>
             </tr></table>
             </form>

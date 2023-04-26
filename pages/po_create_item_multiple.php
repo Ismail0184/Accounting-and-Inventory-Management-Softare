@@ -27,8 +27,8 @@ if(prevent_multi_submit()){
        if (!isset($_SESSION['initiate_po_no'])) {
             $_POST['entry_by'] = $_SESSION['userid'];
             $_POST['entry_at'] = date('Y-m-d h:s:i');
-            $_POST['edit_by'] = $_SESSION['userid'];
-            $_POST['edit_at'] = date('Y-m-d h:s:i');
+            $_POST['section_id'] = $_SESSION['sectionid'];
+            $_POST['company_id'] = $_SESSION['companyid'];
             $_SESSION['initiate_po_id'] = $_POST['po_id'];
             $_POST['create_date']=date('Y-m-d');
 			$_POST['currency'] = 'BDT';
@@ -526,7 +526,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                 <tbody>
                 <?php
                 $i = 0;
-                $sql = mysqli_query($conn, "SELECT * from item_info where 1 order by serial");
+                $sql = mysqli_query($conn, "SELECT * from item_info where d_price>0 order by serial");
                 while($data=mysqli_fetch_object($sql)):
                 $item_id = @$data->item_id; ?>
                 <tr>
@@ -542,12 +542,12 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <input type="number" name="qty<?=$item_id?>"   id="qty<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$edit_value_qty?>" step="any" min="0" class="qty<?=$item_id?>" />
                     </td>
                     <td style="vertical-align:middle;width: 10%">
-                        <input type="number" name="rate<?=$item_id?>"   id="rate<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$data->t_price;?>"  required="required" step="any" min="0" class="rate<?=$item_id?>" />
+                        <input type="number" name="rate<?=$item_id?>"   id="rate<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$data->d_price;?>"  required="required" readonly step="any" min="0" class="rate<?=$item_id?>" />
                         <input type="hidden" name="vat_amount" id="vat_amount" value=""  class="vat_amount" />
                         <input type="hidden" name="commission_amount" id="commission_amount" value="<?=$edit_value_commission_amount?>"  class="commission_amount" />
                     </td>
                     <td style="vertical-align:middle;width: 12%">
-                        <input type="number" name="amount<?=$item_id?>" readonly id="amount<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:98%; margin-left:2%; height:25px;text-align:center;" value="<?=$edit_value_amount?>" class="amount<?=$item_id?>" step="any" min="1" />
+                        <input type="text" name="amount<?=$item_id?>" readonly id="amount<?=$item_id?>" style="width:98%; margin-left:2%; height:25px;text-align:center;" value="<?=$edit_value_amount?>" class="sum" step="any" min="1" />
                     </td>
                 </tr>
                     <script>
@@ -578,39 +578,25 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         });
                     </script>
                 <?php endwhile; ?>
+                <script>
+                    $('.sum').blur(function () {
+                        var sum = 0;
+                        $('.sum').each(function() {
+                            sum += Number($(this).val());
+                        });
+                        $('#totalPurchaseAmount').val((sum).toFixed(2));
+                    });
+                </script>
+                <tr>
+                    <th colspan="5" style="text-align: right; vertical-align: middle; border: none">Total Purchase Amount</th>
+                    <td style="vertical-align: middle; border: none"><input type="number" name="totalPurchaseAmount" readonly id="totalPurchaseAmount" class="form-control col-md-7 col-xs-12" style="width:98%; margin-left:2%; height:25px;text-align:center;"  class="totalPurchaseAmount"  /></td>
+                </tr>
                 <tr><td colspan="6"><button  type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm?");' name="add" class="btn btn-primary" style="float: right; font-size: 12px; margin-right: 1%">Add items and proceed next</button></td></tr>
             </table>
             <?php endif; ?>
         </form>
     <? endif;?>
-    <script>
-        $(function(){
-            $('#rate,#qty').keyup(function(){
-                var rate = parseFloat($('#rate').val()) || 0;
-                var qty = parseFloat($('#qty').val()) || 0;
-                $('#amount').val((rate * qty));
-            });
-        });
-    </script>
-    <script>
-        $(function(){
-            $('#rate').keyup(function(){
-                var rate = parseFloat($('#rate').val()) || 0;
-                var amount = parseFloat($('#amount').val()) || 0;
-                $('#vat_amount').val(amount+((amount/100)*<?=$tax?>));
-            });
-        });
-    </script>
 
-    <script>
-        $(function(){
-            $('#rate').keyup(function(){
-                var rate = parseFloat($('#rate').val()) || 0;
-                var vat_amount = parseFloat($('#vat_amount').val()) || 0;
-                $('#commission_amount').val(((vat_amount/100)*<?=$commission?>));
-            });
-        });
-    </script>
 <?php $commission_amount=find_a_field('purchase_invoice','SUM(commission_amount)','po_no='.$initiate_po_no); ?>
 <?=added_data_delete_edit_purchase_order($res,$unique,$initiate_po_no,$COUNT_details_data,$page,5,5,$commission_amount,$tax);?>
 <?php endif;?>
