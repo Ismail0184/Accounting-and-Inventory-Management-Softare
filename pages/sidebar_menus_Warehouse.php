@@ -1,6 +1,6 @@
 <?php
 require_once ('support_file.php');
-$STO_received=find_a_field('production_issue_master','COUNT(pi_no)','verifi_status="CHECKED" and warehouse_to='.$_SESSION['warehouse'].'');
+$STO_received=find_a_field("production_issue_master","COUNT(pi_no)","verifi_status='CHECKED' and warehouse_to=".$_SESSION['warehouse']."");
 $DO_delivery_pending=find_a_field('sale_do_master','COUNT(do_no)','status="CHECKED" and depot_id='.$_SESSION['warehouse'].'');
 $Material_issued_to_CMU=find_a_field('production_issue_master','COUNT(pi_no)','verifi_status="CHECKED" and ISSUE_TYPE="ISSUE"');
 $mushak_challan_pending=find_a_field('sale_do_master','COUNT(do_no)','mushak_challan_status="RECORDED" and status="COMPLETED" and depot_id='.$_SESSION['warehouse']);
@@ -58,7 +58,7 @@ $total_mushak=$mushak_challan_pending;
 				while($mainrow=mysqli_fetch_object($master_result)):  ?>
                     <?php if($mainrow->main_menu_name!="Warehouse Report"): ?>
                         <li><a href="#"><i class="<?=$mainrow->iconmain;?>"></i><?=$mainrow->main_menu_name;?>
-                                <?php if($mainrow->main_menu_id=="10041") if($total_inventory_received>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$total_inventory_received.' </span>]'?><?php } else {echo'';} ?>
+                                <?php if($mainrow->main_menu_id=="10021") if($total_inventory_received>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$total_inventory_received.' </span>]'?><?php } else {echo'';} ?>
                                 <?php if($mainrow->main_menu_id=="10042") if($total_do>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$total_do.' </span>]'?><?php } else {echo'';} ?>
                                 <?php if($mainrow->main_menu_id=="10057") if($total_mushak>0) { ?><?='[<span style="color:red;font-weight:bold; font-size:15px"> '.$total_mushak.' </span>]'?><?php } else {echo'';} ?>
 								<?php if($mainrow->main_url=='#'):?><span class="fa fa-chevron-down"></span><?php endif; ?></a>

@@ -178,15 +178,6 @@ function reload1(form)
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Item Group :</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="select2_single form-control"  required style="width: 100%;" name="group_id" id="group_id">
-                                <option></option>
-                                <?php foreign_relation('item_group', 'group_id', 'CONCAT(group_id," : ", group_name)',1, '1'); ?>
-                            </select>
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">As at Date <span class="required">*</span>

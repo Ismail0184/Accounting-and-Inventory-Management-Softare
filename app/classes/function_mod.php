@@ -643,7 +643,67 @@ function add_to_bank_payment ($initiate_credit_note,$date,$proj_id,$narration,$l
  $query_receipt = mysqli_query($conn, $recept);
 }
 
+function add_to_opening_info ($initiate_credit_note,$date,$proj_id,$narration,$ledger_id,$dr_amt,$cr_amt,$type,$cur_bal,$paid_to,
+                              $Cheque_No,$c_date,$Cheque_of_bank,$manual_payment_no,$cc_code,$subledger_id,$status,$ip,$voucher_date,$sectionid,$companyid,$userid,$create_date,$now,$day
+    ,$thisday,$thismonth,$thisyear,$receive_ledger)
+{ global $conn;
+ $recept="INSERT INTO `opening_info` (
+							opening_info_no ,
+							opening_info_date ,
+							proj_id ,
+							narration ,
+							ledger_id ,
+							dr_amt ,
+							cr_amt ,
+							type ,
+							cur_bal ,
+							received_from,
+							cheq_no,
+							cheq_date,
+							bank,
+							manual_opening_info_no,
+							cc_code,
+							sub_ledger_id,
+							entry_status,
+							`ip`,
+							j_date,
+							section_id,
+							company_id,
+							entry_by,
+							do_no,
+							create_date,
+							`time`,
+							`day_name`,
+							`day`,
+							`month`,
+							`year` )
 
+							VALUES
+
+							('$initiate_credit_note',
+							'$date',
+							'$proj_id',
+							'$narration',
+							'$ledger_id',
+							'$dr_amt',
+							'$cr_amt',
+							'$type',
+							'$cur_bal',
+							'$paid_to',
+							'$Cheque_No',
+							'$c_date',
+							'$Cheque_of_bank',
+							'$manual_payment_no'
+							,'$cc_code',
+							'$subledger_id',
+							'$status',
+							'$ip',
+							'$voucher_date',
+							'$sectionid',
+							'$companyid',
+							'$userid','','$create_date','$now','$day','$thisday','$thismonth','$thisyear')";
+ $query_receipt = mysqli_query($conn, $recept);
+}
 
 function add_to_journal_info ($initiate_credit_note,$date,$proj_id,$narration,$ledger_id,$dr_amt,$cr_amt,$type,$cur_bal,$paid_to,
                          $Cheque_No,$c_date,$Cheque_of_bank,$manual_payment_no,$cc_code,$subledger_id,$status,$ip,$voucher_date,$sectionid,$companyid,$userid,$create_date,$now,$day

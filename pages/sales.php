@@ -11,6 +11,9 @@ $journal_item='journal_item';
 $journal='journal';
 $crud      =new crud($table_master);
 
+$config_group_class=find_all_field("config_group_class","","1");
+$inventory_ledger=find_a_field('warehouse','ledger_id','warehouse_id='.$_SESSION['warehouse']);
+
 if(prevent_multi_submit()){
 if(isset($_POST["Import"])){
     $filename=$_FILES["file"]["tmp_name"];
@@ -136,6 +139,7 @@ $COUNT_details_data=find_a_field("".$table."","Count(id)","sales_date='".$sales_
 
 $count_do = find_a_field("sale_do_master","COUNT(do_no)","do_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
+
 if ($_REQUEST['status']=='confirm'):
 if($count_do>0) {} else {
     $sql=mysqli_query($conn, "SELECT distinct route,section,sales_date,id,point from sales_data_from_prism_software where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' group by route");
@@ -154,18 +158,19 @@ if($count_do>0) {} else {
         $crud->insert();
     endwhile;
 
-
         $sql3=mysqli_query($conn, "SELECT * from sales_data_from_prism_software_filterd where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
         while($data_d=mysqli_fetch_object($sql3)) {
 
             $sql2=mysqli_query($conn, "SELECT dm.do_no,dm.do_date,dm.dealer_code,d.dealer_custom_code,d.town_code,d.area_code,d.territory,d.region from sale_do_master dm, dealer_info d where dm.dealer_code=d.dealer_code and d.dealer_custom_code='".$data_d->route."' and dm.do_date='".$_SESSION['sales_date']."' and dm.section_id='".$_SESSION['sectionid']."' and dm.company_id='".$_SESSION['companyid']."' group by dm.do_no,d.dealer_custom_code");
             $data_m=mysqli_fetch_object($sql2);
-                $crud = new crud($sale_do_details);
+            $find_chalan_no = $data_m->do_no;
+            $crud = new crud($sale_do_details);
                 $_POST['do_no'] = $data_m->do_no;
                 $_POST['tr_no'] = $data_m->do_no;
                 $_POST['do_date'] = $data_m->do_date;
                 $_POST['ji_date'] = $data_m->do_date;
                 $_POST['dealer_code'] = $data_m->dealer_code;;
+                $_POST['dealer_id'] = $data_m->dealer_code;;
                 $_POST['town'] = $data_m->town_code;;
                 $_POST['area_code'] = $data_m->area_code;;
                 $_POST['territory'] = $data_m->territory;;
@@ -176,7 +181,7 @@ if($count_do>0) {} else {
             $item_all = find_all_field("item_info","","item_id=".$data_d->item_id);
             $_POST['item_id'] = $data_d->item_id;
             $_POST['unit_price'] = $data_d->rate;
-            $_POST['item_price'] = $data_d->rate;
+
             $_POST['pkt_size'] = $item_all->pack_size;
             $_POST['total_unit'] = $item_all->pack_size*$data_d->qty;
             $_POST['total_amt'] = $data_d->amount;
@@ -186,19 +191,22 @@ if($count_do>0) {} else {
             $_POST['do_type'] = 'sales';
             $_POST['tr_from'] = 'sales';
             $_POST['item_ex'] = $item_all->pack_size*$data_d->qty;;
-
-            if($data_d->qty>0){
+            if($data_d->qty>0):
+                $_POST['chalan_no']=$find_chalan_no;
+                $crud->insert();
+                $crud = new crud($sale_do_chalan);
                 $crud->insert();
 
-                //$crud = new crud($sale_do_chalan);
-                //$crud->insert();
-
+                $_POST['item_price'] = $item_all->production_cost;
+                $_POST['total_amt'] = $data_d->qty*$item_all->production_cost;
                 $crud = new crud($journal_item);
                 $crud->insert();
+            endif;
 
-            }}}
+        }
+}
     $up=mysqli_query($conn, "UPDATE sales_data_from_prism_software SET status='completed' where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
-    header("Location: ".$page."");
+
 endif;
 ?>
 <?php require_once 'header_content.php'; ?>
@@ -277,11 +285,10 @@ endif;
             <?php
             $i = 0;
             $searchStatus = find_a_field("sales_data_from_prism_software","distinct status","sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
-            $sql = mysqli_query($conn, "SELECT distinct route,section,sales_date as sales_date,id,point from sales_data_from_prism_software where sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' order by id");
+            $sql = mysqli_query($conn, "SELECT distinct route,section,sales_date as sales_date,id,point from sales_data_from_prism_software where  sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' order by id");
             while($data=mysqli_fetch_object($sql)){ ?>
                 <tr style="background-color: #00ADEE; color: white"><td colspan="8">Route : <?=$data->route;?> , Section : <?=$data->section;?></td></tr>
                 <?php
-
                 $sql2 = mysqli_query($conn, "SELECT * from item_info where 1 order by serial");
                 while($data2=mysqli_fetch_object($sql2)){
                     $item_id = $data2->item_id;
@@ -324,12 +331,98 @@ endif;
                 <?php }}?>
                 </thead>
             </table>
-    </form>
 
+    <?php
+    $jv = 0;
+    $sql_find_do = "SELECT * from ".$sale_do_master." where do_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' order by do_no";
+    $result = mysqli_query($conn, $sql_find_do);
+    while($data = mysqli_fetch_object($result)){
+        $jv = next_journal_voucher_id();
+        $dealer_master = find_all_field("dealer_info","","dealer_code=".$data->dealer_code." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+        $total_sales_amount=find_a_field("sale_do_chalan","SUM(total_amt)","do_no=".$data->do_no." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+        $COGS_amount=find_a_field("journal_item","SUM(total_amt)","do_no=".$data->do_no." and gift_type in ('none') and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+        $find_chalan_no=find_a_field("sale_do_chalan","distinct chalan_no","do_no=".$data->do_no." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+        $narration="Sales by ".$dealer_master->dealer_name_e.', Invoice No # '.$data->do_no;
 
+        if ($_REQUEST['status']=='confirm') {
+            $date = $_SESSION['sales_date'];
+            $sales_ledger = $config_group_class->sales_ledger;
+            $COGS_sales = $config_group_class->cogs_sales;
 
-    </div>
-    </div>
-    </div>
+            if (($dealer_master->account_code > 0) && (($sales_ledger && $total_sales_amount) > 0)) {
+                add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $dealer_master->account_code, $narration, $total_sales_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $sales_ledger, $narration, 0, $total_sales_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+            } // sales start form here
+            if (($COGS_sales > 0) && (($inventory_ledger && $COGS_amount) > 0)) {
+                add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $COGS_sales, $narration, $COGS_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $inventory_ledger, $narration, 0, $COGS_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+            } // COGS start form here
+
+        } ?>
+        <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:">
+            <thead>
+            <tr style="background-color: bisque">
+                <th>#</th>
+                <th style="width: 8%; vertical-align: middle; text-align: center">Journal</th>
+                <th style="width: 10%; vertical-align: middle; text-align: center">For</th>
+                <th style="vertical-align: middle">Accounts Description</th>
+                <th style="text-align:center; width: 25%; vertical-align: middle">Narration</th>
+                <th style="text-align:center; width: 12%; vertical-align: middle">Debit</th>
+                <th style="text-align:center; width: 12%; vertical-align: middle">Credit</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th rowspan="2" style="text-align: center; vertical-align: middle">1</th>
+                <th rowspan="2" style="text-align: center; vertical-align: middle">Sales Journal</th>
+                <th style="text-align: center; vertical-align: middle">Customer Ledger</th>
+                <td style="vertical-align: middle">
+                    <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required  name="ledger_1<?=$data->do_no?>">
+                        <option  value="<?=$dealer_master->account_code;?>"><?=$dealer_master->account_code; ?>-<?=$customer_name=find_a_field('accounts_ledger','ledger_name','ledger_id='.$dealer_master->account_code.''); ?></option>
+                    </select>
+                </td>
+                <td rowspan="2" style="text-align: center; vertical-align: middle"><textarea name="narration_1<?=$data->do_no?>" id="narration_1" class="form-control col-md-7 col-xs-12" style="width:100%; height:92px; font-size: 11px; text-align:center"><?=$narration?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?></textarea></td>
+                <td align="center" style="vertical-align: middle"><input type="text" name="dr_amount_1<?=$data->do_no?>" readonly value="<?=$total_sales_amount;?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                <td align="center" style="vertical-align: middle"><input type="text" name="cr_amount_1<?=$data->do_no?>" readonly value="" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+            </tr>
+            <tr>
+                <th style="text-align: center; vertical-align: middle">Sales Ledger</th>
+                <td style="vertical-align: middle"><?$sales_ledger=$config_group_class->sales_ledger;?>
+                    <select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_2<?=$data->do_no?>" id="ledger_2">
+                        <?=foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)', $sales_ledger, 'ledger_id='.$sales_ledger);?>
+                    </select></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_2<?=$data->do_no?>" readonly value="" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text" name="cr_amount_2<?=$data->do_no?>" readonly value="<?=$total_sales_amount;?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+            </tr>
+            <tr>
+                <th rowspan="2" style="text-align: center; vertical-align: middle">2</th>
+                <th rowspan="2" style="text-align: center; vertical-align: middle">COGS Journal</th>
+                <th style="text-align: center; vertical-align: middle">COGS Ledger</th>
+                <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_3<?=$data->do_no?>">
+                        <?$COGS_sales=$config_group_class->cogs_sales;?>
+                        <option  value="<?=$COGS_sales;?>"><?=$COGS_sales; ?>-<?=find_a_field('accounts_ledger','ledger_name','ledger_id='.$COGS_sales.''); ?></option>
+                    </select></td>
+                <td rowspan="2" style="text-align: center; vertical-align: middle"><textarea name="narration_3<?=$data->do_no?>" id="narration_3" class="form-control col-md-7 col-xs-12" style="width:100%; height:92px; font-size: 11px; text-align:center"><?=$narration;?><?php if(!empty($do_master->remarks)) { echo ' , Remarks # '.$do_master->remarks.''; }?></textarea></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_3<?=$data->do_no?>" readonly value="<?=$COGS_amount;?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text" name="cr_amount_3<?=$data->do_no?>" readonly value="" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+            </tr>
+            <tr>
+                <th style="text-align: center; vertical-align: middle">Warehouse / Inventory</th>
+                <td style="vertical-align: middle"><select class="select2_single form-control" style="width:100%" tabindex="-1" required="required"  name="ledger_4<?=$data->do_no?>" id="ledger_4">
+                        <option  value="<?=$inventory_ledger;?>"><?=$inventory_ledger?> : <?=find_a_field('accounts_ledger','ledger_name','ledger_id='.$inventory_ledger.''); ?></option>
+                    </select></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text" name="dr_amount_4<?=$data->do_no?>"  readonly value="" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+                <td style="text-align: right; vertical-align: middle"><input type="text" name="cr_amount_4<?=$data->do_no?>" readonly value="<?=$COGS_amount;?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:35px; font-size: 11px; text-align:center" ></td>
+            </tr>
+            </tbody>
+        </table>
     <?php } ?>
+        </form>
+    </div>
+    </div>
+    </div>
+
+<?php } if ($_GET['status']=='confirm') { ?>
+    <meta http-equiv='refresh' content='0;<?=$page?>'>
+<?php } ?>
 <?=$html->footer_content();?>

@@ -60,7 +60,6 @@ if(isset($_POST['viewreport'])){
 
 				WHERE 
 				
-				  checked!='NO' and 
 				  w.warehouse_id=r.warehouse_id AND
 				  j.tr_no = r.pr_no AND
 				  j.tr_from = 'Purchase' AND 

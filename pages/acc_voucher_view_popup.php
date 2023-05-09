@@ -2,8 +2,9 @@
 require_once 'support_file.php';
 $vdate		= @$_REQUEST['vdate'];
 $jvdate=date('Y-m-d' , strtotime($vdate));
-$jv_no =  $_REQUEST['v_no'];
-$v_type 		= find_a_field('journal','distinct tr_from','jv_no='.$_REQUEST['v_no']);
+$jv_no =  @$_GET['v_no'];
+$v_type 		= find_a_field('journal','distinct tr_from','jv_no='.$jv_no);
+
 $v_type = strtolower($v_type);
 $no 		= $v_type."_no";
 $v_no = getSVALUE('journal','tr_no','where jv_no='.$_REQUEST['v_no']);
@@ -19,6 +20,7 @@ if($v_type=='receipt'){$voucher_name='RECEIPT VOUCHER';$vtype='receipt';$tr_from
 elseif($v_type=='payment'){$voucher_name='PAYMENT VOUCHER';$vtype='payment';$tr_from='payment';$dtype='paymentdate';$olddtype='payment_date';}
 elseif($v_type=='Purchase'){$voucher_name='Purchase VOUCHER';$vtype='secondary_journal';$tr_from='Purchase';$dtype='jvdate';$olddtype='jv_date';}
 elseif($v_type=='journal_info'){$voucher_name='JOURNAL VOUCHER';$vtype='journal_info';$tr_from='journal_info';$dtype='j_date';$olddtype='journal_info_date';}
+elseif($v_type=='opening'){$voucher_name='Opening Balance VOUCHER';$vtype='opening';$tr_from='opening';$dtype='j_date';$olddtype='opening_info_date';}
 elseif($v_type=='Contra'){$voucher_name='CONTRA VOUCHER';$vtype='coutra';$tr_from='Contra';$dtype='coutradate';$olddtype='coutra_date';}
 else{$v_type=='Contra';$voucher_name='CONTRA VOUCHER';$vtype='coutra';$tr_from='Contra';$dtype='coutradate';$olddtype='coutra_date';}
 
@@ -76,7 +78,6 @@ if(isset($_POST['check']))
 
 if(isset($_POST['update']))
 {
-
     $vdate = strtotime($_POST["vdate"]);
     $vdateji = date('Y-m-d' , strtotime($_REQUEST['vdate']));
     $sqldate1 = "UPDATE $vtype SET {$v_type}_date='$vdate' and $dtype='$vdateji' WHERE $no='$v_no' and 1";
@@ -159,13 +160,15 @@ $sql1="select narration,cheq_no,cheq_date,' ',jv_date,cc_code,sub_ledger_id,jvda
 $data1=mysqli_fetch_row(mysqli_query($conn, $sql1));
 $sql1."<br>";
 ?>
-    <?php require_once 'header_content.php'; ?>
-    <?php require_once 'body_content_without_menu.php'; ?>
+
+<?php require_once 'header_content.php'; ?>
+<?php require_once 'body_content_without_menu.php'; ?>
+
     <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="x_panel">
-    <div class="x_content">
-    <form  name="form2" id="form2" class="form-horizontal form-label-left" method="post" onsubmit="return validate_total()" style="font-size: 11px">
-    <? require_once 'support_html.php';?>
+        <div class="x_panel">
+            <div class="x_content">
+                <form  name="form2" id="form2" class="form-horizontal form-label-left" method="post" onsubmit="return validate_total()" style="font-size: 11px">
+                    <? require_once 'support_html.php';?>
     <table align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">
     <tr>
                         <td align="right"><strong>Date:</strong></td>
@@ -192,7 +195,7 @@ $sql1."<br>";
                 $pi=0;
                 $d_total=0;
                 $c_total=0;
-                $sql2="select a.dr_amt,a.cr_amt,b.ledger_name,b.ledger_id,a.narration,a.id,a.cc_code from accounts_ledger b, journal a where a.ledger_id=b.ledger_id and a.tr_from = '$tr_from' and a.jv_no='$jv_no' and a.ledger_id>0";
+                $sql2="select a.dr_amt,a.cr_amt,b.ledger_name,b.ledger_id,a.narration,a.id,a.cc_code from accounts_ledger b, journal a where a.ledger_id=b.ledger_id and a.tr_from = '".$tr_from."' and a.jv_no='$jv_no' and a.ledger_id>0";
                 $data2=mysqli_query($conn, $sql2);
                 while($info=mysqli_fetch_row($data2)){ $pi++;
                     $entry[$pi] = $info[5];
@@ -206,7 +209,7 @@ $sql1."<br>";
                         <td style="text-align: center; vertical-align: middle"><?=$pi;?></td>
                         <td style="text-align: left; vertical-align: middle">
                             <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_<?=$info[5]?>" id="ledger_<?=$info[5]?>">
-                                <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_id," : ", ledger_name)',$info[3], 'status=1'); ?>
+                                <?php foreign_relation('accounts_ledger', 'ledger_id', 'CONCAT(ledger_name)',$info[3], 'status=1'); ?>
                             </select>
                         <td style="text-align: left; vertical-align: middle">
                         <textarea  name="narration_<?=$info[5];?>" id="narration_<?=$info[5];?>" class="form-control col-md-7 col-xs-12" style="width:100%; height:37px; font-size: 11px; text-align:center"><?=$info[4];?></textarea>
@@ -271,7 +274,7 @@ $sql1."<br>";
             $datetime2 = date_create(date('Y-m-d'));
             $interval = date_diff($datetime1, $datetime2);
             $v_d=$interval->format('%a');
-            if($_SESSION[userlevel]=='2'){
+            if($_SESSION['userlevel']=='2'){
                 if($v_d>$access_days){ echo '<h6 style="text-align: center; color:red">Access Restricted.</h6>';} else {?>
                     <tr><td colspan="6"><textarea style="float: left; margin-left:1%; font-size: 11px; width: 250px" name="note" id="note" placeholder="Type the reason for the update or deletion" ></textarea></td></tr>
                     <tr><td colspan="2"><button style="float: left; margin-left:1%; font-size: 11px" type="submit" name="delete" id="delete" class="btn btn-danger" onclick='return window.confirm("Are you confirm to Completed?");'>Delete Voucher</button></td>

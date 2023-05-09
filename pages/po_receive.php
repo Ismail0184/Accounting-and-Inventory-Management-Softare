@@ -27,14 +27,14 @@ if(prevent_multi_submit()){
 			$_POST['rcv_Date']=$_POST['rec_date'];
 			$rec_no=$_POST['rec_no'];
             $now = date('Y-m-d H:s:i');		
-			$_POST[grn_inventory_type]='';	
+			$_POST['grn_inventory_type']='';
 			$crud      =new crud($table_receive_master);
             $crud->insert();	// GRN master
 ////////////////////////////////////////////////////////		
 		$results="Select * from purchase_invoice  where ".$unique."=".$$unique."";
         $query=mysqli_query($conn, $results);
         while($row=mysqli_fetch_array($query)){
-			$id=$row[id];
+			$id=$row['id'];
     		$GRN_Qty=$_POST['chalan_'.$id];
 			if($GRN_Qty>0){
 			$_POST['entry_by'] = $_SESSION['userid'];	
@@ -64,20 +64,15 @@ if(prevent_multi_submit()){
             $total_amt=$GRN_Qty*$row['rate'];
             $_POST['ip']=$ip;
             $crud      =new crud($journal_item);
-            //$crud->insert();   // inventory received
+            $crud->insert();   // inventory received
                 $total_amount=$total_amount+$total_amt;
 			}}
-
-
-         // MAN status update
          $mup=mysqli_query($conn, "Update MAN_details SET MAN_RCV_STATUS='Done' where m_id='".$_GET['m_id']."' and po_no='".$_GET['po_no']."'");
 
+///////////// accounts journal start from here
 
-
-///////////// accounts journal start from here			
-			
-        $jv=next_journal_sec_voucher_id(); 
-        $get_tax_ait=$_POST[tax_ait];
+        $jv=next_journal_sec_voucher_id();
+        $get_tax_ait=$_POST['tax_ait'];
         $pr_amt  = $total_amount;
 
 //// service charge calculation
@@ -270,7 +265,7 @@ td {
                         </thead>
                         <tbody>
                         <?php
-						$res=mysqli_query($conn, "SELECT sj.* from secondary_journal sj where jv_no=".$_GET[jv_no]."");
+						$res=mysqli_query($conn, "SELECT sj.* from secondary_journal sj where jv_no=".$_GET['jv_no']."");
 						while($data=mysqli_fetch_object($res)){?>                        
                         <tr>
                             <td style="text-align: center"><?=$i=$i+1;?></td>
@@ -423,7 +418,7 @@ td {
             <th>Recd </th>
             <th>UnRecd </th>
             <th>RecQty </th>            
-            <th>No. of Pack</th>            
+            <!--th>No. of Pack</th-->
             <!--th style="width:10%">MFG/ Warranty</th-->
           </tr>
           </thead>
@@ -463,7 +458,7 @@ td {
                 form.chalan_<?=$row->id?>.focus();
             }</script>
             
-            <td align="center"><input type="text" style="width:50px; text-align:center"  value="<?=$noofpack = find_a_field('MAN_details','no_of_pack','status="VERIFIED" and po_no="'.$_GET[po_no].'" and MAN_ID="'.$_GET[MAN_ID].'" and item_id="'.$row->item_id.'"');?>" name="of_no_pack<?=$row->id?>" id="of_no_pack<?=$row->id?>"  /></td>                
+            <!--td align="center"><input type="text" style="width:50px; text-align:center"  value="<?=$noofpack = find_a_field('MAN_details','no_of_pack','status="VERIFIED" and po_no="'.$_GET[po_no].'" and MAN_ID="'.$_GET[MAN_ID].'" and item_id="'.$row->item_id.'"');?>" name="of_no_pack<?=$row->id?>" id="of_no_pack<?=$row->id?>"  /></td-->
                 <!--td><input type="date" style="" min="<?=date('Y-m-d');?>" name="mfg<?=$row->id?>" id="mfg<?=$row->id?>" value="<?=$MAN_details->mfg;?>" /></td-->
               </tr>
           <? }?>

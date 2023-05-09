@@ -74,7 +74,7 @@ designation des
 <?php require_once 'header_content.php'; ?>
 <script type="text/javascript">
     function DoNavPOPUP(lk)
-    {myWindow = window.open("<?=$page?>?<?=$unique?>="+lk, "myWindow", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no,directories=0,toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=900,height=320,left = 230,top = 5");}
+    {myWindow = window.open("<?=$page?>?<?=$unique?>="+lk, "myWindow", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no,directories=0,toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=600,height=400,left = 250,top = 5");}
 </script>
 <?php if(isset($_GET[$unique])):
     require_once 'body_content_without_menu.php'; else :
@@ -93,7 +93,6 @@ designation des
         </div>
         <div class="x_content">
             <?php else: ?>
-
             <div class="modal fade" id="addModal">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">

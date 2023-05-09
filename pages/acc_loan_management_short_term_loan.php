@@ -13,9 +13,9 @@ $find_date = date('Y-m-d');
 $maturity_date_get = find_a_field('acc_short_term_loan_details','maturity_date','maturity_date="'.$find_date.'"');
 $Get_STL_ledger = find_a_field('acc_short_term_loan','STL_ledger','id="19"');
 
-$query=mysqli_query($conn, "SELECT d.maturity_date as jv_date,d.*,m.* from acc_short_term_loan_details d,acc_short_term_loan m where d.journal_status='pending' and m.status='Disbursement' and d.maturity_date between '0000-00-00' and '".$find_date."' and m.id=d.uid");
+$query=mysqli_query($conn, "SELECT d.maturity_date as jv_date,d.*,m.* from acc_short_term_loan_details d,acc_short_term_loan m where d.journal_status='pending' and m.status='Disbursed' and d.maturity_date between '0000-00-00' and '".$find_date."' and m.id=d.uid");
 while($data=mysqli_fetch_object($query)){
-    $ledger_balance = find_a_field('journal','(cr_amt-dr_amt)','ledger_id='.$data->STL_ledger);
+    $ledger_balance = find_a_field('journal','SUM(cr_amt-dr_amt)','ledger_id='.$data->STL_ledger);
     $interest_amount = (($ledger_balance/100)*$data->interest_rate)/360*1;
     $jv=next_journal_voucher_id();
     $narration = $data->interest_rate."% Interest on loan of ".$data->bank_name." ".$data->stl_no;
@@ -108,19 +108,19 @@ if(prevent_multi_submit()){
                 }}
 
             $_POST['status']=1;
-            $_POST['maturity_date']=date('Y-m-d', strtotime($_POST['date'] .' '.$_POST['days'].' day'));
+            $_POST['maturity_date']=date('Y-m-d', strtotime($_POST['interest_effective_date'] .' '.$_POST['days'].' day'));
             $_POST['STL_ledger']        = find_a_field('accounts_ledger','ledger_id','ledger_name="'.$_SESSION['sub_sub_name'].'"');
             $_POST['interest_ledger']   = find_a_field('accounts_ledger','ledger_id','ledger_name="'.$_SESSION['SSL_name'].'"');
             $crud->insert();
             $jv=next_journal_voucher_id();
-            $narration = 'Loan Disbursement against short term loan of '.$_POST['bank_name'].', STL No # '.$_SESSION['sub_sub_name'];
+            $narration = 'Loan Disbursement against short term loan of '.$_POST['bank_name'].', STL No # '.$_SESSION['sub_sub_name'].', remarks # '.$_POST['remarks'];
             $interest_amounts = ((($_POST['loan_amount']/100)*$_POST['interest_rate'])/360*1);
             $interest_narration = $_POST['interest_rate'].'% Interest on loan of '.$_POST['bank_name'].', STL No # '.$_SESSION['sub_sub_name'];
             if (($_POST['ledger_id'] > 0) && ($_POST['loan_amount'])) {
                 add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['ledger_id'], $narration, $_POST['loan_amount'], 0,'Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
                 add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['STL_ledger'], $narration, 0, $_POST['loan_amount'],'Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
-                add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['expenses_head'], $interest_narration, $interest_amounts, 0,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
-                add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['interest_ledger'], $interest_narration, 0, $interest_amounts,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+                //add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['expenses_head'], $interest_narration, $interest_amounts, 0,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
+                //add_to_journal_new($_POST['date'], $proj_id, $jv, $date, $_POST['interest_ledger'], $interest_narration, 0, $interest_amounts,'interest_on_Loan','', $unique_GET, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $_SESSION['wpc_DO']);
                 $up = mysqli_query($conn, "Update acc_short_term_loan_details set journal_status='created' where maturity_date='".$_POST['date']."'");
 
             }
@@ -128,9 +128,10 @@ if(prevent_multi_submit()){
             for($i=0;$i<$_POST['days'];$i++)
             {
                 $_POST['installment_no'] = $i+1;
+                $_POST['date'] = $_POST['date'];
                 $_POST['uid']=find_a_field('acc_short_term_loan','id','stl_no="'.$_POST['stl_no'].'"');
-                $_POST['date']=$_POST['date'];
-                $_POST['maturity_date']=date('Y-m-d', strtotime($_POST['date'] .' '.$i.' days'));
+                $_POST['interest_effective_date']=$_POST['interest_effective_date'];
+                $_POST['maturity_date']=date('Y-m-d', strtotime($_POST['interest_effective_date'] .' '.$i.' days'));
                 $_POST['amount']=((($_POST['loan_amount']/100)*$_POST['interest_rate'])/360)*1;
                 $crud      =new crud($table_details);
                 $crud->insert();
@@ -165,7 +166,7 @@ if(isset($$unique))
     while (list($key, $value)=each($data))
     { $$key=$value;}
 }
-$res="SELECT a.id,a.stl_no,l.ledger_name as bank_name,(select ledger_name from accounts_ledger where ledger_id=a.STL_ledger) as STL_ledger,(select ledger_name from accounts_ledger where ledger_id=a.interest_ledger) as interest_ledger,a.loan_amount,a.interest_rate,a.interest_on_late_payment,a.date,a.maturity_date,a.status from ".$table." a,accounts_ledger l where a.ledger_id=l.ledger_id";
+$res="SELECT a.id,a.id as uid,a.stl_no,l.ledger_name as bank_name,(select ledger_name from accounts_ledger where ledger_id=a.STL_ledger) as STL_ledger,(select ledger_name from accounts_ledger where ledger_id=a.interest_ledger) as interest_ledger,a.loan_amount,a.interest_rate,a.interest_on_late_payment,a.date,a.maturity_date,a.remarks,a.status as status from ".$table." a,accounts_ledger l where a.ledger_id=l.ledger_id";
 $result=mysqli_query($conn, $res);
 while($data=mysqli_fetch_object($result)){
     $id=$data->id;
@@ -178,7 +179,7 @@ while($data=mysqli_fetch_object($result)){
 <?php require_once 'header_content.php'; ?>
 <script type="text/javascript">
     function DoNavPOPUP(lk)
-    {myWindow = window.open("<?=$page?>?<?=$unique?>="+lk, "myWindow", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no,directories=0,toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=900,height=320,left = 230,top = 5");}
+    {myWindow = window.open("<?=$page?>?<?=$unique?>="+lk, "myWindow", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no,directories=0,toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=600,height=500,left = 350,top = 5");}
 </script>
 <?php if(isset($_GET[$unique])):
     require_once 'body_content_without_menu.php'; else :
@@ -211,11 +212,11 @@ while($data=mysqli_fetch_object($result)){
                             <?php endif; ?>
                             <form  name="addem" id="addem" class="form-horizontal form-label-left" style="font-size: 11px" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Bank Name <span class="required text-danger">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Bank / Party Name <span class="required text-danger">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="ledger_id">
                                             <option></option>
-                                            <?php foreign_relation('sub_ledger', 'sub_ledger_id', 'sub_ledger', $ledger_id, 'status=1 and ledger_id="1002000900000000"'); ?>
+                                            <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $ledger_id, 'status=1 and ledger_group_id in ("1002","2002")'); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -225,7 +226,7 @@ while($data=mysqli_fetch_object($result)){
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="stl_ledger">
                                             <option></option>
-                                            <?php foreign_relation('sub_ledger', 'sub_ledger_id', 'sub_ledger', $ledger_id, 'status=1 and ledger_id="2003000100000000"'); ?>
+                                            <?php foreign_relation('sub_ledger', 'sub_ledger_id', 'sub_ledger', $ledger_id, 'status=1 and ledger_id in ("2003000100000000","2002000600000000")'); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -234,7 +235,7 @@ while($data=mysqli_fetch_object($result)){
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="interest_ledger">
                                             <option></option>
-                                            <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $ledger_id, 'status=1 and ledger_id="2007000400020000"'); ?>
+                                            <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $ledger_id, 'status=1 and ledger_id in ("2007000400020000","2007000400030000")'); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -244,7 +245,7 @@ while($data=mysqli_fetch_object($result)){
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required"  name="expenses_head">
                                             <option></option>
-                                            <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $expenses_head, 'status=1 and ledger_id="4007000200010000"'); ?>
+                                            <?php foreign_relation('accounts_ledger', 'ledger_id', 'ledger_name', $expenses_head, 'status=1 and ledger_id in ("4007000200010000","4007000200020000")'); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -272,13 +273,13 @@ while($data=mysqli_fetch_object($result)){
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Interest Rate (%)<span class="required text-danger">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                        <input type="number" class="form-control" style="font-size: 11px" required name="interest_rate" value="<?=$interest_rate?>" />
+                                        <input type="number" class="form-control" style="font-size: 11px" required name="interest_rate" step="any" value="<?=$interest_rate?>" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Interest on Late Payment Rate (%)<span class="required text-danger">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
-                                        <input type="number" class="form-control" style="font-size: 11px" required name="interest_on_late_payment" value="<?=$interest_on_late_payment?>" />
+                                        <input type="number" class="form-control" style="font-size: 11px" step="any"  required name="interest_on_late_payment" value="<?=$interest_on_late_payment?>" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -287,10 +288,24 @@ while($data=mysqli_fetch_object($result)){
                                         <input type="date" class="form-control" style="font-size: 11px" required name="date" value="<?=$date?>" />
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Interest Effective Date<span class="required text-danger">*</span></label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="date" class="form-control" style="font-size: 11px" required name="interest_effective_date" value="<?=$interest_effective_date?>" />
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">No. of Days <span class="required text-danger">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <input type="text" class="form-control" style="font-size: 11px" required name="days" value="<?=$days?>" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Remarks</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <textarea name="remarks" class="form-control"><?=$remarks?></textarea>
                                     </div>
                                 </div>
                                 <?php if(isset($_GET[$unique])): ?>
@@ -299,7 +314,8 @@ while($data=mysqli_fetch_object($result)){
                                         <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                             <select class="select2_single form-control" style="width: 100%;" tabindex="-1" required="required" name="status">
                                                 <option></option>
-                                                <?=foreign_relation('status', 'id', 'name', $status, 'status=1'); ?>
+                                                <option value="1"<?=($status=='Disbursed')? ' Selected' : '' ?>>Disbursed</option>
+                                                <option value="0"<?=($status=='Settled')? ' Selected' : '' ?>>Settled</option>
                                             </select>
                                         </div>
                                     </div>
@@ -308,9 +324,15 @@ while($data=mysqli_fetch_object($result)){
                                 <?php if($_GET[$unique]):  ?>
                                     <div class="form-group" style="margin-left:40%">
                                         <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <?php
+                                            $status =find_a_field('acc_short_term_loan','status','id='.$_GET['id']) ;
+                                            if($status=='Settled'){ echo '<h6 style="color: red; font-style: italic">This STL has been SETTLED</h6>';} else {
+                                            ?>
                                             <button type="submit" name="modify" id="modify" style="font-size:12px" class="btn btn-danger" onclick="self.close()">Close</button>
                                             <button type="submit" name="modify" id="modify" style="font-size:12px" class="btn btn-primary">Modify</button>
-                                        </div></div>
+                                        <?php } ?>
+                                        </div>
+                                    </div>
                                 <?php else : ?>
                                     <div class="form-group" style="margin-left:40%">
                                         <div class="col-md-6 col-sm-6 col-xs-12">

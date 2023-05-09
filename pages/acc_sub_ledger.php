@@ -132,14 +132,14 @@ while($row=mysqli_fetch_object($query)){
     <form id="form2" name="form2" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
         <? require_once 'support_html.php';?>
         <div class="form-group" style="width: 100%">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Ledger:<span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Sub Ledger <span class="required text-danger">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <input type="hidden" id="<?=$unique?>" name="<?=$unique?>" value="<?=$unique_GET?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
                 <input type="text" id="name"  required="required" name="name" value="<?=$sub_ledger?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size: 12px" >
             </div>
         </div>
         <div class="form-group" style="width: 100%">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Under Ledger<span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Under Ledger <span class="required text-danger">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <select class="select2_single form-control" required name="under" id="under" style="width: 100%; font-size: 12px">
                     <option value=""></option>

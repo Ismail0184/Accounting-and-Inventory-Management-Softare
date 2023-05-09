@@ -118,6 +118,7 @@ function reload1(form)
                             </select>
                         </div>
                     </div>
+
                 <?php elseif ($report_id=='1002001'): ?>
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Ledger <span class="required text-danger">*</span></label>
@@ -145,6 +146,42 @@ function reload1(form)
                             <select class="select2_single form-control" style="width:100%;font-size: 11px" tabindex="-1"  name="tr_from" id="tr_from" >
                                 <option value="">Select Type</option>
                                 <?=foreign_relation('journal', 'distinct tr_from', 'tr_from',1, '1','order by tr_from');?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" style="font-size: 11px; width: 49%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-01');?>" class="form-control col-md-7 col-xs-12" required name="f_date">
+                            <input type="date" style="font-size: 11px; width: 49%; margin-left:2%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
+                        </div>
+                    </div>
+
+                <?php elseif ($report_id=='1002008'): ?>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Ledger <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required" name="ledger_id" >
+                                <option></option>
+                                <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)",1, "show_in_transaction not in ('1') and status=1".$sec_com_connection_wa.""); ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" style="font-size: 11px; width: 49%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-01');?>" class="form-control col-md-7 col-xs-12" required name="f_date">
+                            <input type="date" style="font-size: 11px; width: 49%; margin-left:2%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
+                        </div>
+                    </div>
+
+                <?php elseif ($report_id=='1002009'): ?>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Sub Ledger <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required" name="sub_ledger_id" >
+                                <option></option>
+                                <?php foreign_relation("sub_ledger", "sub_ledger_id", "CONCAT(sub_ledger_id,' : ', sub_ledger)",1, "sub_ledger_id in (select sub_ledger_id from sub_sub_ledger) and status=1".$sec_com_connection_wa.""); ?>
                             </select>
                         </div>
                     </div>

@@ -19,7 +19,7 @@ if(prevent_multi_submit()){
         $_SESSION['pi_tr'] = $_GET[$unique];
         $_SESSION['initiate_production_transfer']=getSVALUE("".$table."", "custom_pi_no", " where ".$unique."=".$_GET[$unique]."");
         $type = 1;
-        echo "<script>self.opener.location = 'production_transfer.php'; self.blur(); </script>";
+        echo "<script>self.opener.location = 'warehouse_goods_transfer.php'; self.blur(); </script>";
         echo "<script>window.close(); </script>";
     }
 

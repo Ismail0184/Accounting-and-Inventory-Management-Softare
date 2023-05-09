@@ -3,6 +3,7 @@
 
 $sekeyword='Agrani#WO#';
 $create_date=('Y-m-d');
+
 $title='Create Work Order';
 $table_master='purchase_master';
 $table_details='purchase_invoice';
@@ -81,41 +82,6 @@ if(prevent_multi_submit()){
         $type = 1;
         $msg = 'Successfully Deleted.';
     }
-
-    if(isset($_POST["Import"])){
-    $filename=$_FILES["file"]["tmp_name"];
-    if($_FILES["file"]["size"] > 0)
-    { $file = fopen($filename, "r");
-        while (($eData = fgetcsv($file, 10000, ",")) !== FALSE)
-        {
-                $entry_at = date('Y-m-d H:i:s');
-                $item_id=find_a_field("item_info","item_id","item_name in ('".$eData[3]."')");
-                $item_info=find_all_field("item_info","","item_id=".$item_id);
-
-            $sql = "INSERT INTO `purchase_invoice`
-   (`po_no`,`po_id`,`po_date`,`vendor_id`,`item_id`,`warehouse_id`,`rate`,`qty`,`amount`,`entry_by`,`entry_at`,`status`,`section_id`,`company_id`)
-	         VALUES ('".$_POST['po_no']."','".$_POST['po_id']."','".$_POST['po_date']."','".$_POST['vendor_id']."','".$item_id."','".$_POST['warehouse_id']."','".$item_info->d_price."','$eData[5]','".$item_info->d_price*$eData[5]."','".$_SESSION['userid']."','".$entry_at."','MANUAL','".$sectionid."','".$_SESSION['companyid']."')";
-
-            $delete_empty_data = mysqli_query($conn, "Delete from purchase_invoice where qty=0 ");
-
-            $result = mysqli_query( $conn, $sql);
-            if(! $result )
-            {
-                echo "<script type=\"text/javascript\">
-							alert(\"Invalid File:Please Upload CSV File.\");
-							window.location = ".$page."
-						</script>";
-            }}
-        fclose($file);
-        //throws a message if data successfully imported to mysql database from excel file
-        echo "<script type=\"text/javascript\">
-						alert(\"CSV File has been successfully Imported.\");
-						window.location = ".$page."
-					</script>";
-    }
-
-    header("Location: ".$page."");
-}
 
     if (isset($_POST['add'])) {
         $_POST['entry_by'] = $_SESSION['userid'];
@@ -369,6 +335,24 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         </td>
                     </tr>
                     <tr><td style="height: 5px"></td></tr>
+                    <!---tr>
+                        <th>Commission (%)</th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <input type="number" readonly name="commission" value="<?=($initiate_po_no>0)? $commission : $vendor_commission; ?>" style="width: 80%; font-size:11px" class="form-control col-md-7 col-xs-12" >
+                        </td>
+                        <th>Transport Bill</th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <input type="text" id="transport_bill" name="transport_bill" value="<?=$transport_bill;?>" class="form-control col-md-7 col-xs-12" >
+                        </td>
+                        <th>Labor Bill</th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <input type="text" id="labor_bill" name="labor_bill" value="<?=$labor_bill;?>" class="form-control col-md-7 col-xs-12" >
+                        </td>
+                    </tr>
+                    <tr><td style="height: 5px"></td></tr-->
                     <tr>
                         <th>VAT</th>
                         <th style="text-align:center">:</th>
@@ -385,8 +369,63 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <td>
                             <input type="text" style="width: 80%;" value="<?=$po_details;?>"  id="po_details" name="po_details"  class="form-control col-md-7 col-xs-12" >
                         </td>
+                        <!--th>ASF</th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <input type="text" id="asf" name="asf" placeholder="%" value="<?=$asf;?>" class="form-control col-md-7 col-xs-12" >
+                        </td-->
                     </tr>
                     <tr><td style="height: 5px"></td></tr>
+
+                    <!--tr>
+                        <th>Remarks</th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <input type="text" style="width: 80%;" value="<?=$po_details;?>"  id="po_details" name="po_details"  class="form-control col-md-7 col-xs-12" ></td>
+                        <th>Quotation (*PDF)</th>
+                        <th style="text-align:center">:</th>
+                        <td><?php if($initiate_po_no): ?>
+                            <a href="../page/po_documents/qoutationDoc/<?=$initiate_po_no.'.pdf';?>" target="_new" style="text-decoration:underline; color:blue"><strong>View Quotation Sample</strong></a><?php  else : ?>
+                                <input type="file" id="qoutationDoc" name="qoutationDoc" value="<?=$qoutationDoc;?>" class="form-control col-md-7 col-xs-12" >
+                            <?php endif; ?>
+                        </td>
+                        <th>Mail (*PDF)</th>
+                        <th style="text-align:center">:</th>
+                        <td><?php if($initiate_po_no): ?>
+                            <a href="../page/po_documents/mailCommDoc/<?=$initiate_po_no.'.pdf';?>" target="_new" style="text-decoration:underline; color:blue"><strong>View Email Conversation</strong></a><?php else : ?>
+                                <input type="file" id="mailCommDoc" name="mailCommDoc" value="<?=$mailCommDoc;?>" class="form-control col-md-7 col-xs-12" ><?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr><td style="height: 5px"></td></tr>
+                    <tr>
+                        <th>Checked By <span class="required text-danger">*</span></th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <select class="select2_single form-control" style="width: 80%;" tabindex="-1" required="required" name="checkby" id="checkby">
+                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="61"');?></option>
+                                <?=advance_foreign_relation($sql_checked_by,$checkby);?>
+                            </select>
+                        </td>
+                        <th>Recommended By <span class="required text-danger">*</span></th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <select class="select2_single form-control" style="width: 80%;" tabindex="-1" required="required" name="recommended" id="recommended">
+                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="61"');?></option>
+                                <option></option>
+                                <?=advance_foreign_relation($sql_checked_by,$recommended);?>
+                            </select>
+                        </td>
+                        <th>Authorised By <span class="required text-danger">*</span></th>
+                        <th style="text-align:center">:</th>
+                        <td>
+                            <select class="select2_single form-control" style="width: 80%;" tabindex="-1" required="required" name="authorise" id="authorise">
+                                <option value="88" selected><?=find_a_field('personnel_basic_info','PBI_NAME','PBI_ID="61"');?></option>
+                                <option></option>
+                                <?=advance_foreign_relation($sql_checked_by,$authorise);?>
+                            </select>
+                        </td>
+                    </tr-->
+
                     <tr>
                         <td align="center" colspan="9" style="vertical-align: middle">
                             <button type="submit" name="new" style="margin-top: 15px; font-size: 11px"  class="btn btn-primary"><?=$btn_name?></button>
@@ -402,32 +441,16 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
     </div>
 </div>
 
+
+
 <?php if($initiate_po_no>0):?>
-        <form action="<?=$page;?>" method="post" enctype="multipart/form-data" name="cloud" id="cloud" class="form-horizontal form-label-left">
+        <form action="<?=$page;?>" method="post" name="cloud" id="cloud" class="form-horizontal form-label-left">
             <input  name="po_no" type="hidden" id="<?=$unique?>" value="<?=$_SESSION['initiate_po_no'];?>"/>
             <input  name="po_id" type="hidden" id="po_id" value="<?=$_SESSION['initiate_po_id'];?>"/>
             <input  name="warehouse_id" type="hidden" id="warehouse_id" value="<?=$warehouse_id?>"/>
             <input  name="po_date" type="hidden" value="<?=$po_date?>"/>
             <input  name="vendor_id" type="hidden" id="vendor_id" value="<?=$vendor_id?>"/>
             <input  name="pono" type="hidden" id="pono" value="<?=$initiate_pono;?>"/>
-    <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
-        <thead>
-        <tr style="background-color: #3caae4; color:white">
-            <th style="text-align: center">Attachment ( .csv file)</th>
-            <th style="text-align: center">Option</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td align="center">
-                <input style="font-size:11px" type="file" id="file" name="file" required class="form-control col-md-7 col-xs-12" >
-            </td>
-            <td align="center" style="width:5%; vertical-align:middle">
-                <button type="submit" name="Import" onclick='return window.confirm("Are you confirm to Upload?");' class="btn btn-primary" style="font-size: 11px">Upload the File</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
             <? $group_for = find_a_field('warehouse','group_for','warehouse_id='.$warehouse_id.' ');
             if($vendor->ledger_id==0): ?>
                 <table width="80%" border="0" align="center" cellpadding="5" cellspacing="0">
@@ -488,7 +511,89 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                         <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td>
                 </tr>
             </table>
-            <?php else:  ?><?php endif; ?>
+            <?php else:  ?>
+            <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered" id="customers">
+                <thead>
+                <tr style="background-color: bisque">
+                    <th style="text-align: center; width: 2%">#</th>
+                    <th style="text-align: center">Item Description</th>
+                    <th style="text-align: center">Unit</th>
+                    <th style="text-align: center">Buy Qty</th>
+                    <th style="text-align: center">Unit Price</th>
+                    <th style="text-align: center; width: 15%">Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                $i = 0;
+                $sql = mysqli_query($conn, "SELECT * from item_info where d_price>0 order by serial");
+                while($data=mysqli_fetch_object($sql)):
+                $item_id = @$data->item_id; ?>
+                <tr>
+                    <td style="vertical-align:middle; text-align: center"><?=$i=$i+1;?></td>
+                    <td style="vertical-align:middle"><?=$data->item_id?> - <?=$data->item_name?></td>
+                    <td style="vertical-align:middle"><?=$data->unit_name;?></td>
+                    <script>function doMath() {
+                        var rate = parseFloat(document.getElementById('rate').value);
+                        var qty = parseFloat(document.getElementById('qty').value);
+                        var amount = (rate * qty).toFixed(2);
+                        document.getElementById('amount').value = amount; }</script>
+                    <td style="vertical-align:middle;width: 10%">
+                        <input type="number" name="qty<?=$item_id?>"   id="qty<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$edit_value_qty?>" step="any" min="0" class="qty<?=$item_id?>" />
+                    </td>
+                    <td style="vertical-align:middle;width: 10%">
+                        <input type="number" name="rate<?=$item_id?>"   id="rate<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$data->d_price;?>"  required="required" readonly step="any" min="0" class="rate<?=$item_id?>" />
+                        <input type="hidden" name="vat_amount" id="vat_amount" value=""  class="vat_amount" />
+                        <input type="hidden" name="commission_amount" id="commission_amount" value="<?=$edit_value_commission_amount?>"  class="commission_amount" />
+                    </td>
+                    <td style="vertical-align:middle;width: 12%">
+                        <input type="text" name="amount<?=$item_id?>" readonly id="amount<?=$item_id?>" style="width:98%; margin-left:2%; height:25px;text-align:center;" value="<?=$edit_value_amount?>" class="sum" step="any" min="1" />
+                    </td>
+                </tr>
+                    <script>
+                        $(function(){
+                            $('#rate<?=$item_id?>,#qty<?=$item_id?>').keyup(function(){
+                                var rate<?=$item_id?> = parseFloat($('#rate<?=$item_id?>').val()) || 0;
+                                var qty<?=$item_id?> = parseFloat($('#qty<?=$item_id?>').val()) || 0;
+                                $('#amount<?=$item_id?>').val((rate<?=$item_id?> * qty<?=$item_id?>));
+                            });
+                        });
+                    </script>
+                    <script>
+                        $(function(){
+                            $('#rate<?=$item_id?>').keyup(function(){
+                                var rate<?=$item_id?> = parseFloat($('#rate<?=$item_id?>').val()) || 0;
+                                var amount<?=$item_id?> = parseFloat($('#amount<?=$item_id?>').val()) || 0;
+                                $('#vat_amount<?=$item_id?>').val(amount<?=$item_id?>+((amount<?=$item_id?>/100)*<?=$tax?>));
+                            });
+                        });
+                    </script>
+                    <script>
+                        $(function(){
+                            $('#rate<?=$item_id?>').keyup(function(){
+                                var rate<?=$item_id?> = parseFloat($('#rate<?=$item_id?>').val()) || 0;
+                                var vat_amount<?=$item_id?> = parseFloat($('#vat_amount<?=$item_id?>').val()) || 0;
+                                $('#commission_amount<?=$item_id?>').val(((vat_amount<?=$item_id?>/100)*<?=$commission?>));
+                            });
+                        });
+                    </script>
+                <?php endwhile; ?>
+                <script>
+                    $('.sum').blur(function () {
+                        var sum = 0;
+                        $('.sum').each(function() {
+                            sum += Number($(this).val());
+                        });
+                        $('#totalPurchaseAmount').val((sum).toFixed(2));
+                    });
+                </script>
+                <tr>
+                    <th colspan="5" style="text-align: right; vertical-align: middle; border: none">Total Purchase Amount</th>
+                    <td style="vertical-align: middle; border: none"><input type="number" name="totalPurchaseAmount" readonly id="totalPurchaseAmount" class="form-control col-md-7 col-xs-12" style="width:98%; margin-left:2%; height:25px;text-align:center;"  class="totalPurchaseAmount"  /></td>
+                </tr>
+                <tr><td colspan="6"><button  type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm?");' name="add" class="btn btn-primary" style="float: right; font-size: 12px; margin-right: 1%">Add items and proceed next</button></td></tr>
+            </table>
+            <?php endif; ?>
         </form>
     <? endif;?>
 

@@ -21,7 +21,7 @@ $lc_lc_received_batch_split='lc_lc_received_batch_split';
 if(prevent_multi_submit()){
 
     if (isset($_POST['returned'])) {
-        $_POST['checked_by']=$_SESSION[userid];
+        $_POST['checked_by']=$_SESSION['userid'];
         $_POST['checked_at']=time();
         $_POST['status']="RETURNED";
         $crud->update($unique);
@@ -46,60 +46,39 @@ item_info i
         $pdetails=mysqli_query($conn, $rs);
         while($row=mysqli_fetch_array($pdetails)){
             $_POST['ji_date'] = date('Y-m-d');
-            $_POST['item_id'] = $row[item_id];
-            $_POST['warehouse_id'] = $row[warehouse_from];
-            $_POST['relevant_warehouse'] = $row[warehouse_to];
-            $_POST['item_price'] = find_a_field('item_costing','fg_cost','status="ON" and item_id='.$row[item_id].'');
+            $_POST['item_id'] = $row['item_id'];
+            $_POST['warehouse_id'] = $row['warehouse_from'];
+            $_POST['relevant_warehouse'] = $row['warehouse_to'];
+            $_POST['item_price'] = $row['unit_price'];
+            $_POST['item_ex'] = $row['total_unit'];
             $_POST['total_amt'] = $_POST['item_ex']*$_POST['item_price'];
-            $_POST['Remarks'] = $row[Remarks];
-            $_POST['batch'] = $row[batch];
-            $_POST['tr_from'] = 'ProductionTransfer';
+            $_POST['Remarks'] = $row['Remarks'];
+            $_POST['batch'] = $row['batch'];
+            $_POST['tr_from'] = 'GoodsTransfer';
             $_POST['tr_no'] = $_GET[$unique];
-            $_POST['sr_no'] = $row[id];
-            $_POST[ip]=$ip;
+            $_POST['sr_no'] = $row['id'];
+            $_POST['ip']=$ip;
             $sent_to_warehouse_at=date('Y-m-d H:s:i');
-            $item_id=$row[item_id];
-            $_SESSION['bqty_STO']=$row[total_unit];
+            $item_id=$row['item_id'];
+            $_SESSION['bqty_STO']=$row['total_unit'];
             $create_date=date('Y-m-d');
-            
-            $fifocheck=mysqli_query($conn, "select distinct qb.batch, SUM(j.item_in-j.item_ex) as qty, j.item_price as rate,qb.mfg,qb.batch_no  from journal_item j, lc_lc_received_batch_split qb
-            where qb.batch=j.batch and qb.status='PROCESSING' and j.item_id=qb.item_id  and j.item_id='".$item_id."' and j.warehouse_id='".$row[warehouse_from]."'
-            group by qb.batch order by qb.mfg asc,qb.batch asc");
-            while ($fifocheckrow=mysqli_fetch_array($fifocheck)){
-                if ( $_SESSION['bqty_STO']<=$fifocheckrow['qty'] && $_SESSION['bqty_STO']>0 && $fifocheckrow['qty']>0){
-                    $new_batch = automatic_number_generate(20,$lc_lc_received_batch_split,'batch',$condition,'000');
-                    mysqli_query($conn, "INSERT INTO journal_item (ji_date,item_id,warehouse_id,relevant_warehouse,item_ex,item_price,total_amt,tr_from,tr_no,entry_by,entry_at,ip,sr_no,section_id,company_id,batch,expiry_date,Remarks,lot_number) VALUES
-                    ('" .$_POST['ji_date']. "','$_POST[item_id]','$_POST[warehouse_id]','$_POST[relevant_warehouse]','$_SESSION[bqty_STO]','$fifocheckrow[rate]','".$_SESSION[bqty_STO]*$fifocheckrow[rate]."','$_POST[tr_from]','".$$unique."','$_SESSION[userid]','$sent_to_warehouse_at','$ip','$row[id]','$_SESSION[sectionid]','$_SESSION[companyid]',$fifocheckrow[batch],'$fifocheckrow[mfg]','$item_status','$new_batch')");
-                    
-                    mysqli_query($conn, "INSERT INTO lc_lc_received_batch_split (po_no,create_date,lc_id,warehouse_id,batch_no,item_id,qty,rate,batch,mfg,entry_by,entry_at,status,source,section_id,company_id,line_id) VALUES
-                    ('".$$unique."','$create_date','".$$unique."','$row[warehouse_to]','".$fifocheckrow['batch_no']."','$_POST[item_id]','$_SESSION[bqty_STO]','$fifocheckrow[rate]','$new_batch','$fifocheckrow[mfg]','$_SESSION[userid]','$sent_to_warehouse_at','PROCESSING','STO','$_SESSION[sectionid]','$_SESSION[companyid]','$row[id]')");
-                    
-                    $_SESSION['bqty_STO']= 0;
-                } else if ($_SESSION['bqty_STO']>=$fifocheckrow['qty'] && $_SESSION['bqty_STO']>0 && $fifocheckrow['qty']>0){
-                    $new_batch = automatic_number_generate(20,$lc_lc_received_batch_split,'batch',$condition,'000');
-                    mysqli_query($conn, "INSERT INTO journal_item (ji_date,item_id,warehouse_id,relevant_warehouse,item_ex,item_price,total_amt,tr_from,tr_no,entry_by,entry_at,ip,sr_no,section_id,company_id,batch,expiry_date,Remarks,lot_number) VALUES 
-                    ('" .$_POST['ji_date']. "','$_POST[item_id]','$_POST[warehouse_id]','$_POST[relevant_warehouse]','$fifocheckrow[qty]','$fifocheckrow[rate]','".$fifocheckrow[qty]*$fifocheckrow[rate]."','$_POST[tr_from]','".$$unique."','$_SESSION[userid]','$sent_to_warehouse_at','$ip','$row[id]','$_SESSION[sectionid]','$_SESSION[companyid]',$fifocheckrow[batch],'$fifocheckrow[mfg]','$item_status','$new_batch')");
+            $crud = new crud($journal_item);
+            $crud->insert();
 
-                    mysqli_query($conn, "INSERT INTO lc_lc_received_batch_split (po_no,create_date,lc_id,warehouse_id,batch_no,item_id,qty,rate,batch,mfg,entry_by,entry_at,status,source,section_id,company_id,line_id) VALUES
-                    ('".$$unique."','$create_date','".$$unique."','$row[warehouse_to]','".$fifocheckrow['batch_no']."','$_POST[item_id]','".$fifocheckrow['qty']."','$fifocheckrow[rate]','$new_batch','$fifocheckrow[mfg]','$_SESSION[userid]','$sent_to_warehouse_at','PROCESSING','STO','$_SESSION[sectionid]','$_SESSION[companyid]','$row[id]')");
-                   
-                    $_SESSION['bqty_STO']= intval($_SESSION['bqty_STO'])-$fifocheckrow['qty'];
-                }}
         }
 
 
         $jv=next_journal_voucher_id();
-        $total_transfer_in_amount=find_a_field('journal_item','SUM(total_amt)','tr_from="ProductionTransfer" and tr_no='.$_GET[$unique]);
-            $transitLedger=$config_group_class->finished_goods_in_transit;
-            $warehouse_ledger=find_a_field('warehouse','ledger_id_FG','warehouse_id='.$pi_master->warehouse_from);
+        $total_transfer_in_amount=find_a_field('journal_item','SUM(total_amt)','tr_from="GoodsTransfer" and tr_no='.$_GET[$unique]);
+            $warehouse_from=find_a_field('warehouse','ledger_id_FG','warehouse_id='.$pi_master->warehouse_from);
             $warehouse_to_ledger=find_all_field('warehouse','','warehouse_id='.$pi_master->warehouse_to);
             $narration='FG Transfer to '.$warehouse_to_ledger->warehouse_name.', STONO #'.$$unique.', Remarks # '.$pi_master->remarks;
         $transaction_date=$pi_master->pi_date;
-            add_to_journal_new($transaction_date, $proj_id, $jv, $date, $transitLedger, $narration, $total_transfer_in_amount, 0, ProductionTransfer, $$unique, $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear);
-            add_to_journal_new($transaction_date, $proj_id, $jv, $date, $warehouse_ledger, $narration, 0, $total_transfer_in_amount, ProductionTransfer, $$unique, $$unique, 0, 0, $_SESSION[usergroup], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear);
-        $up_master="UPDATE ".$table." SET verifi_status='CHECKED',verifi_by='$_SESSION[userid]',verify_at='$todayss',checked_by='".$_SESSION[userid]."',checked_at='$now' where ".$unique."=".$$unique."";
+            add_to_journal_new($transaction_date, $proj_id, $jv, $date, $warehouse_to_ledger->ledger_id, $narration, $total_transfer_in_amount, 0, 'GoodsTransfer', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+            add_to_journal_new($transaction_date, $proj_id, $jv, $date, $warehouse_from, $narration, 0, $total_transfer_in_amount, 'GoodsTransfer', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+        $up_master="UPDATE ".$table." SET verifi_status='CHECKED',verifi_by='$_SESSION[userid]',verify_at='$todayss',checked_by='".$_SESSION['userid']."',checked_at='$now' where ".$unique."=".$$unique."";
         $update_table_master=mysqli_query($conn, $up_master);
-        $up_details="UPDATE ".$table_details." SET verifi_status='CHECKED',status='CHECKED',verifi_by='$_SESSION[userid]',verify_at='$todayss' where ".$unique."=".$unique."";
+        $up_details="UPDATE ".$table_details." SET verifi_status='CHECKED',status='CHECKED',verifi_by='".$_SESSION['userid']."',verify_at='$todayss' where ".$unique."=".$unique."";
         $update_table_details=mysqli_query($conn, $up_details);
         $type=1;
         unset($_POST);
@@ -110,9 +89,9 @@ item_info i
 }
 
 // data query..................................
-if(isset($_POST[viewreport])){
-    $from_date=date('Y-m-d' , strtotime($_POST[f_date]));
-    $to_date=date('Y-m-d' , strtotime($_POST[t_date]));
+if(isset($_POST['viewreport'])){
+    $from_date=date('Y-m-d' , strtotime($_POST['f_date']));
+    $to_date=date('Y-m-d' , strtotime($_POST['t_date']));
     $resultss="Select m.pi_no,m.pi_no as STO_ID,m.custom_pi_no as STO_No,m.pi_date as STO_date,m.remarks,w.warehouse_name as 'Warehouse / CMU From',w2.warehouse_name as transfer_to,u.fname as entry_by,m.verifi_status as status
 from 
 ".$table." m,
@@ -124,8 +103,8 @@ warehouse w2
   m.entry_by=u.user_id and 
  w.warehouse_id=m.warehouse_from and  
  w2.warehouse_id=m.warehouse_to and 
- m.pi_date between '$_POST[f_date]' and '$_POST[t_date]' and
- m.verifi_status not in ('MANUAL') 
+ m.pi_date between '".$_POST['f_date']."' and '".$_POST['t_date']."' and
+ m.verifi_status not in ('MANUAL') and m.section_id=".$_SESSION['sectionid']." and m.company_id=".$_SESSION['companyid']."
  
  order by m.".$unique." DESC ";
 } else {
@@ -140,7 +119,7 @@ warehouse w2
   m.entry_by=u.user_id and 
  w.warehouse_id=m.warehouse_from and  
  w2.warehouse_id=m.warehouse_to and 
-  m.verifi_status='UNCHECKED' order by m.".$unique." DESC ";
+  m.verifi_status='UNCHECKED' and m.section_id=".$_SESSION['sectionid']." and m.company_id=".$_SESSION['companyid']." order by m.".$unique." DESC ";
 
 }
 ?>
@@ -232,9 +211,9 @@ item_info i
     <form action="" enctype="multipart/form-data" method="post" name="addem" id="addem" >
         <table align="center" style="width: 50%;">
             <tr><td>
-                    <input type="date"  style="width:150px; font-size: 11px;" max="<?=date('Y-m-d');?>"  value="<?=($_POST[f_date]!='')? $_POST[f_date] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
+                    <input type="date"  style="width:150px; font-size: 11px;" max="<?=date('Y-m-d');?>"  value="<?=($_POST['f_date']!='')? $_POST['f_date'] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
                 <td style="width:10px; text-align:center"> -</td>
-                <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?=($_POST[t_date]!='')? $_POST[t_date] : date('Y-m-d') ?>" required  max="<?=date('Y-m-d');?>" name="t_date" class="form-control col-md-7 col-xs-12" ></td>
+                <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?=($_POST['t_date']!='')? $_POST['t_date'] : date('Y-m-d') ?>" required  max="<?=date('Y-m-d');?>" name="t_date" class="form-control col-md-7 col-xs-12" ></td>
                 <td style="width:10px; text-align:center"> -</td>
                 <td style="padding:10px"><button type="submit" style="font-size: 11px;" name="viewreport"  class="btn btn-primary">View STO</button></td>
             </tr></table>

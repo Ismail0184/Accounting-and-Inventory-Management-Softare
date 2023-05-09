@@ -19,6 +19,7 @@ if(isset($_POST['update'])){
     $_SESSION['company_address']=@$data->address;
     $_SESSION['com_short_name']=@$data->com_short_name;
     $_SESSION['section_name']=@$data->section_name;
+    $_SESSION['warehouse']=find_a_field("warehouse","warehouse_id","section_id=".$_POST['section_id']." and company_id=".$_SESSION['companyid']."");
 }
 ?>
 <?php require_once 'header_content.php'; ?>

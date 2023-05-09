@@ -662,7 +662,7 @@ ORDER BY zm.sl, zs.sl");
 							$sp='<span class="label label-success" style="font-size:10px">COMPLETED</span>';
 							elseif($b=='APPROVED'):
 							$sp='<span class="label label-success" style="font-size:10px">COMPLETED</span>';
-                        elseif($b=='SETTLED'):
+                        elseif($b=='SETTLED' || $b=='Settled'):
                             $sp='<span class="label label-success" style="font-size:10px">SETTLED</span>';
 							elseif($b=='RETURNED'):
 							$sp='<span class="label label-danger" style="font-size:10px">RETURNED</span>';
@@ -679,8 +679,10 @@ ORDER BY zm.sl, zs.sl");
                             $sp='<span class="label label-danger" style="font-size:10px">SUSPENDED</span>';
                             elseif($b=='HOLDED'):
                                 $sp='<span class="label label-info" style="font-size:10px">HOLDED</span>';    
-						elseif($b=='CHECKED'):
-							$sp='<span class="label label-primary" style="font-size:10px">CHECKED</span>';
+						elseif($b=='Disbursed'):
+							$sp='<span class="label label-primary" style="font-size:10px">Disbursed</span>';
+                        elseif($b=='CHECKED' || $b=='Disbursed'):
+                            $sp='<span class="label label-primary" style="font-size:10px">CHECKED</span>';
 						elseif($b=='UNCHECKED'):
 							$sp='<span class="label label-default" style="font-size:10px">UNCHECKED</span>';
 							elseif($b=='MANUAL'):

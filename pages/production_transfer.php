@@ -175,7 +175,8 @@ $stock_balance=$stock_balance_GET-$Manual_item;?>
             form.total_unit.value='';
         }
         form.total_unit.focus();
-    }</script>
+    }
+</script>
 <style>
     input[type=text]{
         font-size: 11px;

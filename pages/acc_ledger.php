@@ -150,7 +150,7 @@ if(isset($_POST['deletedata'.$row->$unique]))
                         <?php require_once 'support_html.php';?>
                             <?php if(!isset($unique_GET)): ?>
                             <div class="form-group" style="width: 100%">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger Group<span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger Group <span class="required text-danger">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select class="select2_single form-control" style="width:100%" name="ledger_group_id" id="ledger_group_id">
                                     <option></option>
@@ -160,7 +160,7 @@ if(isset($_POST['deletedata'.$row->$unique]))
                             </div>
                             <?php endif; ?>
                             <div class="form-group" style="width: 100%">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger  Name<span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger  Name <span class="required text-danger">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="ledger_name"  required="required" name="ledger_name" value="<?=$ledger_name;?>" class="form-control col-md-7 col-xs-12" style="width: 100%; font-size:11px" >
                                 </div>

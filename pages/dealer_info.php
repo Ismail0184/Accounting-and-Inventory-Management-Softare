@@ -88,9 +88,9 @@ $tsm = @$tsm;
     mysqli_query($conn, "Update sale_return_details set region='".$_POST['region']."',territory='".$_POST['territory']."',area_code='".$_POST['area_code']."',town='".$_POST['town_code']."',dealer_type='".$_POST['customer_type']."' where dealer_code='".$_GET['dealer_code']);
 }
 
-$sql_area = 'select a.AREA_CODE,concat(AREA_CODE," : ",a.AREA_NAME) from area a  where Territory_CODE>0 order by a.AREA_NAME';
+$sql_area = 'select a.AREA_CODE,concat(AREA_CODE," : ",a.AREA_NAME) from area a  where 1 order by a.AREA_NAME';
 if(@$_GET['area_codeGET']>0){
-	$area_code=$_GET['area_codeGET'];
+	$area_code=@$_GET['area_codeGET'];
 } else {
 	$area_code=@$area_code;
 	}
