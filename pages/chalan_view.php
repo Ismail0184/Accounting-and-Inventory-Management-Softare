@@ -208,8 +208,8 @@ else{?>
                   <th  align="center">Order Qty</th>
                   <th  align="center">Undel. Qty</th>
                   <th  align="center">Delivery Qty</th>
-                  <th  align="center">Batch</th>
-                  <th  align="center">Expiry Date</th>
+                  <!--th  align="center">Batch</th>
+                  <th  align="center">Expiry Date</th-->
               </tr>
 
               <? $sqlc = 'select c.*,SUM(c.dist_unit) as deliverd_qty,(select SUM(dist_unit) from sale_do_details where do_no=c.do_no and item_id=c.item_id ) as order_qty, i.item_name, i.finish_goods_code, i.pack_size,i.unit_name from sale_do_chalan c, item_info i where 
@@ -222,8 +222,9 @@ else{?>
                       <td align="center" valign="top" style="vertical-align: middle"><?=$datac->unit_name;?></td>
                       <td align="center" valign="top" style="vertical-align: middle"><?=$datac->order_qty;?></td>
                       <td align="center" valign="top" style="vertical-align: middle"><?=$datac->order_qty-$datac->deliverd_qty;?></td>
+                      <td align="center" valign="top" style="vertical-align: middle"><?=$datac->deliverd_qty;?></td>
 
-                      <td align="center" valign="top" style="vertical-align: middle"><table border="1" style="border-collapse: collapse; width: 100%" >
+                      <!--td align="center" valign="top" style="vertical-align: middle"><table border="1" style="border-collapse: collapse; width: 100%" >
                               <?php $res=mysqli_query($conn, "SELECT SUM(j.item_ex) as item_ex from journal_item j where j.item_ex>0 and j.item_id=".$datac->item_id." and  j.sr_no=".$chalan_no." group by j.batch,j.expiry_date");
                               While($data_inventory=mysqli_fetch_object($res)){ ?>
                                   <tr><td style="border: 1px solid #ccc; text-align: center"><?=number_format($data_inventory->item_ex);?> </td></tr>
@@ -239,7 +240,7 @@ else{?>
                               <?php $res=mysqli_query($conn, "SELECT expiry_date from journal_item where item_ex>0 and item_id=".$datac->item_id." and  sr_no=".$chalan_no." group by batch,expiry_date");
                               While($data_inventory=mysqli_fetch_object($res)){ ?>
                                   <tr><td style="border: 1px solid #ccc; text-align: center"><?=$data_inventory->expiry_date;?> </td></tr>
-                              <?php } ?></table></td>
+                              <?php } ?></table></td-->
                   </tr>
 
               <? }
@@ -251,8 +252,8 @@ else{?>
                   <td align="center" valign="middle"><?=$g_tot_ctn_order?></td>
                   <td align="center" valign="middle" ><?=$g_tot_pcs_order?></td>
                   <td align="center" valign="middle"><?=$g_tot_undel_ctn?></td>
-                  <td align="center" valign="middle"><?=$g_tot_undel_pcs?></td>
-                  <td align="center" valign="middle"><?=$g_tot_ctn_delv?></td>
+                  <!--td align="center" valign="middle"><?=$g_tot_undel_pcs?></td>
+                  <td align="center" valign="middle"><?=$g_tot_ctn_delv?></td-->
               </tr>
 
           </table>

@@ -2,37 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/MIS_upload_dealer_info.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/acc_opening_voucher.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/warehouse_goods_transfer.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/classes/function_mod.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/function_mod.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_goods_received_note_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_goods_received_note_view.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_journal_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_loan_management_short_term_loan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_loan_management_short_term_loan.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_sub_ledger.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_sub_ledger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_voucher_view_popup.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_voucher_view_popup.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/account_settings_change_default_branch.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/account_settings_change_default_branch.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/accounts_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_reportview.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/dealer_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/dealer_info.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/inventory_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/inventory_select_report.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/po_create_item_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_create_item_multiple.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/po_receive.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_receive.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/prodcution_transfer_checked.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/prodcution_transfer_checked.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/production_transfer.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/production_transfer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/chalan_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/chalan_view.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/po_create_item.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_create_item.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/sales_market_setup_territory.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_market_setup_territory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_QC.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_QC.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sidebar_menus_Warehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sidebar_menus_Warehouse.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_STO_received.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_STO_received.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_STO_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_STO_view.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_reportview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_reportview.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +41,9 @@
     <include_path>
       <path value="$PROJECT_DIR$/vendor/composer" />
     </include_path>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2LJTVDXZJdomVLeemhLGi9mztiW" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -169,7 +152,11 @@
       <workItem from="1683346710670" duration="17683000" />
       <workItem from="1683449015949" duration="8685000" />
       <workItem from="1683527213635" duration="17692000" />
-      <workItem from="1683608857609" duration="7393000" />
+      <workItem from="1683608857609" duration="9346000" />
+      <workItem from="1683799739055" duration="2694000" />
+      <workItem from="1683949636075" duration="3505000" />
+      <workItem from="1684043491368" duration="3636000" />
+      <workItem from="1684124981055" duration="9064000" />
     </task>
     <servers />
   </component>

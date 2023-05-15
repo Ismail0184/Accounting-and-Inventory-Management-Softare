@@ -2051,7 +2051,6 @@ a.cc_code=c.id and
 a.ledger_id=b.ledger_id and
 a.jvdate between '".$_POST['f_date']."' AND '".$_POST['t_date']."' and
 a.ledger_id like '".$_POST['ledger_id']."' and
-b.group_for=".$_SESSION['usergroup']." and
 a.user_id=u.user_id
 order by a.jvdate,a.id";
         if($total[0]>$total[1])

@@ -420,16 +420,18 @@ order by a.jvdate,a.id";
     } else {
         $sec_com_connection=" i.company_id='".$_SESSION['companyid']."' and i.section_id in ('400000','".$_SESSION['sectionid']."')";
     }
-    $sql="SELECT i.item_id,i.item_id,i.finish_goods_code as custom_code,i.item_name,i.consumable_type,i.product_nature,i.unit_name,i.d_price,i.t_price,i.m_price,FORMAT(i.production_cost,2) as pro_cost,i.material_cost,
+    $sql="SELECT i.item_id,i.item_id,i.finish_goods_code as custom_code,i.item_name,i.consumable_type,i.product_nature,i.unit_name,b.brand_name,i.d_price,i.t_price,i.m_price,FORMAT(i.production_cost,2) as pro_cost,i.material_cost,
 FORMAT(i.SD,3) as SD,i.SD_percentage as 'SD (%)',FORMAT(i.VAT,3) as VAT,i.VAT_percentage as 'VAT (%)',(select group_name from VAT_item_group where i.VAT_item_group=group_id) as VAT_item_group,hs.H_S_code,sg.sub_group_name,g.group_name,s.section_name as branch
 from item_info i,
 item_sub_group sg,
 item_group g,
 item_tariff_master hs,
-company s
+company s,
+item_brand b
 where
 i.section_id=s.section_id and 
-    i.H_S_code=hs.id and
+i.H_S_code=hs.id and
+i.brand_id=b.brand_id and
 i.sub_group_id=sg.sub_group_id and
 sg.group_id=g.group_id and
 i.status in ('".$_POST['status']."') and
@@ -957,9 +959,9 @@ order by c.do_no";
             $cc_code = (int) $_REQUEST['cc_code'];
             if($cc_code > 0)
             {
-                $p = "select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date'  and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and a.tr_from='Payment' and ".$ledger_conx."".$sec_com_connection." AND a.cc_code=$cc_code GROUP BY group_name order by b.ledger_id";
+                $p = "select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date'  and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." and ".$ledger_conx."".$sec_com_connection." AND a.cc_code=$cc_code GROUP BY group_name order by b.ledger_id";
             } else {
-                $p ="select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.tr_from='Payment' and ".$ledger_conx."".$sec_com_connection." GROUP BY group_name order by b.ledger_id";
+                $p ="select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and ".$ledger_conx."".$sec_com_connection." GROUP BY group_name order by b.ledger_id";
             }
             //echo $p;
             $pi=0;

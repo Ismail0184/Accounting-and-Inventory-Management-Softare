@@ -14,6 +14,7 @@ if(prevent_multi_submit()){
     {    $$unique = $_POST[$unique];
         if(isset($_POST['record']))
         {
+            $_POST['Region_code'] = find_a_field('zon','REGION_ID','ZONE_CODE='.$_POST['ZONE_ID']);
             $crud->insert();
             $type=1;
             $msg='New Entry Successfully Inserted.';
@@ -26,6 +27,7 @@ if(prevent_multi_submit()){
         {
             $_POST['edit_at']=time();
             $_POST['edit_by']=$_SESSION['userid'];
+            $_POST['Region_code'] = find_a_field('zon','REGION_ID','ZONE_CODE='.$_POST['ZONE_ID']);
             $crud->update($unique);
             $type=1;
             echo "<script>self.opener.location = '$page'; self.blur(); </script>";

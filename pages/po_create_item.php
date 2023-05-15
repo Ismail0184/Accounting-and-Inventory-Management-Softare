@@ -95,7 +95,40 @@ if(prevent_multi_submit()){
 		$_POST['po_date'] = @$_POST['po_date'];
         $crud = new crud($table_details);
         $crud->insert();
-    }}
+    }
+
+
+    if(isset($_POST["Import"])){
+        $filename=$_FILES["file"]["tmp_name"];
+        if($_FILES["file"]["size"] > 0)
+        { $file = fopen($filename, "r");
+            while (($eData = fgetcsv($file, 10000, ",")) !== FALSE)
+            {
+                $entry_at = date('Y-m-d H:i:s');
+                $sql = "INSERT INTO `purchase_invoice`
+   (`po_no`,`po_id`,`po_date`,`vendor_id`,`item_id`,`warehouse_id`,`rate`,`qty`,`amount`,`entry_by`,`entry_at`,`status`,`section_id`,`company_id`)
+	         VALUES ('".$_POST['po_no']."','".$_POST['po_id']."','".$_POST['po_date']."','".$_POST['vendor_id']."','".$eData[0]."','".$_POST['warehouse_id']."','".$eData[2]."','$eData[1]','".$eData[2]*$eData[1]."','".$_SESSION['userid']."','".$entry_at."','MANUAL','".$sectionid."','".$_SESSION['companyid']."')";
+
+                $result = mysqli_query( $conn, $sql);
+                if(! $result )
+                {
+                    echo "<script type=\"text/javascript\">
+							alert(\"Invalid File:Please Upload CSV File.\");
+							window.location = ".$page."
+						</script>";
+                }}
+            fclose($file);
+            //throws a message if data successfully imported to mysql database from excel file
+            echo "<script type=\"text/javascript\">
+						alert(\"CSV File has been successfully Imported.\");
+						window.location = ".$page."
+					</script>";
+        }
+
+        header("Location: ".$page."");
+    }
+
+}
 
 
     if (isset($_POST['confirm'])) {
@@ -140,7 +173,7 @@ $initiate_pono = @$_SESSION['initiate_pono'];
 $initiate_po_id = @$_SESSION['initiate_po_id'];
 
 //for single FG Delete..................................
-$res='select a.id, concat(b.item_id," # ", b.item_name," # ",a.item_details) as item_description,a.unit_name as unit,a.rate as unit_price,a.qty,a.amount from purchase_invoice a,item_info b where b.item_id=a.item_id and a.po_no='.$initiate_po_no;
+$res='select a.id, concat(b.item_id," # ", b.item_name," # ",a.item_details) as item_description,b.unit_name as unit,a.rate as unit_price,a.qty,a.amount from purchase_invoice a,item_info b where b.item_id=a.item_id and a.po_no='.$initiate_po_no;
 $results=mysqli_query($conn,$res);
 while($data=@mysqli_fetch_object($results)){
     $id=$data->id;
@@ -430,8 +463,14 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
 
 
 <?php if($initiate_po_no>0):?>
-        <form action="<?=$page;?>" method="post" name="cloud" id="cloud" class="form-horizontal form-label-left">
+        <form action="<?=$page;?>" method="post" enctype="multipart/form-data" name="cloud" id="cloud" class="form-horizontal form-label-left">
             <? require_once 'support_html.php';?>
+            <input  name="<?=$unique?>" type="hidden" id="<?=$unique?>" value="<?=$initiate_po_no;?>"/>
+            <input  name="po_id" type="hidden" id="po_id" value="<?=$_SESSION['initiate_po_id'];?>"/>
+            <input  name="warehouse_id" type="hidden" id="warehouse_id" value="<?=$warehouse_id?>"/>
+            <input  name="po_date" type="hidden" value="<?=$po_date?>"/>
+            <input  name="vendor_id" type="hidden" id="vendor_id" value="<?=$vendor_id?>"/>
+            <input  name="pono" type="hidden" id="pono" value="<?=$initiate_pono;?>"/>
             <? $group_for = find_a_field('warehouse','group_for','warehouse_id='.$warehouse_id.' ');
             if($vendor->ledger_id==0): ?>
                 <table width="80%" border="0" align="center" cellpadding="5" cellspacing="0">
@@ -442,7 +481,7 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
             <? else:?>
             <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
                 <thead>
-                <tr style="background-color: bisque">
+                <tr style="background-color: #3caae4; color:white">
                     <th style="text-align: center">Item Name</th>
                     <th style="text-align: center">Item Details</th>
                     <th style="text-align: center">Buy Qty</th>
@@ -452,6 +491,20 @@ if($initiate_po_no>0) $btn_name='Update WO Info'; else $btn_name='Initiate Work 
                 </tr>
                 </thead>
                 <tbody>
+                <tr>
+                    <td align="center" colspan="5">
+                        <input style="font-size:11px" type="file" id="file" name="file" required class="form-control col-md-7 col-xs-12" >
+                    </td>
+                    <td align="center" style="width:5%; vertical-align:middle">
+                        <button type="submit" name="Import" onclick='return window.confirm("Are you confirm to Upload?");' class="btn btn-primary" style="font-size: 11px">Upload the File</button>
+                    </td>
+                </tr>
+                <tr><th colspan="6" style="text-align: center">or</th></tr>
+                </tbody></table></form>
+
+
+    <form action="<?=$page;?>" method="post" name="cloud" id="cloud" class="form-horizontal form-label-left">
+                <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
                 <tr>
                     <td style="vertical-align:middle"><input  name="<?=$unique?>" type="hidden" id="<?=$unique?>" value="<?=$initiate_po_no;?>"/>
                         <input  name="po_id" type="hidden" id="po_id" value="<?=$_SESSION['initiate_po_id'];?>"/>
