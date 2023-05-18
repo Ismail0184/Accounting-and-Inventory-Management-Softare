@@ -38,9 +38,9 @@ p.status>0
 order by m.sl";
 }
 if($_SESSION['language']=='Bangla') {
-$main_manu_get="SELECT dmm.main_menu_id,dmm.quick_access_url,dmm.faicon,dmm.main_menu_name_BN as main_menu_name from dev_main_menu dmm, user_permission_matrix_main_menu pmm where dmm.main_menu_id=pmm.main_menu_id and dmm.module_id=".$_SESSION['module_id']." and pmm.user_id=".$_SESSION["userid"]." order by dmm.sl";
+$main_manu_get="SELECT dmm.main_menu_id,dmm.quick_access_url,dmm.faicon,dmm.main_menu_name_BN as main_menu_name from dev_main_menu dmm, user_permission_matrix_main_menu pmm where dmm.main_menu_id=pmm.main_menu_id and dmm.module_id=".$_SESSION['module_id']." and pmm.user_id=".$_SESSION["userid"]." and pmm.status>0 order by dmm.sl";
 } else if($_SESSION['language']=='English') {
-    $main_manu_get="SELECT dmm.main_menu_id,dmm.quick_access_url,dmm.faicon,dmm.main_menu_name from dev_main_menu dmm, user_permission_matrix_main_menu pmm where dmm.main_menu_id=pmm.main_menu_id and dmm.module_id=".$module_id." and pmm.user_id=".$_SESSION["userid"]." order by dmm.sl";
+$main_manu_get="SELECT dmm.main_menu_id,dmm.quick_access_url,dmm.faicon,dmm.main_menu_name from dev_main_menu dmm, user_permission_matrix_main_menu pmm where dmm.main_menu_id=pmm.main_menu_id and dmm.module_id=".$module_id." and pmm.user_id=".$_SESSION["userid"]." and pmm.status>0 order by dmm.sl";
 }
 $url_current=parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 $link='?module=';

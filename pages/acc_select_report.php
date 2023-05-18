@@ -707,6 +707,46 @@ function reload1(form)
                         </div>
                     </div>
 
+                <?php elseif ($report_id=='1012001' || $report_id=='1012002'): ?>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" style="font-size: 11px; width: 49%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-01');?>" class="form-control col-md-7 col-xs-12" required name="f_date">
+                            <input type="date" style="font-size: 11px; width: 49%; margin-left:2%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
+                        </div>
+                    </div>
+
+                <?php elseif ($report_id=='1012004'): ?>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">As on <span class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" style="font-size: 11px; width:100%;" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
+                        </div>
+                    </div>
+
+                <?php elseif ($report_id=='1012003'): ?>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">As on <span class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" style="font-size: 11px; width:100%;" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Warehouse <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="select2_single form-control" style="width:100%; font-size: 12px" tabindex="-1" required="required" name="warehouse_id" >
+                                <option></option>
+                                <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),'');?>
+                            </select>
+                        </div>
+                    </div>
+
                 <?php elseif ($report_id=='1005004'): ?>
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Year <span class="required text-danger">*</span></label>

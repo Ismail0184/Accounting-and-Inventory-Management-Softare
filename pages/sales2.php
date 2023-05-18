@@ -1,7 +1,7 @@
 <?php
 require_once 'support_file.php';
 $page = 'sales2.php';
-$table='sales_data_from_prism_software';
+$table='sales_data_from_prism_software_gulshan';
 $table_master='sales_data_from_prism_software_filterd';
 $unique_master='id';
 $sale_do_master='sale_do_master';
@@ -20,77 +20,19 @@ if(prevent_multi_submit()){
         if($_FILES["file"]["size"] > 0)
         { $file = fopen($filename, "r");
             while (($eData = fgetcsv($file, 10000, ",")) !== FALSE)
-            { if(!empty($eData[6]) && $eData[7]>0) {
-                if($eData[4]=='Gulshan') {
-                    $sectionid = '400001';
-                } elseif ($eData[4]=='Moghbazar') {
-                    $sectionid = '400002';
-                } elseif ($eData[4]=='Mirpur-1') {
-                    $sectionid = '400003';
-                } elseif ($eData[4]=='Mirpur-2') {
-                    $sectionid = '400004';
-                } elseif ($eData[4]=='Banasree') {
-                    $sectionid = '400006';
-                } elseif ($eData[4]=='Motijheel') {
-                    $sectionid = '400007';
-                } elseif ($eData[4]=='Jatrabari') {
-                    $sectionid = '400008';
-                } elseif ($eData[4]=='Badda') {
-                    $sectionid = '400009';
-                } elseif ($eData[4]=='Matuail') {
-                    $sectionid = '400010';
-                } elseif ($eData[4]=='Bhulta') {
-                    $sectionid = '400011';
-                } elseif ($eData[4]=='Tangail') {
-                    $sectionid = '400012';
-                } elseif ($eData[4]=='Nagorpur') {
-                    $sectionid = '400013';
-                } elseif ($eData[4]=='Shokhipur') {
-                    $sectionid = '400014';
-                } elseif ($eData[4]=='Mirzapur') {
-                    $sectionid = '400015';
-                } elseif ($eData[4]=='Ghatail') {
-                    $sectionid = '400016';
-                } elseif ($eData[4]=='Modhupur') {
-                    $sectionid = '400017';
-                } elseif ($eData[4]=='Shorishabari') {
-                    $sectionid = '400018';
-                } elseif ($eData[4]=='Bhuapur') {
-                    $sectionid = '400019';
-                } elseif ($eData[4]=='Savar') {
-                    $sectionid = '400020';
-                } elseif ($eData[4]=='Zirabo') {
-                    $sectionid = '400021';
-                } elseif ($eData[4]=='DEPZ') {
-                    $sectionid = '400022';
-                } elseif ($eData[4]=='Zirani') {
-                    $sectionid = '400023';
-                } elseif ($eData[4]=='Manikganj') {
-                    $sectionid = '400024';
-                } elseif ($eData[4]=='Mohadevpur') {
-                    $sectionid = '400025';
-                } elseif ($eData[4]=='Jhitka') {
-                    $sectionid = '400026';
-                } elseif ($eData[4]=='Singair') {
-                    $sectionid = '400027';
-                } elseif ($eData[4]=='Hemayetpur') {
-                    $sectionid = '400028';
-                } elseif ($eData[4]=='Dhamrai') {
-                    $sectionid = '400029';
-                }
+            {
                 $entry_at = date('Y-m-d H:i:s');
-                $item_id_get = find_a_field("item_info","item_id","item_name in ('".$eData[0]."')");
-
-                $sql = "INSERT INTO `sales_data_from_prism_software` 
-    (`item_id`,`item_name`,
-`R1`,`R2`,`R3`,`R4`,`R5`,`R6`,`R7`,`R8`,`R9`,`R10`,`R11`,`R12`,`R13`,`R14`,`R15`,`R16`,`R17`,`R18`,`R19`,`R20`,
+                $item_id_get = find_a_field("item_info","item_id","item_name='".$eData[0]."'");
+                $sql = "INSERT INTO `sales_data_from_prism_software_gulshan` 
+    (`item_id`,`item_name`,`R1`,`R2`,`R3`,`R4`,`R5`,`R6`,`R7`,`R8`,`R9`,`R10`,`R11`,`R12`,`R13`,`R14`,`R15`,`R16`,`R17`,`R18`,`R19`,`R20`,
 `R21`,`R22`,`R23`,`sales_date`,`entry_by`,`entry_at`,`status`,`section_id`,`company_id`) 
 	         VALUES('$item_id_get','$eData[0]','$eData[1]','$eData[2]','$eData[3]','$eData[4]','$eData[5]',
 '$eData[6]','$eData[7]','$eData[8]','$eData[9]','$eData[10]','$eData[11]','$eData[12]','$eData[13]','$eData[14]','$eData[15]',
-'$eData[16]','$eData[17]','$eData[18]','$eData[19]','$eData[20]','$eData[21]','$eData[22]','$eData[23]','".$_POST['sales_date']."','".$_SESSION['userid']."','".$entry_at."','MANUAL','".$sectionid."','".$_SESSION['companyid']."')";
+'$eData[16]','$eData[17]','$eData[18]','$eData[19]','$eData[20]','$eData[21]','$eData[22]','$eData[23]','".$_POST['sales_date']."','".$_SESSION['userid']."','".$entry_at."','MANUAL','".$_SESSION['sectionid']."','".$_SESSION['companyid']."')";
                 $_SESSION['sales_date'] = @$_POST['sales_date'];
-            }
                 $result = mysqli_query( $conn, $sql);
+                $del = mysqli_query($conn, "DELETE from sales_data_from_prism_software_gulshan where item_id='0'");
+
                 if(! $result )
                 {
                     echo "<script type=\"text/javascript\">
@@ -111,7 +53,7 @@ if(prevent_multi_submit()){
 
 if(isset($_POST['cancelAll']))
 {
-    mysqli_query($conn, "DELETE from sales_data_from_prism_software where sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+    mysqli_query($conn, "DELETE from sales_data_from_prism_software_gulshan where sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
     unset($_SESSION['sales_date']);
 }
 if(isset($_POST['search_data']))
@@ -126,10 +68,10 @@ $COUNT_details_data=find_a_field("".$table."","Count(id)","sales_date='".$sales_
 
 $count_do = find_a_field("sale_do_master","COUNT(do_no)","do_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
-
-if ($_REQUEST['status']=='confirm'):
+$status = @$_REQUEST['status'];
+if ($status=='confirm'):
     if($count_do>0) {} else {
-        $sql=mysqli_query($conn, "SELECT distinct route,section,sales_date,id,point from sales_data_from_prism_software where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' group by route");
+        $sql=mysqli_query($conn, "SELECT distinct route,sales_date,id from sales_data_from_prism_software_filterd where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' group by route");
         while($data=mysqli_fetch_object($sql)):
             $crud = new crud($sale_do_master);
             $_POST['do_no'] = find_a_field($sale_do_master, 'max(do_no)', '1') + 1;
@@ -192,7 +134,7 @@ if ($_REQUEST['status']=='confirm'):
 
         }
     }
-    $up=mysqli_query($conn, "UPDATE sales_data_from_prism_software SET status='completed' where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+    $up=mysqli_query($conn, "UPDATE sales_data_from_prism_software_gulshan SET status='completed' where sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
 endif;
 ?>
@@ -241,7 +183,7 @@ endif;
                             <td><input type="date" style="font-size: 11px;" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date=date('Y-m-d') .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" value="<?=($sales_date!='')? $sales_date : date('Y-m-d') ?>" class="form-control col-md-7 col-xs-12" required name="sales_date"></td>
                             <td align="center"><button type="submit" name="search_data" class="btn btn-primary" style="font-size: 11px">Search Uploaded Data</button></td>
                             <?php
-                            $searchStatus = find_a_field("sales_data_from_prism_software","distinct status","sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+                            $searchStatus = find_a_field("sales_data_from_prism_software_gulshan","distinct status","sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
                             if($COUNT_details_data>0){
                                 if ($searchStatus=='manual'):?>
                                     <td align="center"><button type="submit" name="cancelAll" onclick='return window.confirm("Are you confirm to Clear Data?");' class="btn btn-danger" style="font-size: 11px">Clear All Data</button></td>
@@ -262,31 +204,42 @@ endif;
             <tr>
                 <th>#</th>
                 <th>Date</th>
-                <th>Point</th>
                 <th>Route - Section</th>
                 <th>Item Description</th>
                 <th>Qty</th>
                 <th>Rate</th>
                 <th>Amount</th>
             </tr>
+
+
             <?php
+
+
             $i = 0;
-            $searchStatus = find_a_field("sales_data_from_prism_software","distinct status","sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
-            $sql = mysqli_query($conn, "SELECT distinct route,section,sales_date as sales_date,id,point from sales_data_from_prism_software where  sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' order by id");
-            while($data=mysqli_fetch_object($sql)){ ?>
-                <tr style="background-color: #00ADEE; color: white"><td colspan="8">Route : <?=$data->route;?> , Section : <?=$data->section;?></td></tr>
+            $total_saless = 0;
+            $total_salesss = 0;
+            $searchStatus = find_a_field("sales_data_from_prism_software_gulshan","distinct status","sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+            $sql = mysqli_query($conn, "SELECT *  FROM dealer_info where section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' and canceled='Yes' order by dealer_custom_code");
+            while($data=mysqli_fetch_object($sql)){
+                $col='R'.$data->dealer_custom_code;
+                ?>
+                <tr style="background-color: #00ADEE; color: white"><td colspan="8">Route : <?=$data->dealer_custom_code;?></td></tr>
                 <?php
-                $sql2 = mysqli_query($conn, "SELECT * from item_info where 1 order by serial");
+                $total_saless = 0;
+
+                $sql2 = mysqli_query($conn, "SELECT i.item_id,i.item_name,s.sales_date,i.t_price from item_info i, sales_data_from_prism_software_gulshan s where i.item_id=s.item_id");
                 while($data2=mysqli_fetch_object($sql2)){
                     $item_id = $data2->item_id;
                     $a = 'A';
-                    $Get_qty = find_a_field('sales_data_from_prism_software', ''.$a.$item_id.'', ''.$item_id.'='. $data2->item_id.' and route='.$data->route.' and section in ("'.$data->section.'")');
+                    $Get_qty = find_a_field('sales_data_from_prism_software_gulshan', 'SUM('.$col.')', 'item_id=' . $data2->item_id . '');
+
+                    //$Get_qty = find_a_field('sales_data_from_prism_software_gulshan', ''.$a.$item_id.'', ''.$item_id.'='. $data2->item_id.' and route='.$data->route.' and section in ("'.$data->section.'")');
                     $POST_route = @$_POST['route' . $item_id];
                     $POST_section = @$_POST['section' . $item_id];
                     $POST_item_id = @$_POST['item_id_' . $item_id];
                     $POST_qty = @$_POST['qty_' . $a . $item_id];
                     $_POST['item_id'] = @$data2->item_id;
-                    $_POST['route'] = @$data->route;
+                    $_POST['route'] = @$data->dealer_code;
                     $_POST['section'] = @$data->section;
                     $_POST['qty'] = @$Get_qty;
                     $_POST['rate'] = @$data2->t_price;
@@ -298,24 +251,34 @@ endif;
                     $_POST['sales_date'] = @$_SESSION['sales_date'];
                     if ($searchStatus=='manual') {
                         $crud->insert();
-                        $up=mysqli_query($conn, "UPDATE sales_data_from_prism_software SET status='checked' where sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+                        $up=mysqli_query($conn, "UPDATE sales_data_from_prism_software_gulshan SET status='checked' where sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
                         unset($_POST);
                     }
                     ?>
                     <tr>
                         <td><?=$i=$i+1;?>
-                            <input type="hidden" name="route<?=$data2->item_id;?>" value="<?=$data->route;?>">
-                            <input type="hidden" name="section<?=$data2->item_id;?>" value="<?=$data->section;?>">
+                            <input type="hidden" name="route<?=$data2->item_id;?>" value="<?=$data->dealer_code;?>">
+
                             <input type="hidden" name="item_id_<?=$data2->item_id;?>" value="<?=$data2->item_id;?>"></td>
-                        <td><?=$data->sales_date;?></td>
-                        <td><?=$data->point;?></td>
-                        <td><?=$data->route;?> - <?=$data->section;?></td>
+                        <td><?=$data2->sales_date;?></td>
+                        <td><?=$data->dealer_code;?></td>
                         <td><?=$data2->item_id;?> : <?=$data2->item_name;?></td>
                         <td><?=$Get_qty?><input type="text" name="qty_<?=$a.$item_id?>" style="display: none" value="<?=$Get_qty?>"></td>
                         <td><?=$data2->t_price;?></td>
-                        <td><?=number_format(($Get_qty*$data2->t_price),3);?></td>
+                        <td style="text-align: right"><?=number_format(($total_sales=$Get_qty*$data2->t_price),3);?></td>
                     </tr>
-                <?php }}?>
+                <?php
+
+                    $total_saless = $total_saless+$total_sales;
+                    $total_salesss = $total_salesss+$total_sales;
+                }?>
+                <tr><th colspan="6" style="text-align: right">Total Sales Value of Route - <?=$data->dealer_code;?>  = </th>
+                    <th style="text-align: right"><?=number_format($total_saless,2)?></th>
+                </tr>
+            <?php }?>
+            <tr><th colspan="6" style="text-align: right">Total Sales Value = </th>
+                <th style="text-align: right"><?=number_format($total_salesss,2)?></th>
+            </tr>
             </thead>
         </table>
 
@@ -330,19 +293,19 @@ endif;
             $COGS_amount=find_a_field("journal_item","SUM(total_amt)","do_no=".$data->do_no." and gift_type in ('none') and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
             $find_chalan_no=find_a_field("sale_do_chalan","distinct chalan_no","do_no=".$data->do_no." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
             $narration="Sales by ".$dealer_master->dealer_name_e.', Invoice No # '.$data->do_no;
-
-            if ($_REQUEST['status']=='confirm') {
+            $status = @$_REQUEST['status'];
+            if ($status=='confirm') {
                 $date = $_SESSION['sales_date'];
                 $sales_ledger = $config_group_class->sales_ledger;
                 $COGS_sales = $config_group_class->cogs_sales;
 
                 if (($dealer_master->account_code > 0) && (($sales_ledger && $total_sales_amount) > 0)) {
-                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $dealer_master->account_code, $narration, $total_sales_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
-                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $sales_ledger, $narration, 0, $total_sales_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $dealer_master->account_code, $narration, $total_sales_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $sales_ledger, $narration, 0, $total_sales_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
                 } // sales start form here
                 if (($COGS_sales > 0) && (($inventory_ledger && $COGS_amount) > 0)) {
-                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $COGS_sales, $narration, $COGS_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
-                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $inventory_ledger, $narration, 0, $COGS_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $COGS_sales, $narration, $COGS_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $inventory_ledger, $narration, 0, $COGS_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
                 } // COGS start form here
 
             } ?>
@@ -409,7 +372,9 @@ endif;
     </div>
     </div>
 
-<?php } if ($_GET['status']=='confirm') { ?>
+<?php }
+$status = @$_GET['status'];
+if ($status=='confirm') { ?>
     <meta http-equiv='refresh' content='0;<?=$page?>'>
 <?php } ?>
 <?=$html->footer_content();?>

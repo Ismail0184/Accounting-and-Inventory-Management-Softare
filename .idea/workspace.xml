@@ -3,16 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_journal_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_journal_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_payment_voucher_multiple.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_receipt_voucher_multiple.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/accounts_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_reportview.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/chalan_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/chalan_view.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/po_create_item.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_create_item.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sales_market_setup_territory.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_market_setup_territory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sales_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_reportview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales2.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales2.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/support_file.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/support_file.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/warehouse_pending_chalan1.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_pending_chalan1.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +153,10 @@
       <workItem from="1683799739055" duration="2694000" />
       <workItem from="1683949636075" duration="3505000" />
       <workItem from="1684043491368" duration="3636000" />
-      <workItem from="1684124981055" duration="9064000" />
+      <workItem from="1684124981055" duration="20575000" />
+      <workItem from="1684148367991" duration="4280000" />
+      <workItem from="1684208169884" duration="22203000" />
+      <workItem from="1684295221350" duration="6636000" />
     </task>
     <servers />
   </component>

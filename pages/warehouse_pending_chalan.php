@@ -28,7 +28,7 @@ $do_master_do_type = @$do_master->do_type;
 $dealer_master=find_all_field('dealer_info','','dealer_code='.$do_master_dealer_code.'');
 $dealer_master_dealer_name_e = @$dealer_master->dealer_name_e;
 $CONN_warehouse_master=find_all_field('warehouse','','warehouse_id='.$do_master_depot_id.'');
-$find_chalan_no=next_chalan_no($_SESSION['warehouse'],date('Y-m-d'));
+$find_chalan_no=next_chalan_no($do_master_depot_id,date('Y-m-d'));
 
 //for Delete..................................
 if(isset($_POST['cancel']))
@@ -172,7 +172,8 @@ if($_SESSION["userlevel"]=='5') {
     $warehouse_conn=' and m.depot_id='.$_SESSION['warehouse'].'';
 }
 $config_group_class=find_all_field("config_group_class","","1");
-$inventory_ledger=find_a_field('warehouse','ledger_id_FG','warehouse_id='.$_SESSION['warehouse']);
+$GET_warehouse_id = find_a_field("sale_do_master","depot_id","do_no=".$_GET['do_no']);
+$inventory_ledger=find_a_field('warehouse','ledger_id_FG','warehouse_id='.$GET_warehouse_id);
 $pending_do_list="";
 if($do_master_do_type=='sales'){
     $do_type_get='Sales';
@@ -328,7 +329,7 @@ if (isset($_POST['viewreport'])) {
             $cash_discounts=substr($cash_discount,1);
             ?>
             </tbody></table>
-        <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:">
+        <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:none">
             <thead>
             <tr style="background-color: bisque">
                 <th>#</th>

@@ -440,6 +440,73 @@ i.status in ('".$_POST['status']."') and
 order by i.".$_POST['order_by'].""?>
     <?=reportview($sql,'Item Info Master','99'); ?>
 
+
+<?php elseif ($_POST['report_id']=='1012001'):?>
+    <?php
+    $sql="SELECT p.po_no,m.po_no,m.po_date,v.vendor_name,i.item_id,i.finish_goods_code as 'FG Code (Custom Code)',item_name as 'Mat. Description',i.unit_name as 'UoM',p.qty  
+from purchase_invoice p,purchase_master m,vendor v,item_info i 
+where 
+p.po_no=m.po_no and m.vendor_id=v.vendor_id  and
+i.item_id=p.item_id and 
+v.vendor_id='13' and 
+m.po_date between '".$_POST['f_date']."' and '".$_POST['t_date']."'
+order by m.po_no,v.vendor_id"?>
+    <?=reportview($sql,'Purchase Report','99'); ?>
+
+<?php elseif ($_POST['report_id']=='1012002'):?>
+    <?php
+    $sql="SELECT sdd.id,sdd.id as 'T.ID',w.warehouse_name as Depot,d.dealer_custom_code as 'DB Code',
+d.dealer_name_e as 'Dealer Name',d.dealer_type,sdd.do_no,sdd.do_date,sdd.do_type,t.AREA_NAME as 'Territory',r.BRANCH_NAME as region,
+i.finish_goods_code as 'FG Code',i.item_name as 'FG Description',i.unit_name as UoM,i.pack_size,sdd.unit_price,sdd.total_unit as qty,sdd.total_amt as amount,
+IF(sdd.total_amt>'0', 'sales','') as sales_for
+from sale_do_details sdd,warehouse w,dealer_info d,branch r,area t,item_info i
+where sdd.depot_id=w.warehouse_id and
+      sdd.dealer_code=d.dealer_code and
+      d.dealer_category='3' and 
+      d.region=r.BRANCH_ID and 
+      d.area_code=t.AREA_CODE and
+      sdd.item_id=i.item_id
+      "?>
+    <?=reportview($sql,'Sales Report','99'); ?>
+
+
+<?php elseif ($_POST['report_id']=='1012003'):
+        $sql="Select i.item_id,i.finish_goods_code,i.item_name,i.unit_name,i.pack_size,
+REPLACE(FORMAT(SUM(j.item_in-j.item_ex), 0), ',', '') as Available_stock_balance
+
+from
+item_info i,
+journal_item j
+
+where
+
+j.item_id=i.item_id and
+j.warehouse_id='".$_POST['warehouse_id']."' and
+j.ji_date <= '".$_POST['t_date']."' and
+i.brand_id in ('10','11','12')
+group by j.item_id ".$order_by."";?>
+<?=reportview($sql,'Present Stock',100)?>
+
+
+
+<?php elseif ($_POST['report_id']=='1012004'):?>
+    <?php
+    $sql="SELECT d.dealer_code,d.dealer_custom_code as 'DB Code',
+d.dealer_name_e as 'Dealer Name',d.dealer_type,t.AREA_NAME as 'Territory',r.BRANCH_NAME as region,
+                                               
+IF(SUM(j.cr_amt-j.dr_amt)>'0',CONCAT(' (Dr) ', SUM(j.cr_amt-j.dr_amt)),CONCAT('(Cr) ',SUBSTR(SUM(j.cr_amt-j.dr_amt),2))) as balance                                               
+from dealer_info d,branch r,area t,journal j
+where 
+      d.dealer_category='3' and 
+      d.region=r.BRANCH_ID and 
+      d.area_code=t.AREA_CODE and
+      d.account_code=j.ledger_id group by d.account_code
+      "?>
+    <?=reportview($sql,'Customer Ledger / Balance','99'); ?>
+
+
+
+
 <?php elseif ($_POST['report_id']=='1002003'): $LC_no=find_a_field('lc_lc_master','lc_no','id='.$_POST['lc_id']);
     if($sectionid=='400000'){
         $sec_com_connection=' and 1';

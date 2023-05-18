@@ -243,17 +243,17 @@ else{?>
                               <?php } ?></table></td-->
                   </tr>
 
-              <? }
-
-              ?>
+              <?
+                  $g_tot_ctn_order = $g_tot_ctn_order+$datac->order_qty;
+                  $g_tot_ctn_undel = $g_tot_ctn_undel+($datac->order_qty-$datac->deliverd_qty);
+                  $g_tot_ctn_delv = $g_tot_ctn_delv+$datac->deliverd_qty;
+              } ?>
               <tr>
                   <td colspan="3" align="right" valign="middle">Total</td>
 
-                  <td align="center" valign="middle"><?=$g_tot_ctn_order?></td>
-                  <td align="center" valign="middle" ><?=$g_tot_pcs_order?></td>
-                  <td align="center" valign="middle"><?=$g_tot_undel_ctn?></td>
-                  <!--td align="center" valign="middle"><?=$g_tot_undel_pcs?></td>
-                  <td align="center" valign="middle"><?=$g_tot_ctn_delv?></td-->
+                  <th align="center" valign="middle"><?=$g_tot_ctn_order?></th>
+                  <th align="center" valign="middle" ><?=$g_tot_ctn_undel?></th>
+                  <th align="center" valign="middle"><?=$g_tot_ctn_delv?></th>
               </tr>
 
           </table>
