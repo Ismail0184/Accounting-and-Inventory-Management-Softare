@@ -122,7 +122,7 @@ if(isset($_POST['checked'])){
             add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST['ledger_2'], $_POST['narration_1'],0, $_POST['cr_amount_2'], 'Cycle_Counting', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
           }
 
-            if (($_POST['dr_amount_1'] > 0) && ($_POST['cr_amount_2'] > 0)) {
+            if (($_POST['dr_amount_3'] > 0) && ($_POST['cr_amount_4'] > 0)) {
               add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST['ledger_3'], $_POST['narration_3'], $_POST['dr_amount_3'],0, 'Cycle_Counting', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
               add_to_journal_new($masterDATA->cc_date, $proj_id, $jv, $date, $_POST['ledger_4'], $_POST['narration_3'],0, $_POST['cr_amount_4'], 'Cycle_Counting', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
               }

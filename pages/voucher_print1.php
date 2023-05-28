@@ -124,7 +124,7 @@ if ($vtype=='payment_bank') {
     $sql2 = "SELECT a.ledger_name,a.ledger_group_id,b.* FROM accounts_ledger a, secondary_payment b where b.payment_no='$_GET[vo_no]' and a.ledger_id=b.ledger_id order by b.dr_amt desc,b.id";
 }
 else {
-    $sql2 = "SELECT a.ledger_name,a.ledger_group_id,b.* FROM accounts_ledger a, journal b where b.jv_no='$_GET[vo_no]' and tr_from='$_GET[v_type]' and a.ledger_id=b.ledger_id order by b.dr_amt desc,b.id";
+    $sql2 = "SELECT a.ledger_name,a.ledger_group_id,b.* FROM accounts_ledger a, journal b where b.jv_no='$_GET[vo_no]' and tr_from='$_GET[v_type]' and a.ledger_id=b.ledger_id order by b.id";
 }
 ?>
 

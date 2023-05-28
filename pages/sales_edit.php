@@ -53,7 +53,7 @@
 function reload(form)
 {
 	var val=form.productcode.options[form.productcode.options.selectedIndex].value;
-	self.location='sales.php?productcodeget=' + val ;
+	self.location='sales_old.php?productcodeget=' + val ;
 }
 
 
@@ -265,7 +265,7 @@ if($_SESSION[initiate_invoice_sales]){
                <div class="col-md-6 col-sm-6 col-xs-12">
                <?php if($_SESSION[initiate_invoice_sales]){ ?>
                
-                <a href="sales.php" style="font-size:20px; font-weight:bold">Refresh page</a>
+                <a href="sales_old.php" style="font-size:20px; font-weight:bold">Refresh page</a>
                
                <?php } else { ?>
                <button type="submit" name="initiate" class="btn btn-success">Initiate Sales invoice</button>
@@ -736,7 +736,7 @@ unset($_SESSION['initiate_invoice_sales']);
                     
                     
                   <td align="center" style="width:10%">
-                  <a href="sales.php?type=delete&productcodeget=<?php echo $_GET[productcodeget] ?>&productdeletecode=<?php echo $row[id] ?>" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i> Delete </a>
+                  <a href="sales_old.php?type=delete&productcodeget=<?php echo $_GET[productcodeget] ?>&productdeletecode=<?php echo $row[id] ?>" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i> Delete </a>
                             
                             
                           </td>

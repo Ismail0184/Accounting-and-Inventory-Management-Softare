@@ -1705,7 +1705,7 @@ group by j.item_id order by g.group_id DESC,i.serial";
     </div>
 <?php } elseif ($_POST['report_id']=='7003002'){
         $sql="Select i.item_id,i.finish_goods_code,i.item_name,i.unit_name,i.pack_size,s.sub_group_name,g.group_name,
-REPLACE(FORMAT(SUM(j.item_in-j.item_ex), 0), ',', '') as Available_stock_balance
+REPLACE(FORMAT(SUM(j.item_in-j.item_ex), 2), ',', '') as Available_stock_balance
 
 from
 item_info i,
@@ -1720,8 +1720,9 @@ j.warehouse_id='".$_POST['warehouse_id']."' and
 j.ji_date <= '".$_POST['t_date']."' and
 i.sub_group_id=s.sub_group_id and
 s.group_id=g.group_id 
-group by j.item_id ".$order_by."";?>
-<?=reportview($sql,'Present Stock',100)?>
+group by j.item_id ".$order_by."";
+$total = find_a_field('journal_item','Sum(item_in-item_ex)','ji_date<="'.$_POST['t_date'].'" and warehouse_id='.$_POST['warehouse_id'].''); ;?>
+<?=reportview($sql,'Present Stock',100,$total,'7')?>
 
 
 <?php } elseif ($_POST['report_id']=='7003003'){ $query="Select i.item_id,i.finish_goods_code,i.item_name,i.unit_name,i.pack_size,s.sub_group_name,g.group_name,

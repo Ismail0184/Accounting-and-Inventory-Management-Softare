@@ -28,6 +28,16 @@ order by w.warehouse_id";
 return $sql_plant;
 }
 
+
+function check_plant_permission_IGT($userid){
+ $sql_plant="SELECT w.warehouse_id,concat(w.warehouse_id,' : ',w.warehouse_name),upp.* FROM
+user_permission_matrix_warehouse upp,
+warehouse w  WHERE  upp.warehouse_id=w.warehouse_id and
+upp.user_id=".$userid." and upp.status>0 and w.warehouse_id not in ('".$_SESSION['warehouse']."') 
+order by w.warehouse_id";
+return $sql_plant;
+}
+
 function find_all_item($product_nature){
  $sectionid = @$_SESSION['sectionid'];
  if($sectionid=='400000'){

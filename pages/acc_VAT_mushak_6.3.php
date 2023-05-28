@@ -20,10 +20,9 @@ if (isset($_POST['viewreport'])) {
 							 m.dealer_code=d.dealer_code and
 							 m.do_date between '".$_POST['f_date']."' and '".$_POST['t_date']."' and
 							 m.status='COMPLETED' and
-							 m.mushak_challan_status not in ('UNRECORDED') and
 							 m.entry_by=uam.user_id and
                              m.depot_id=w.warehouse_id and
-                             m.depot_id=".$_POST['depot_id']." and
+                             m.depot_id='".$_POST['depot_id']."' and
                              m.do_no=vms.do_no and 
                              vms.fiscal_year=ft.fiscal_year and
                              vms.source in ('Sales')
@@ -32,7 +31,7 @@ if (isset($_POST['viewreport'])) {
 							 sale_do_master m,
 							dealer_info d,
 							users uam,
-              warehouse w
+                            warehouse w
 							 where
 							 m.dealer_code=d.dealer_code and
 							 m.status in ('COMPLETED') and

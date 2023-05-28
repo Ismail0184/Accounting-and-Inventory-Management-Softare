@@ -1,6 +1,6 @@
 <?php require_once 'support_file.php'; ?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
-$title='Goods Transfer';
+$title='Goods Transfer (IGT)';
 
 $now=time();
 $unique='pi_no';
@@ -9,8 +9,7 @@ $table_details="production_issue_detail";
 
 $page="warehouse_goods_transfer.php";
 $crud      =new crud($table);
-
-$targeturl="<meta http-equiv='refresh' content='0;$page'>";
+$unique_GET = @$_GET[$unique];
 $create_date=date('Y-m-d');
 
 if(prevent_multi_submit()){
@@ -80,19 +79,22 @@ if(isset($_POST['confirm']))
     $up2="UPDATE ".$table_details." SET verifi_status='UNCHECKED',status='UNCHECKED' where ".$unique."='".$_SESSION['pi_tr'];
     $update_production_floor_issue_master=mysqli_query($conn, $up2);
     unset($_SESSION['pi_tr']);
+    unset($pi_tr);
     unset($_SESSION['initiate_production_transfer']);
+    unset($initiate_production_transfer);
     unset($_POST);
 }
 
-
 //for single FG Delete..................................
-$query="Select * from ".$table_details." where ".$unique."='".$_SESSION['pi_tr']."'";
+$pi_tr = @$_SESSION['pi_tr'];
+$initiate_production_transfer = @$_SESSION['initiate_production_transfer'];
+$query="Select * from ".$table_details." where ".$unique."='".$pi_tr."'";
 $res=mysqli_query($conn, $query);
 while($row=mysqli_fetch_array($res)){
     $ids=$row[id];
     if(isset($_POST['deletedata'.$ids]))
     {
-        $del="DELETE FROM ".$table_details." WHERE id='$ids' and ".$unique."='".$_SESSION['pi_tr']."'";
+        $del="DELETE FROM ".$table_details." WHERE id='$ids' and ".$unique."='".$pi_tr."'";
         $del_item=mysqli_query($conn, $del);
         unset($_POST);
     }}
@@ -106,28 +108,43 @@ if(isset($_POST['cancel']))
     $condition=$unique."=".$_SESSION['pi_tr'];
     $crud->delete($condition);
     unset($_SESSION['pi_tr']);
+    unset($pi_tr);
     unset($_SESSION['initiate_production_transfer']);
+    unset($initiate_production_transfer);
     unset($_POST);
 }
+$GET_id = @$_GET['id'];
+$pi_tr = @$_SESSION['pi_tr'];
+$initiate_production_transfer = @$_SESSION['initiate_production_transfer'];
+if (isset($GET_id)) {$edit_value=find_all_field(''.$table_details.'','','id='.$GET_id.'');}
+$edit_value_item_id = @$edit_value->item_id;
+$edit_value_total_unit = @$edit_value->total_unit;
+$edit_value_amount = @$edit_value->amount;
+$COUNT_details_data=find_a_field(''.$table_details.'','Count(id)',''.$unique.'='.$pi_tr.'');
 
-if (isset($_GET['id'])) {$edit_value=find_all_field(''.$table_details.'','','id='.$_GET['id'].'');}
-$COUNT_details_data=find_a_field(''.$table_details.'','Count(id)',''.$unique.'='.$_SESSION['pi_tr'].'');
-
-
-
-if(isset($_SESSION['pi_tr']))
-{   $condition=$unique."=".$_SESSION['pi_tr'];
+if(isset($pi_tr))
+{   $condition=$unique."=".$pi_tr;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
 
-$stock_balance_single=find_a_field("journal_item", "SUM(item_in-item_ex)", "item_id='".$edit_value->item_id."' and warehouse_id=".$warehouse_from." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+$custom_pi_no = @$custom_pi_no;
+$pi_date = @$pi_date;
+$remarks = @$remarks;
+$warehouse_from = @$warehouse_from;
+$warehouse_to = @$warehouse_to;
+$VATChallanno = @$VATChallanno;
+$transporter = @$transporter;
+$track_no = @$track_no;
+$driver_info = @$driver_info;
+
+$stock_balance_single=find_a_field("journal_item", "SUM(item_in-item_ex)", "item_id='".$edit_value_item_id."' and warehouse_id=".$warehouse_from." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
 $res="Select t.id,concat(i.item_id,' : ', i.finish_goods_code, ' : ', i.item_name) as item_description,i.unit_name as unit,t.total_unit 
 from 
 ".$table_details." t,item_info i 
 where   
-t.".$unique."=".$_SESSION['pi_tr']." and t.item_id=i.item_id";
+t.".$unique."=".$pi_tr." and t.item_id=i.item_id";
 $query=mysqli_query($conn, $res);
 while($data=@mysqli_fetch_object($query)){
   if(isset($_POST['deletedata'.$data->id]))
@@ -138,8 +155,6 @@ while($data=@mysqli_fetch_object($query)){
   {   mysqli_query($conn, ("UPDATE ".$table_details." SET item_id='".$_POST['item_id']."', total_unit='".$_POST['total_unit']."' WHERE id=".$data->id));
       unset($_POST);
     }}
-
-
 ?>
 <?php require_once 'header_content.php'; ?>
 <SCRIPT language=JavaScript>
@@ -177,8 +192,8 @@ while($data=@mysqli_fetch_object($query)){
 
 <?php require_once 'body_content_nva_sm.php';
 $pi_nos = find_a_field('' . $table . '', 'max(' . $unique . ')', '1');
-if ($_SESSION['pi_tr'] > 0) {
-    $pi_noGET = $_SESSION['pi_tr'];
+if ($pi_tr > 0) {
+    $pi_noGET = @$_SESSION['pi_tr'];
 } else {
     $pi_noGET = $pi_nos + 1;
     if ($pi_nos < 1) $pi_noGET = 1;
@@ -200,7 +215,7 @@ if ($_SESSION['pi_tr'] > 0) {
                         <th style="width:2%; text-align:center">:</th>
                         <td style="width: 20%">
                             <input type="hidden" name="<?=$unique;?>" id="<?=$unique;?>" value="<?=$pi_noGET;?>">
-                            <input type="text" id="custom_pi_no" style="width:90%" readonly name="custom_pi_no" value="<?=($_SESSION['initiate_production_transfer']!='')? $custom_pi_no : automatic_number_generate("STO","production_issue_master","custom_pi_no","create_date='".$idatess."' and   custom_pi_no like '$sekeyword%'","");?>" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="custom_pi_no" style="width:90%" readonly name="custom_pi_no" value="<?=($initiate_production_transfer!='')? $custom_pi_no : automatic_number_generate("IGT","production_issue_master","custom_pi_no","create_date='".$idatess."' ","");?>" class="form-control col-md-7 col-xs-12">
                         </td>
 
                         <th style="width: 10%">Date <span class="required text-danger">*</span></th>
@@ -226,7 +241,7 @@ if ($_SESSION['pi_tr'] > 0) {
                                 <?php if(isset($_SESSION['initiate_production_transfer'])>0): ?>
                                     <option value="<?=$warehouse_from?>" selected><?=$warehouse_from?> : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$warehouse_from)?></option>
                                 <?php else: ?>
-                                    <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$warehouse_from);?>
+                                    <?=foreign_relation("warehouse","warehouse_id","concat(warehouse_id,' : ',warehouse_name)",$warehouse_from, "warehouse_id in ('".$_SESSION['warehouse']."')");?>
                                 <?php endif; ?>
                             </select>
                         </td>
@@ -238,7 +253,7 @@ if ($_SESSION['pi_tr'] > 0) {
                                 <?php if(isset($_SESSION['initiate_production_transfer'])>0): ?>
                                     <option value="<?=$warehouse_to?>" selected><?=$warehouse_to?> : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$warehouse_to)?></option>
                                 <?php else: ?>
-                                    <?=foreign_relation("warehouse","warehouse_id","concat(warehouse_id,' : ',warehouse_name)",$warehouse_to, "warehouse_id not in ('".$_SESSION['warehouse']."','0')");?>
+                                    <?=advance_foreign_relation(check_plant_permission_IGT($_SESSION['userid']));?>
                                 <?php endif; ?>
                             </select>
                         </td>
@@ -260,20 +275,20 @@ if ($_SESSION['pi_tr'] > 0) {
                         <th>Track No <span class="required text-danger">*</span></th>
                         <th style="text-align:center">:</th>
                         <td>
-                            <input type="text" id="ps_date" style="width:90%"  name="track_no" value="<?=$track_no?>" class="form-control col-md-7 col-xs-12" >
+                            <input type="text" style="width:90%"  name="track_no" value="<?=$track_no?>" class="form-control col-md-7 col-xs-12" >
                         </td>
 
                         <th>Driver Name</th>
                         <th style="text-align:center">:</th>
                         <td>
-                            <input type="text" id="remarkspro" style="width:90%"  required="required" name="driver_info" value="<?=$driver_info;?>" class="form-control col-md-7 col-xs-12" Placeholder="Name & mobile No" >
+                            <input type="text" style="width:90%" name="driver_info" value="<?=$driver_info;?>" class="form-control col-md-7 col-xs-12" Placeholder="Name & mobile No" >
                         </td>
                     </tr>
 
                     <tr><td style="height: 15px"></td></tr>
                     <tr>
                         <td colspan="9" style="text-align: center">
-                                    <?php if($_SESSION['initiate_production_transfer']){  ?>
+                                    <?php if($initiate_production_transfer){  ?>
                                         <button type="submit" name="modify" class="btn btn-primary" onclick='return window.confirm("Are you confirm?");' style="font-size: 12px">Update Information</button>
                                     <?php   } else {?>
                                         <button type="submit" name="initiate" onclick='return window.confirm("Are you confirm?");' class="btn btn-primary" style="font-size: 12px">Initiate Transfer Entry</button>
@@ -288,7 +303,7 @@ if ($_SESSION['pi_tr'] > 0) {
 
 
 
-<?php if($_SESSION['initiate_production_transfer']):?>
+<?php if($initiate_production_transfer):?>
     <form action="<?=$page;?>" name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
         <input type="hidden" name="<?=$unique;?>" id="<?=$unique;?>" value="<?=$_SESSION['pi_tr'];?>" >
         <input type="hidden" name="custom_pi_no" id="custom_pi_no" value="<?=$custom_pi_no;?>" >
@@ -298,7 +313,7 @@ if ($_SESSION['pi_tr'] > 0) {
         <input type="hidden" name="section_id" id="section_id" value="<?=$_SESSION['sectionid'];?>">
         <input type="hidden" name="company_id" id="company_id" value="<?=$_SESSION['companyid'];?>">
 
-        <?php if($_GET['id']>0): ?>
+        <?php if($GET_id>0): ?>
         <table align="center" style="width:98%; font-size: 11px" class="table table-striped table-bordered">
             <thead>
             <tr style="background-color: bisque">
@@ -314,7 +329,7 @@ if ($_SESSION['pi_tr'] > 0) {
                 <td style="vertical-align: middle">
                     <select class="select2_single form-control" style="width: 100%" tabindex="-1" required="required" name="item_id" id="item_id" onchange="javascript:reloaditem(this.form)">
                         <option></option>
-                        <? advance_foreign_relation(find_all_item($product_nature="'Salable','Both'"),($_GET['item_id']>0)? $_GET['item_id'] : $edit_value->item_id);?>
+                        <? advance_foreign_relation(find_all_item($product_nature="'Salable','Both'"),($_GET['item_id']>0)? $_GET['item_id'] : $edit_value_item_id);?>
                     </select>
                 </td>
                 <td style="vertical-align: middle;width:10%; text-align:center">
@@ -326,10 +341,10 @@ if ($_SESSION['pi_tr'] > 0) {
                 </td>
 
                 <td style="vertical-align: middle;width:10%; text-align:center">
-                    <input type="text" id="total_unit" onkeyup="doAlert(this.form);" name="total_unit" value="<?=$edit_value->total_unit?>" style="width:100%; height:37px;text-align:center"  required="required"  class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
+                    <input type="text" id="total_unit" onkeyup="doAlert(this.form);" name="total_unit" value="<?=$edit_value_total_unit?>" style="width:100%; height:37px;text-align:center"  required="required"  class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
 
                 <td style="vertical-align: middle;width:5%; text-align:center">
-                    <?php if (isset($_GET['id'])) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$_GET['id'];?>" id="editdata<?=$_GET[id];?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
+                    <?php if (isset($GET_id)) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$GET_id;?>" id="editdata<?=$GET_id;?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
                     <?php else: ?><button type="submit" class="btn btn-primary" name="add" id="add" style="font-size: 11px">Add</button> <?php endif; ?></td>
             </tr>
             </tbody>
@@ -380,7 +395,7 @@ if ($_SESSION['pi_tr'] > 0) {
                 </td>
 
                 <td style="vertical-align: middle;width:10%; text-align:center">
-                    <input type="text" id="total_unit<?=$item_id?>" onkeyup="doAlert<?=$item_id?>(this.form);" name="total_unit<?=$item_id?>" value="<?=$edit_value->total_unit?>" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;"   class="form-control col-md-7 col-xs-12" autocomplete="off" >
+                    <input type="text" id="total_unit<?=$item_id?>" onkeyup="doAlert<?=$item_id?>(this.form);" name="total_unit<?=$item_id?>" value="<?=$edit_value_total_unit?>" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;"   class="form-control col-md-7 col-xs-12" autocomplete="off" >
                 </td>
                 <td style="vertical-align:middle;width: 10%; display: none">
                     <input type="number" name="unit_price<?=$item_id?>"   id="unit_price<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$data->d_price;?>"  required="required" readonly step="any" min="0" class="unit_price<?=$item_id?>" />
@@ -395,6 +410,6 @@ if ($_SESSION['pi_tr'] > 0) {
         </table>
         <?php endif; ?>
     </form>
-    <?=added_data_delete_edit($res,$unique,$unique_GET,$COUNT_details_data);
+    <?=added_data_delete_edit($res,$unique,$unique_GET,$COUNT_details_data,$page,'','');
     endif;?>
 <?=$html->footer_content();mysqli_close($conn);?>

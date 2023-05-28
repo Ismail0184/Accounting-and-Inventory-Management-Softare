@@ -2119,6 +2119,7 @@ order by a.jvdate,a.id";
                 $datecon=' and j.jvdate<"'.$_POST['t_date'].'"';
                 $query='Select
 				d.dealer_code,
+				d.dealer_custom_code,
 				d.account_code,
 				d.dealer_name_e as dealername,
 				t.town_name as town,
@@ -2143,7 +2144,7 @@ order by a.jvdate,a.id";
 
             <?php elseif ($report_id=='9005008'): if ($_POST['commission_status']=='0'): ?>
                 <title>Collection & Shipment</title>
-                <h2 align="center"><?=$_SESSION[company_name]?></h2>
+                <h2 align="center"><?=$_SESSION['company_name']?></h2>
                 <h4 align="center" style="margin-top:-10px">Cash Collection and Shipment in Value (Total Country)</h4>
                 <h5 align="center" style="margin-top:-10px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
                 <table align="center"  style="width:90%; border: solid 1px #999; border-collapse:collapse; ">

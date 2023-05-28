@@ -201,7 +201,7 @@ $userRow=mysql_fetch_array($res);
 
                      <div class="input-group pull-right">
 
-								<a class="btn btn-sm btn-default"  href="sales.php">
+								<a class="btn btn-sm btn-default"  href="sales_old.php">
 
 									<i class="fa fa-plus-circle"></i> <span class="language" style="color:#000">Sales</span>
 

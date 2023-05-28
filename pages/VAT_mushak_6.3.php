@@ -12,17 +12,17 @@ $crud      =new crud($table);
 
 
 
-if (isset($_POST[viewreport])) {
+if (isset($_POST['viewreport'])) {
     $res = "SELECT  m.do_no,m.do_no,m.do_date,m.do_type,d.dealer_name_e as customer_name,uam.fname as prepared_by,m.entry_at as prepared_at,m.challan_date as delivered_time,m.mushak_challan_status as status FROM
 							 sale_do_master m,
 							dealer_info d,
 							users uam
 							 where
 							 m.dealer_code=d.dealer_code and
-							 m.do_date between '".$_POST[f_date]."' and '".$_POST[t_date]."' and
-               m.depot_id in ('".$_POST[depot_id]."') and
+							 m.do_date between '".$_POST['f_date']."' and '".$_POST['t_date']."' and
+               m.depot_id in ('".$_POST['depot_id']."') and
 							 m.status='COMPLETED' and
-               m.mushak_challan_status in ('RECORDED','COMPLETED') and
+               m.mushak_challan_status in ('UNRECORDED','RECORDED','COMPLETED') and
 							 m.entry_by=uam.user_id
 							  order by m.do_no"; } else {
     $res = "SELECT  m.do_no,m.do_no,m.do_date,m.do_type,d.dealer_name_e as customer_name,uam.fname as prepared_by,m.entry_at as prepared_at,m.challan_date as delivered_time,m.mushak_challan_status as status FROM
@@ -31,7 +31,7 @@ if (isset($_POST[viewreport])) {
 							users uam
 							 where
 							 m.dealer_code=d.dealer_code and
-							 m.depot_id=".$_SESSION[warehouse]." and
+							 m.depot_id=".$_SESSION['warehouse']." and
 							 m.status in ('COMPLETED') and
                m.mushak_challan_status='RECORDED' and
 							 m.entry_by=uam.user_id

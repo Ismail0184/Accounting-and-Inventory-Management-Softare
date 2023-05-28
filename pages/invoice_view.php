@@ -2,9 +2,14 @@
 require_once 'support_file.php';
 require_once 'class.numbertoword.php';
 
-
-
 $chalan_no 		= find_a_field('sale_do_chalan','chalan_no','do_no='.$_GET['do_no']);
+
+$challan= find_all_field('sale_do_chalan','','chalan_no='.$chalan_no);
+$dealer_category = find_a_field('dealer_info','dealer_category','dealer_code='.$challan->dealer_code);
+
+if($dealer_category!=='3'){ echo '<h5 style="text-align: center">opps!! You do not have permission to view this page. The administrator has been notified that you attempted to view an unauthorized page. </h5>';} else {
+
+
 
 $sql1=mysqli_query($conn, "select d.*,b.*, b.sales_commission, sum(b.total_unit) as total_unit, d.total_unit as ord_unit, sum(b.total_amt) as total_amt, j.item_ex as item_ex, m.depot_id as depot, m.remarks
 from sale_do_chalan b,sale_do_details d, journal_item j, sale_do_master m
@@ -328,3 +333,4 @@ font-size: 14px
 
 </body>
 </html>
+<?php } ?>

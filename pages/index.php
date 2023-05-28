@@ -1,4 +1,56 @@
 <?php
+$dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
+$access_time=$dateTime->format("Y-m-d, h:i:s A");
+
+
+$browser="";
+if(strrpos(strtolower($_SERVER["HTTP_USER_AGENT"]),strtolower("MSIE")))
+{$browser="Internet Explorer";
+} else if(strrpos(strtolower($_SERVER["HTTP_USER_AGENT"]),strtolower("Presto")))
+{$browser="Opera";
+} else if(strrpos(strtolower($_SERVER["HTTP_USER_AGENT"]),strtolower("CHROME")))
+{$browser="Google Chrome";
+} else if(strrpos(strtolower($_SERVER["HTTP_USER_AGENT"]),strtolower("SAFARI")))
+{$browser="Safari";
+} else if(strrpos(strtolower($_SERVER["HTTP_USER_AGENT"]),strtolower("FIREFOX")))
+{ $browser="FIREFOX";} else
+{ $browser="OTHER";}
+
+function get_operating_system() {
+    $u_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+    $operating_system = 'Unknown Operating System';
+
+    //Get the operating_system name
+    if($u_agent) {
+        if (preg_match('/linux/i', $u_agent)) {
+            $operating_system = 'Linux';
+        } elseif (preg_match('/macintosh|mac os x|mac_powerpc/i', $u_agent)) {
+            $operating_system = 'Mac';
+        } elseif (preg_match('/windows|win32|win98|win95|win16/i', $u_agent)) {
+            $operating_system = 'Windows';
+        } elseif (preg_match('/ubuntu/i', $u_agent)) {
+            $operating_system = 'Ubuntu';
+        } elseif (preg_match('/iphone/i', $u_agent)) {
+            $operating_system = 'IPhone';
+        } elseif (preg_match('/ipod/i', $u_agent)) {
+            $operating_system = 'IPod';
+        } elseif (preg_match('/ipad/i', $u_agent)) {
+            $operating_system = 'IPad';
+        } elseif (preg_match('/android/i', $u_agent)) {
+            $operating_system = 'Android';
+        } elseif (preg_match('/blackberry/i', $u_agent)) {
+            $operating_system = 'Blackberry';
+        } elseif (preg_match('/webos/i', $u_agent)) {
+            $operating_system = 'Mobile';
+        }
+    } else {
+        $operating_system = php_uname('s');
+    }
+
+    return $operating_system;
+}
+$operating_system = get_operating_system();
+
 session_start();
 require ("../app/db/base.php");
 if(isset($_SESSION['login_email'])!="")
@@ -38,11 +90,12 @@ $_SESSION['company_name']=$userRow['company_name'];
 $_SESSION['company_address']=$userRow['address'];
 $_SESSION['com_short_name']=$userRow['com_short_name'];
 $_SESSION['section_name']=$userRow['section_name'];
-
-$login_activity_insert = mysqli_query($conn, "INSERT INTO user_activity_log (user_id,ip)
-VALUES ('$row[user_id]','$ip')");
+$login_activity_insert = mysqli_query($conn, "INSERT INTO user_activity_log (user_id,ip,access_time,browser,access_status,os)
+VALUES ('".$row['user_id']."','$ip','".$access_time."','".$browser."','success','".$operating_system."')");
 header("Location: dashboard.php");
 			} else{
+    $login_activity_insert = mysqli_query($conn, "INSERT INTO user_activity_log (user_id,ip,access_time,browser,access_status,os)
+VALUES ('".$row['user_id']."','$ip','".$access_time."','".$browser."','decline','".$operating_system."')");
 				echo "email or password does not exist."; // wrong details
 			}}
 		catch(PDOException $e){
@@ -84,7 +137,7 @@ header("Location: dashboard.php");
                                     <div class="col-7">
                                         <div class="text-primary p-4">
                                             <h5 class="text-primary">Welcome Back !</h5>
-                                            <p>Sign in to continue to ICP ERP.</p>
+                                            <p>Sign in to continue to ERP Software.</p>
                                         </div>
                                     </div>
                                     <div class="col-5 align-self-end">
@@ -164,3 +217,4 @@ header("Location: dashboard.php");
         <script src="../assets/login/js/app.js"></script>
     </body>
 </html>
+

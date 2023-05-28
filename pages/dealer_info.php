@@ -314,6 +314,11 @@ function reload2(form)
                             <input type="text" id="account_code"  value="<?=$account_code?>" name="account_code" class="form-control col-md-7 col-xs-12" style="width: 90%" />
                         <?php endif; ?>
                         </td>
+
+                        <th style="">Dealer Category</th><th>:</th>
+                        <td>
+                            <input type="text" value="<?=$dealer_category?>" name="dealer_category" class="form-control col-md-7 col-xs-12" style="width: 90%" />
+                        </td>
                     </tr>
                 </table>
                 <hr>

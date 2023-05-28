@@ -1,20 +1,31 @@
-<input type="text" id ="text1" onblur="someFunction()"/><br>
-<input type="text" id ="text2" onblur="someFunction()"/><br>
-<input type="text" readonly="readonly" disabled="disabled" id ="text3"/>
+<?php
 
-<script>
-    function someFunction()
+$xml = simplexml_load_file("http://www.geoplugin.net/xml.gp?ip=".getRealIpAddr());
+echo $xml->geoplugin_countryName ;
+
+
+echo "<pre>";
+foreach ($xml as $key => $value)
+{
+    echo $key , "= " , $value ,  " \n" ;
+}
+echo "</pre>";
+
+function getRealIpAddr()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
     {
-        var p1 = $('#text1').val();
-        var p2 = $('#text2').val;
-        if(p1=='' || p2=='')
-        {
-            alert('Please Fill all the Values');
-        }
-        else
-        {
-            var p3 = ((p1/p2)*100)-100;
-            $('#text3').val(p3);
-        }
+        $ip=$_SERVER['HTTP_CLIENT_IP'];
     }
-</script>
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+    {
+        $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
+    else
+    {
+        $ip=$_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
+?>

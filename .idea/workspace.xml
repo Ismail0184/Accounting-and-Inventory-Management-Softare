@@ -2,14 +2,35 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pages/acc_inventory_opening.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/delivery_chalan_view.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/invoice_view.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/sales_old.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/classes/curd_function.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/curd_function.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/classes/function_mod.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/classes/function_mod.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/VAT_mushak_6.3.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/VAT_mushak_6.3.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_VAT_mushak_6.3.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_VAT_mushak_6.3.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_goods_received_note_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_goods_received_note_view.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/acc_inventory_cycle_counting_check.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_inventory_cycle_counting_check.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/acc_select_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/acc_select_report.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/accounts_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accounts_reportview.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/chalan_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/chalan_view.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/sales2.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales2.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/support_file.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/support_file.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_pending_chalan.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_pending_chalan1.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_pending_chalan1.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/chalan_bill_distributors.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/chalan_bill_distributors.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/date.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/date.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/dealer_info.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/dealer_info.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/po_create_item.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_create_item.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/po_create_item_multiple.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_create_item_multiple.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/po_create_item_multiple_po.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_create_item_multiple_po.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/po_receive.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/po_receive.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales2.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales_report.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_report.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/sales_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales_reportview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/voucher_print1.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/voucher_print1.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/warehouse_goods_transfer.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_goods_transfer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/warehouse_reportview.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_reportview.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +177,20 @@
       <workItem from="1684124981055" duration="20575000" />
       <workItem from="1684148367991" duration="4280000" />
       <workItem from="1684208169884" duration="22203000" />
-      <workItem from="1684295221350" duration="6636000" />
+      <workItem from="1684295221350" duration="10453000" />
+      <workItem from="1684558376957" duration="10042000" />
+      <workItem from="1684642979746" duration="2000" />
+      <workItem from="1684644399765" duration="4281000" />
+      <workItem from="1684730871998" duration="11136000" />
+      <workItem from="1684816711534" duration="4519000" />
+      <workItem from="1684828462298" duration="4893000" />
+      <workItem from="1684899853827" duration="7416000" />
+      <workItem from="1684913213532" duration="3942000" />
+      <workItem from="1685170914623" duration="810000" />
+      <workItem from="1685174106425" duration="809000" />
+      <workItem from="1685187180928" duration="4508000" />
+      <workItem from="1685241376373" duration="593000" />
+      <workItem from="1685242266993" duration="957000" />
     </task>
     <servers />
   </component>

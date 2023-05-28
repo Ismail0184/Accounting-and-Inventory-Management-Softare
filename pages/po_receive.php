@@ -358,57 +358,16 @@ td {
 
 
 
-<table width="98%"  border="0" align="center"  style="font-size: 11px; background-color: blanchedalmond; padding:20px">
- <tr>
-    
-    
-    <th>MAN</th>
-    <th style="width:1%"> : </th>
-    <td><select style=" height:23px; width:90%" name="m_id" id="m_id" onchange="javascript:reload(this.form)">
-                <option></option>
-                <? foreign_relation('MAN_details','distinct m_id','concat(m_id,":", MAN_ID)',''.$_GET['m_id'].'','po_no='.$_GET[po_no].' and MAN_RCV_STATUS!="Done" and  status="VERIFIED"');?>
-               </select>
-        <input type="hidden" name="rec_no" id="rec_no" value="<?=$MAN_master->MAN_ID;?>">
-        <input type="hidden" name="MAN_ID" id="MAN_ID" value="<?=$MAN_master->MAN_ID;?>">
-    </td>
-        
-    <th>Rcv. Date</th>
-    <th style="width:1%"> : </th>
-    <td><input style="width:90%" name="rec_date" MAX="<?=date('Y-m-d')?>" type="date"  value="<?=$MAN->man_received_date;?>"  required="required" /></td>
-    <th>VAT Date</th>
-    <th style="width:1%"> : </th>
-    <td><input style="width:90%"  name="VAT_challan_Date" MAX="<?=date('Y-m-d')?>" type="date"  value="<?=$MAN_master->VAT_challan_Date;?>" /></td>
-    
-    <th>Challan Date</th>
-    <th style="width:1%"> : </th>
-    <td><input style="width:90%" name="ch_date" type="date" MAX="<?=date('Y-m-d')?>"  value="<?=$MAN_master->delivary_challan_Date;?>" required="required" /></td>
-    </tr>
-    </table>
-    <table width="98%"  border="0" align="center"  style="font-size: 11px; background-color: blanchedalmond; margin-top:5px">
-    <tr>
-    <td><input style="width:90%" name="tax_ait" type="text"  value="<? if($tax_ait>0) echo $tax_ait;?>" title="Tax" placeholder="Tax (%)" /></td>
-    <td><input style="width:90%" name="tax" type="text"  value="<? if($tax>0) echo $tax;?>" title="VAT" placeholder=" VAT (%)" required="required" /></td>       
-    <td><input style="width:90%;"  name="VAT_challan" type="text" id="VAT_challan" value="<?=find_a_field('MAN_details','VAT_challan','status="VERIFIED" and m_id="'.$_GET['m_id'].'" and po_no='.$_GET[po_no]); ?>" title="VAT Challan No" placeholder="VAT Challan No" required="required"/></td>
-    
-    <td><input style="width:90%" name="asf" type="twxt"  value="<? if($asf>0) echo $asf;?>" title="ASF" placeholder="ASF (%)" /></td>
-    <td><input style="width:90%" name="ch_no" type="text" title="Chalan No" placeholder="Chalan No"  value="<?=$MAN_master->delivary_challan;?>" required="required" /></td> </tr>
 
-    <tr>
-    <td><input style="width:90%"  name="transport_bill" type="text"  value="<? if($transport_bill>0) echo $transport_bill;?>" placeholder="Transport Bill" /></td>
-    <td><input style="width:90%"  name="labor_bill" type="text"  value="<? if($labor_bill>0) echo $labor_bill;?>" placeholder="Labour Bill" /></td>
-    <td><input style="width:90%" name="otc" type="text"  placeholder="Other Cost" /></td>
-    <td><textarea style="width:90%;padding-left:5px;padding-top:2px; height:22px"  name="remarks" placeholder="remarks"  type="text" ></textarea></td>
-    <td><input style="width:90%"  type="text"  value="<?=find_a_field('users','fname','user_id='.$MAN->check_by);?>"  /></td>
-    </tr>
-    
-    </table><br>
 
 
        <? if($$unique>0){       
        $res=mysqli_query($conn, $sql);
 	   ?>
       <table id="customers" align="center" class="table table-striped table-bordered" style="width:98%; font-size: 11px">
-      <thead>
+      <input style="width:90%" name="rec_date" MAX="<?=date('Y-m-d')?>" type="hidden"  value="<?=date('Y-m-d');?>"  />
+
+          <thead>
           <tr style="background-color: blanchedalmond">
             <th>SL</th>
             <th>Item Code</th>
@@ -444,7 +403,7 @@ td {
             
               <td width="5%" align="center" bgcolor="#6699FF" style="text-align:center">
 			  <? if($unrec_qty>0){$cow++;?>
-                <input name="chalan_<?=$row->id?>" onkeyup="doAlert<?=$row->id?>(this.form);" type="text" id="chalan_<?=$row->id?>" style="width:70px; float:none" value="<?php if($MAN_details->qty<=$row->qty) echo $MAN_details->qty; else echo $row->qty;?>"  />
+                <input name="chalan_<?=$row->id?>" readonly onkeyup="doAlert<?=$row->id?>(this.form);" type="text" id="chalan_<?=$row->id?>" style="width:70px; float:none" value="<?=$unrec_qty;?>"  />
                 <? } else echo 'Done';?></td>
                 <SCRIPT language=JavaScript>
             function doAlert<?=$row->id?>(form)
@@ -458,7 +417,7 @@ td {
                 form.chalan_<?=$row->id?>.focus();
             }</script>
             
-            <!--td align="center"><input type="text" style="width:50px; text-align:center"  value="<?=$noofpack = find_a_field('MAN_details','no_of_pack','status="VERIFIED" and po_no="'.$_GET[po_no].'" and MAN_ID="'.$_GET[MAN_ID].'" and item_id="'.$row->item_id.'"');?>" name="of_no_pack<?=$row->id?>" id="of_no_pack<?=$row->id?>"  /></td-->
+            <!--td align="center"><input type="text" style="width:50px; text-align:center"  value="<?=$noofpack = find_a_field('MAN_details','no_of_pack','status="VERIFIED" and po_no="'.$_GET['po_no'].'" and MAN_ID="'.$_GET['MAN_ID'].'" and item_id="'.$row->item_id.'"');?>" name="of_no_pack<?=$row->id?>" id="of_no_pack<?=$row->id?>"  /></td-->
                 <!--td><input type="date" style="" min="<?=date('Y-m-d');?>" name="mfg<?=$row->id?>" id="mfg<?=$row->id?>" value="<?=$MAN_details->mfg;?>" /></td-->
               </tr>
           <? }?>

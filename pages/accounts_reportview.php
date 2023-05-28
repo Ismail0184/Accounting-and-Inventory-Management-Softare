@@ -494,7 +494,7 @@ group by j.item_id ".$order_by."";?>
     $sql="SELECT d.dealer_code,d.dealer_custom_code as 'DB Code',
 d.dealer_name_e as 'Dealer Name',d.dealer_type,t.AREA_NAME as 'Territory',r.BRANCH_NAME as region,
                                                
-IF(SUM(j.cr_amt-j.dr_amt)>'0',CONCAT(' (Dr) ', SUM(j.cr_amt-j.dr_amt)),CONCAT('(Cr) ',SUBSTR(SUM(j.cr_amt-j.dr_amt),2))) as balance                                               
+IF(SUM(j.dr_amt-j.cr_amt)>'0',CONCAT(' (Dr) ', SUM(j.dr_amt-j.cr_amt)),CONCAT('(Cr) ',SUBSTR(SUM(j.dr_amt-j.cr_amt),2))) as balance                                               
 from dealer_info d,branch r,area t,journal j
 where 
       d.dealer_category='3' and 
@@ -503,6 +503,161 @@ where
       d.account_code=j.ledger_id group by d.account_code
       "?>
     <?=reportview($sql,'Customer Ledger / Balance','99'); ?>
+
+
+
+
+<?php elseif($_POST['report_id']==1012005): ?>
+<style>
+    #customers {
+        font-family: "Gill Sans", sans-serif;
+    }
+    #customers td {
+    }
+    #customers tr:ntd-child(even)
+    {background-color: #f0f0f0;}
+    #customers tr:hover {background-color: #f5f5f5;}
+    td{
+        text-align: center;
+
+    }
+</style>
+<title>Sales Invoice List</title>
+<h2 align="center" style="margin-top: -5px"><?=$_SESSION['company_name'];?></h2>
+<h4 align="center" style="margin-top:-15px">Sales Invoice List</h4>
+<?php if($_POST['dealer_code']){?>
+<h5 align="center" style="margin-top:-15px">Dealer : <?=find_a_field('dealer_info','dealer_name_e','dealer_code='.$_POST['dealer_code'].'')?></h5>
+<?php } ?>
+<?php if($_POST['warehouse_id']){?>
+<h5 align="center" style="margin-top:-15px">Warehouse : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$_POST['warehouse_id'].'')?></h5>
+<?php } ?>
+<h5 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h5>
+<?php
+$datecon=' and m.do_date between  "'.$_POST['f_date'].'" and "'.$_POST['t_date'].'"';
+if($_POST['warehouse_id']>0) 			 $warehouse_id=$_POST['warehouse_id'];
+if(isset($warehouse_id))				{$warehouse_id_CON=' and m.depot_id='.$warehouse_id;}
+if($_POST['dealer_code']>0) 			 $dealer_code=$_POST['dealer_code'];
+if(isset($dealer_code))				{$dealer_code_CON=' and m.dealer_code='.$dealer_code;}
+$sql="select
+distinct c.chalan_no,
+
+c.chalan_date,
+m.do_no,
+m.do_date,
+d.dealer_custom_code,
+d.dealer_code as dealercode,
+d.region,
+d.area_code,
+d.territory,
+d.town_code,
+p.PBI_NAME as tsm ,
+concat(d.dealer_name_e) as dealer_name,
+a.AREA_NAME as area,
+a.ZONE_ID as Zonecode,
+a.PBI_ID,
+d.team_name as team,
+w.warehouse_name as depot,
+d.product_group as grp,
+c.driver_name,
+m.cash_discount commission,
+m.commission_amount as comissionamount,
+m.do_type,
+SUM(c.total_amt)as invoice_amount,
+(SELECT SUM(total_amt) from sale_do_details where do_no=c.do_no and item_id=1096000100010312) as discount
+from
+sale_do_master m,
+sale_do_chalan c,
+dealer_info d ,
+warehouse w,
+area a,
+personnel_basic_info p
+
+where
+d.dealer_category='3' and 
+a.AREA_CODE=d.area_code
+and m.status in ('CHECKED','COMPLETED') and m.do_no=c.do_no and  m.dealer_code=d.dealer_code and m.do_section not in ('Rice') and w.warehouse_id=m.depot_id and
+c.item_id not in ('1096000100010312') and
+a.PBI_ID=p.PBI_ID".$warehouse_id_CON.$datecon.$pg_con.$dealer_code_CON.$dtype_con.$product_team_con."
+group by c.do_no
+order by c.do_no";
+$query = mysqli_query($conn, $sql); ?>
+
+
+<table align="center" id="customers"  style="width:95%; border: solid 1px #999; border-collapse:collapse;">
+    <thead>
+    <p style="width:95%; text-align:right; font-size:10px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
+        echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
+    <tr style="border: solid 1px #999;font-weight:bold; background-color:#f5f5f5; font-size:11px">
+        <th style="border: solid 1px #999; padding:2px">S/L</th>
+        <th style="border: solid 1px #999; padding:2px">Chalan No</th>
+        <th style="border: solid 1px #999; padding:2px">Chalan Date</th>
+        <th style="border: solid 1px #999; padding:2px">Do No</th>
+        <th style="border: solid 1px #999; padding:2px">Do Date</th>
+        <th style="border: solid 1px #999; padding:2px">Do Type</th>
+        <th style="border: solid 1px #999; padding:2px">Dealer Code</th>
+        <th style="border: solid 1px #999; padding:2px">Dealer Name</th>
+        <th style="border: solid 1px #999; padding:2px">Territory</th>
+        <th style="border: solid 1px #999; padding:2px">Depot</th>
+        <th style="border: solid 1px #999; padding:2px">Invoice Amount</th>
+        <th style="border: solid 1px #999; padding:2px">Discount</th>
+        <th style="border: solid 1px #999; padding:2px">Commission</th>
+        <th style="border: solid 1px #999; padding:2px">Receivable Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php $s=0;  while($data=mysqli_fetch_object($query)){$s++; ?>
+        <tr style="border: solid 1px #999; font-size:10px; font-weight:normal;">
+            <td style="border: solid 1px #999; text-align:center"><?=$s?></td>
+            <td style="border: solid 1px #999; text-align:center"><a href="delivery_chalan_view.php?v_no=<?=$data->chalan_no?>" target="_blank"><?=$data->chalan_no?></a></td>
+            <td style="border: solid 1px #999; text-align:center"><?=$data->chalan_date?></td>
+            <td style="border: solid 1px #999; text-align:center"><a href="invoice_view.php?do_no=<?=$data->do_no?>" target="_blank"><?=$data->do_no;?></a></td>
+            <td style="border: solid 1px #999; text-align:center"><?=$data->do_date;?></td>
+            <td style="border: solid 1px #999; text-align:center"><?=$data->do_type;?></td>
+            <td style="border: solid 1px #999; text-align:center"><?=$data->dealer_custom_code;?></td>
+            <td style="border: solid 1px #999; text-align:left"><?=$data->dealer_name;?></td>
+            <td style="border: solid 1px #999; text-align:center"><?=$data->area;?></td>
+            <td style="border: solid 1px #999; text-align:center"><?=$data->depot;?></td>
+            <td style="border: solid 1px #999; text-align:right"><?=number_format($data->invoice_amount,2);?></td>
+            <td style="border: solid 1px #999; text-align:right"><? if(substr($data->discount,1)>0) echo  number_format(substr($data->discount,1),2); else echo'-';?></td>
+            <td style="border: solid 1px #999; text-align:right"><? if($data->comissionamount>0) echo  number_format($data->comissionamount,2); else echo'-';?></td>
+            <td style="border: solid 1px #999; text-align:right"><?=number_format($data->invoice_amount-(substr($data->discount)+$data->comissionamount),2)?></td>
+        </tr>
+
+        <?php
+        $discounts=substr($data->discount,1);
+        $discounttotal=$discounttotal+$discounts;
+        $total_invoice_amount=$total_invoice_amount+$data->invoice_amount;
+        $totalsaleafterdiscount=($total_invoice_amount-($discounttotal+$data->comissionamount));
+        $actualsalestotalamts=$actualsalestotalamts+$totalamts;
+
+        $totalsaleafterdiscounts=$totalsaleafterdiscounts+$totalsaleafterdiscount;
+        $totalcomissionamount=$totalcomissionamount+$data->comissionamount;
+
+    } ?>
+    <tr style="font-size:11px; font-weight:bold">
+        <td colspan="10" style="border: solid 1px #999; text-align:right;  padding:2px">Total</td>
+        <td style="border: solid 1px #999; text-align:right;  padding:2px"><?=number_format($total_invoice_amount,2);?></td>
+        <td style="border: solid 1px #999; text-align:right;  padding:2px"><?=number_format($discounttotal,2);?></td>
+        <td style="border: solid 1px #999; text-align:right;  padding:2px"><?=number_format($totalcomissionamount,2);?></td>
+        <td style="border: solid 1px #999; text-align:right;  padding:2px"><?=number_format($total_invoice_amount-($discounttotal+$totalcomissionamount),2);?></td>
+    </tr></tbody>
+</table>
+
+
+
+<?php elseif ($_POST['report_id']=='1012006'):?>
+    <?php
+    $sql="SELECT d.dealer_code,d.dealer_custom_code as 'DB Code',
+d.dealer_name_e as 'Dealer Name',d.dealer_type,t.AREA_NAME as 'Territory',r.BRANCH_NAME as region,
+(select SUM(cr_amt) from journal where ledger_id=d.account_code and jvdate between '".$_POST['f_date']."' and '".$_POST['t_date']."') as collection
+                                               
+from dealer_info d,branch r,area t
+where 
+      d.dealer_category='3' and 
+      d.region=r.BRANCH_ID and 
+      d.area_code=t.AREA_CODE  group by d.account_code
+      "?>
+    <?=reportview($sql,'Collection Report','99'); ?>
 
 
 
@@ -1906,7 +2061,7 @@ group by lld.item_id
 
             {   $total_dr=0;
                 $total_cr=0;  ?>
-                <tr bgcolor="#FFCCFF" style="font-size: 11px; height: 20px"><th colspan="5" align="left"><?php echo $g[3];?> - <?php echo $g[0];?></th></tr>
+                <tr bgcolor="#f5f5f5" style="font-size: 11px; height: 20px"><th colspan="5" align="left"><?php echo $g[3];?> - <?php echo $g[0];?></th></tr>
 
                 <?php
                 $cc_code = (int) $_REQUEST['cc_code'];
@@ -1938,7 +2093,7 @@ group by lld.item_id
                     $t_dr=$t_dr+$dr;
                     $t_cr=$t_cr+$cr;
                 }?>
-                <tr bgcolor="#FFCCFF" style="font-size: 11px">
+                <tr bgcolor="#f5f5f5" style="font-size: 11px">
                     <th colspan="2"  style="border: solid 1px #999;  text-align: right; ">Total <?=$g[0];?>:</th>
                     <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_dr,2);?></th>
                     <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_cr,2)?></th>
@@ -2143,8 +2298,11 @@ group by lld.item_id
     <?php elseif ($_POST['report_id']=='1004003'):
         if($sectionid=='400000'){
             $sec_com_connectionT=' and 1';
+            $sec_com_connection_wa=' and 1';
         } else {
             $sec_com_connectionT=" and b.section_id='".$_SESSION['sectionid']."' and b.company_id='".$_SESSION['companyid']."'";
+            $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+
         }
         ?>
         <title>Periodical Trial Balance (Details)</title>
@@ -2156,13 +2314,13 @@ group by lld.item_id
             }
             #customers tr:ntd-child(even)
             {background-color: #f0f0f0;}
-            #customers tr:hover {background-color: #ddd;}
+            #customers tr:hover {background-color: #f0f0f0;}
             td{border: solid 1px #999; padding:2px;}
             th{text-align: center;border: solid 1px #999; padding:2px;}
         </style>
         <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
         <p align="center" style="margin-top:-20px">Periodical Trial Balance (Details)</p>
-        <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST['t_date']?></p>
+        <p align="center" style="margin-top:-12px; font-size: 11px">Date Interval: <?=$_POST['f_date']?> to <?=$_POST['t_date']?></p>
         <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
             <thead>
             <p style="width:85%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -2173,6 +2331,7 @@ group by lld.item_id
                 <th width="19%" align="center">Opening</th>
                 <th width="19%" align="center">Debit </th>
                 <th width="19%" height="20" align="center">Credit </th>
+                <th width="19%" height="20" align="center">Closing </th>
             </tr>
             <?php
             $total_dr=0;
@@ -2180,34 +2339,34 @@ group by lld.item_id
             $cc_code = (int) $_POST['cc_code'];
             if($cc_code > 0)
             {
-                $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$f_date' AND '$t_date'".$sec_com_connection." AND b.cc_code=$cc_code group by c.group_name";
+                $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '".$f_date."' AND '".$t_date."'".$sec_com_connectionT." AND b.cc_code=$cc_code group by c.group_id";
             } else {
-                $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '$f_date' AND '$t_date'".$sec_com_connection." group by c.group_name";
+                $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '".$f_date."' AND '".$t_date."'".$sec_com_connectionT." group by c.group_id";
             }
             $gsql=mysqli_query($conn, $g);
-            while($g=mysqli_fetch_row($gsql))
+            while($g=mysqli_fetch_array($gsql))
             {
                 $total_dr=0;
                 $total_cr=0;
                 ?>
-                <tr bgcolor="#FFCCFF" style="font-size: 11px; height: 20px">
-                    <th colspan="5" style="text-align: left"><?php echo $g[0];?></th>
+                <tr bgcolor="#f0f0f0" style="font-size: 11px; height: 20px">
+                    <th colspan="6" style="text-align: left"><?php echo $g[0];?></th>
                 </tr>
                 <?php
                 $cc_code = (int) $_REQUEST['cc_code'];
                 if($cc_code > 0)
                 {
-                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code".$sec_com_connection." group by ledger_name order by a.ledger_name";
+                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code".$sec_com_connectionT." group by ledger_name order by a.ledger_id";
                 } else {
-                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]'".$sec_com_connection." group by ledger_name order by a.ledger_name";
+                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]'".$sec_com_connectionT." group by ledger_name order by a.ledger_id";
                 }
                 $pi=0;
                 $sql=mysqli_query($conn, $p);
                 while($p=mysqli_fetch_row($sql))
                 {
-                    $query="select SUM(dr_amt),SUM(cr_amt) from journal where jv_date < '$fdate' and ledger_id='$p[3]'".$sec_com_connection_wa."";
+                    $query="select SUM(dr_amt),SUM(cr_amt) from journal where jvdate < '$f_date' and ledger_id='$p[3]'".$sec_com_connection_wa."";
                     $ssql=mysqli_query($conn, $query);
-                    $open=mysqli_fetch_row($ssql);
+                    $open=mysqli_fetch_array($ssql);
                     $opening = $open[0]-$open[1];
                     if($opening>0)
                     { $tag='(Dr)';}
@@ -2215,14 +2374,18 @@ group by lld.item_id
                     { $tag='(Cr)';$opening=$opening*(-1);}
                     $pi++;
                     $dr=$p[1];
-                    $cr=$p[2];
-                    ?>
+                    $cr=$p[2]; ?>
                     <tr style="border: solid 1px #999; font-size:11px">
-                        <td align="center"><?php echo $pi;?></td>
-                        <td align="left" style="text-align: left"><?php echo $p[0];?></td>
-                        <td align="right"><?php if($opening>0) number_format($opening,2).' '.$tag; else echo '-';?></td>
-                        <td align="right"><?php if($dr>0) echo number_format($dr,2); else echo '-';?></td>
-                        <td align="right"><?php if($cr>0) echo number_format($cr,2); else echo '-';?></td>
+                        <td align="center"><?=$pi;?></td>
+                        <td align="left" style="text-align: left"><?=$p[0];?></td>
+                        <td align="right"><?php if($opening>0) echo number_format($opening,2).' '.$tag; else echo '-';?></td>
+                        <td align="right"><?=number_format($dr,2);?></td>
+                        <td align="right"><?=number_format($cr,2);?></td>
+                        <?php if ($g['group_id'] =='2010'){ ?>
+                        <td align="right"><?=number_format(($dr-($opening+$cr)),2);?></td>
+                        <?php } else { ?>
+                            <td align="right"><?=number_format(($opening+($dr-$cr)),2);?></td>
+                        <?php } ?>
                     </tr>
                     <?php
                     $total_dr=$total_dr+$dr;
@@ -3517,20 +3680,20 @@ group by j.item_id order by g.group_id DESC,i.serial";
             <tr style="border: solid 1px #999;font-weight:bold; font-size:12px">
                 <th style="border: solid 1px #999; padding:2px">S/L</th>
                 <th style="border: solid 1px #999; padding:2px">Code</th>
-                <th style="border: solid 1px #999; padding:2px">Custom Code</th>
                 <th style="border: solid 1px #999; padding:2px">FG Description</th>
-                <th style="border: solid 1px #999; padding:2px">FG Sub Group</th>
-                <th style="border: solid 1px #999; padding:2px">FG Group</div></th>
+                <!--th style="border: solid 1px #999; padding:2px">FG Sub Group</th>
+                <th style="border: solid 1px #999; padding:2px">FG Group</div></th-->
                 <th style="border: solid 1px #999; padding:2px">UOM</th>
-                <th style="border: solid 1px #999; padding:2px">Pk. Size</th>
                 <th style="border: solid 1px #999; padding:2px">Present Stock</th>
+                <th style="border: solid 1px #999; padding:2px">Rate</th>
+                <th style="border: solid 1px #999; padding:2px">Amount</th>
             </tr>
             </thead>
 
             <tbody>
             <?php
             $fgresult="Select  j.item_id, i.item_id,i.item_name,i.finish_goods_code as custom_Code,i.unit_name,i.pack_size,i.serial, s.sub_group_id, s.group_id, g.group_id,s.sub_group_name,g.group_name,
-SUM(j.item_in-j.item_ex) as presentstock
+SUM(j.item_in-j.item_ex) as presentstock,i.d_price as rate
 from
 item_info i,
 journal_item j,
@@ -3549,18 +3712,21 @@ group by j.item_id order by g.group_id DESC,i.finish_goods_code";
                 <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
                     <td style="border: solid 1px #999; text-align:center"><?=$ismail=$ismail+1;?></td>
                     <td style="border: solid 1px #999; text-align:center"><?=$data->item_id;?></td>
-                    <td style="border: solid 1px #999; text-align:center"><?=$data->custom_Code;?></td>
                     <td style="border: solid 1px #999; text-align:left"><?=$data->item_name;?></td>
-                    <td style="border: solid 1px #999; text-align:center"><?=$data->sub_group_name;?></td>
-                    <td style="border: solid 1px #999; text-align:center"><?=$data->group_name;?></td>
+                    <!--td style="border: solid 1px #999; text-align:center"><?=$data->sub_group_name;?></td>
+                    <td style="border: solid 1px #999; text-align:center"><?=$data->group_name;?></td-->
                     <td style="border: solid 1px #999; text-align:center"><?=$data->unit_name;?></td>
-                    <td style="border: solid 1px #999; text-align:center"><?=$data->pack_size;?></td>
                     <td style="border: solid 1px #999; text-align:center"><?=number_format($pstock=$data->presentstock,2);?></td>
+                    <td style="border: solid 1px #999; text-align:center"><?=$data->rate;?></td>
+                    <td style="border: solid 1px #999; text-align:center"><?=number_format($pstocks=$data->presentstock*$data->rate,2);?></td>
                 </tr>
-                <?php $ttotalclosing=$ttotalclosing+$pstock;  } ?>
+                <?php $ttotalclosing=$ttotalclosing+$pstock;
+                $ttotalclosing_in_value = $ttotalclosing_in_value+$pstocks;} ?>
             <tr style="font-size:12px; font-weight:bold; border: solid 1px #999;">
-                <td colspan="8" style="text-align:right;border: solid 1px #999;"> Total</td>
+                <td colspan="4" style="text-align:right;border: solid 1px #999;"> Total</td>
                 <td style="text-align:center;border: solid 1px #999; width: auto"><?=number_format($ttotalclosing,2)?></td>
+                <td style="text-align:center;border: solid 1px #999; width: auto"></td>
+                <td style="text-align:center;border: solid 1px #999; width: auto"><?=number_format($ttotalclosing_in_value,2)?></td>
             </tr>
             </tbody>
         </table></div>
