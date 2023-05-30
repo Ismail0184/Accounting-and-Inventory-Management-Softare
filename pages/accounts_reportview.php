@@ -649,7 +649,8 @@ $query = mysqli_query($conn, $sql); ?>
     <?php
     $sql="SELECT d.dealer_code,d.dealer_custom_code as 'DB Code',
 d.dealer_name_e as 'Dealer Name',d.dealer_type,t.AREA_NAME as 'Territory',r.BRANCH_NAME as region,
-(select SUM(cr_amt) from journal where ledger_id=d.account_code and jvdate between '".$_POST['f_date']."' and '".$_POST['t_date']."') as collection
+FORMAT((select SUM(total_amt) from sale_do_details where dealer_code=d.dealer_code and do_date between '".$_POST['f_date']."' and '".$_POST['t_date']."'),2) as shipment,
+FORMAT((select SUM(cr_amt) from journal where ledger_id=d.account_code and jvdate between '".$_POST['f_date']."' and '".$_POST['t_date']."'),2) as collection
                                                
 from dealer_info d,branch r,area t
 where 
@@ -657,7 +658,7 @@ where
       d.region=r.BRANCH_ID and 
       d.area_code=t.AREA_CODE  group by d.account_code
       "?>
-    <?=reportview($sql,'Collection Report','99'); ?>
+    <?=reportview($sql,'Shipment & Collection Report','99'); ?>
 
 
 

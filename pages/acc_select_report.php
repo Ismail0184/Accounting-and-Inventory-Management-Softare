@@ -769,7 +769,6 @@ function reload1(form)
                     </div>
 
                 <?php elseif ($report_id=='1012005'): ?>
-
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Warehouse <span class="required text-danger">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -788,6 +787,16 @@ function reload1(form)
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" style="font-size: 11px; width: 49%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-01');?>" class="form-control col-md-7 col-xs-12" required name="f_date">
+                            <input type="date" style="font-size: 11px; width: 49%; margin-left:2%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
+                        </div>
+                    </div>
+
+                <?php elseif ($report_id=='1012006'): ?>
+
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">

@@ -163,6 +163,8 @@ while($data=@mysqli_fetch_object($query)){
         self.location='<?=$page;?>?item_id=' + val;
     }
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js "></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <style>
     input[type=text]{
         font-size: 11px;
@@ -174,7 +176,7 @@ while($data=@mysqli_fetch_object($query)){
     #customers td {}
     #customers tr:ntd-child(even)
     {background-color: #f0f0f0;}
-    #customers tr:hover {background-color: #f5f5f5;}
+    #customers tr:hover {background-color: #7FFFD4;}
     td{}
 </style>
 <SCRIPT language=JavaScript>
@@ -272,7 +274,7 @@ if ($pi_tr > 0) {
                             <input type="text" style="width:90%"  name="transporter" value="<?=$transporter;?>" class="form-control col-md-7 col-xs-12" >
                         </td>
 
-                        <th>Track No <span class="required text-danger">*</span></th>
+                        <th>Track No</th>
                         <th style="text-align:center">:</th>
                         <td>
                             <input type="text" style="width:90%"  name="track_no" value="<?=$track_no?>" class="form-control col-md-7 col-xs-12" >
@@ -333,15 +335,15 @@ if ($pi_tr > 0) {
                     </select>
                 </td>
                 <td style="vertical-align: middle;width:10%; text-align:center">
-                    <input type="text" id="unit" style="width:100%; height:37px; font-weight:bold; text-align:center"   name="unit" readonly  class="form-control col-md-7 col-xs-12" value="<?=$item_info->unit_name;?>" >
+                    <input type="text" id="unit" style="width:100%; height:37px; font-weight:bold; text-align:center"   name="unit" readonly  class="form-control col-md-7 col-xs-12" value="<?=$item_info->unit_name;?>" tabindex="-1" >
                 </td>
 
                 <td style="vertical-align: middle;width:10%; text-align:center">
-                    <input type="text" id="stock_balance" style="width:100%; height:37px; font-weight:bold; text-align:center"   name="stock_balance" readonly  class="form-control col-md-7 col-xs-12" value="<?=$stock_balance_single;?>" >
+                    <input type="text" id="stock_balance" style="width:100%; height:37px; font-weight:bold; text-align:center"   name="stock_balance" readonly  class="form-control col-md-7 col-xs-12" value="<?=$stock_balance_single;?>" tabindex="-1" />
                 </td>
 
                 <td style="vertical-align: middle;width:10%; text-align:center">
-                    <input type="text" id="total_unit" onkeyup="doAlert(this.form);" name="total_unit" value="<?=$edit_value_total_unit?>" style="width:100%; height:37px;text-align:center"  required="required"  class="form-control col-md-7 col-xs-12" autocomplete="off" ></td>
+                    <input type="text" id="total_unit" onkeyup="doAlert(this.form);" name="total_unit" value="<?=$edit_value_total_unit?>" style="width:100%; height:37px;text-align:center"  required="required"  class="form-control col-md-7 col-xs-12" autocomplete="off" tabindex="1" /></td>
 
                 <td style="vertical-align: middle;width:5%; text-align:center">
                     <?php if (isset($GET_id)) : ?><button type="submit" class="btn btn-primary" name="editdata<?=$GET_id;?>" id="editdata<?=$GET_id;?>" style="font-size: 11px">Update</button><br><a href="<?=$page;?>" style="font-size: 11px"  onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you sure you want to Delete the Voucher?");' class="btn btn-danger">Cancel</a>
@@ -391,20 +393,36 @@ if ($pi_tr > 0) {
                 <td style="vertical-align: middle"><?=$data->item_id?> - <?=$data->item_name?></td>
                 <td style="vertical-align: middle;width:10%; text-align:center"><?=$data->unit_name?></td>
                 <td style="vertical-align: middle;width:10%; text-align:center">
-                    <input type="text" id="stock_balance<?=$item_id?>" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;"   name="stock_balance<?=$item_id?>" readonly  class="form-control col-md-7 col-xs-12" value="<?=$stock_balance;?>" >
+                    <input type="text" id="stock_balance<?=$item_id?>" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;"   name="stock_balance<?=$item_id?>" readonly  class="form-control col-md-7 col-xs-12" value="<?=$stock_balance;?>" tabindex="-1" />
                 </td>
 
                 <td style="vertical-align: middle;width:10%; text-align:center">
-                    <input type="text" id="total_unit<?=$item_id?>" onkeyup="doAlert<?=$item_id?>(this.form);" name="total_unit<?=$item_id?>" value="<?=$edit_value_total_unit?>" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;"   class="form-control col-md-7 col-xs-12" autocomplete="off" >
+                    <input type="text" id="total_unit<?=$item_id?>" onkeyup="doAlert<?=$item_id?>(this.form);" name="total_unit<?=$item_id?>" value="<?=$edit_value_total_unit?>" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;"  class="sum" tabindex="1" />
                 </td>
                 <td style="vertical-align:middle;width: 10%; display: none">
                     <input type="number" name="unit_price<?=$item_id?>"   id="unit_price<?=$item_id?>" class="form-control col-md-7 col-xs-12" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;" value="<?=$data->d_price;?>"  required="required" readonly step="any" min="0" class="unit_price<?=$item_id?>" />
                 </td>
                 <td style="vertical-align:middle;width: 12%; display: none">
-                    <input type="text" name="total_amt<?=$item_id?>" readonly id="total_amt<?=$item_id?>" style="width:98%; margin-left:2%; height:25px;text-align:center;" value="<?=$edit_value_amount?>" class="sum" step="any" min="1" />
+                    <input type="text" name="total_amt<?=$item_id?>" readonly id="total_amt<?=$item_id?>" style="width:98%; margin-left:2%; height:25px;text-align:center;" value="<?=$edit_value_amount?>"  step="any" min="1"  />
                 </td>
             </tr>
             <?php endwhile; ?>
+            <script>
+                // we used jQuery 'keyup' to trigger the computation as the user type
+                $('.sum').keyup(function () {
+                    // initialize the sum (total price) to zero
+                    var sum = 0;
+                    // we use jQuery each() to loop through all the textbox with 'price' class
+                    // and compute the sum for each loop
+                    $('.sum').each(function() {
+                        sum += Number($(this).val());
+                    });
+                    // set the computed value to 'totalPrice' textbox
+                    $('#totalPrice').val((sum).toFixed(2));
+                });
+            </script>
+            <tr><th colspan="4">Total</th>
+                <td><input type="number" id="totalPrice" style="width:98%; margin-left:2%; height:25px;text-align:center;font-size: 12px" readonly class="form-control col-md-7 col-xs-12" class="total_qty"></td></tr>
             <tr><td colspan="6"><button  type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm?");' name="add" class="btn btn-primary" style="float: right; font-size: 12px; margin-right: 1%">Add items and proceed next</button></td></tr>
             </tbody>
         </table>
