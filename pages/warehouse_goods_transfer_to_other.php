@@ -16,13 +16,10 @@ if(prevent_multi_submit()){
     {
         $_POST['section_id'] = $_SESSION['sectionid'];
         $_POST['company_id'] = $_SESSION['companyid'];
-        $_POST['ISSUE_TYPE']='STO';
-        $d =$_POST['pi_date'];
         $_POST['entry_by'] = $_SESSION['userid'];
         $_POST['entry_at'] = date('Y-m-d H:s:i');
-        $_SESSION['initiate_production_transfer']=$_POST['custom_pi_no'];
-        $_SESSION['pi_tr'] =$_POST[$unique];
-        $_SESSION['production_warehouse'] =$_POST['warehouse_to'];
+        $_SESSION['uniqueid']=$_POST['uid'];
+        $_SESSION['status']='MANUAL';
         $_POST['create_date']=$create_date;
         $crud->insert();
         $type=1;
@@ -44,9 +41,7 @@ if(prevent_multi_submit()){
 
 //for single FG Add...........................
     if(isset($_POST['add'])) {
-        $_POST['status']="MANUAL";
-        $_POST['ISSUE_TYPE']="STO";
-        $_POST['ip']=$ip;
+        $_POST['status']="UNCHECKED";
         $_POST['total_unit']=$_POST['total_unit'];
         $_POST['entry_by'] = $_SESSION['userid'];
         $_POST['entry_at'] = date('Y-m-d H:s:i');
@@ -66,21 +61,21 @@ if(prevent_multi_submit()){
     }
 } /// prevent multi submit
 
+$unique_GET = @$_SESSION['uniqueid'];
+
+
+
 if(isset($_POST['confirm']))
-{   $up="UPDATE ".$table." SET verifi_status='UNCHECKED' where ".$unique."='$_SESSION[pi_tr]'";
+{   $up="UPDATE ".$table." SET status='UNCHECKED' where ".$unique."='".$_SESSION['uniqueid']."'";
     $update_table_master=mysqli_query($conn, $up);
-    $up2="UPDATE ".$table_details." SET verifi_status='UNCHECKED',status='UNCHECKED' where ".$unique."='".$_SESSION['pi_tr'];
-    $update_production_floor_issue_master=mysqli_query($conn, $up2);
-    unset($_SESSION['pi_tr']);
-    unset($pi_tr);
-    unset($_SESSION['initiate_production_transfer']);
-    unset($initiate_production_transfer);
+    unset($_SESSION['uniqueid']);
+    unset($uniqueid);
     unset($_POST);
 }
 
 //for single FG Delete..................................
-$pi_tr = @$_SESSION['pi_tr'];
-$initiate_production_transfer = @$_SESSION['initiate_production_transfer'];
+$pi_tr = @$_SESSION['uniqueid'];
+$initiate_production_transfer = @$_SESSION['uniqueid'];
 $query="Select * from ".$table_details." where ".$unique."='".$pi_tr."'";
 $res=mysqli_query($conn, $query);
 while($row=mysqli_fetch_array($res)){
@@ -95,20 +90,18 @@ while($row=mysqli_fetch_array($res)){
 //for Delete..................................
 if(isset($_POST['cancel']))
 {   $crud = new crud($table_details);
-    $condition =$unique."=".$_SESSION['pi_tr'];
+    $condition =$unique."=".$_SESSION['uniqueid'];
     $crud->delete_all($condition);
     $crud = new crud($table);
-    $condition=$unique."=".$_SESSION['pi_tr'];
+    $condition=$unique."=".$_SESSION['uniqueid'];
     $crud->delete($condition);
-    unset($_SESSION['pi_tr']);
-    unset($pi_tr);
-    unset($_SESSION['initiate_production_transfer']);
-    unset($initiate_production_transfer);
+    unset($_SESSION['uniqueid']);
+    unset($uniqueid);
     unset($_POST);
 }
 $GET_id = @$_GET['id'];
-$pi_tr = @$_SESSION['pi_tr'];
-$initiate_production_transfer = @$_SESSION['initiate_production_transfer'];
+$uniqueid = @$_SESSION['uniqueid'];
+
 if (isset($GET_id)) {$edit_value=find_all_field(''.$table_details.'','','id='.$GET_id.'');}
 $edit_value_item_id = @$edit_value->item_id;
 $edit_value_total_unit = @$edit_value->total_unit;
@@ -116,7 +109,7 @@ $edit_value_amount = @$edit_value->amount;
 $COUNT_details_data=find_a_field(''.$table_details.'','Count(id)',''.$unique.'='.$pi_tr.'');
 
 if(isset($pi_tr))
-{   $condition=$unique."=".$pi_tr;
+{   $condition=$unique."=".$uniqueid;
     $data=db_fetch_object($table,$condition);
     while (list($key, $value)=each($data))
     { $$key=$value;}}
@@ -128,7 +121,7 @@ $warehouse_id = @$warehouse_id;
 $warehouse_to = @$warehouse_to;
 $VATChallanno = @$VATChallanno;
 
-$stock_balance_single=find_a_field("journal_item", "SUM(item_in-item_ex)", "item_id='".$edit_value_item_id."' and warehouse_id=".$warehouse_from." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
+$stock_balance_single=find_a_field("journal_item", "SUM(item_in-item_ex)", "item_id='".$edit_value_item_id."' and warehouse_id=".$warehouse_id." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
 $res="Select t.id,concat(i.item_id,' : ', i.finish_goods_code, ' : ', i.item_name) as item_description,i.unit_name as unit,t.total_unit 
 from 
@@ -184,8 +177,9 @@ while($data=@mysqli_fetch_object($query)){
 
 <?php require_once 'body_content_nva_sm.php';
 $pi_nos = find_a_field('' . $table . '', 'max(' . $unique . ')', '1');
+$create_date = date('Y-m-d');
 if ($pi_tr > 0) {
-    $pi_noGET = @$_SESSION['pi_tr'];
+    $pi_noGET = @$_SESSION['uniqueid'];
 } else {
     $pi_noGET = $pi_nos + 1;
     if ($pi_nos < 1) $pi_noGET = 1;
@@ -197,7 +191,7 @@ if ($pi_tr > 0) {
                     <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_add_corporate_party.php">
                         <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Add Party</span>
                     </a>
-            <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_STO_view.php">
+            <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_transfer_other_view.php.php">
                 <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">View Report</span>
             </a>
             <div class="clearfix"></div>
@@ -210,13 +204,12 @@ if ($pi_tr > 0) {
                         <th style="width:2%; text-align:center">:</th>
                         <td style="width: 20%">
                             <input type="hidden" name="<?=$unique;?>" id="<?=$unique;?>" value="<?=$pi_noGET;?>">
-                            <input type="text" id="custom_id" style="width:90%" readonly name="custom_id" value="<?=($initiate_production_transfer!='')? $custom_id : automatic_number_generate("OGT","warehouse_goods_transfer_to_other_master","custom_pi_no","create_date='".$idatess."' ","");?>" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="custom_id" style="width:90%" readonly name="custom_id" value="<?=($uniqueid!='')? $custom_id : automatic_voucher_number_generate($table,'custom_id',1,'1'.$sectionid_substr);?>" class="form-control col-md-7 col-xs-12">
                         </td>
-
                         <th style="width: 10%">Date <span class="required text-danger">*</span></th>
                         <th style="width:2%; text-align:center">:</th>
                         <td style="width: 20%">
-                            <input type="date" id="ogt_date" style="width:90%" max="<?=date('Y-m-d')?>"  required="required" name="pi_date" value="<?=($ogt_date!='')? $ogt_date : date('Y-m-d') ?>" class="form-control col-md-7 col-xs-12" >
+                            <input type="date" id="ogt_date" style="width:90%" max="<?=date('Y-m-d')?>"  required="required" name="ogt_date" value="<?=($ogt_date!='')? $ogt_date : date('Y-m-d') ?>" class="form-control col-md-7 col-xs-12" >
                         </td>
                         <th style="width: 10%">Remarks</th>
                         <th style="width:2%; text-align:center">:</th>
@@ -232,7 +225,7 @@ if ($pi_tr > 0) {
                         <th style="text-align:center">:</th>
                         <td>
                             <select class="form-control" style="width:90%; font-size: 11px" tabindex="-1" required="required"  name="warehouse_id" id="warehouse_id">
-                                <?php if(isset($_SESSION['initiate_production_transfer'])>0): ?>
+                                <?php if(isset($uniqueid)>0): ?>
                                     <option value="<?=$warehouse_id?>" selected><?=$warehouse_id?> : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$warehouse_id)?></option>
                                 <?php else: ?>
                                     <?=foreign_relation("warehouse","warehouse_id","concat(warehouse_id,' : ',warehouse_name)",$warehouse_id, "warehouse_id in ('".$_SESSION['warehouse']."')");?>
@@ -244,8 +237,8 @@ if ($pi_tr > 0) {
                         <td>
                             <select class="form-control" style="width:90%; font-size: 11px" tabindex="-1" required="required"  name="dealer_code" id="dealer_code">
                                 <option></option>
-                                <?php if(isset($_SESSION['initiate_production_transfer'])>0): ?>
-                                    <option value="<?=$warehouse_to?>" selected><?=$warehouse_to?> : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$warehouse_to)?></option>
+                                <?php if(isset($uniqueid)>0): ?>
+                                    <option value="<?=$dealer_code?>" selected><?=$dealer_code?> : <?=find_a_field('corporate_dealer_info','dealer_name','dealer_code='.$dealer_code)?></option>
                                 <?php else: ?>
                                     <?php foreign_relation("corporate_dealer_info", "dealer_code", "CONCAT(dealer_code,' : ', dealer_name)", $dealer_code, "status='yes'".$sec_com_connection_wa."","order by dealer_code"); ?>
                                 <?php endif; ?>
@@ -262,7 +255,7 @@ if ($pi_tr > 0) {
                     <tr><td style="height: 15px"></td></tr>
                     <tr>
                         <td colspan="9" style="text-align: center">
-                                    <?php if($initiate_production_transfer){  ?>
+                                    <?php if($uniqueid){  ?>
                                         <button type="submit" name="modify" class="btn btn-primary" onclick='return window.confirm("Are you confirm?");' style="font-size: 12px">Update Information</button>
                                     <?php   } else {?>
                                         <button type="submit" name="initiate" onclick='return window.confirm("Are you confirm?");' class="btn btn-primary" style="font-size: 12px">Initiate Transfer Entry</button>
@@ -277,13 +270,11 @@ if ($pi_tr > 0) {
 
 
 
-<?php if($initiate_production_transfer):?>
+<?php if($uniqueid):?>
     <form action="<?=$page;?>" name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
-        <input type="hidden" name="<?=$unique;?>" id="<?=$unique;?>" value="<?=$_SESSION['pi_tr'];?>" >
-        <input type="hidden" name="custom_pi_no" id="custom_pi_no" value="<?=$custom_pi_no;?>" >
-        <input type="hidden" name="pi_date" id="pi_date" value="<?=$pi_date;?>">
-        <input type="hidden" name="warehouse_from" id="warehouse_from" value="<?=$warehouse_from;?>">
-        <input type="hidden" name="warehouse_to" id="warehouse_to" value="<?=$warehouse_to;?>">
+        <input type="hidden" name="<?=$unique;?>" id="<?=$unique;?>" value="<?=$_SESSION['uniqueid'];?>" >
+        <input type="hidden" name="ogt_date" id="ogt_date" value="<?=$ogt_date;?>">
+        <input type="hidden" name="warehouse_id" id="warehouse_id" value="<?=$warehouse_id;?>">
         <input type="hidden" name="section_id" id="section_id" value="<?=$_SESSION['sectionid'];?>">
         <input type="hidden" name="company_id" id="company_id" value="<?=$_SESSION['companyid'];?>">
 
@@ -342,7 +333,7 @@ if ($pi_tr > 0) {
                 $sql = mysqli_query($conn, "SELECT * from item_info where d_price>0 order by serial");
                 while($data=mysqli_fetch_object($sql)):
                 $item_id = @$data->item_id;
-                $present_stock_sql=find_a_field("journal_item", "SUM(item_in-item_ex)", "item_id='".$data->item_id."' and warehouse_id=".$warehouse_from." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");;
+                $present_stock_sql=find_a_field("journal_item", "SUM(item_in-item_ex)", "item_id='".$data->item_id."' and warehouse_id=".$warehouse_id." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");;
                     $stock_balance_GET=$present_stock_sql;
                     $Manual_item=find_a_field("warehouse_goods_transfer_to_other_details", "SUM(total_unit)", "item_id='".$data->item_id."' and warehouse_from=".$warehouse_from." and status in ('MANUAL','UNCHECKED') and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
                     $stock_balance=$stock_balance_GET-$Manual_item;
