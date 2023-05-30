@@ -1,7 +1,7 @@
 <?php require_once 'support_file.php'; ?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
 $title='Goods Transfer (Other)';
-
+$sectionid_substr = @(substr($_SESSION['sectionid'],4));
 $now=time();
 $unique='uid';
 $table="warehouse_goods_transfer_to_other_master";
@@ -191,7 +191,7 @@ if ($pi_tr > 0) {
                     <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_add_corporate_party.php">
                         <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Add Party</span>
                     </a>
-            <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_transfer_other_view.php.php">
+            <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_transfer_other_view.php">
                 <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">View Report</span>
             </a>
             <div class="clearfix"></div>

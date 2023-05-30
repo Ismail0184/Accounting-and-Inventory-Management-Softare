@@ -6,31 +6,26 @@ $now=time();
 $unique='uid';
 $table="warehouse_goods_transfer_to_other_master";
 $table_details="warehouse_goods_transfer_to_other_details";
-$page='warehouse_STO_view.php';
+$page='warehouse_transfer_other_view.php';
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
 $STO_master=find_all_field(''.$table.'','',''.$unique.'='.$$unique.'');
 if(prevent_multi_submit()){
     if (isset($_POST['reprocess'])) {
-        $up="UPDATE ".$table." SET verifi_status='MANUAL' where ".$unique."=".$$unique."";
+        $up="UPDATE ".$table." SET status='MANUAL' where ".$unique."=".$$unique."";
         $update_table_master=mysqli_query($conn, $up);
-        $up2="UPDATE ".$table_details." SET verifi_status='MANUAL',status='MANUAL' where ".$unique."=".$$unique."";
-        $update_table_details=mysqli_query($conn, $up2);
-        $_SESSION['pi_tr'] = $_GET[$unique];
-        $_SESSION['initiate_production_transfer']=getSVALUE("".$table."", "custom_pi_no", " where ".$unique."=".$_GET[$unique]."");
+        $_SESSION['uniqueid'] = $_GET[$unique];
         $type = 1;
-        echo "<script>self.opener.location = 'warehouse_goods_transfer.php'; self.blur(); </script>";
+        echo "<script>self.opener.location = 'warehouse_goods_transfer_to_other.php'; self.blur(); </script>";
         echo "<script>window.close(); </script>";
     }
 
 //for Delete..................................
     if(isset($_POST['deleted']))
     {
-
             $crud = new crud($table_details);
             $condition =$unique."=".$$unique;
             $crud->delete_all($condition);
-
             $crud = new crud($table);
             $condition=$unique."=".$$unique;
             $crud->delete($condition);
@@ -40,13 +35,12 @@ if(prevent_multi_submit()){
         echo "<script>window.close(); </script>";
     }}
 
-// data query..................................
 if(isset($_POST['viewreport'])){
-    if($_POST['warehouse_from']>0) 			 $warehouse_from=$_POST['warehouse_from'];
-    if(isset($warehouse_from))				{$warehouse_from_CON=' and m.warehouse_from='.$warehouse_from;}
-    if($_POST['verifi_status']!=='') 		$verifi_status=$_POST['verifi_status'];
-    if(isset($verifi_status))				{$verifi_status_CON=' and m.verifi_status in ("'.$verifi_status.'")';}
-    $sql="SELECT * from ".$table."";
+
+    $sql="SELECT m.uid,m.custom_id,m.ogt_date as 'date',w.warehouse_name as warehouse,dealer_name as party,m.remarks,m.status as status from 
+    ".$table." m, warehouse w,corporate_dealer_info d where
+    w.warehouse_id=m.warehouse_id and 
+    d.dealer_code=m.dealer_code";
 }
 ?>
 
@@ -60,7 +54,7 @@ if(isset($_POST['viewreport'])){
 
 
 
-<?php if(isset($_GET[$unique])){ ?>
+<?php if(($_GET[$unique]>0)){ ?>
     <!-- input section-->
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
@@ -74,8 +68,6 @@ if(isset($_POST['viewreport'])){
                             <th>Code / Barcode</th>
                             <th>Item Description</th>
                             <th style="text-align: center">Unit</th>
-                            <th style="text-align: center">Pack Size</th>
-                            <th style="text-align:center">Batch</th>
                             <th style="text-align:center">Qty in Pcs</th>
                         </tr>
                         </thead>
@@ -91,20 +83,18 @@ item_info i
  d.".$unique."=".$$unique."
  order by d.id";
                         $pdetails=mysqli_query($conn, $rs);
-                        while($uncheckrow=mysqli_fetch_array($pdetails)){
+                        $js = 0;
+                        while($data=mysqli_fetch_object($pdetails)){
                             ?>
-
                             <tr>
                                 <td style="width:3%; vertical-align:middle"><?=$js=$js+1;?></td>
-                                <td><?=$uncheckrow[custom_pi_no];?></td>
-                                <td style="text-align:left"><?=$uncheckrow[item_name];?></td>
-                                <td style="text-align:center"><?=$uncheckrow[unit_name];?></td>
-                                <td style="text-align:center"><?=$uncheckrow[pack_size];?></td>
-                                <td style="width:10%; text-align:center"><?=$uncheckrow[batch];?></td>
-                                <td align="right" style="width:15%; text-align:center"><?=$uncheckrow[total_unit];?></td>
+                                <td><?=$data->item_id;?></td>
+                                <td style="text-align:left"><?=$data->item_name;?></td>
+                                <td style="text-align:center"><?=$data->unit_name;?></td>
+                                <td align="right" style="width:15%; text-align:center"><?=$data->total_unit;?></td>
                             </tr>
-                            <?php  $amountqty=$amountqty+$uncheckrow[total_unit];  } ?>
-                        <tr style="font-weight: bold"><td colspan="6" style="text-align: right">Total = </td>
+                            <?php $amountqty=$amountqty+$data->total_unit;  } ?>
+                        <tr style="font-weight: bold"><td colspan="4" style="text-align: right">Total = </td>
                             <td style="text-align: center"><?=number_format($amountqty)?></td>
                         </tr>
                         </tbody></table>
@@ -113,9 +103,9 @@ item_info i
 
 
                     <?php
-                    $GET_status=find_a_field(''.$table.'','verifi_status',''.$unique.'='.$_GET[$unique]);
+                    $GET_status=find_a_field(''.$table.'','status',''.$unique.'='.$_GET[$unique]);
                     if($GET_status=='UNCHECKED' || $GET_status=='MANUAL' || $GET_status=='Manual' || $GET_status=='RETURNED'){
-                        if($STO_master->entry_by==$_SESSION[userid]){ ?>
+                        if($STO_master->entry_by==$_SESSION['userid']){ ?>
                     <p>
                         <button style="float: left; font-size: 12px" type="submit" name="reprocess" id="reprocess" class="btn btn-primary" onclick='return window.confirm("Are you confirm?");'>Re-process & Update</button>
                         <button style="float: right;font-size: 12px" type="submit" name="deleted" id="deleted" class="btn btn-danger" onclick='return window.confirm("Are you confirm?");'>Delete the STO</button>
@@ -144,7 +134,7 @@ item_info i
                     <option selected></option>
                     <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),($_POST['warehouse_id']>0 ? $_POST['warehouse_id'] : $_SESSION['warehouse']));?>
                 </select></td>
-            <td style="padding:10px"><button type="submit" style="font-size: 11px;" name="viewreport"  class="btn btn-primary">View STO</button></td>
+            <td style="padding:10px"><button type="submit" style="font-size: 11px;" name="viewreport"  class="btn btn-primary">View OGT</button></td>
         </tr></table>
     <?=$crud->report_templates_with_status($sql,$title='STO View');?>
 </form>

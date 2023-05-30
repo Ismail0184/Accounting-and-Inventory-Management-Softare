@@ -56,32 +56,7 @@ $consumable_type = @$consumable_type;
 $product_nature = @$product_nature;
 $exim_status = @$exim_status;
 $brand_category = @$brand_category;
-$brand_id = @$brand_id;
-$unit_name = @$unit_name;
-$pack_unit = @$pack_unit;
-$pack_size = @$pack_size;
-$g_weight = @$g_weight;
-$shelf_life = @$shelf_life;
-$material_cost = @$material_cost;
-$conversion_cost = @$conversion_cost;
-$production_cost = @$production_cost;
-$m_price = @$m_price;
-$d_price = @$d_price;
-$t_price = @$t_price;
-$com_on_m_price = @$com_on_m_price;
-$com_on_d_price = @$com_on_d_price;
-$com_on_t_price = @$com_on_t_price;
-$SD_percentage = @$SD_percentage;
-$SD = @$SD;
-$VAT_percentage = @$VAT_percentage;
-$VAT = @$VAT;
-$quantity_type = @$quantity_type;
-$status = @$status;
-$commission_status = @$commission_status;
-$revenue_persentage = @$revenue_persentage;
-$VAT_item_group = @$VAT_item_group;
-$H_S_code = @$H_S_code;
-$serial = @$serial;
+
 
 $query=mysqli_query($conn, $res);
 while($row=mysqli_fetch_object($query)){
@@ -158,11 +133,16 @@ $res = "SELECT d.dealer_code,d.dealer_name,d.contact_person,d.contact_number,d.c
                                         <input type="text" id="contact_person_desig" style="width:100%; font-size: 12px" name="contact_person_desig" value="<?=$contact_number;?>" class="form-control col-md-7 col-xs-12" >
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Address</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <textarea id="address" style="width:100%; height: 80px; font-size: 12px" name="address" class="form-control col-md-7 col-xs-12" ><?=$address?></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Ledger ID</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
+                                        <input type="text" id="ledger_id" style="width:100%; font-size: 12px" name="ledger_id" value="<?=$ledger_id;?>" class="form-control col-md-7 col-xs-12" >
                                     </div>
                                 </div>
 
