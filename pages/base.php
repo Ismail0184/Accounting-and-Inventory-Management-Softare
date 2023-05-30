@@ -15,17 +15,13 @@ $conn = mysqli_connect($servername, $username, $password, $dbname);
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
-
-	
 	try{
-		
 		$db_con = new PDO("mysql:host={$servername};dbname={$dbname}",$username,$password);
 		$db_con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 	catch(PDOException $e){
 		echo $e->getMessage();
 	}
-
 
 // coder for IP
 if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
