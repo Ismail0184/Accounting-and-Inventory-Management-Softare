@@ -5,15 +5,10 @@ $idatess=date('Y-m-d');
 //ob_start("ob_gzhandler");
 $endtime = microtime();
 $servername = "localhost";
-$username = "icp_distribution";
-$password = "Allahis1!!@@##";
-$dbname = "icp_distribution";
+$username = "******";
+$password = "******";
+$dbname = "*****";
 
-
-
-$_SESSION['link']= mysql_connect($servername, $username, $password) or die("MySQL Error: " .
-mysql_error());
-mysql_select_db($dbname) or die("MySQL Error:" . mysql_error());
 
 // Create connection
 $conn = mysqli_connect($servername, $username, $password, $dbname);
