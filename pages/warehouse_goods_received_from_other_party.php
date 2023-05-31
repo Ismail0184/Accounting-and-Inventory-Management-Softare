@@ -1,12 +1,12 @@
 <?php require_once 'support_file.php'; ?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
-$title='Goods Transfer (Other)';
+$title='Goods Received From (Other)';
 $sectionid_substr = @(substr($_SESSION['sectionid'],4));
 $now=time();
 $unique='uid';
 $table="warehouse_goods_transfer_to_other_master";
 $table_details="warehouse_goods_transfer_to_other_details";
-$page="warehouse_goods_transfer_to_other.php";
+$page="warehouse_goods_received_from_other_party.php";
 $crud      =new crud($table);
 $unique_GET = @$_GET[$unique];
 $create_date=date('Y-m-d');
@@ -17,8 +17,9 @@ if(prevent_multi_submit()){
         $_POST['section_id'] = $_SESSION['sectionid'];
         $_POST['company_id'] = $_SESSION['companyid'];
         $_POST['entry_by'] = $_SESSION['userid'];
-        $_POST['entry_at'] = date('Y-m-d H:s:i');
-        $_SESSION['uniqueid']=$_POST['uid'];
+        $_POST['entry_at'] = date('Y-m-d H:i:s');
+        $_SESSION['receive_uniqueid']=$_POST['uid'];
+        $_POST['type'] = 'Received';
         $_SESSION['status']='MANUAL';
         $_POST['create_date']=$create_date;
         $crud->insert();
@@ -61,21 +62,21 @@ if(prevent_multi_submit()){
     }
 } /// prevent multi submit
 
-$unique_GET = @$_SESSION['uniqueid'];
+$unique_GET = @$_SESSION['receive_uniqueid'];
 
 
 
 if(isset($_POST['confirm']))
-{   $up="UPDATE ".$table." SET status='UNCHECKED' where ".$unique."='".$_SESSION['uniqueid']."'";
+{   $up="UPDATE ".$table." SET status='UNCHECKED' where ".$unique."='".$_SESSION['receive_uniqueid']."'";
     $update_table_master=mysqli_query($conn, $up);
-    unset($_SESSION['uniqueid']);
+    unset($_SESSION['receive_uniqueid']);
     unset($uniqueid);
     unset($_POST);
 }
 
 //for single FG Delete..................................
-$pi_tr = @$_SESSION['uniqueid'];
-$initiate_production_transfer = @$_SESSION['uniqueid'];
+$pi_tr = @$_SESSION['receive_uniqueid'];
+$initiate_production_transfer = @$_SESSION['receive_uniqueid'];
 $query="Select * from ".$table_details." where ".$unique."='".$pi_tr."'";
 $res=mysqli_query($conn, $query);
 while($row=mysqli_fetch_array($res)){
@@ -90,17 +91,17 @@ while($row=mysqli_fetch_array($res)){
 //for Delete..................................
 if(isset($_POST['cancel']))
 {   $crud = new crud($table_details);
-    $condition =$unique."=".$_SESSION['uniqueid'];
+    $condition =$unique."=".$_SESSION['receive_uniqueid'];
     $crud->delete_all($condition);
     $crud = new crud($table);
-    $condition=$unique."=".$_SESSION['uniqueid'];
+    $condition=$unique."=".$_SESSION['receive_uniqueid'];
     $crud->delete($condition);
-    unset($_SESSION['uniqueid']);
+    unset($_SESSION['receive_uniqueid']);
     unset($uniqueid);
     unset($_POST);
 }
 $GET_id = @$_GET['id'];
-$uniqueid = @$_SESSION['uniqueid'];
+$uniqueid = @$_SESSION['receive_uniqueid'];
 
 if (isset($GET_id)) {$edit_value=find_all_field(''.$table_details.'','','id='.$GET_id.'');}
 $edit_value_item_id = @$edit_value->item_id;
@@ -179,7 +180,7 @@ while($data=@mysqli_fetch_object($query)){
 $pi_nos = find_a_field('' . $table . '', 'max(' . $unique . ')', '1');
 $create_date = date('Y-m-d');
 if ($pi_tr > 0) {
-    $pi_noGET = @$_SESSION['uniqueid'];
+    $pi_noGET = @$_SESSION['receive_uniqueid'];
 } else {
     $pi_noGET = $pi_nos + 1;
     if ($pi_nos < 1) $pi_noGET = 1;
@@ -221,7 +222,7 @@ if ($pi_tr > 0) {
 
                     <tr><td style="height: 5px"></td></tr>
                     <tr>
-                        <th>Transfer From <span class="required text-danger">*</span></th>
+                        <th>Receive to <span class="required text-danger">*</span></th>
                         <th style="text-align:center">:</th>
                         <td>
                             <select class="form-control" style="width:90%; font-size: 11px" tabindex="-1" required="required"  name="warehouse_id" id="warehouse_id">
@@ -232,7 +233,7 @@ if ($pi_tr > 0) {
                                 <?php endif; ?>
                             </select>
                         </td>
-                        <th>Transfer to <span class="required text-danger">*</span></th>
+                        <th>Receive from <span class="required text-danger">*</span></th>
                         <th style="text-align:center">:</th>
                         <td>
                             <select class="form-control" style="width:90%; font-size: 11px" tabindex="-1" required="required"  name="dealer_code" id="dealer_code">
@@ -258,7 +259,7 @@ if ($pi_tr > 0) {
                                     <?php if($uniqueid){  ?>
                                         <button type="submit" name="modify" class="btn btn-primary" onclick='return window.confirm("Are you confirm?");' style="font-size: 12px">Update Information</button>
                                     <?php   } else {?>
-                                        <button type="submit" name="initiate" onclick='return window.confirm("Are you confirm?");' class="btn btn-primary" style="font-size: 12px">Initiate Transfer Entry</button>
+                                        <button type="submit" name="initiate" onclick='return window.confirm("Are you confirm?");' class="btn btn-primary" style="font-size: 12px">Initiate Receive Entry</button>
                                     <?php } ?>
                         </td>
                         </tr>
@@ -272,7 +273,7 @@ if ($pi_tr > 0) {
 
 <?php if($uniqueid):?>
     <form action="<?=$page;?>" name="addem" id="addem" class="form-horizontal form-label-left" method="post" style="font-size: 11px">
-        <input type="hidden" name="<?=$unique;?>" id="<?=$unique;?>" value="<?=$_SESSION['uniqueid'];?>" >
+        <input type="hidden" name="<?=$unique;?>" id="<?=$unique;?>" value="<?=$_SESSION['receive_uniqueid'];?>" >
         <input type="hidden" name="ogt_date" id="ogt_date" value="<?=$ogt_date;?>">
         <input type="hidden" name="warehouse_id" id="warehouse_id" value="<?=$warehouse_id;?>">
         <input type="hidden" name="section_id" id="section_id" value="<?=$_SESSION['sectionid'];?>">
@@ -321,7 +322,6 @@ if ($pi_tr > 0) {
                 <th style="width: 2%">#</th>
                 <th style="text-align: center">Item Description</th>
                 <th style="text-align: center">Unit</th>
-                <th style="text-align: center">Stock Balance</th>
                 <th style="text-align: center">Qty</th>
                 <th style="text-align: center; display: none">Rate</th>
                 <th style="text-align: center; display: none">Amount</th>
@@ -338,26 +338,11 @@ if ($pi_tr > 0) {
                     $Manual_item=find_a_field("warehouse_goods_transfer_to_other_details", "SUM(total_unit)", "item_id='".$data->item_id."' and warehouse_from=".$warehouse_from." and status in ('MANUAL','UNCHECKED') and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
                     $stock_balance=$stock_balance_GET-$Manual_item;
                 ?>
-                    <script>
-                        function doAlert<?=$item_id?>(form)
-                        {
-                            var val=form.total_unit<?=$item_id?>.value;
-                            var val2=form.stock_balance<?=$item_id?>.value;
-                            if (Number(val)>Number(val2)){
-                                alert('oops!! Exceed Stock Balance!! Thanks');
-                                form.total_unit<?=$item_id?>.value='';
-                            }
-                            form.total_unit<?=$item_id?>.focus();
-                        }
-                    </script>
-            <tr>
 
+            <tr>
                 <td style="vertical-align: middle"><?=$i=$i+1;?></td>
                 <td style="vertical-align: middle"><?=$data->item_id?> - <?=$data->item_name?></td>
                 <td style="vertical-align: middle;width:10%; text-align:center"><?=$data->unit_name?></td>
-                <td style="vertical-align: middle;width:10%; text-align:center">
-                    <input type="text" id="stock_balance<?=$item_id?>" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;"   name="stock_balance<?=$item_id?>" readonly  class="form-control col-md-7 col-xs-12" value="<?=$stock_balance;?>" tabindex="-1" />
-                </td>
 
                 <td style="vertical-align: middle;width:10%; text-align:center">
                     <input type="text" id="total_unit<?=$item_id?>" onkeyup="doAlert<?=$item_id?>(this.form);" name="total_unit<?=$item_id?>" value="<?=$edit_value_total_unit?>" style="width:96%; margin-left:2%; height:25px;font-size: 11px; text-align:center;"  class="sum" tabindex="1" />
@@ -384,7 +369,7 @@ if ($pi_tr > 0) {
                     $('#totalPrice').val((sum).toFixed(2));
                 });
             </script>
-            <tr><th colspan="4">Total</th>
+            <tr><th colspan="3">Total</th>
                 <td><input type="number" id="totalPrice" style="width:98%; margin-left:2%; height:25px;text-align:center;font-size: 12px" readonly class="form-control col-md-7 col-xs-12" class="total_qty"></td></tr>
             <tr><td colspan="6"><button  type="submit" onclick='return window.confirm("Mr. <?php echo $_SESSION["username"]; ?>, Are you confirm?");' name="add" class="btn btn-primary" style="float: right; font-size: 12px; margin-right: 1%">Add items and proceed next</button></td></tr>
             </tbody>
