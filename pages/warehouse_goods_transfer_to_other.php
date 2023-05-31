@@ -123,7 +123,7 @@ $VATChallanno = @$VATChallanno;
 
 $stock_balance_single=find_a_field("journal_item", "SUM(item_in-item_ex)", "item_id='".$edit_value_item_id."' and warehouse_id=".$warehouse_id." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
-$res="Select t.id,concat(i.item_id,' : ', i.finish_goods_code, ' : ', i.item_name) as item_description,i.unit_name as unit,t.total_unit 
+$res="Select t.id,concat(i.item_id,' : ', ' : ', i.item_name) as item_description,i.unit_name as unit,t.total_unit 
 from 
 ".$table_details." t,item_info i 
 where   
@@ -391,6 +391,9 @@ if ($pi_tr > 0) {
         </table>
         <?php endif; ?>
     </form>
-    <?=added_data_delete_edit($res,$unique,$unique_GET,$COUNT_details_data,$page,'','');
+<?php
+    $total = find_a_field('warehouse_goods_transfer_to_other_details','SUM(total_unit)','uid='.$uniqueid.'');
+    ?>
+    <?=added_data_delete_edit($res,$unique,$unique_GET,$COUNT_details_data,$page,$total,'3');
     endif;?>
 <?=$html->footer_content();mysqli_close($conn);?>

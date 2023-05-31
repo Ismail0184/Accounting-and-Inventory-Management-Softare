@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/prodcution_transfer_checked.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/prodcution_transfer_checked.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/warehouse_STO_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_STO_view.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/warehouse_add_corporate_party.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_add_corporate_party.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/warehouse_goods_transfer.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_goods_transfer.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/warehouse_goods_transfer_to_other.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_goods_transfer_to_other.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/warehouse_transfer_other_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_transfer_other_view.php" afterDir="false" />
     </list>
@@ -49,7 +52,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/mac/Software/OOP ERP/Agrani/pages",
+    "last_opened_file_path": "/Users/mac/Software/OOP ERP/Agrani",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -170,7 +173,8 @@
       <workItem from="1685418000289" duration="4327000" />
       <workItem from="1685422363951" duration="1218000" />
       <workItem from="1685429720515" duration="1078000" />
-      <workItem from="1685433333666" duration="13123000" />
+      <workItem from="1685433333666" duration="13299000" />
+      <workItem from="1685506237512" duration="8258000" />
     </task>
     <servers />
   </component>

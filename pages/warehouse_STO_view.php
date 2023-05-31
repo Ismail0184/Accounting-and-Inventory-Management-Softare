@@ -2,10 +2,10 @@
 require_once 'support_file.php';
 $title='Production Report';
 $now=time();
-
 $unique='pi_no';
 $table="production_issue_master";
 $table_details="production_issue_detail";
+$journal_item="journal_item";
 $page='warehouse_STO_view.php';
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
@@ -20,6 +20,60 @@ if(prevent_multi_submit()){
         $_SESSION['initiate_production_transfer']=getSVALUE("".$table."", "custom_pi_no", " where ".$unique."=".$_GET[$unique]."");
         $type = 1;
         echo "<script>self.opener.location = 'warehouse_goods_transfer.php'; self.blur(); </script>";
+        echo "<script>window.close(); </script>";
+    }
+
+    //for modify PS information ...........................
+    if(isset($_POST['checked']))
+    {
+        $rs="Select d.*,i.*
+from 
+".$table_details." d,
+item_info i
+ where
+ i.item_id=d.item_id  and 
+ d.".$unique."=".$$unique."
+ order by d.id";
+        $pdetails=mysqli_query($conn, $rs);
+        while($row=mysqli_fetch_array($pdetails)){
+            $_POST['ji_date'] = date('Y-m-d');
+            $_POST['item_id'] = $row['item_id'];
+            $_POST['warehouse_id'] = $row['warehouse_from'];
+            $_POST['relevant_warehouse'] = $row['warehouse_to'];
+            $_POST['item_price'] = $row['unit_price'];
+            $_POST['item_ex'] = $row['total_unit'];
+            $_POST['total_amt'] = $_POST['item_ex']*$_POST['item_price'];
+            $_POST['Remarks'] = $row['Remarks'];
+            $_POST['batch'] = $row['batch'];
+            $_POST['tr_from'] = 'GoodsTransfer';
+            $_POST['tr_no'] = $_GET[$unique];
+            $_POST['sr_no'] = $row['id'];
+            $_POST['ip']=$ip;
+            $sent_to_warehouse_at=date('Y-m-d H:s:i');
+            $item_id=$row['item_id'];
+            $_SESSION['bqty_STO']=$row['total_unit'];
+            $create_date=date('Y-m-d');
+            $crud = new crud($journal_item);
+            $crud->insert();
+
+        }
+
+
+        $jv=next_journal_voucher_id();
+        $total_transfer_in_amount=find_a_field('journal_item','SUM(total_amt)','tr_from="GoodsTransfer" and tr_no='.$_GET[$unique]);
+        $warehouse_from=find_a_field('warehouse','ledger_id_FG','warehouse_id='.$STO_master->warehouse_from);
+        $warehouse_to_ledger=find_all_field('warehouse','','warehouse_id='.$STO_master->warehouse_to);
+        $narration='FG Transfer to '.$warehouse_to_ledger->warehouse_name.', IGT NO #'.$$unique.', Remarks # '.$STO_master->remarks;
+        $transaction_date=$STO_master->pi_date;
+        add_to_journal_new($transaction_date, $proj_id, $jv, $date, $warehouse_to_ledger->ledger_id, $narration, $total_transfer_in_amount, 0, 'GoodsTransfer', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+        add_to_journal_new($transaction_date, $proj_id, $jv, $date, $warehouse_from, $narration, 0, $total_transfer_in_amount, 'GoodsTransfer', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+        $up_master="UPDATE ".$table." SET verifi_status='CHECKED',verifi_by='$_SESSION[userid]',verify_at='$todayss',checked_by='".$_SESSION['userid']."',checked_at='$now' where ".$unique."=".$$unique."";
+        $update_table_master=mysqli_query($conn, $up_master);
+        $up_details="UPDATE ".$table_details." SET verifi_status='CHECKED',status='CHECKED',verifi_by='".$_SESSION['userid']."',verify_at='$todayss' where ".$unique."=".$unique."";
+        $update_table_details=mysqli_query($conn, $up_details);
+        $type=1;
+        unset($_POST);
+        echo "<script>self.opener.location = '".$page."'; self.blur(); </script>";
         echo "<script>window.close(); </script>";
     }
 
@@ -41,7 +95,7 @@ if(prevent_multi_submit()){
     }}
 
 // data query..................................
-if(isset($_POST[viewreport])){
+if(isset($_POST['viewreport'])){
     if($_POST['warehouse_from']>0) 			 $warehouse_from=$_POST['warehouse_from'];
     if(isset($warehouse_from))				{$warehouse_from_CON=' and m.warehouse_from='.$warehouse_from;}
     if($_POST['verifi_status']!=='') 		$verifi_status=$_POST['verifi_status'];
@@ -106,39 +160,31 @@ item_info i
                         $pdetails=mysqli_query($conn, $rs);
                         while($uncheckrow=mysqli_fetch_array($pdetails)){
                             ?>
-
                             <tr>
                                 <td style="width:3%; vertical-align:middle"><?=$js=$js+1;?></td>
-                                <td><?=$uncheckrow[custom_pi_no];?></td>
-                                <td style="text-align:left"><?=$uncheckrow[item_name];?></td>
-                                <td style="text-align:center"><?=$uncheckrow[unit_name];?></td>
-                                <td style="text-align:center"><?=$uncheckrow[pack_size];?></td>
-                                <td style="width:10%; text-align:center"><?=$uncheckrow[batch];?></td>
-                                <td align="right" style="width:15%; text-align:center"><?=$uncheckrow[total_unit];?></td>
+                                <td><?=$uncheckrow['custom_pi_no'];?></td>
+                                <td style="text-align:left"><?=$uncheckrow['item_name'];?></td>
+                                <td style="text-align:center"><?=$uncheckrow['unit_name'];?></td>
+                                <td style="text-align:center"><?=$uncheckrow['pack_size'];?></td>
+                                <td style="width:10%; text-align:center"><?=$uncheckrow['batch'];?></td>
+                                <td align="right" style="width:15%; text-align:center"><?=$uncheckrow['total_unit'];?></td>
                             </tr>
-                            <?php  $amountqty=$amountqty+$uncheckrow[total_unit];  } ?>
+                            <?php  $amountqty=$amountqty+$uncheckrow['total_unit'];  } ?>
                         <tr style="font-weight: bold"><td colspan="6" style="text-align: right">Total = </td>
                             <td style="text-align: center"><?=number_format($amountqty)?></td>
                         </tr>
                         </tbody></table>
-
-
-
-
                     <?php
                     $GET_status=find_a_field(''.$table.'','verifi_status',''.$unique.'='.$_GET[$unique]);
                     if($GET_status=='UNCHECKED' || $GET_status=='MANUAL' || $GET_status=='Manual' || $GET_status=='RETURNED'){
-                        if($STO_master->entry_by==$_SESSION[userid]){ ?>
+                        if($STO_master->entry_by==$_SESSION['userid']){ ?>
                     <p>
-                        <button style="float: left; font-size: 12px" type="submit" name="reprocess" id="reprocess" class="btn btn-primary" onclick='return window.confirm("Are you confirm?");'>Re-process & Update</button>
-                        <button style="float: right;font-size: 12px" type="submit" name="deleted" id="deleted" class="btn btn-danger" onclick='return window.confirm("Are you confirm?");'>Delete the STO</button>
+                        <button style="float: left; font-size: 12px" type="submit" name="reprocess" id="reprocess" class="btn btn-danger" onclick='return window.confirm("Are you confirm?");'>Re-process & Update</button>
+                        <button style="float: right;font-size: 12px" type="submit" name="checked" id="checked" class="btn btn-primary" onclick='return window.confirm("Are you confirm?");'>Check & Confirm</button>
                     </p>
                     <? } else { echo '<h6 style="text-align: center;color: red;  font-weight: bold"><i>Oops!! This STO was created by another user. So you are not able to do anything here!!</i></h6>'; } ?>
 
                         <? } else {echo '<h6 style="text-align: center;color: red;  font-weight: bold"><i>This Stock Transfer has been checked by QC !!</i></h6>';}?>
-
-
-
                 </form>
             </div>
         </div>
@@ -149,18 +195,17 @@ item_info i
 <form  name="addem" id="addem" class="form-horizontal form-label-left" method="post" >
     <table align="center" style="width: 50%;">
         <tr><td>
-            <input type="date"  style="width:150px; font-size: 11px;"  value="<?=($_POST[f_date]!='')? $_POST[f_date] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
+            <input type="date"  style="width:150px; font-size: 11px;"  value="<?=($_POST['f_date']!='')? $_POST['f_date'] : date('Y-m-01') ?>" required   name="f_date" class="form-control col-md-7 col-xs-12" >
             <td style="width:10px; text-align:center"> -</td>
-            <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?=($_POST[t_date]!='')? $_POST[t_date] : date('Y-m-d') ?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
+            <td><input type="date"  style="width:150px;font-size: 11px;"  value="<?=($_POST['t_date']!='')? $_POST['t_date'] : date('Y-m-d') ?>" required   name="t_date" class="form-control col-md-7 col-xs-12" ></td>
             <td style="width:10px; text-align:center"> -</td>
             <td><select class="form-control" style="width:200px; font-size: 11px;" tabindex="-1" required="required"  name="warehouse_from" id="warehouse_from">
                     <option selected></option>
-                    <?=advance_foreign_relation(check_plant_permission($_SESSION[userid]),($_POST[warehouse_from]>0 ? $_POST[warehouse_from] : $_SESSION[warehouse]));?> 
+                    <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),($_POST['warehouse_from']>0 ? $_POST['warehouse_from'] : $_SESSION['warehouse']));?>
                 </select></td>
             <td style="padding:10px"><button type="submit" style="font-size: 11px;" name="viewreport"  class="btn btn-primary">View STO</button></td>
         </tr></table>
     <?=$crud->report_templates_with_status($sql,$title='STO View');?>
 </form>
     <?php } ?>
-
 <?=$html->footer_content();?>

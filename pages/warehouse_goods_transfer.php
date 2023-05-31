@@ -239,7 +239,6 @@ if ($pi_tr > 0) {
                         <th style="text-align:center">:</th>
                         <td>
                             <select class="form-control" style="width:90%; font-size: 11px" tabindex="-1" required="required"  name="warehouse_from" id="warehouse_from">
-                                <option></option>
                                 <?php if(isset($_SESSION['initiate_production_transfer'])>0): ?>
                                     <option value="<?=$warehouse_from?>" selected><?=$warehouse_from?> : <?=find_a_field('warehouse','warehouse_name','warehouse_id='.$warehouse_from)?></option>
                                 <?php else: ?>

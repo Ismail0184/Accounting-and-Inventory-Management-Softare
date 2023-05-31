@@ -40,10 +40,6 @@ if(prevent_multi_submit()) {
 
 }
 
-
-
-
-
 if(isset($unique_GET))
 {   $condition=$unique."=".$unique_GET;
     $data=db_fetch_object($table,$condition);
@@ -105,28 +101,24 @@ $res = "SELECT d.dealer_code,d.dealer_name,d.contact_person,d.contact_number,d.c
                             <?php endif; ?>
                             <form  name="addem" id="addem" class="form-horizontal form-label-left" style="font-size: 11px" method="post">
                                 <? require_once 'support_html.php';?>
-
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Party Name <span class="required text-danger">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <input type="text" id="dealer_name" style="width:100%; font-size: 12px"  required   name="dealer_name" value="<?=$dealer_name;?>" class="form-control col-md-7 col-xs-12" >
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Contact Person</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <input type="text" id="contact_person" style="width:100%; font-size: 12px" name="contact_person" value="<?=$contact_person;?>" class="form-control col-md-7 col-xs-12" >
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Contact Number</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
                                         <input type="text" id="contact_number" style="width:100%; font-size: 12px" name="contact_number" value="<?=$contact_number;?>" class="form-control col-md-7 col-xs-12" >
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="width: 30%">Contact Person Designation</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12" style="width: 60%">
@@ -145,9 +137,6 @@ $res = "SELECT d.dealer_code,d.dealer_name,d.contact_person,d.contact_number,d.c
                                         <input type="text" id="ledger_id" style="width:100%; font-size: 12px" name="ledger_id" value="<?=$ledger_id;?>" class="form-control col-md-7 col-xs-12" >
                                     </div>
                                 </div>
-
-
-
                                 <hr/>
                                 <?php if($unique_GET>0):  ?>
                                     <div class="form-group" style="margin-left:40%">

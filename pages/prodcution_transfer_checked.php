@@ -180,7 +180,7 @@ item_info i
                             </tr>
                             <?php  $amountqty=$amountqty+$data->total_unit;} ?>
                         <tr style="font-weight: bold"><td colspan="6" style="text-align: right">Total = </td>
-                            <td style="text-align: center"><?=number_format($amountqty)?></td>
+                            <td style="text-align: center"><?=number_format($amountqty,2)?></td>
                         </tr>
                         </tbody></table>
 
