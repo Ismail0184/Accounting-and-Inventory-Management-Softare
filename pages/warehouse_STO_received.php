@@ -165,7 +165,6 @@ $narration='Goods Received from '.$received_from_warehouse.', STONO#'.$$unique.'
     require_once 'body_content.php';
 } ?>
 <?php if(isset($_GET[$unique])){ ?>
-    <!-- input section-->
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_content">
@@ -231,7 +230,7 @@ item_info i
                         </tbody>
                     </table>
 
-                    <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:">
+                    <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:none">
                         <thead>
                         <tr style="background-color: bisque">
                             <th>#</th>
