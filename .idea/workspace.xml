@@ -4,10 +4,6 @@
     <list default="true" id="71226dd0-c3e6-4da6-9d73-614e90e4c28e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/sales.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_goods_received_from_other_party.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_goods_received_from_other_party.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_goods_transfer_to_other.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_goods_transfer_to_other.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_receive_other_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_receive_other_view.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/warehouse_transfer_other_view.php" beforeDir="false" afterPath="$PROJECT_DIR$/pages/warehouse_transfer_other_view.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +174,8 @@
       <workItem from="1685528788608" duration="10000" />
       <workItem from="1685529415858" duration="2832000" />
       <workItem from="1685534763953" duration="2239000" />
-      <workItem from="1685591473982" duration="3165000" />
+      <workItem from="1685591473982" duration="4337000" />
+      <workItem from="1685601360034" duration="14000" />
     </task>
     <servers />
   </component>

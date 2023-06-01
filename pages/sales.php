@@ -3,7 +3,6 @@ require_once 'support_file.php';
 $page = 'sales.php';
 $table='sales_data_from_prism_software_gulshan';
 $table_master='sales_data_from_prism_software_filterd';
-$table_master_record='sales_data_from_prism_software_filterd_record';
 $unique_master='id';
 $sale_do_master='sale_do_master';
 $sale_do_details='sale_do_details';
@@ -225,7 +224,7 @@ endif;
                 <?php
                 $total_saless = 0;
 
-                $sql2 = mysqli_query($conn, "SELECT i.item_id,i.item_name,s.sales_date,i.t_price from item_info i, sales_data_from_prism_software_gulshan s where i.item_id=s.item_id");
+                $sql2 = mysqli_query($conn, "SELECT i.item_id,i.item_name,s.sales_date,i.t_price from item_info i, sales_data_from_prism_software_gulshan s where i.item_id=s.item_id and s.sales_date='".$_SESSION['sales_date']."' and s.section_id='".$_SESSION['sectionid']."' and s.company_id='".$_SESSION['companyid']."'");
                 while($data2=mysqli_fetch_object($sql2)){
                     $item_id = $data2->item_id;
                     $a = 'A';
@@ -246,12 +245,7 @@ endif;
                     $_POST['company_id'] = @$_SESSION['companyid'];
                     $_POST['sales_date'] = @$_SESSION['sales_date'];
                     if ($searchStatus=='manual') {
-                        $crud      =new crud($table_master);
                         $crud->insert();
-
-                        $crud      =new crud($table_master_record);
-                        $crud->insert();
-
                         $up=mysqli_query($conn, "UPDATE sales_data_from_prism_software_gulshan SET status='checked' where sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
                         unset($_POST);
                     }
@@ -313,7 +307,7 @@ endif;
                 //unset($_POST);
                 //unset($_SESSION['sales_date']);
             } ?>
-            <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:">
+            <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:none">
                 <thead>
                 <tr style="background-color: bisque">
                     <th>#</th>
