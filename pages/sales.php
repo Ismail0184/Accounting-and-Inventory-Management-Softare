@@ -3,6 +3,7 @@ require_once 'support_file.php';
 $page = 'sales.php';
 $table='sales_data_from_prism_software_gulshan';
 $table_master='sales_data_from_prism_software_filterd';
+$table_master_record='sales_data_from_prism_software_filterd_record';
 $unique_master='id';
 $sale_do_master='sale_do_master';
 $sale_do_details='sale_do_details';
@@ -245,7 +246,12 @@ endif;
                     $_POST['company_id'] = @$_SESSION['companyid'];
                     $_POST['sales_date'] = @$_SESSION['sales_date'];
                     if ($searchStatus=='manual') {
+                        $crud      =new crud($table_master);
                         $crud->insert();
+
+                        $crud      =new crud($table_master_record);
+                        $crud->insert();
+
                         $up=mysqli_query($conn, "UPDATE sales_data_from_prism_software_gulshan SET status='checked' where sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
                         unset($_POST);
                     }
@@ -290,23 +296,24 @@ endif;
             $find_chalan_no=find_a_field("sale_do_chalan","distinct chalan_no","do_no=".$data->do_no." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
             $narration="Sales by ".$dealer_master->dealer_name_e.', Invoice No # '.$data->do_no;
             $status = @$_REQUEST['status'];
+            $sdata =@$_SESSION['sales_date'];
             if ($status=='confirm') {
                 $date = $_SESSION['sales_date'];
                 $sales_ledger = $config_group_class->sales_ledger;
                 $COGS_sales = $config_group_class->cogs_sales;
 
                 if (($dealer_master->account_code > 0) && (($sales_ledger && $total_sales_amount) > 0)) {
-                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $dealer_master->account_code, $narration, $total_sales_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
-                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $sales_ledger, $narration, 0, $total_sales_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                    add_to_journal_new($sdata, 0, $jv, $date, $dealer_master->account_code, $narration, $total_sales_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                    add_to_journal_new($sdata, 0, $jv, $date, $sales_ledger, $narration, 0, $total_sales_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
                 } // sales start form here
                 if (($COGS_sales > 0) && (($inventory_ledger && $COGS_amount) > 0)) {
-                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $COGS_sales, $narration, $COGS_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
-                    add_to_journal_new($_SESSION['sales_date'], 0, $jv, $date, $inventory_ledger, $narration, 0, $COGS_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                    add_to_journal_new($sdata, 0, $jv, $date, $COGS_sales, $narration, $COGS_amount, 0, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
+                    add_to_journal_new($sdata, 0, $jv, $date, $inventory_ledger, $narration, 0, $COGS_amount, 'Sales', $data->do_no, $data->do_no, 0, 0, $_SESSION['usergroup'], '', $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear, $_POST['pc_code'], $data->do_no, '');
                 } // COGS start form here
-                unset($_POST);
-                unset($_SESSION['sales_date']);
+                //unset($_POST);
+                //unset($_SESSION['sales_date']);
             } ?>
-            <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:none">
+            <table align="center" class="table table-striped table-bordered" style="width:98%;font-size:11px; display:">
                 <thead>
                 <tr style="background-color: bisque">
                     <th>#</th>

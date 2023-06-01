@@ -7,7 +7,7 @@ $unique='uid';
 $table="warehouse_goods_transfer_to_other_master";
 $table_details="warehouse_goods_transfer_to_other_details";
 $journal_item = 'journal_item';
-$page='warehouse_transfer_other_view.php';
+$page='warehouse_receive_other_view.php';
 $crud      =new crud($table);
 $$unique = $_GET[$unique];
 $masterDATA=find_all_field(''.$table.'','',''.$unique.'='.$_GET['uid'].'');
@@ -18,9 +18,8 @@ if(prevent_multi_submit()){
     if (isset($_POST['reprocess'])) {
         $up="UPDATE ".$table." SET status='MANUAL' where ".$unique."=".$$unique."";
         $update_table_master=mysqli_query($conn, $up);
-        $_SESSION['uniqueid'] = $_GET[$unique];
-        $type = 1;
-        echo "<script>self.opener.location = 'warehouse_goods_transfer_to_other.php'; self.blur(); </script>";
+        $_SESSION['receive_uniqueid'] = $_GET[$unique];
+        echo "<script>self.opener.location = 'warehouse_goods_received_from_other_party.php'; self.blur(); </script>";
         echo "<script>window.close(); </script>";
     }
 
@@ -33,10 +32,10 @@ if(prevent_multi_submit()){
             $_POST['ji_date'] = $data->ogt_date;
             $_POST['item_id'] = $data->item_id;
             $_POST['warehouse_id'] = $data->warehouse_id;
-            $_POST['item_in'] = $data->total_unit;
+            $_POST['item_ex'] = $data->total_unit;
             $_POST['item_price'] = $data->unit_price;
             $_POST['total_amt'] = $data->total_unit*$data->unit_price;;
-            $_POST['tr_from'] = 'GoodsTransferToOther';
+            $_POST['tr_from'] = 'GoodsReceivedFromOther';
             $_POST['tr_no'] = $_GET[$unique];
             $_POST['sr_no'] = $_GET[$unique];
             $_POST['entry_by'] = $_SESSION['userid'];
@@ -48,13 +47,14 @@ if(prevent_multi_submit()){
             $total_amount = $total_amount+$data->total_amt;
         }
 
-        $narration = "Goods Transfer to ".$DealerMaster->dealer_name.", OGT No # ".$_GET['uid']."";
+        $narration = "Goods Received from ".$DealerMaster->dealer_name.", Ref No # ".$_GET['uid']."";
         $up_master=mysqli_query($conn,"UPDATE ".$table." SET status='COMPLETED',checked_by='".$_SESSION['userid']."',checked_at='".date('Y-m-d H:i:s')."' where uid=".$_GET['uid']."");
         $debit_ledger = @$DealerMaster->ledger_id;
         $credit_ledger = @$WarehouseMaster->ledger_id_FG;
         if($total_amount > 0 && ($debit_ledger>0) && $credit_ledger>0)  {
-            add_to_journal_new($masterDATA->ogt_date, $proj_id, $jv, $masterDATA->ogt_date, $debit_ledger, $narration, $total_amount,0, 'GoodsTransferToOther', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
-            add_to_journal_new($masterDATA->ogt_date, $proj_id, $jv, $masterDATA->ogt_date, $credit_ledger, $narration,0, $total_amount, 'GoodsTransferToOther', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+            add_to_journal_new($masterDATA->ogt_date, $proj_id, $jv, $masterDATA->ogt_date, $credit_ledger, $narration,$total_amount, 0, 'GoodsReceivedFromOther', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+            add_to_journal_new($masterDATA->ogt_date, $proj_id, $jv, $masterDATA->ogt_date, $debit_ledger, $narration, 0,$total_amount, 'GoodsReceivedFromOther', $$unique, $$unique, 0, 0, $_SESSION['usergroup'], $c_no, $c_date, $create_date, $ip, $now, $day, $thisday, $thismonth, $thisyear,'','','');
+
         }
         unset($_POST);
         echo "<script>self.opener.location = '".$page."'; self.blur(); </script>";
@@ -81,7 +81,7 @@ if(isset($_POST['viewreport'])){
     $sql="SELECT m.uid,m.custom_id,m.ogt_date as 'date',w.warehouse_name as warehouse,dealer_name as party,m.remarks,m.status as status from 
     ".$table." m, warehouse w,corporate_dealer_info d where
     w.warehouse_id=m.warehouse_id and 
-    d.dealer_code=m.dealer_code";
+    d.dealer_code=m.dealer_code and m.type in ('Received')";
 }
 ?>
 
@@ -109,7 +109,6 @@ if(isset($_POST['viewreport'])){
                             <th>Code</th>
                             <th>Item Description</th>
                             <th style="text-align: center">Unit</th>
-                            <th style="text-align: center">Stock Balance</th>
                             <th style="text-align:center">Transfer Qty</th>
                         </tr>
                         </thead>
@@ -121,22 +120,20 @@ if(isset($_POST['viewreport'])){
                         while($data=mysqli_fetch_object($pdetails)){
                             $stock_balance = find_a_field('journal_item','SUM(item_in-item_ex)','item_id="'.$data->item_id.'" and warehouse_id="'.$masterDATA->warehouse_id.'"');
                             $unrec_qty = $stock_balance-$data->total_unit; ?>
-                            <tr <?php if($unrec_qty<0){$cow++;?> style="background-color:red; color:white" <?php } ?>>
+                            <tr>
                                 <td style="width:3%; vertical-align:middle"><?=$js=$js+1;?></td>
                                 <td><?=$data->item_id;?></td>
                                 <td style="text-align:left"><?=$data->item_name;?></td>
                                 <td style="text-align:center"><?=$data->unit_name;?></td>
-                                <td style="vertical-align:middle; text-align:center" align="center"><input type="text" name="available_stock" style="width:80px; height:20px; font-size:11px" value="<?=$stock_balance?>" readonly class="form-control col-md-7 col-xs-12"></td>
                                 <td align="right" style="width:15%; text-align:center"><?=$data->total_unit;?></td>
                             </tr>
                             <?php $amountqty=$amountqty+$data->total_unit;  } ?>
-                        <tr style="font-weight: bold"><td colspan="5" style="text-align: right">Total = </td>
+                        <tr style="font-weight: bold"><td colspan="4" style="text-align: right">Total = </td>
                             <td style="text-align: center"><?=number_format($amountqty,2)?></td>
                         </tr>
                         </tbody></table>
                     <?php
                     $GET_status=find_a_field(''.$table.'','status',''.$unique.'='.$_GET[$unique]);
-                    if($cow<1){
                     if($GET_status=='UNCHECKED' || $GET_status=='MANUAL' || $GET_status=='Manual' || $GET_status=='RETURNED'){
                         if($masterDATA->entry_by==$_SESSION['userid']){ ?>
                     <p>
@@ -145,8 +142,6 @@ if(isset($_POST['viewreport'])){
                     </p>
                     <? } else { echo '<h6 style="text-align: center;color: red;  font-weight: bold"><i>Oops!! This STO was created by another user. So you are not able to do anything here!!</i></h6>'; } ?>
                     <? } else {echo '<h6 style="text-align: center;color: red;  font-weight: bold"><i>This Stock Transfer has been checked by QC !!</i></h6>';}?>
-                        <?php } else { ?>
-                    <h6 style="text-align: center;color: red;  font-weight: bold"><i>Oops! Some of the items have exceeded the stock balance!!</i></h6> <?php }?>
 
                 </form>
             </div>
@@ -166,7 +161,7 @@ if(isset($_POST['viewreport'])){
                     <option selected></option>
                     <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),($_POST['warehouse_id']>0 ? $_POST['warehouse_id'] : $_SESSION['warehouse']));?>
                 </select></td>
-            <td style="padding:10px"><button type="submit" style="font-size: 11px;" name="viewreport"  class="btn btn-primary">View OGT</button></td>
+            <td style="padding:10px"><button type="submit" style="font-size: 11px;" name="viewreport"  class="btn btn-primary">View Data</button></td>
         </tr></table>
     <?=$crud->report_templates_with_status($sql,$title='STO View');?>
 </form>

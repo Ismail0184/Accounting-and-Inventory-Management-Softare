@@ -1,6 +1,6 @@
 <?php require_once 'support_file.php'; ?>
 <?=(check_permission(basename($_SERVER['SCRIPT_NAME']))>0)? '' : header('Location: dashboard.php');
-$title='Goods Received From (Other)';
+$title='Goods Received From (other)';
 $sectionid_substr = @(substr($_SESSION['sectionid'],4));
 $now=time();
 $unique='uid';
@@ -63,8 +63,6 @@ if(prevent_multi_submit()){
 } /// prevent multi submit
 
 $unique_GET = @$_SESSION['receive_uniqueid'];
-
-
 
 if(isset($_POST['confirm']))
 {   $up="UPDATE ".$table." SET status='UNCHECKED' where ".$unique."='".$_SESSION['receive_uniqueid']."'";
@@ -192,7 +190,7 @@ if ($pi_tr > 0) {
                     <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_add_corporate_party.php">
                         <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">Add Party</span>
                     </a>
-            <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_transfer_other_view.php">
+            <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_receive_other_view.php">
                 <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">View Report</span>
             </a>
             <div class="clearfix"></div>

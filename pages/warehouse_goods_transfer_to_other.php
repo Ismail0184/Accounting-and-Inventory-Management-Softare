@@ -20,6 +20,7 @@ if(prevent_multi_submit()){
         $_POST['entry_at'] = date('Y-m-d H:s:i');
         $_SESSION['uniqueid']=$_POST['uid'];
         $_SESSION['status']='MANUAL';
+        $_POST['type'] = 'SEND';
         $_POST['create_date']=$create_date;
         $crud->insert();
         $type=1;

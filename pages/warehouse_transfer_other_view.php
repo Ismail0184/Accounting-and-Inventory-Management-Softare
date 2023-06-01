@@ -81,7 +81,8 @@ if(isset($_POST['viewreport'])){
     $sql="SELECT m.uid,m.custom_id,m.ogt_date as 'date',w.warehouse_name as warehouse,dealer_name as party,m.remarks,m.status as status from 
     ".$table." m, warehouse w,corporate_dealer_info d where
     w.warehouse_id=m.warehouse_id and 
-    d.dealer_code=m.dealer_code";
+    d.dealer_code=m.dealer_code and 
+    m.type='SEND'";
 }
 ?>
 
@@ -166,7 +167,7 @@ if(isset($_POST['viewreport'])){
                     <option selected></option>
                     <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),($_POST['warehouse_id']>0 ? $_POST['warehouse_id'] : $_SESSION['warehouse']));?>
                 </select></td>
-            <td style="padding:10px"><button type="submit" style="font-size: 11px;" name="viewreport"  class="btn btn-primary">View OGT</button></td>
+            <td style="padding:10px"><button type="submit" style="font-size: 11px;" name="viewreport"  class="btn btn-primary">View Data</button></td>
         </tr></table>
     <?=$crud->report_templates_with_status($sql,$title='STO View');?>
 </form>
