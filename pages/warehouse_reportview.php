@@ -1860,60 +1860,55 @@ $sql=mysqli_query($conn, $query);?>
       </tbody>
     </table>
 
-<?php } elseif ($_POST['report']=='60012'){?>
+<?php } elseif ($_POST['report_id']=='7004007'){?>
     <h2 align="center"><?=$_SESSION['company_name'];?></h2>
-    <h5 align="center" style="margin-top:-15px">Present Stock (Asset)</h5>
-    <h6 align="center" style="margin-top:-15px">Warehouse Name: <?= getSVALUE('warehouse','warehouse_name','WHERE warehouse_id="'.$_POST[warehouse_id].'"');?> </h6>
-    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST[f_date]?> to <?=$_POST[t_date]?></h6>
-    <table align="center"  style="width:80%; border: solid 1px #999; border-collapse:collapse; ">
+    <h5 align="center" style="margin-top:-15px">Daily Received, Transfer, Sales & Closing</h5>
+    <h6 align="center" style="margin-top:-15px">Warehouse Name: <?=find_a_field('warehouse','warehouse_name','warehouse_id="'.$_POST[warehouse_id].'"');?> </h6>
+    <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
+    <table align="center"  style="width:99%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
             echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
         <tr style="border: solid 1px #999;font-weight:bold; font-size:12px">
-            <th style="border: solid 1px #999; padding:2px">S/L</th>
-            <th style="border: solid 1px #999; padding:2px">Code</th>
-            <th style="border: solid 1px #999; padding:2px">FG Description</th>
-            <th style="border: solid 1px #999; padding:2px">FG Sub Group</th>
-            <th style="border: solid 1px #999; padding:2px">FG Group</div></th>
-            <th style="border: solid 1px #999; padding:2px">UOM</th>
-            <th style="border: solid 1px #999; padding:2px">Pk. Size</th>
-            <th style="border: solid 1px #999; padding:2px">Present Stock</th>
+            <th rowspan="2" style="border: solid 1px #999; padding:2px">S/L</th>
+            <th rowspan="2" style="border: solid 1px #999; padding:2px">Code</th>
+            <th rowspan="2" style="border: solid 1px #999; padding:2px">Brand Name</th>
+            <th rowspan="2" style="border: solid 1px #999; padding:2px">Opening Stock</th>
+            <th colspan="2" style="border: solid 1px #999; padding:2px">Received From</th>
+            <th rowspan="2" style="border: solid 1px #999; padding:2px">Total Sales</th>
+            <th colspan="2" style="border: solid 1px #999; padding:2px">Transfer to</th>
+        </tr>
+        <tr style="border: solid 1px #999;font-weight:bold; font-size:12px">
+            <th style="border: solid 1px #999; padding:2px">BAT</th>
+            <th style="border: solid 1px #999; padding:2px">Others Branch</th>
+            <th style="border: solid 1px #999; padding:2px">Badda, Moghbazar & Mirpur</th>
         </tr>
         </thead>
 
         <tbody>
         <?php
-        $fgresult="Select  j.item_id, i.item_id,i.item_name,i.finish_goods_code,i.unit_name,i.pack_size,i.serial, s.sub_group_id, s.group_id, g.group_id,s.sub_group_name,g.group_name,
-SUM(j.item_in-j.item_ex) as presentstock
+        $ismail = 0;
+        $fgresult="Select i.item_id,i.item_name,i.finish_goods_code,i.unit_name,i.pack_size,i.serial,
+       (select sum(item_in-item_ex) from journal_item where item_id=i.item_id and ji_date < '".$_POST['f_date']."' and warehouse_id=".$_POST['warehouse_id'].") as presentstock,
+       (select sum(item_in) from journal_item where item_id=i.item_id and ji_date='".$_POST['f_date']."' and warehouse_id=".$_POST['warehouse_id']." and tr_from='Purchase') as receivedfromBAT
 from
-item_info i,
-journal_item j,
-item_sub_group s,
-item_group g
+item_info i
 where
-j.item_id=i.item_id and
-j.warehouse_id='".$_POST[warehouse_id]."' and
-j.ji_date <= '".$to_date."' and
-i.sub_group_id=s.sub_group_id and
-s.group_id=g.group_id and
-g.group_id in ('".$_POST[group_id]."')
-group by j.item_id order by g.group_id DESC,i.serial";
+i.status='Active'
+ order by i.serial";
         $persentrow = mysqli_query($conn, $fgresult);
         while($data=mysqli_fetch_object($persentrow)){ ?>
             <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
                 <td style="border: solid 1px #999; text-align:center"><?=$ismail=$ismail+1;?></td>
                 <td style="border: solid 1px #999; text-align:center"><?=$data->item_id;?></td>
                 <td style="border: solid 1px #999; text-align:left"><?=$data->item_name;?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data->sub_group_name;?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data->group_name;?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data->unit_name;?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=$data->pack_size;?></td>
-                <td style="border: solid 1px #999; text-align:center"><?=number_format($pstock=$data->presentstock,2);?></td>
+                <td style="border: solid 1px #999; text-align:center"><?=$pstock=$data->presentstock;?></td>
+                <td style="border: solid 1px #999; text-align:center"><?=$pstock=$data->receivedfromBAT;?></td>
             </tr>
             <?php $ttotalclosing=$ttotalclosing+$pstock;  } ?>
         <tr style="font-size:12px; font-weight:bold; border: solid 1px #999;">
-            <td colspan="7" style="text-align:right;border: solid 1px #999;"> Total</td>
-            <td style="text-align:center;border: solid 1px #999; width: auto"><?=number_format($ttotalclosing,2)?></td>
+            <td colspan="3" style="text-align:right;border: solid 1px #999;"> Total</td>
+            <td style="text-align:center;border: solid 1px #999; width: auto"><?=$ttotalclosing?></td>
         </tr>
         </tbody>
     </table>
@@ -2119,24 +2114,9 @@ group by j.item_id order by g.group_id DESC,i.serial";
 
 </table>
 
-<?php
-
-
-
-}
-
-else
-
-{
-
-
-
+<?php } else {
 		if($sql==NULL) return NULL;
-
-		$res	 = mysqli_query($conn, $sql);
-
-		?>
-
+		$res	 = mysqli_query($conn, $sql); ?>
 		<table width="100%" border="0" cellpadding="2" cellspacing="0">
 		<thead>
 		<tr><td colspan="10" style="border:0px;">

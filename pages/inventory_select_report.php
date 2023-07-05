@@ -34,6 +34,10 @@ function reload1(form)
     </div>
     <div class="col-md-7 col-sm-12 col-xs-12">
         <div class="x_panel">
+            <div class="x_title">
+                <h2><small class="text-danger">field marked with * are mandatory</small></h2>
+                <div class="clearfix"></div>
+            </div>
             <div class="x_content">
                 <?php if ($report_id=='50000'):?>
                     <div class="form-group">
@@ -228,6 +232,32 @@ function reload1(form)
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval :<span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" style="font-size: 11px; width: 49%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-01');?>" class="form-control col-md-7 col-xs-12" required name="f_date">
+                            <input type="date" style="font-size: 11px; width: 49%; margin-left:2%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
+                        </div>
+                    </div>
+                <?php elseif ($report_id=='7004007'):?>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Warehouse <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="select2_single form-control" style="width:100%; font-size: 11px ;height: 25px" tabindex="-1" required   name="warehouse_id" id="warehouse_id">
+                                <option></option>
+                                <?=advance_foreign_relation(check_plant_permission($_SESSION['userid']),$_SESSION['warehouse']);?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Item Name</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="select2_single form-control" style="width: 100%" tabindex="-1" required="required" name="item_id" id="item_id">
+                                <option value="0"></option>
+                                <?=advance_foreign_relation(find_all_item($product_nature="'Salable','Both','Purchasable'"),1);?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <input type="date" style="font-size: 11px; width: 49%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-01');?>" class="form-control col-md-7 col-xs-12" required name="f_date">
                             <input type="date" style="font-size: 11px; width: 49%; margin-left:2%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">

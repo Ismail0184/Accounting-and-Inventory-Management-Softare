@@ -63,6 +63,12 @@ if(isset($_POST['search_data']))
     $_SESSION['sales_date'] = @$_POST['sales_date'];
     unset($_POST);
 }
+
+if(isset($_POST['cancel_date']))
+{
+    unset($_SESSION['sales_date']);
+    unset($_POST);
+}
 $sales_date = @$_SESSION['sales_date'];
 $COUNT_details_data=find_a_field("".$table."","Count(id)","sales_date='".$sales_date."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
 
@@ -182,7 +188,11 @@ endif;
                         <tr>
                             <th>Sales Date <span class="required text-danger">*</span></th>
                             <td><input type="date" style="font-size: 11px;" max="<?=date('Y-m-d');?>" min="<?=date('Y-m-d', strtotime($date=date('Y-m-d') .' -'.find_a_field('acc_voucher_config','back_date_limit','1'). 'day'));?>" value="<?=($sales_date!='')? $sales_date : date('Y-m-d') ?>" class="form-control col-md-7 col-xs-12" required name="sales_date"></td>
+
                             <td align="center"><button type="submit" name="search_data" class="btn btn-primary" style="font-size: 11px">Search Uploaded Data</button></td>
+                            <?php if(isset($_SESSION['sales_date'])){ ?>
+                            <td align="center"><button type="submit" name="cancel_date" class="btn btn-danger" style="font-size: 11px">Cancel Date</button></td>
+                            <?php } ?>
                             <?php
                             $searchStatus = find_a_field("sales_data_from_prism_software_gulshan","distinct status","sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
                             if($COUNT_details_data>0){
@@ -207,14 +217,15 @@ endif;
                 <th>Date</th>
                 <th>Route - Section</th>
                 <th>Item Description</th>
-                <th>Qty</th>
                 <th>Rate</th>
+                <th>Qty</th>
                 <th>Amount</th>
             </tr>
             <?php
             $i = 0;
             $total_saless = 0;
             $total_salesss = 0;
+            $total_volumes = 0;
             $searchStatus = find_a_field("sales_data_from_prism_software_gulshan","distinct status","sales_date='".$_SESSION['sales_date']."' and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");
             $sql = mysqli_query($conn, "SELECT *  FROM dealer_info where section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."' and canceled='Yes' order by dealer_custom_code");
             while($data=mysqli_fetch_object($sql)){
@@ -223,6 +234,7 @@ endif;
                 <tr style="background-color: #00ADEE; color: white"><td colspan="8">Route : <?=($data->dealer_custom_code=='24')? 'Counter' : $data->dealer_custom_code; ?></td></tr>
                 <?php
                 $total_saless = 0;
+                $total_volume = 0;
 
                 $sql2 = mysqli_query($conn, "SELECT i.item_id,i.item_name,s.sales_date,i.t_price from item_info i, sales_data_from_prism_software_gulshan s where i.item_id=s.item_id and s.sales_date='".$_SESSION['sales_date']."' and s.section_id='".$_SESSION['sectionid']."' and s.company_id='".$_SESSION['companyid']."'");
                 while($data2=mysqli_fetch_object($sql2)){
@@ -258,21 +270,25 @@ endif;
                         <td><?=$data2->sales_date;?></td>
                         <td><?=$data->dealer_code;?></td>
                         <td><?=$data2->item_id;?> : <?=$data2->item_name;?></td>
-                        <td><?=$Get_qty?><input type="text" name="qty_<?=$a.$item_id?>" style="display: none" value="<?=$Get_qty?>"></td>
                         <td><?=$data2->t_price;?></td>
+                        <td class="text-center"><?=$Get_qty?><input type="text" name="qty_<?=$a.$item_id?>" style="display: none" value="<?=$Get_qty?>"></td>
                         <td style="text-align: right"><?=number_format(($total_sales=$Get_qty*$data2->t_price),3);?></td>
                     </tr>
 
                     <?php
 
+                    $total_volume = $total_volume+$Get_qty;
+                    $total_volumes = $total_volumes+$total_volume;
                     $total_saless = $total_saless+$total_sales;
                     $total_salesss = $total_salesss+$total_sales;
                 }}?>
-                <tr><th colspan="6" style="text-align: right">Total Sales Value of Route - <?=$data->dealer_code;?>  = </th>
+                <tr><th colspan="5" style="text-align: right">Total Sales Value of Route - <?=$data->dealer_code;?>  = </th>
+                    <th style="text-align: center"><?=$total_volume?></th>
                     <th style="text-align: right"><?=number_format($total_saless,2)?></th>
                 </tr>
             <?php }?>
-            <tr><th colspan="6" style="text-align: right">Total Sales Value = </th>
+            <tr><th colspan="5" style="text-align: right">Total Sales Value = </th>
+                <th style="text-align: center"><?=$total_volumes?></th>
                 <th style="text-align: right"><?=number_format($total_salesss,2)?></th>
             </tr>
             </thead>

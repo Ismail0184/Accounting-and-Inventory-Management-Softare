@@ -20,7 +20,7 @@ if(prevent_multi_submit()){
         } else {
         $_POST['section_id'] = $_SESSION['sectionid'];
         $_POST['company_id'] = $_SESSION['companyid'];
-        $_POST['ISSUE_TYPE']='STO';
+        $_POST['ISSUE_TYPE']='IGR';
         $d =$_POST['pi_date'];
         $_POST['pi_date']=date('Y-m-d' , strtotime($d));
         $_POST['entry_by'] = $_SESSION['userid'];
@@ -203,7 +203,7 @@ if ($pi_tr > 0) {
     <div class="x_panel">
         <div class="x_title">
             <h2><?=$title;?> <small class="text-danger">field marked with * are mandatory</small></h2>
-                    <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_STO_view.php">
+                    <a target="_new" style="float: right" class="btn btn-sm btn-default"  href="warehouse_manual_received_from_godown_view.php">
                         <i class="fa fa-plus-circle"></i> <span class="language" style="color:#000; font-size: 11px">View Report</span>
                     </a>
             <div class="clearfix"></div>
@@ -361,7 +361,7 @@ if ($pi_tr > 0) {
             <tbody>
             <?php
                 $i = 0;
-                $sql = mysqli_query($conn, "SELECT * from item_info where d_price>0 order by serial");
+                $sql = mysqli_query($conn, "SELECT * from item_info where d_price>0 and status='Active' order by serial");
                 while($data=mysqli_fetch_object($sql)):
                 $item_id = @$data->item_id;
                 $present_stock_sql=find_a_field("journal_item", "SUM(item_in-item_ex)", "item_id='".$data->item_id."' and warehouse_id=".$warehouse_from." and section_id='".$_SESSION['sectionid']."' and company_id='".$_SESSION['companyid']."'");;
