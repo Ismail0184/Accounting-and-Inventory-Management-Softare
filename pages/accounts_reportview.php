@@ -280,7 +280,7 @@ order by a.jvdate,a.id";
     </style>
     <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
     <p align="center" style="margin-top:-20px">Statement of <?=find_a_field('accounts_ledger','ledger_name','ledger_id='.$_POST['ledger_id'])?></p>
-    <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST['t_date']?></p>
+    <p align="center" style="margin-top:-12px; font-size: 11px">Date:<?=$_POST['f_date']?> to <?=$_POST['t_date']?></p>
     <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
         <thead>
         <p style="width:85%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
@@ -299,7 +299,7 @@ order by a.jvdate,a.id";
         $cr_total = 0;
         $sql = mysqli_query($conn, "SELECT a.* from sub_ledger a where a.ledger_id=".$_POST['ledger_id']."".$sec_com_connection."");
         while($data=mysqli_fetch_object($sql)){
-            $sl_sql = "SELECT SUM(a.dr_amt) as dr_amt,SUM(a.cr_amt) as cr_amt from journal a where a.ledger_id=".$data->sub_ledger_id;
+            $sl_sql = "SELECT SUM(a.dr_amt) as dr_amt,SUM(a.cr_amt) as cr_amt from journal a where a.jvdate between '".$_POST['f_date']."' and '".$_POST['t_date']."' and a.ledger_id=".$data->sub_ledger_id;
             $sl_result = mysqli_query($conn, $sl_sql);
             $sl_data=mysqli_fetch_object($sl_result);
 
@@ -307,7 +307,7 @@ order by a.jvdate,a.id";
             $ssl_cr_total = 0;
         $sql_sub_sub_ledger = mysqli_query($conn, "SELECT a.* from sub_sub_ledger a where a.sub_ledger_id=".$data->sub_ledger_id."".$sec_com_connection."");
         while($data2=mysqli_fetch_object($sql_sub_sub_ledger)) {
-            $ssl_sql = "SELECT SUM(a.dr_amt) as dr_amt,SUM(a.cr_amt) as cr_amt from journal a where a.ledger_id=" . $data2->sub_sub_ledger_id;
+            $ssl_sql = "SELECT SUM(a.dr_amt) as dr_amt,SUM(a.cr_amt) as cr_amt from journal a where a.jvdate between '".$_POST['f_date']."' and '".$_POST['t_date']."' and  a.ledger_id=" . $data2->sub_sub_ledger_id;
             $ssl_result = mysqli_query($conn, $ssl_sql);
             $ssl_data = mysqli_fetch_object($ssl_result);
 
@@ -386,7 +386,7 @@ order by a.jvdate,a.id";
         $cr_total = 0;
         $sql = mysqli_query($conn, "SELECT a.* from sub_sub_ledger a where a.sub_ledger_id=".$_POST['sub_ledger_id']."".$sec_com_connection."");
         while($data=mysqli_fetch_object($sql)){
-            $sl_sql = "SELECT SUM(a.dr_amt) as dr_amt,SUM(a.cr_amt) as cr_amt from journal a where a.ledger_id=".$data->sub_sub_ledger_id;
+            $sl_sql = "SELECT SUM(a.dr_amt) as dr_amt,SUM(a.cr_amt) as cr_amt from journal a where a.jvdate between '".$_POST['f_date']."' and '".$_POST['t_date']."' and a.ledger_id=".$data->sub_sub_ledger_id;
             $sl_result = mysqli_query($conn, $sl_sql);
             $sl_data=mysqli_fetch_object($sl_result);
             $dr = @$sl_data->dr_amt;
@@ -1056,9 +1056,6 @@ order by c.do_no";
             $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
             $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
         }
-
-
-
         $cash_and_bank_balance=find_a_field("ledger_group","group_id","group_id='1002'".$sec_com_connection_wa."");
         $led=mysqli_query($conn, "select ledger_id,ledger_name from accounts_ledger where ledger_group_id='$cash_and_bank_balance'".$sec_com_connection_wa." order by ledger_id");
         $data = '[';
@@ -1259,6 +1256,175 @@ order by c.do_no";
                         {if($cl_to<0) echo "(".number_format($cl_to*(-1)+$re_to,2).")"; else echo number_format($cl_to+$re_to,2);}?>
                     </strong>
                 </th>
+            </tr>
+        </table>
+
+    <?php elseif ($_POST['report_id']=='1002011'):?>
+        <?php
+        if($sectionid=='400000'){
+            $sec_com_connection=' and 1';
+            $sec_com_connection_wa=' and 1';
+        } else {
+            $sec_com_connection=" and a.company_id='".$_SESSION['companyid']."' and a.section_id in ('400000','".$_SESSION['sectionid']."')";
+            $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+        }
+        $cash_and_bank_balance =find_a_field('sub_ledger','sub_ledger_id','ledger_id="1002000100000000"'.$sec_com_connection_wa);
+
+        if($_REQUEST['ledger_id']>0)
+        {$ledger_con = 'b.ledger_id="'.$_REQUEST['ledger_id'].'"';
+            $ledger_conx = 'a.relavent_cash_head="'.$_REQUEST['ledger_id'].'"';
+        }else {$ledger_con = 'b.ledger_group_id="'.$cash_and_bank_balance.'"';
+            $ledger_conx = '1';}
+        ?>
+        <h2 align="center"><?=$_SESSION['company_name'];?></h2>
+        <h4 align="center" style="margin-top:-15px">Receipt & Payment Statement (Cash)</h4>
+        <?php if ($_POST['cc_code']>0) { ?><h4 align="center" style="margin-top:-15px">Cost Center :  <?=find_a_field('cost_center','center_name','id="'.$_POST['cc_code'].'"');?> </h4><?php } ?>
+        <h6 align="center" style="margin-top:-15px">Report From <?=$_POST['f_date']?> to <?=$_POST['t_date']?></h6>
+        <table align="center"  style="width:70%; border: solid 1px #999; border-collapse:collapse;font-size:12px">
+            <thead>
+            <tr style="background-color: #f5f5f5"><th height="20" colspan="5" align="left">Opening Cash Balance</th></tr></thead>
+                <tr  style="font-size: 12px">
+                    <td style="border: solid 1px #999; padding:2px"><?=find_a_field('sub_ledger','sub_ledger','ledger_id="1002000100000000"'.$sec_com_connection_wa)?></td>
+                    <td style="border: solid 1px #999; padding:2px; text-align: right">
+                        <?php
+                        $op_b1="select (SUM(dr_amt)-SUM(cr_amt)) as balance from journal a, accounts_ledger b where a.ledger_id='".$cash_and_bank_balance."' and a.ledger_id=b.ledger_id and jvdate < '$f_date'".$sec_com_connection."";
+                        $op_res = mysqli_query($conn, $op_b1);
+                        $op_data=mysqli_fetch_object($op_res);
+                        echo number_format(($op_data->balance),2);
+                        ?>
+                    </td>
+                </tr>
+
+
+            <tr style="font-size: 12px; background-color: #f5f5f5"><th align="right" style="border: solid 1px #999; padding:2px"><strong>Total : </strong></th>
+                <th align="right" style="border: solid 1px #999; padding:2px"><?php if($op_data->balance==0) echo "0.00"; else
+                    {if($op_data->balance<0) echo "(".number_format($op_data->balance*(-1),2).")"; else echo number_format($op_data->balance,2);}?></th></tr>
+        </table>
+        <br /><br />
+        <table align="center"  style="width:70%; border: solid 1px #999; border-collapse:collapse;font-size: 12px ">
+            <thead>
+            <tr >
+                <th height="20" colspan="5" align="left" style="border: solid 1px #999; padding:2px">Receipt</th>
+            </tr>
+            </thead>
+
+
+
+            <?php
+            $p = "select DISTINCT(group_name),SUM(cr_amt),b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and a.tr_from='Receipt' and a.ledger_id!='".$cash_and_bank_balance."' and ".$ledger_conx."".$sec_com_connection." GROUP BY group_name order by c.group_id";
+            $pi=0;
+            $re_to=0;
+            $sql=mysqli_query($conn, $p);
+            while($data=mysqli_fetch_row($sql))
+            {            $pi++;
+                $re_to=$re_to+$data[1];
+                ?>
+                <tr style="font-weight: bold; background-color: #f5f5f5">
+                    <td width="19%" align="center" style="border: solid 1px #999; padding:2px"><?php echo $pi;?></td>
+                    <td colspan="2" align="left" style="border: solid 1px #999; padding:2px"><?php echo $data[0];?></td>
+                    <td colspan="2" align="right" style="border: solid 1px #999; padding:2px"><?php echo number_format($data[1],2);?></td>
+                </tr>
+                <?php
+                $cc_code = (int) $_REQUEST['cc_code'];
+                if($cc_code > 0)
+                {
+                    $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt'".$sec_com_connection." and a.ledger_id!=a.relavent_cash_head and ".$ledger_conx." AND a.cc_code=$cc_code GROUP BY ledger_name order by b.ledger_id";
+                }   else {
+                    $Lg="select DISTINCT(b.ledger_name),SUM(cr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Receipt'".$sec_com_connection." and a.ledger_id!='".$cash_and_bank_balance."' and ".$ledger_conx." GROUP BY ledger_name order by b.ledger_id";
+                }   $Li=0;
+                $Lsql=mysqli_query($conn, $Lg);
+                while($Ldata=mysqli_fetch_row($Lsql)){
+                    $Li++;?>
+                    <tr onclick="DoNav('<?php echo $f_date;?>','<?php echo $t_date;?>','<?php echo $Ldata[2];?>');">
+                        <td width="19%" align="center" style="border: solid 1px #999; padding:2px">&nbsp;</td>
+                        <td width="14%" align="center" style="border: solid 1px #999; padding:2px"><?php echo $pi.'.'.$Li;?></td>
+                        <td align="left" style="border: solid 1px #999; padding:2px"><?php echo $Ldata[0];?></td>
+                        <td width="22%" align="right" style="border: solid 1px #999; padding:2px"><?php echo $Ldata[1];?></td>
+                        <td width="15%" align="right" style="border: solid 1px #999; padding:2px">&nbsp;</td>
+                    </tr>
+                <?php }?>
+            <?php }?>
+            <tr style="background-color: #f5f5f5"><th colspan="3" align="right" style="border: solid 1px #999; padding:2px"><strong>Total : </strong></th>
+                <th colspan="2" align="right" style="border: solid 1px #999; padding:2px"><strong><?php if($re_to==0) echo "0.00"; else echo number_format($re_to,2);?></strong></th>
+            </tr>
+            <tr style="background-color: #f5f5f5"><th colspan="3" align="right" style="border: solid 1px #999; padding:2px">Grand Total : </th>
+                <th colspan="2" align="right" style="border: solid 1px #999; padding:2px"><strong>
+                        <?php if(($op_to+$re_to)==0) echo "0.00"; else
+                        {if(($op_to+$re_to)<0) echo "(".number_format(($op_to+$re_to)*(-1),2).")"; else echo number_format(($op_to+$re_to),2);}?>
+                    </strong></th></tr></table>
+        <br /><br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <table align="center"  style="width:70%; border: solid 1px #999; border-collapse:collapse;font-size: 12px ">
+            <thead>
+            <tr style="background-color: #f5f5f5"><th height="20" colspan="5" align="left">Payment</th></tr>
+            </thead>
+            <?php
+            $p ="select DISTINCT(group_name),SUM(dr_amt), b.ledger_group_id from journal a,accounts_ledger b,ledger_group c where a.ledger_id = b.ledger_id and b.ledger_group_id=c.group_id and b.ledger_id not in ('".$cash_and_bank_balance."') and a.tr_from in ('Payment','Contra') and a.jvdate>='$f_date' and a.jvdate<='$t_date' and ".$ledger_conx."".$sec_com_connection." GROUP BY group_name order by b.ledger_id";
+
+            $pi=0;
+            $payment_to=0;
+            $sql=mysqli_query($conn, $p);
+            while($data=mysqli_fetch_row($sql))
+            {
+                $pi++;
+                $payment_to=$payment_to+$data[1];
+                ?>
+                <tr style="font-weight: bold; background-color: #f5f5f5">
+                    <td align="center" style="border: solid 1px #999; padding:2px"><?=$pi;?></td>
+                    <td colspan="2" align="left" style="border: solid 1px #999; padding:2px"><?=$data[0];?></td>
+                    <td colspan="2" align="right" style="border: solid 1px #999; padding:2px"><?=number_format($data[1],2);?></td>
+                </tr>
+                <?php
+                $cc_code = (int) $_REQUEST['cc_code'];
+                if($cc_code > 0)
+                {
+                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from='Payment'".$sec_com_connection." AND a.cc_code=$cc_code GROUP BY ledger_name";
+                }   else   {
+                    $Lg="select DISTINCT(b.ledger_name),SUM(dr_amt),b.ledger_id from journal a,accounts_ledger b where a.ledger_id = b.ledger_id and a.jvdate>='$f_date' and a.jvdate<='$t_date' and b.ledger_group_id='$data[2]' and a.tr_from in ('Payment','Contra')".$sec_com_connection." GROUP BY ledger_name";
+                }
+                $Li=0;
+                $Lsql=mysqli_query($conn, $Lg);
+                while($Ldata=mysqli_fetch_row($Lsql)){
+                    $Li++;
+                    //$re_to=$re_to+$data[1];
+                    ?>
+                    <tr>
+                    <td width="19%" align="center" style="border: solid 1px #999; padding:2px">&nbsp;</td>
+                    <td width="14%" align="center" style="border: solid 1px #999; padding:2px"><?php echo $pi.'.'.$Li;?></td>
+                    <td align="left" style="border: solid 1px #999; padding:2px"><?php echo $Ldata[0];?></td>
+                    <td width="22%" align="right" style="border: solid 1px #999; padding:2px"><?php echo $Ldata[1];?></td>
+                    <td width="15%" align="right" style="border: solid 1px #999; padding:2px">&nbsp;</td>
+                    </tr><?php }?>
+
+                <tr style="background-color: #f5f5f5">
+                    <th colspan="3" align="right" style="border: solid 1px #999; padding:2px"><strong>Total : </strong></th>
+                    <th colspan="2" align="right" style="border: solid 1px #999; padding:2px"><strong>
+                            <?php if($payment_to==0) echo "0.00"; else echo number_format($payment_to,2);?>
+                        </strong></th></tr>
+            <?php }?>
+        </table><br /><br />
+        <table align="center"  style="width:70%; border: solid 1px #999; border-collapse:collapse;font-size: 12px ">
+            <thead>
+            <tr style="background-color: #f5f5f5"><th colspan="2" align="left" style="border: solid 1px #999; padding:2px">Closing Cash Balance </th>
+            </tr>
+            <thead>
+            <tr  style="font-size: 12px">
+                <td style="border: solid 1px #999; padding:2px"><?=find_a_field('sub_ledger','sub_ledger','ledger_id="1002000100000000"'.$sec_com_connection_wa)?></td>
+                <td style="border: solid 1px #999; padding:2px; text-align: right">
+                    <?php echo number_format((($op_data->balance+$re_to)-$payment_to),2); ?>
+                </td>
             </tr>
         </table>
 
@@ -1911,97 +2077,79 @@ group by lld.item_id
                 <?php } else { ?> <h5 align="center" style="color:red; font-weight: italic; font-weight: bold">This LC has not yet been received!!</h5><?php } ?>
         </form>
 
-
-
-
-    <?php elseif ($_POST['report_id']=='1002005'): ?>
-
+    <?php elseif ($_POST['report_id']=='1002005'):?>
+        <title>Trade Account Receivable (Market Due)</title>
         <style>
-            #customers {}
-            #customers td {}
+            #customers {
+                font-family: "Gill Sans", sans-serif;
+            }
+            #customers td {
+            }
             #customers tr:ntd-child(even)
             {background-color: #f0f0f0;}
-            #customers tr:hover {background-color: #FFCCFF;}
-            td{}
-        </style>
-        <title><?=$_SESSION['company_name'];?> | Account Receivable Status</title>
-        <p align="center" style="margin-top:-5px; font-weight: bold; font-size: 22px"><?=$_SESSION['company_name'];?></p>
-        <p align="center" style="margin-top:-15px; font-size: 15px">Account Receiable Status</p>
-        <p align="center" style="margin-top:-15px; font-size: 15px">As On: <?=$_POST['t_date'];?></p>
-        <?php if($_POST['dealer_type']){?>
-            <p align="center" style="margin-top:-15px; font-size: 15px">Customer Type: <?=$_POST['dealer_type'];?></p>
-        <?php } ?>
-        <table align="center" id="customers"  style="width:90%; border: solid 1px #999; border-collapse:collapse; ">
-            <thead>
-            <p style="width:90%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
-                echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
+            #customers tr:hover {background-color: #f5f5f5;}
+            td{
+                text-align: center;
 
-            <tr style="border: solid 1px #999;font-weight:bold; font-size:11px; background-color:#FFCCFF">
-                <th style="border: solid 1px #999; padding:2px">SL</th>
-                <th style="border: solid 1px #999; padding:2px; width:5%">Code</th>
-                <th style="border: solid 1px #999; padding:2px; width:10%">Accounts Code</th>
-                <th style="border: solid 1px #999; padding:2px">Customer Name</th>
-                <th style="border: solid 1px #999; padding:2px">Town</th>
-                <th style="border: solid 1px #999; padding:2px">Territory</th>
-                <th style="border: solid 1px #999; padding:2px">Region</th>
-                <th style="border: solid 1px #999; padding:2px">Current Balance</th>
-            </tr>
-            </thead>
+            }
+        </style>
+        <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
+        <p align="center" style="margin-top:-20px">Trade Account Receivable (Market Due)</p>
+        <p align="center" style="margin-top:-12px; font-size: 11px">As On: <?=$_POST['t_date']?></p>
+        <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
+            <thead>
+            <p style="width:85%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
+                echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
+            <tr style="border: solid 1px #999;font-weight:bold; font-size:12px" >
+                <th style="border: solid 1px #999; padding:2px; width: 4%"><strong>SL</strong></th>
+                <th style="border: solid 1px #999; padding:2px;"><strong>Account Particulars</strong></th>
+                <th style="border: solid 1px #999; padding:2px; width:15%"><strong>Debit Amount</strong></th>
+                <th style="border: solid 1px #999; padding:2px; width:15%"><strong>Credit Amount</strong></th>
+                <th style="border: solid 1px #999; padding:2px; width:15%"><strong>Balance</strong></th>
+            </tr></thead>
             <tbody>
             <?php
 
-            $datecon=' and j.jvdate<"'.$_POST['t_date'].'"';
-
-            if ($_POST['dealer_type'] != '' && $_POST['dealer_type'] != 'All') {
-                $dealer_type_conn=" and d.dealer_type='" . $_POST['dealer_type'] . "'";
+            if($sectionid=='400000'){
+                $sec_com_connectionT=' and 1';
             } else {
-                $dealer_type_conn=" and 1";
+                $sec_com_connectionT=" and b.section_id='".$_SESSION['sectionid']."' and b.company_id='".$_SESSION['companyid']."'";
             }
-            $totalactualcollection = 0;
-            $i                     = 0;
-            $result=mysqli_query($conn, "Select
-				d.dealer_code,
-				d.account_code,
-				d.dealer_name_e as dealername,
-				t.town_name as town,
-				a.AREA_NAME as territory,
-				b.BRANCH_NAME as region,
-				SUM(j.cr_amt-j.dr_amt) actualcollection
-				from
-				dealer_info d,
-				town t,
-				area a,
-				branch b,
-				journal j
-				where
-				d.town_code=t.town_code and
-				a.AREA_CODE=d.area_code and
-				 d.region=b.BRANCH_ID and
-				j.ledger_id=d.account_code and
-				d.company_id='".$_SESSION['companyid']."' and d.section_id in ('400000','".$_SESSION['sectionid']."')
-				".$datecon.$dealer_type_conn."
-				group by d.dealer_code order by b.sl,d.dealer_code");
-            $query2 = $result;
-            while($data=mysqli_fetch_object($query2)){ ?>
-                <tr style="border: solid 1px #999; font-size:11px; font-weight:normal">
-                    <td style="border: solid 1px #999; text-align:center"><?=$i=$i+1;?></td>
-                    <td style="border: solid 1px #999; text-align:center"><?=$data->dealer_code;?></td>
-                    <td style="border: solid 1px #999; text-align:center"><?=$data->account_code;?></td>
-                    <td style="border: solid 1px #999; text-align:left; padding:5px"><?=$data->dealername;?></td>
-                    <td style="border: solid 1px #999; text-align:left; padding:5px; width:10%"><?=$data->town;?></td>
-                    <td style="border: solid 1px #999; padding:5px"><?=$data->territory;?></td>
-                    <td style="border: solid 1px #999; text-align:left; padding:2px"><?=$data->region;?></td>
-                    <td style="border: solid 1px #999; text-align:right; padding:2px"><strong><?=number_format($actualcollection=$data->actualcollection,2);?></strong></td>
+            $total_dr=0;
+            $total_cr=0;
+
+                $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id between '1006000900000000' and '1006000901000000' and a.ledger_id=b.ledger_id and b.jvdate<= '$t_date' and a.ledger_group_id='1006' and 1 ".$sec_com_connectionT."  group by ledger_name order by a.ledger_id";
+                $pi=0;
+                //$t_dr = 0;
+                //$t_cr = 0;
+                $sql=mysqli_query($conn, $p);
+                while($p=mysqli_fetch_row($sql)){
+                    $pi++;
+                    $dr=$p[1];
+                    $cr=$p[2];
+                    ?>
+                    <tr style="border: solid 1px #999; font-size:11px">
+                        <td style="border: solid 1px #999; padding:2px; text-align: center"><?=$pi;?></td>
+                        <td style="border: solid 1px #999; padding:2px 10px 2px 2px; text-align: left"><?=$p[3];?> - <?=$p[0];?></td>
+                        <td style="border: solid 1px #999; padding:2px; text-align: right"><?=number_format($dr,2);?></td>
+                        <td style="border: solid 1px #999; padding:2px; text-align: right"><?=number_format($cr,2);?></td>
+                        <td style="border: solid 1px #999; padding:2px; text-align: right"><?=number_format($dr-$cr,2);?></td>
+                    </tr>
+                    <?php
+                    $total_dr=$total_dr+$dr;
+                    $total_cr=$total_cr+$cr;
+                    $t_dr=$t_dr+$dr;
+                    $t_cr=$t_cr+$cr;
+                }?>
+                <tr bgcolor="#f5f5f5" style="font-size: 11px">
+                    <th colspan="2"  style="border: solid 1px #999;  text-align: right; ">Total <?=$g[0];?>:</th>
+                    <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_dr,2);?></th>
+                    <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_cr,2)?></th>
+                    <th style="border: solid 1px #999; text-align: right;"><?=number_format($total_dr-$total_cr,2)?></th>
                 </tr>
-                <?php
-                $totalactualcollection=$totalactualcollection+$actualcollection;} ?>
-            <tr><td colspan="7" style="text-align:right;border: solid 1px #999;">Total</td>
-                <td style="text-align:right;border: solid 1px #999;"><strong><?=number_format($totalactualcollection,2)?></strong></td>
-            </tr>
             </tbody>
-        </table></div>
-        </div>
-        </div>
+        </table>
+
 
     <?php elseif ($_POST['report_id']=='1004001'):?>
         <title>Trial Balance</title>
@@ -2403,6 +2551,127 @@ group by lld.item_id
             <?php }?>
             <tr style="border: solid 1px #999; font-size:12px">
                 <th colspan="2" style="text-align: right">Total Balance : </th>
+                <th style="text-align: right">&nbsp;</th>
+                <th style="text-align: right"><strong><?php echo number_format($t_dr,2);?></strong></th>
+                <th style="text-align: right"><strong><?php echo number_format($t_cr,2)?></strong></th>
+            </tr>
+        </table>
+
+
+
+    <?php elseif ($_POST['report_id']=='1002010'):
+        if($sectionid=='400000'){
+            $sec_com_connectionT=' and 1';
+            $sec_com_connection_wa=' and 1';
+        } else {
+            $sec_com_connectionT=" and b.section_id='".$_SESSION['sectionid']."' and b.company_id='".$_SESSION['companyid']."'";
+            $sec_com_connection_wa=" and company_id='".$_SESSION['companyid']."' and section_id in ('400000','".$_SESSION['sectionid']."')";
+
+        }
+        ?>
+        <title>Expenses Report</title>
+        <style>
+            #customers {
+                font-family: "Gill Sans", sans-serif;
+            }
+            #customers td {
+            }
+            #customers tr:ntd-child(even)
+            {background-color: #f0f0f0;}
+            #customers tr:hover {background-color: #f0f0f0;}
+            td{border: solid 1px #999; padding:2px;}
+            th{text-align: center;border: solid 1px #999; padding:2px;}
+        </style>
+        <h2 align="center" style="margin-top: -8px"><?=$_SESSION['company_name'];?></h2>
+        <p align="center" style="margin-top:-20px">Expenses Report</p>
+        <p align="center" style="margin-top:-12px; font-size: 11px">Date Interval: <?=$_POST['f_date']?> to <?=$_POST['t_date']?></p>
+        <table align="center" id="customers" style="width:75%; border: solid 1px #999; border-collapse:collapse; ">
+            <thead>
+            <p style="width:85%; text-align:right; font-size:11px; font-weight:normal">Reporting Time: <?php $dateTime = new DateTime('now', new DateTimeZone('Asia/Dhaka'));
+                echo $now=$dateTime->format("d/m/Y  h:i:s A");?></p>
+            <tr style="border: solid 1px #999;font-weight:bold; font-size:12px" >
+                <th width="4%" height="20" align="center">S/N</th>
+                <th width="45%" height="20" align="center">Head Of Accounts </th>
+                <th width="19%" align="center">Opening</th>
+                <th width="19%" align="center">Debit </th>
+                <th width="19%" height="20" align="center">Credit </th>
+                <th width="19%" height="20" align="center">Closing </th>
+            </tr>
+            <?php
+            $total_dr=0;
+            $total_cr=0;
+            $cc_code = (int) $_POST['cc_code'];
+            $group_id = $_POST['group_id'];
+            if($group_id>0){
+                $group_conn = ' and c.group_id='.$group_id.'';
+            } else {
+                $group_conn = ' and 1';
+            }
+            if($cc_code > 0)
+            {
+                $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where c.group_class='4000' and a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '".$f_date."' AND '".$t_date."'".$sec_com_connectionT." AND b.cc_code=$cc_code group by c.group_id";
+            } else {
+                $g="select DISTINCT c.group_name,SUM(dr_amt),SUM(cr_amt),c.group_id FROM accounts_ledger a, journal b,ledger_group c where c.group_class='4000' and a.ledger_id=b.ledger_id and a.ledger_group_id=c.group_id and b.jvdate BETWEEN '".$f_date."' AND '".$t_date."'".$group_conn."".$sec_com_connectionT." group by c.group_id";
+            }
+            $gsql=mysqli_query($conn, $g);
+            while($g=mysqli_fetch_array($gsql))
+            {
+                $total_dr=0;
+                $total_cr=0;
+                ?>
+                <tr bgcolor="#f0f0f0" style="font-size: 11px; height: 20px">
+                    <th colspan="6" style="text-align: left"><?=$g[0];?></th>
+                </tr>
+                <?php
+                $cc_code = (int) $_REQUEST['cc_code'];
+                if($cc_code > 0)
+                {
+                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt) from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]' and 1 AND b.cc_code=$cc_code".$sec_com_connectionT." group by ledger_name order by a.ledger_id";
+                } else {
+                    $p="select DISTINCT a.ledger_name,SUM(dr_amt),SUM(cr_amt),a.ledger_id from accounts_ledger a, journal b where a.ledger_id=b.ledger_id and b.jvdate BETWEEN '$f_date' AND '$t_date' and a.ledger_group_id='$g[3]'".$sec_com_connectionT." group by ledger_name order by a.ledger_id";
+                }
+                $pi=0;
+                $sql=mysqli_query($conn, $p);
+                while($p=mysqli_fetch_row($sql))
+                {
+                    $query="select SUM(dr_amt),SUM(cr_amt) from journal where jvdate < '$f_date' and ledger_id='$p[3]'".$sec_com_connection_wa."";
+                    $ssql=mysqli_query($conn, $query);
+                    $open=mysqli_fetch_array($ssql);
+                    $opening = $open[0]-$open[1];
+                    if($opening>0)
+                    { $tag='(Dr)';}
+                    elseif($opening<0)
+                    { $tag='(Cr)';$opening=$opening*(-1);}
+                    $pi++;
+                    $dr=$p[1];
+                    $cr=$p[2]; ?>
+                    <tr style="border: solid 1px #999; font-size:11px">
+                        <td align="center"><?=$pi;?></td>
+                        <td align="left" style="text-align: left"><?=$p[0];?></td>
+                        <td align="right"><?php if($opening>0) echo number_format($opening,2).' '.$tag; else echo '-';?></td>
+                        <td align="right"><?=number_format($dr,2);?></td>
+                        <td align="right"><?=number_format($cr,2);?></td>
+                        <?php if ($g['group_id'] =='2010'){ ?>
+                            <td align="right"><?=number_format(($dr-($opening+$cr)),2);?></td>
+                        <?php } else { ?>
+                            <td align="right"><?=number_format(($opening+($dr-$cr)),2);?></td>
+                        <?php } ?>
+                    </tr>
+                    <?php
+                    $total_dr=$total_dr+$dr;
+                    $total_cr=$total_cr+$cr;
+                    $t_dr=$t_dr+$dr;
+                    $t_cr=$t_cr+$cr;
+                }?>
+                <tr style="border: solid 1px #999; font-size:12px">
+                    <th colspan="2" style="text-align: right">Total : <?=number_format(($total_dr-$total_cr),2);?></th>
+                    <th style="text-align: right">&nbsp;</th>
+                    <th style="text-align: right"><strong><?php echo number_format($total_dr,2);?></strong></th>
+                    <th style="text-align: right"><strong><?php echo number_format($total_cr,2)?></strong></th>
+                </tr>
+            <?php }?>
+            <tr style="border: solid 1px #999; font-size:12px">
+                <th colspan="2" style="text-align: right">Grand Total : </th>
                 <th style="text-align: right">&nbsp;</th>
                 <th style="text-align: right"><strong><?php echo number_format($t_dr,2);?></strong></th>
                 <th style="text-align: right"><strong><?php echo number_format($t_cr,2)?></strong></th>

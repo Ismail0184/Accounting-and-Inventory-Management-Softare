@@ -163,7 +163,7 @@ function reload1(form)
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" required="required" name="ledger_id" >
                                 <option></option>
-                                <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)",1, "show_in_transaction not in ('1') and status=1".$sec_com_connection_wa.""); ?>
+                                <?php foreign_relation("accounts_ledger", "ledger_id", "CONCAT(ledger_id,' : ', ledger_name)",1, "status=1".$sec_com_connection_wa.""); ?>
                             </select>
                         </div>
                     </div>
@@ -185,6 +185,24 @@ function reload1(form)
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" style="font-size: 11px; width: 49%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-01');?>" class="form-control col-md-7 col-xs-12" required name="f_date">
+                            <input type="date" style="font-size: 11px; width: 49%; margin-left:2%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
+                        </div>
+                    </div>
+                <?php elseif ($report_id=='1002010'): ?>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Ledger Group : </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="select2_single form-control" style="width:100%; font-size: 11px" tabindex="-1" name="group_id" id="group_id">
+                                <option></option>
+                                <? foreign_relation('ledger_group','group_id','CONCAT(group_id, " : ", group_name)',1,"group_for=".$_SESSION['usergroup']);?>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date Interval <span class="required text-danger">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -274,20 +292,7 @@ function reload1(form)
 
 
 
-
-
-
-
-     <?php elseif ($report_id=='1002004'):?>
-       <div class="form-group">
-           <label class="control-label col-md-3 col-sm-3 col-xs-12">Users </label>
-           <div class="col-md-6 col-sm-6 col-xs-12">
-               <select class="select2_single form-control" style="width:100%" tabindex="-1"   name="user_id" id="user_id" >
-                   <option></option>
-                   <?=foreign_relation('users', 'user_id', 'CONCAT(user_id," : ", fname)',1, 'account_status in ("active")'); ?>
-                 </select>
-           </div>
-       </div>
+     <?php elseif ($report_id=='1002004' || $report_id=='1002011'):?>
        <div class="form-group">
            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date From <span class="required text-danger">*</span>
            </label>
@@ -296,10 +301,6 @@ function reload1(form)
                <input type="date" style="font-size: 11px; width: 49%; margin-left:2%" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>" class="form-control col-md-7 col-xs-12"  required name="t_date">
            </div>
        </div>
-
-
-
-
 
 
     <?php elseif ($report_id=='1010001'):  ?>
@@ -546,15 +547,7 @@ function reload1(form)
                             <input type="date" style="font-size: 11px;width: 100%" class="form-control col-md-7 col-xs-12" max="<?=date('Y-m-d');?>" value="<?=date('Y-m-d');?>"  required="required" name="t_date" /></td>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Customer Type: </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="select2_single form-control" style="width:100%;font-size: 11px" tabindex="-1"  name="dealer_type" id="dealer_type" >
-                                <option></option>
-                                <?php foreign_relation('distributor_type', 'typeshorname', 'CONCAT(typedetails)',1, '1'); ?>
-                            </select>
-                        </div>
-                    </div>
+
                 <?php elseif ($report_id=='1004001' || $report_id=='1004002'): ?>
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">As On <span class="required text-danger">*</span></label>
